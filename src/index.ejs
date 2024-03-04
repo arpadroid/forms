@@ -1,0 +1,42 @@
+<!-- This is a demo form page -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/ui/material-symbols/outlined.css" />
+        <!-- <link rel="stylesheet" href="/ui/themes/default/default.min.css" /> -->
+        <link rel="stylesheet" href="/themes/default/default.bundled.css" />
+        <% for (key in htmlWebpackPlugin.files.js) { %>
+          <script type="module" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
+        <% } %>
+        <title>Form Demo</title>
+    </head>
+    <body>
+        <script type="module" src="index.js"></script>
+        <form
+            id="demo-form"
+            is="arpa-form"
+            class="my-form"
+            title="My Form"
+        >
+            <text-field
+                id="test-text"
+                class="my-text-field"
+                label="my text field"
+                description="This text filed is required. Lorem ipsum dolor sit amet"
+                footnote="This is a footnote with some sample text. Lorem ipsum dolor sit amet"
+                tooltip="This is a tooltip with some sample text. Lorem ipsum dolor sit amet"
+                required
+            />
+        </form>
+        <script type="text/javascript">
+          const form = document.getElementById('demo-form');
+          customElements.whenDefined('arpa-form').then(() => {
+            form.onSubmit((data) => {
+              console.log('Form submitted', {
+                data
+              });
+            })
+          });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,4 @@
+node_modules/
+dist/
+*.bundled.css
+junit.xml

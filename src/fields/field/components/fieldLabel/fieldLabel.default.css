@@ -1,0 +1,31 @@
+.fieldLabel {
+    display: flex;
+    flex: 1 1 auto;
+    padding: 8px 4px 8px;
+    position: relative;
+    cursor: pointer;
+    font-size: 13px;
+    align-items: center;
+}
+
+.fieldLabel__required {
+    color: var(--color-red);
+    padding: 0px 6px;
+    position: relative;
+    font-size: 20px;
+}
+
+.fieldLabel__text {
+    flex: 0 1 auto;
+    color: var(--grey-650);
+    font-family: var(--font-family-avant-garde-gothic);
+    font-weight: normal;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.fieldLabel__icon.fieldLabel__icon {
+    margin-right: 10px;
+    color: var(--grey-650);
+    font-size: 20px;
+}
