@@ -1,0 +1,13 @@
+field-errors {
+    &:has(.fieldErrors__list:empty) {
+        display: none;
+    }
+    .tooltip__content {
+        background-color: var(--color-error-light);
+        border-color: var(--color-error);
+    }
+    arpa-icon {
+        color: var(--color-red);
+        margin: 0;
+    }
+}

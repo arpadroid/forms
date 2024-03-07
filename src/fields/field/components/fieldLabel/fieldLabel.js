@@ -1,12 +1,17 @@
+/**
+ * @typedef {import('../../field').default} Field
+ */
+
 const html = String.raw;
 class FieldLabel extends HTMLLabelElement {
     connectedCallback() {
+        /** @type {Field} */
         this.field = this.closest('.arpaField');
         this.render();
     }
 
     render() {
-        const label = this.getLabel();
+        const label = this.field.getLabel();
         if (label) {
             this.setAttribute('for', this.field.getHtmlId());
             this.classList.add('fieldLabel');
@@ -17,15 +22,11 @@ class FieldLabel extends HTMLLabelElement {
     }
 
     renderRequired() {
-        const required = this.field.hasAttribute('required');
+        const required = this.field.isRequired();
         if (required) {
             return html`<span class="fieldLabel__required">*</span>`;
         }
         return '';
-    }
-
-    getLabel() {
-        return this.field.getAttribute('label');
     }
 }
 

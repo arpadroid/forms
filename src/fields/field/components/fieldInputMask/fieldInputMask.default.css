@@ -1,0 +1,36 @@
+field-input-mask {
+    visibility: hidden;
+    display: flex;
+    justify-content: flex-start;
+    position: absolute;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 48px;
+
+    arpa-icon {
+        font-size: 23px;
+        max-width: 20px;
+    }
+
+    label {
+        display: flex;
+    }
+}
+
+field-input-mask > * {
+    visibility: visible;
+}
+
+.fieldInputMask__rhs {
+    margin-left: auto;
+}
+
+.fieldInputMask__rhs,
+.fieldInputMask__lhs {
+    padding: 0px 12px;
+    display: flex;
+    align-items: center;
+}

@@ -1,5 +1,27 @@
+.arpaField p {
+    margin: 8px 0px;
+}
+
 .arpaField__header {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
+    gap: 8px;
+    padding: 8px 0px;
+}
+
+.arpaField.arpaField--hasError {
+    .fieldInput {
+        border-color: var(--color-red);
+        background-color: var(--color-error-light);
+    }
+    &:focus-within field-errors .tooltip__content {
+        display: block;
+    }
+}
+
+.arpaField__inputWrapper {
+    display: flex;
+    flex: 1 1 auto;
+    position: relative;
 }

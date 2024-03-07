@@ -18,33 +18,61 @@ import {
     validateSize
 } from '@arpadroid/tools';
 
+/**
+ * Represents a field validator.
+ */
 class FieldValidator {
     /** @type {Field} */
     field;
     _methods = ['required', 'minLength', 'maxLength', 'size'];
     _errors = [];
 
+    /**
+     * Creates a new instance of FieldValidator.
+     * @param {Field} field - The field to validate.
+     */
     constructor(field) {
         this.field = field;
         this.config = this.field.getConfig();
     }
 
+    /**
+     * Sets an error message.
+     * @param {string} error - The error message.
+     */
     setError(error) {
         this._errors.push(error);
     }
 
+    /**
+     * Gets the errors.
+     * @returns {string[]}
+     */
     getErrors() {
         return [...this._errors];
     }
 
+    /**
+     * Checks if the field is valid.
+     * @returns {boolean} - True if the field is valid, false otherwise.
+     */
     isValid() {
         return this._errors?.length;
     }
 
+    /**
+     * Gets the validation methods.
+     * @returns {string[]} - The validation methods.
+     */
     getMethods() {
         return this.field.getValidations() ?? [];
     }
 
+    /**
+     * Validates the field value.
+     * @param {unknown} value - The value to validate.
+     * @returns {boolean} - True if the value is valid, false otherwise.
+     */
     validate(value) {
         this.i18n = this.field.getI18n();
         this._errors = [];
@@ -57,6 +85,11 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Runs the validation methods.
+     * @param {unknown} value - The value to validate.
+     * @returns {boolean} - True if all validation methods pass, false otherwise.
+     */
     runValidationMethods(value) {
         let isValid = true;
         for (const _method of this.getMethods()) {
@@ -76,6 +109,11 @@ class FieldValidator {
         return isValid;
     }
 
+    /**
+     * Gets the validation method.
+     * @param {*} param - The validation method parameter.
+     * @returns {Function | undefined} - The validation method.
+     */
     getMethod(param) {
         if (typeof param === 'function') {
             return param;
@@ -90,6 +128,12 @@ class FieldValidator {
         }
     }
 
+    /**
+     * Validates if the field is required.
+     * @param {*} value - The value to validate.
+     * @param {boolean} [report=true] - Indicates whether to report the error.
+     * @returns {boolean} - True if the field is not required or the value is not empty, false otherwise.
+     */
     required(value = this.field.getValue(), report = true) {
         const valid = !this.field.isRequired() || validateRequired(value);
         if (!valid && report) {
@@ -99,6 +143,13 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates if the field value length is less than or equal to the specified maximum length.
+     * @param {*} value - The value to validate.
+     * @param {number} [maxLength] - The maximum length allowed.
+     * @param {boolean} [report=true] - Indicates whether to report the error.
+     * @returns {boolean} - True if the value length is less than or equal to the maximum length, false otherwise.
+     */
     maxLength(value = this.field.getValue(), report = true) {
         const maxLength = this.field.getMaxLength();
         const valid = !maxLength ?? validateMaxLength(value, maxLength);
@@ -117,6 +168,11 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates if the field value length is equal to the specified length.
+     * @param {*} value - The value to validate.
+     * @returns {boolean} - True if the value length is equal to the specified length, false otherwise.
+     */
     length(value = this.field.getValue()) {
         const length = this.field.getLength();
         const valid = validateLength(value, length);
@@ -126,6 +182,11 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates if the field value size is equal to the specified size.
+     * @param {*} value - The value to validate.
+     * @returns {boolean} - True if the value size is equal to the specified size, false otherwise.
+     */
     size(value = this.field.getValue()) {
         const size = this.field.getSize();
         const valid = validateSize(value, size);
@@ -135,19 +196,31 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates if the field value matches the specified regular expression.
+     * @param {*} value - The value to validate.
+     * @param {RegExp} [regex] - The regular expression to match against.
+     * @returns {boolean} - True if the value matches the regular expression, false otherwise.
+     */
     regex(value = this.field.getValue(), regex = this.field.getRegex()) {
         if (!regex || (this.field.isRequired() && !value)) {
             return true;
         }
         const valid = !regex || validateRegex(value, regex);
         const config = this.field.getConfig();
-        const message = config.validationMessages?.regex;
-        if (message) {
+        const message = config?.regexMessage;
+
+        if (!valid && message) {
             this.setError(message);
         }
         return valid;
     }
 
+    /**
+     * Validates if the field value is a number.
+     * @param {*} value - The value to validate.
+     * @returns {boolean} - True if the value is a number, false otherwise.
+     */
     number(value = this.field.getValue()) {
         const valid = validateNumber(value);
         if (!valid) {
@@ -156,6 +229,11 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates if the field value is a valid color.
+     * @param {*} value - The value to validate.
+     * @returns {boolean} - True if the value is a valid color, false otherwise.
+     */
     color(value = this.field.getValue()) {
         if (!value) {
             return true;
@@ -171,6 +249,11 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates a file.
+     * @param {File} file - The file to validate.
+     * @returns {boolean} - True if the file is valid, false otherwise.
+     */
     validateFile(file) {
         this.i18n = this.field.getI18n();
         let valid = true;
@@ -187,6 +270,12 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates if the file size is greater than or equal to the specified minimum size.
+     * @param {File} file - The file to validate.
+     * @param {number} [minSize] - The minimum size allowed.
+     * @returns {boolean} - True if the file size is greater than or equal to the minimum size, false otherwise.
+     */
     validateMinSize(file, minSize = this.field?.getMinSize()) {
         let valid = true;
         if (minSize) {
@@ -204,6 +293,12 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates if the file extension is included in the specified extensions.
+     * @param {File} file - The file to validate.
+     * @param {string[]} [extensions] - The allowed extensions.
+     * @returns {boolean} - True if the file extension is included in the extensions, false otherwise.
+     */
     validateExtensions(file, extensions = this.field?.getExtensions()) {
         let valid = true;
         const extension = getExtension(file);
@@ -219,6 +314,12 @@ class FieldValidator {
         return valid;
     }
 
+    /**
+     * Validates if the file size is less than or equal to the specified maximum size.
+     * @param {File} file - The file to validate.
+     * @param {number} [maxSize] - The maximum size allowed.
+     * @returns {boolean} - True if the file size is less than or equal to the maximum size, false otherwise.
+     */
     validateMaxSize(file, maxSize = this.field?.getMaxSize()) {
         let valid = true;
         if (maxSize) {

@@ -5,16 +5,16 @@ export const InputTemplate = html`<input is="field-input" />`;
 export const FieldTemplate = html`
     <div class="arpaField__header">
         <label is="field-label"></label>
-        <arpa-tooltip>{tooltip}</arpa-tooltip>
         <field-errors></field-errors>
+        <arpa-tooltip position="bottom-right">{tooltip}</arpa-tooltip>
     </div>
 
     <div class="arpaField__body">
         <p is="field-description"></p>
-        <field-input-wrapper>
+        <div class="arpaField__inputWrapper">
             {input}
             <field-input-mask></field-input-mask>
-        </field-input-wrapper>
+        </div>
     </div>
 
     <div class="arpaField__footer">

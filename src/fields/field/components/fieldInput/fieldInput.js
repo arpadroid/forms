@@ -5,6 +5,10 @@ class FieldInput extends HTMLInputElement {
         return ['value'];
     }
 
+    setValue(value) {
+        this.value = value;
+    }
+
     connectedCallback() {
         this.update();
         /** @type {Field} */
@@ -12,6 +16,7 @@ class FieldInput extends HTMLInputElement {
         this.id = this.field.getHtmlId();
         this.name = this.field.id;
         this.classList.add('fieldInput');
+        this.value = this.field.getAttribute('value');
     }
 
     update() {}

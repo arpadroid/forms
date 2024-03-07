@@ -1,28 +1,31 @@
 .fieldInput {
-    width: 100%;
-    border-radius: 16px;
-    border: none;
-    border: 2px solid var(--border-color);
-    padding: 14px 18px 12px;
     background-color: var(--grey-30);
-    transition: color 0.4s ease-in-out, border-color 0.4s ease-in-out, background-color 0.4s ease-in-out;
-    color: var(--text-color);
-    font-size: 16px;
-    font-family: var(--font-family-avant-garde);
-    color: var(--grey-600);
-    height: 48px;
+    border-radius: 16px;
+    border: 2px solid var(--border-color);
     box-shadow: none;
+    color: var(--text-color);
     flex: 1 1 auto;
+    font-size: 16px;
+    height: 48px;
+    padding: 14px 18px 12px;
+    transition: color 0.4s ease-in-out, border-color 0.4s ease-in-out, background-color 0.4s ease-in-out;
+    width: 100%;
     &:focus,
     &:hover {
+        background-color: var(--primary-hilight);
         border: 2px solid var(--primary-highlight-outline);
         outline: none;
-        background-color: var(--primary-hilight);
     }
 }
 
-.arpaField--hasError .fieldInput {
-    border-color: var(--outline-error);
-    color: var(--color-error-text);
-    background-color: var(--bg-error);
+:root {
+    --input-icon-padding: 40px;
+}
+
+.arpaField:has(.arpaField__icon) .fieldInput {
+    padding-left: var(--input-icon-padding);
+}
+
+.arpaField:has(.arpaField__iconRight) .fieldInput {
+    padding-right: var(--input-icon-padding);
 }

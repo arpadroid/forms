@@ -13,24 +13,45 @@
     <body>
         <script type="module" src="index.js"></script>
         <form
-            id="demo-form"
+            id="demoForm"
             is="arpa-form"
-            class="my-form"
             title="My Form"
         >
             <text-field
-                id="test-text"
-                class="my-text-field"
-                label="my text field"
-                description="This text filed is required. Lorem ipsum dolor sit amet"
+                id="fullText"
+                label="Full Featured Text Field"
+                description="This text is configured with every possible option"
                 footnote="This is a footnote with some sample text. Lorem ipsum dolor sit amet"
-                tooltip="This is a tooltip with some sample text. Lorem ipsum dolor sit amet"
+                tooltip="Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
                 required
-            />
+                icon="abc"
+                icon-right="abc"
+                regex="alphaLower"
+                regex-message="Only letters and numbers are allowed"
+                value="Some value"
+            ></text-field>
+            <text-field
+                id="simpleText"
+                label="Simple Text Field",
+                regex="alphaLower"
+            ></text-field>
+            <password-field
+                id="password"
+                label="Password"
+                confirm
+            ></password-field>
+            <text-area-field id="textarea" label="Text Area">some value</text-area-field>
         </form>
         <script type="text/javascript">
-          const form = document.getElementById('demo-form');
+          const form = document.getElementById('demoForm');
+          
+          
           customElements.whenDefined('arpa-form').then(() => {
+            // const simpleText = form.getField('simpleText');
+            // simpleText.setValue('Hello World');
+            const fullText = form.getField('fullText');
+            fullText.setValue('Hello World');
+            
             form.onSubmit((data) => {
               console.log('Form submitted', {
                 data

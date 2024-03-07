@@ -1,10 +1,15 @@
-import { lcFirst, mergeObjects, processTemplate } from '@arpadroid/tools';
+import { attr, lcFirst, mergeObjects, processTemplate, ComponentTool } from '@arpadroid/tools';
 import { FieldTemplate, InputTemplate } from './fieldTemplate.js';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
 
 class Field extends HTMLElement {
     _validations = ['required', 'minLength', 'maxLength', 'size'];
+    _onReadyCallbacks = [];
+    _isReady = false;
+
+    static template = FieldTemplate;
+    static inputTemplate = InputTemplate;
 
     static get observedAttributes() {
         return ['value'];
@@ -13,13 +18,19 @@ class Field extends HTMLElement {
     constructor(config) {
         super();
         this.setConfig(config);
-        if (!this.id || this.id === 'null') {
+        const id = this.getId();
+        if (!id) {
             throw new Error('Field must have an id');
         }
+        this._initialize();
+    }
+
+    _initialize() {
+        ComponentTool.applyOnReady(this);
     }
 
     getId() {
-        return this._id || this.id;
+        return this._id || this.id || this._config.id;
     }
 
     getProperty(name) {
@@ -35,23 +46,14 @@ class Field extends HTMLElement {
         return this._config;
     }
 
-    getInputComponent() {
-        // return this.getComponent('FieldInput');
-    }
-
-    getInput() {
-        // const component = this.getInputComponent();
-        // return component?.node;
-    }
-
     /**
      * Returns default config.
      * @returns {*}
      */
     getDefaultConfig() {
         return {
-            template: FieldTemplate,
-            inputTemplate: InputTemplate,
+            template: Field.template,
+            inputTemplate: Field.inputTemplate,
             variant: undefined,
             validator: FieldValidator,
             inputAttributes: {
@@ -59,7 +61,6 @@ class Field extends HTMLElement {
             },
             tagName: 'div',
             validation: {},
-            validationMessages: {},
             context: {}
         };
     }
@@ -89,26 +90,25 @@ class Field extends HTMLElement {
     initializeProperties() {
         this.form = this.closest('form');
         this.form.registerField(this);
-        this.initializeInput();
+        this._initializeInput();
+        attr(this.input, this._config.inputAttributes);
+        this.inputMask = this.querySelector('field-input-mask');
         this._id = this.id;
         this.removeAttribute('id');
     }
 
-    initializeInput() {
+    _initializeInput() {
         this.input = this.querySelector('input');
-        this.input.type = 'text';
     }
 
     renderTemplate() {
-        const { template } = this._config;
-        const { inputTemplate } = this._config;
+        const { template, inputTemplate } = this._config;
         if (template) {
             return processTemplate(template, {
                 input: inputTemplate,
-                tooltip: this.getTooltip(),
-            })
+                tooltip: this.getTooltip()
+            });
         }
-        
     }
 
     getTooltip() {
@@ -127,21 +127,23 @@ class Field extends HTMLElement {
         return [...this._validations];
     }
 
+    setValue(value) {
+        this.value = value;
+        this.input.setValue(value);
+        return this;
+    }
+
     validate(value = this.getValue(), update = true) {
-        this.errorMessages = [];
-        let isValid = undefined;
-        if (typeof this.validator?.validate === 'function') {
-            isValid = this.validator.validate(value);
-        }
+        const isValid = this?.validator?.validate(value) ?? true;
         if (isValid) {
-            this.classList?.remove('arpaField--hasError');
+            this.classList.remove('arpaField--hasError');
         } else {
             this.classList.add('arpaField--hasError');
         }
         if (update) {
             this._isValid = isValid;
-            this.updateErrors();
         }
+        this.updateErrors();
         return isValid;
     }
 
@@ -174,7 +176,7 @@ class Field extends HTMLElement {
     }
 
     isRequired() {
-        return this.hasAttribute('required');
+        return this.hasAttribute('required') || this._config.required;
     }
 
     setOnChange(onChange) {
@@ -215,6 +217,10 @@ class Field extends HTMLElement {
         return this.getProperty('length');
     }
 
+    getLabel() {
+        return this.getProperty('label');
+    }
+
     setMaxLength(maxLength) {
         this.setAttribute('maxLength', maxLength);
     }
@@ -229,6 +235,10 @@ class Field extends HTMLElement {
 
     getRegex() {
         return this.getProperty('regex');
+    }
+
+    getIcon() {
+        return this.getProperty('icon');
     }
 
     setRegex(regex) {
@@ -253,6 +263,11 @@ class Field extends HTMLElement {
 
     updateErrors() {
         this.getErrorsComponent().setErrors(this.getErrorMessages());
+    }
+
+    setError(text) {
+        this.validator.setError(text);
+        this.updateErrors();
     }
 }
 

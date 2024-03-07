@@ -1,4 +1,4 @@
-import { isObject, mergeObjects, processTemplate } from '@arpadroid/tools';
+import { ComponentTool, isObject, mergeObjects, processTemplate } from '@arpadroid/tools';
 
 /**
  * The form configuration.
@@ -7,7 +7,7 @@ import { isObject, mergeObjects, processTemplate } from '@arpadroid/tools';
  * @property {Record<string,unknown>} initialValues - The initial values for the form.
  * @property {string} [variant=default] - The form variant.
  * @property {string} [submitButtonText=Submit] - The text for the submit button.
- * @property {(values: Record<string, unknown>, form: Form) => void} [onSubmit] - The submit event handler.
+ * @property {(values: Record<string, unknown>, form: FormComponent) => void} [onSubmit] - The submit event handler.
  * @property {number} [debounce=500] - The debounce time for the submit event.
  * @property {string} [template] - The form template.
  * @property {boolean} [hasSubmitButton=true] - Whether the form has a submit button.
@@ -24,7 +24,7 @@ class FormComponent extends HTMLFormElement {
             <form-description></form-description>
         </form-header>
         <form-body>
-            <form-fields></form-fields>
+            <div class="arpaForm__fields"></div>
         </form-body>
 
         <form-footer>
@@ -45,22 +45,28 @@ class FormComponent extends HTMLFormElement {
         return ['initialValues'];
     }
 
-    update() {}
-
     connectedCallback() {
         this.render();
-        this.update();
     }
 
     constructor(config) {
         super();
+        ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
     }
 
+    /**
+     * Sets the form configuration.
+     * @param {FormConfigInterface} config - The form configuration.
+     */
     setConfig(config) {
         this._config = mergeObjects(this.getDefaultConfig(), config);
     }
 
+    /**
+     * Returns the form configuration.
+     * @returns {FormConfigInterface} The form configuration.
+     */
     getDefaultConfig() {
         return {
             variant: 'default',
@@ -77,17 +83,19 @@ class FormComponent extends HTMLFormElement {
         this.update();
     }
 
+
+    /**
+     * Renders the form.
+     */
     render() {
         // this.content = this.innerHTML;
         const { variant } = this._config;
         const contentNodes = [...this.childNodes];
         this.renderTemplate();
-
-        const formFields = this.querySelector('form-fields');
-        if (formFields) {
-            formFields.append(...contentNodes);
+        this.formFields = this.querySelector('.arpaForm__fields');
+        if (this.formFields) {
+            this.formFields.append(...contentNodes);
         }
-
         // if (!this._hasRendered) {
         //     this.setInitialValues(initialValues);
         //     this.setValues(initialValues);
@@ -100,6 +108,9 @@ class FormComponent extends HTMLFormElement {
         this.addEventListener('submit', this._onSubmit.bind(this));
     }
 
+    /**
+     * Renders the form template.
+     */
     renderTemplate() {
         const { template } = this._config;
         if (template && this.canUseTemplate()) {
@@ -187,6 +198,10 @@ class FormComponent extends HTMLFormElement {
 
     getFields() {
         return Object.values(this.fields);
+    }
+
+    getField(fieldId) {
+        return this.fields[fieldId];
     }
 
     getOnSubmit() {

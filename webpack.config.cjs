@@ -32,7 +32,7 @@ module.exports = (async () => {
                 port: 9000,
                 hot: true,
                 open: true,
-                watchFiles: ['src/**/*.js', 'src/**/*.html'],
+                watchFiles: ['src/**/*.js', 'src/**/*.ejs', 'src/**/*.html'],
                 static: {
                     directory: path.join(__dirname, 'dist')
                 }

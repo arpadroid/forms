@@ -1,7 +1,7 @@
 .fieldLabel {
     display: flex;
     flex: 1 1 auto;
-    padding: 8px 4px 8px;
+    padding: 8 4px 8px;
     position: relative;
     cursor: pointer;
     font-size: 13px;
@@ -17,8 +17,7 @@
 
 .fieldLabel__text {
     flex: 0 1 auto;
-    color: var(--grey-650);
-    font-family: var(--font-family-avant-garde-gothic);
+    color: var(--grey-800);
     font-weight: normal;
     font-weight: 600;
     font-size: 16px;
