@@ -1,0 +1,15 @@
+select-field select {
+    position: relative;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.select-items {
+    position: absolute;
+    background-color: DodgerBlue;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+}

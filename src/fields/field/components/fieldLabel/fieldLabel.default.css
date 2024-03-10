@@ -1,7 +1,6 @@
 .fieldLabel {
     display: flex;
     flex: 1 1 auto;
-    padding: 8 4px 8px;
     position: relative;
     cursor: pointer;
     font-size: 13px;

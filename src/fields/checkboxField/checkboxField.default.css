@@ -1,0 +1,70 @@
+checkbox-field.arpaField {
+    margin: 8px 0px;
+    position: relative;
+
+    label {
+        cursor: pointer;
+    }
+
+    .arpaField__icon {
+        margin-right: 12px;
+    }
+
+    .fieldLabel__text {
+        flex: 1 1 auto;
+    }
+
+    &:has(input:checked) .fieldInput {
+        background-color: var(--primary-hilight);
+    }
+}
+
+checkbox-field.arpaField:has(.arpaField__icon) .fieldInput {
+    padding-left: 12px;
+}
+
+checkbox-field.arpaField:has(.arpaField__iconRight) .fieldInput {
+    padding-right: 12px;
+}
+
+input[type='radio'],
+input[type='checkbox'] {
+    width: 24px;
+    height: 0 !important;
+    position: relative;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    visibility: hidden;
+    flex: 0 0 auto;
+
+    &::after {
+        font-family: 'Material Symbols Outlined';
+        content: 'check_box_outline_blank';
+
+        color: var(--grey-300);
+        font-size: 24px;
+        position: absolute;
+        visibility: visible;
+        cursor: pointer;
+    }
+}
+
+input[type='checkbox']:checked:after {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    content: 'check_box';
+    color: var(--color-primary);
+}
+
+input[type='radio']::after {
+    content: 'radio_button_unchecked';
+}
+
+input[type='radio']:checked:after {
+    content: 'radio_button_checked';
+    color: var(--color-primary);
+}

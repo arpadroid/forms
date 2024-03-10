@@ -45,7 +45,7 @@ class FieldInputMask extends HTMLElement {
      * @returns {string} The right icon for the field.
      */
     getIconRight() {
-        return this.field?.getAttribute('icon-right');
+        return this.field?.getIconRight();
     }
 
     /**

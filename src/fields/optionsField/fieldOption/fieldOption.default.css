@@ -1,0 +1,23 @@
+.fieldOption {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    height: 48px;
+    label {
+        cursor: pointer;
+    }
+}
+
+.fieldOption__handler {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    height: 48px;
+}
+
+.fieldOption__content {
+    display: flex;
+    flex-direction: column;
+}

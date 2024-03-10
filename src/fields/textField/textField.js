@@ -1,15 +1,32 @@
 import Field from '../field/field.js';
 import { Regex } from '@arpadroid/tools';
 
+/**
+ * Represents a text field element.
+ */
 class TextField extends Field {
+    /**
+     * Array of validations for the text field.
+     * @type {string[]}
+     * @protected
+     */
     _validations = [...super.getValidations(), 'regex'];
 
+    /**
+     * Called when the element is connected to the DOM.
+     * @override
+     */
     connectedCallback() {
         super.connectedCallback();
         this.setRegexValidation();
     }
 
-    setRegexValidation(regex = this.getAttribute('regex'), message = this.getAttribute('regex-message')) {
+    /**
+     * Sets the regex validation for the text field.
+     * @param {string | RegExp} [regex] - The regular expression or the name of a predefined regex pattern.
+     * @param {string} [message] - The error message to display if the validation fails.
+     */
+    setRegexValidation(regex = this.getProperty('regex'), message = this.getProperty('regex-message')) {
         if (typeof regex === 'string') {
             if (Regex[regex]) {
                 regex = Regex[regex];
@@ -18,11 +35,12 @@ class TextField extends Field {
                 regex = new RegExp(regex);
             }
         }
+
         if (regex instanceof RegExp) {
-            this._config.validation.regex = regex;
+            this.regex = regex;
         }
         if (typeof message === 'string') {
-            this._config.regexMessage = message;
+            this.regexMessage = message;
         }
     }
 }

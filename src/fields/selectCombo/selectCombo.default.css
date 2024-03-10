@@ -1,0 +1,14 @@
+select-combo {
+    .comboBox {
+        left: 0;
+        right: auto;
+        display: none;
+    }
+    &:focus-within {
+        .comboBox {
+            display: block;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+    }
+}

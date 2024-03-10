@@ -11,11 +11,19 @@ class FieldLabel extends HTMLLabelElement {
     }
 
     render() {
+        this.content = this.innerHTML;
         const label = this.field.getLabel();
+        const labelNode = this.querySelector('.fieldLabel__text');
         if (label) {
             this.setAttribute('for', this.field.getHtmlId());
             this.classList.add('fieldLabel');
-            this.innerHTML = html` <span class="fieldLabel__text">${label}</span>${this.renderRequired()}`;
+            if (labelNode) {
+                labelNode.innerHTML = `${label} ${this.renderRequired()}`;
+            } else {
+                this.innerHTML = html`
+                    <span class="fieldLabel__text">${label}</span>${this.renderRequired()}
+                `;
+            }
         } else {
             this.remove();
         }

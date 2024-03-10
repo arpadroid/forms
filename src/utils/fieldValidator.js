@@ -1,6 +1,6 @@
 /**
  * @typedef {import("../components/fields/field/interface/fieldInterface").FieldInterface} FieldInterface
- * @typedef {import('../components/fields/field/field.js').default} Field
+ * @typedef {import('../fields/field/field.js').default} Field
  */
 
 import {
@@ -32,7 +32,9 @@ class FieldValidator {
      * @param {Field} field - The field to validate.
      */
     constructor(field) {
+        /** @type {Field} */
         this.field = field;
+        /** @type {FieldInterface} */
         this.config = this.field.getConfig();
     }
 
@@ -111,8 +113,8 @@ class FieldValidator {
 
     /**
      * Gets the validation method.
-     * @param {*} param - The validation method parameter.
-     * @returns {Function | undefined} - The validation method.
+     * @param {string | () => void} param - The validation method parameter.
+     * @returns {undefined | (value) => boolean} - The validation method.
      */
     getMethod(param) {
         if (typeof param === 'function') {
@@ -130,8 +132,8 @@ class FieldValidator {
 
     /**
      * Validates if the field is required.
-     * @param {*} value - The value to validate.
-     * @param {boolean} [report=true] - Indicates whether to report the error.
+     * @param {unknown} value - The value to validate.
+     * @param {boolean} [report] - Indicates whether to report the error.
      * @returns {boolean} - True if the field is not required or the value is not empty, false otherwise.
      */
     required(value = this.field.getValue(), report = true) {
@@ -145,9 +147,8 @@ class FieldValidator {
 
     /**
      * Validates if the field value length is less than or equal to the specified maximum length.
-     * @param {*} value - The value to validate.
-     * @param {number} [maxLength] - The maximum length allowed.
-     * @param {boolean} [report=true] - Indicates whether to report the error.
+     * @param {unknown} value - The value to validate.
+     * @param {boolean} [report] - Indicates whether to report the error.
      * @returns {boolean} - True if the value length is less than or equal to the maximum length, false otherwise.
      */
     maxLength(value = this.field.getValue(), report = true) {
@@ -170,7 +171,7 @@ class FieldValidator {
 
     /**
      * Validates if the field value length is equal to the specified length.
-     * @param {*} value - The value to validate.
+     * @param {unknown} value - The value to validate.
      * @returns {boolean} - True if the value length is equal to the specified length, false otherwise.
      */
     length(value = this.field.getValue()) {
@@ -184,7 +185,7 @@ class FieldValidator {
 
     /**
      * Validates if the field value size is equal to the specified size.
-     * @param {*} value - The value to validate.
+     * @param {unknown} value - The value to validate.
      * @returns {boolean} - True if the value size is equal to the specified size, false otherwise.
      */
     size(value = this.field.getValue()) {
@@ -198,17 +199,16 @@ class FieldValidator {
 
     /**
      * Validates if the field value matches the specified regular expression.
-     * @param {*} value - The value to validate.
+     * @param {unknown} value - The value to validate.
      * @param {RegExp} [regex] - The regular expression to match against.
      * @returns {boolean} - True if the value matches the regular expression, false otherwise.
      */
-    regex(value = this.field.getValue(), regex = this.field.getRegex()) {
+    regex(value = this.field.getValue(), regex = this.field.regex) {
         if (!regex || (this.field.isRequired() && !value)) {
             return true;
         }
         const valid = !regex || validateRegex(value, regex);
-        const config = this.field.getConfig();
-        const message = config?.regexMessage;
+        const message = this.field?.regexMessage;
 
         if (!valid && message) {
             this.setError(message);
@@ -218,7 +218,7 @@ class FieldValidator {
 
     /**
      * Validates if the field value is a number.
-     * @param {*} value - The value to validate.
+     * @param {unknown} value - The value to validate.
      * @returns {boolean} - True if the value is a number, false otherwise.
      */
     number(value = this.field.getValue()) {
@@ -231,7 +231,7 @@ class FieldValidator {
 
     /**
      * Validates if the field value is a valid color.
-     * @param {*} value - The value to validate.
+     * @param {unknown} value - The value to validate.
      * @returns {boolean} - True if the value is a valid color, false otherwise.
      */
     color(value = this.field.getValue()) {
@@ -239,7 +239,7 @@ class FieldValidator {
             return true;
         }
         let valid = false;
-        const textInput = this.field.node.querySelector('.colorInputComponent__textInput');
+        const textInput = this.field.textInput;
         if (textInput?.value?.length && validateColor(textInput.value)) {
             valid = true;
         }

@@ -2,17 +2,22 @@ import { mergeObjects, Regex } from '@arpadroid/tools';
 import { IconButton } from '@arpadroid/ui';
 import TextField from '../textField/textField.js';
 
+/**
+ * Represents a password field that extends the TextField class.
+ */
 class PasswordField extends TextField {
+    /**
+     * Returns the default configuration for the PasswordField.
+     * @returns {import('./passwordFieldInterface.js').PasswordFieldInterface} The default configuration object.
+     */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             label: this.i18n?.lblPassword,
             icon: 'lock',
             confirm: false,
-            isLoginField: true,
             required: true,
             regex: Regex.password,
             regexMessage: this.i18n?.errRegex,
-            required: true,
             inputAttributes: {
                 type: 'password'
             },
@@ -20,16 +25,26 @@ class PasswordField extends TextField {
         });
     }
 
+    /**
+     * Checks if the PasswordField has a confirm field.
+     * @returns {boolean} True if the PasswordField has a confirm field, false otherwise.
+     */
     hasConfirm() {
         return this.hasAttribute('confirm') ?? this._config.confirm;
     }
 
+    /**
+     * Called when the PasswordField is connected to the DOM.
+     */
     connectedCallback() {
         super.connectedCallback();
-        this.render();
     }
 
-    render() {
+    /**
+     * Initializes the confirm field if the PasswordField has a confirm field.
+     * @protected
+     */
+    _onConnected() {
         if (this.hasConfirm()) {
             this._initializeConfirmField();
         }
@@ -39,6 +54,10 @@ class PasswordField extends TextField {
         });
     }
 
+    /**
+     * Initializes the confirm field for password confirmation.
+     * @protected
+     */
     _initializeConfirmField() {
         this.confirmField = new PasswordField({
             id: this._id + '-confirmField',
@@ -51,6 +70,10 @@ class PasswordField extends TextField {
         this.after(this.confirmField);
     }
 
+    /**
+     * Validates the password confirmation.
+     * @returns {boolean} True if the password confirmation is valid, false otherwise.
+     */
     validateConfirm() {
         const confirmValue = this.confirmField.getValue();
         if (!confirmValue) {
@@ -63,6 +86,10 @@ class PasswordField extends TextField {
         return true;
     }
 
+    /**
+     * Renders the visibility button for toggling password visibility.
+     * @returns {IconButton}
+     */
     renderVisibilityButton() {
         const button = new IconButton({
             icon: 'visibility',
@@ -74,6 +101,9 @@ class PasswordField extends TextField {
         return button;
     }
 
+    /**
+     * Toggles the visibility of the password.
+     */
     togglePasswordVisibility() {
         const isPassword = this.input.getAttribute('type') === 'password';
         this.input.setAttribute('type', isPassword ? 'text' : 'password');

@@ -1,4 +1,4 @@
-import { ComponentTool, isObject, mergeObjects, processTemplate } from '@arpadroid/tools';
+import { ComponentTool, ObserverTool, attr, isObject, mergeObjects, processTemplate } from '@arpadroid/tools';
 
 /**
  * The form configuration.
@@ -45,14 +45,15 @@ class FormComponent extends HTMLFormElement {
         return ['initialValues'];
     }
 
-    connectedCallback() {
-        this.render();
-    }
-
     constructor(config) {
         super();
+        ObserverTool.mixin(this);
         ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
+    }
+
+    connectedCallback() {
+        this.render();
     }
 
     /**
@@ -83,12 +84,12 @@ class FormComponent extends HTMLFormElement {
         this.update();
     }
 
-
     /**
      * Renders the form.
      */
     render() {
         // this.content = this.innerHTML;
+        attr(this, { novalidate: true });
         const { variant } = this._config;
         const contentNodes = [...this.childNodes];
         this.renderTemplate();
@@ -240,11 +241,7 @@ class FormComponent extends HTMLFormElement {
         // this?.messenger?.deleteMessages();
         const onSubmit = this.getOnSubmit();
         if (typeof onSubmit === 'function') {
-            const payload = {
-                values: this._values,
-                form: this
-                // messenger: this.messenger
-            };
+            const payload = this._values;
             // this.startLoading();
             const rv = onSubmit(payload);
             if (typeof rv?.finally === 'function') {
