@@ -1,9 +1,15 @@
-import { attr, lcFirst, mergeObjects, processTemplate, ComponentTool } from '@arpadroid/tools';
+import { attr, lcFirst, mergeObjects, processTemplate, ComponentTool, ObserverTool } from '@arpadroid/tools';
+import { ArpaElement } from '@arpadroid/ui';
 import { FieldTemplate, InputTemplate } from './fieldTemplate.js';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
+/**
+ * @typedef {import('../../components/form/form.js').default} FormComponent
+ * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
+ * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
+ */
 
-class Field extends HTMLElement {
+class Field extends ArpaElement {
     _validations = ['required', 'minLength', 'maxLength', 'size'];
     _onReadyCallbacks = [];
     _isReady = false;
@@ -11,44 +17,33 @@ class Field extends HTMLElement {
     static template = FieldTemplate;
     static inputTemplate = InputTemplate;
 
+    /**
+     * Returns the observed attributes for the field element.
+     * @type {string[]}
+     */
     static get observedAttributes() {
         return ['value'];
     }
 
-    constructor(config) {
-        super();
-        this.setConfig(config);
+    /**
+     * Initializes the field after constructor.
+     * @throws {Error} If the field does not have an id.
+     * @protected
+     */
+    _initialize() {
+        ObserverTool.mixin(this);
+        super._initialize();
         const id = this.getId();
         if (!id) {
             throw new Error('Field must have an id');
         }
-        this._initialize();
-    }
-
-    _initialize() {
         ComponentTool.applyOnReady(this);
-    }
-
-    getId() {
-        return this._id || this.id || this._config.id;
-    }
-
-    getProperty(name) {
-        return this.getAttribute(name) ?? this._config[name];
-    }
-
-    setConfig(config) {
-        this._initializeI18n(config);
-        this._config = mergeObjects(this.getDefaultConfig(), config);
-    }
-
-    getConfig() {
-        return this._config;
     }
 
     /**
      * Returns default config.
-     * @returns {*}
+     * @returns {FieldInterface}
+     * @protected
      */
     getDefaultConfig() {
         return {
@@ -65,57 +60,113 @@ class Field extends HTMLElement {
         };
     }
 
-    getOutputValue() {
-        return this.getValue();
+    /**
+     * Sets the configuration for the field.
+     * @param {FieldInterface} config
+     * @protected
+     */
+    setConfig(config) {
+        this._initializeI18n(config);
+        super.setConfig(config);
     }
 
-    getValue() {
-        return this?.input?.value ?? this.getAttribute('value');
+    /**
+     * Initializes internationalization for the field.
+     */
+    _initializeI18n() {
+        this.i18n = this._getI18n();
     }
 
-    update() {}
+    /**
+     * Prepares the i18n object for the field.
+     * @returns {Record<string, unknown>} The i18n object.
+     */
+    _getI18n() {
+        const type = this.getFieldType();
+        const typePayload = I18n.get(`modules.form.fields.${type}`);
+        const fieldPayload = I18n.get('modules.form.field');
+        return mergeObjects(fieldPayload, typePayload);
+    }
 
+    /**
+     * Initializes the value for the field.
+     * @param {unknown} value
+     * @protected
+     */
+    _initializeValue(value = this.getProperty('value')) {
+        if (typeof value === 'undefined') {
+            value = this.getProperty('default-value');
+        }
+        if (typeof value !== 'undefined') {
+            this.setValue(value);
+        }
+    }
+
+    /**
+     * Handles the change event for the field.
+     * @protected
+     */
     connectedCallback() {
+        /** @type {FormComponent} */
         this.form = this.closest('form');
         this.classList.add('arpaField');
-        const template = this.renderTemplate();
-        if (template) {
-            this.innerHTML = template;
-        }
+        super.connectedCallback();
+        this.initializeInput();
         this.initializeProperties();
-        this._initializeValidation();
-        this.update();
+        this.initializeValidation();
+        this._onConnected();
     }
 
+    /**
+     * Initializes the properties for the field.
+     * @protected
+     */
     initializeProperties() {
+        /** @type {FormComponent} */
         this.form = this.closest('form');
         this.form.registerField(this);
-        this._initializeInput();
-        attr(this.input, this._config.inputAttributes);
+        if (this.input) {
+            attr(this.input, this._config.inputAttributes);
+        }
         this.inputMask = this.querySelector('field-input-mask');
+        this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
+        this.label = this.querySelector('label[is="field-label"]');
         this._id = this.id;
         this.removeAttribute('id');
     }
 
-    _initializeInput() {
+    /**
+     * Initializes the input element for the field.
+     * @protected
+     */
+    initializeInput() {
         this.input = this.querySelector('input');
     }
 
-    renderTemplate() {
-        const { template, inputTemplate } = this._config;
-        if (template) {
-            return processTemplate(template, {
-                input: inputTemplate,
-                tooltip: this.getTooltip()
-            });
-        }
+    /**
+     * Returns the template variables for the field.
+     * @returns {Record<string, unknown>} The template variables.
+     */
+    getTemplateVars() {
+        const { inputTemplate } = this._config;
+        return {
+            input: processTemplate(inputTemplate, this.getInputTemplateVars()),
+            tooltip: this.getTooltip()
+        };
     }
 
-    getTooltip() {
-        return this.getAttribute('tooltip');
+    /**
+     * Renders the input template variables for the field.
+     * @returns {string} The rendered input template.
+     */
+    getInputTemplateVars() {
+        return {};
     }
 
-    _initializeValidation() {
+    /**
+     * Initializes the validation for the field.
+     */
+    initializeValidation() {
         const { validator } = this._config;
         if (validator) {
             /** @type {FieldValidator} */
@@ -123,16 +174,82 @@ class Field extends HTMLElement {
         }
     }
 
+    /**
+     * Called after the component has rendered.
+     * @protected
+     */
+    _onConnected() {
+        this._initializeValue();
+        // abstract method
+    }
+
+    /**
+     * Returns the ID for the field.
+     * @returns {string}
+     */
+    getId() {
+        return this._id || this.id || this._config.id;
+    }
+
+    /**
+     * Returns the output value for the field.
+     * @returns {unknown}
+     */
+    getOutputValue() {
+        return this.getValue();
+    }
+
+    /**
+     * Returns the value for the field.
+     * @returns {unknown}
+     */
+    getValue() {
+        return this?.input?.value ?? this.getProperty('value');
+    }
+
+    getTooltip() {
+        return this.getAttribute('tooltip');
+    }
+
+    /**
+     * Returns array of strings specifying which methods the field should use for validation.
+     * @returns {string[]}
+     */
     getValidations() {
         return [...this._validations];
     }
 
-    setValue(value) {
+    /**
+     * Sets the value for the field.
+     * @param {unknown} value
+     * @param {boolean} update
+     * @returns {Field}
+     */
+    setValue(value, update = true) {
         this.value = value;
-        this.input.setValue(value);
+        if (this.input) {
+            if (typeof this.input.setValue === 'function') {
+                this.input.setValue(value);
+            } else {
+                this.input.value = value;
+            }
+        }
+        if (update && this.isConnected) {
+            this.setAttribute('value', value);
+        }
         return this;
     }
 
+    /**
+     * VALIDATION.
+     */
+
+    /**
+     * Validates the field.
+     * @param {unknown} value
+     * @param {boolean} update - Whether to update the field's state.
+     * @returns {boolean}
+     */
     validate(value = this.getValue(), update = true) {
         const isValid = this?.validator?.validate(value) ?? true;
         if (isValid) {
@@ -147,25 +264,70 @@ class Field extends HTMLElement {
         return isValid;
     }
 
-    _initializeI18n() {
-        this.i18n = this._getI18n();
+    /**
+     * Returns the error messages for the field.
+     * @returns {string[]}
+     */
+    getErrorMessages() {
+        return this.validator?.getErrors() ?? [];
     }
 
-    _getI18n() {
-        const type = this.getFieldType();
-        const typePayload = I18n.get(`modules.form.fields.${type}`);
-        const fieldPayload = I18n.get('modules.form.field');
-        return mergeObjects(fieldPayload, typePayload);
+    /**
+     * Updates the errors for the field.
+     */
+    updateErrors() {
+        this.getErrorsComponent()?.setErrors(this.getErrorMessages());
     }
 
-    getI18n() {
-        return { ...this.i18n };
+    /**
+     * Sets an error to the field.
+     * @param {string} text
+     */
+    setError(text) {
+        this.validator.setError(text);
+        this.updateErrors();
     }
 
+    /**
+     * Returns the field errors component.
+     * @returns {FieldErrors}
+     */
+    getErrorsComponent() {
+        return this.querySelector('field-errors');
+    }
+
+    /**
+     * ACCESSORS.
+     */
+
+    /**
+     * Returns the custom validator for the field.
+     * @returns {(value: unknown) => boolean}
+     */
+    getCustomValidator() {
+        return this._config?.validation;
+    }
+
+    /**
+     * Returns the default value for the field.
+     * @returns {unknown}
+     */
+    getDefaultValue() {
+        return this.getProperty('defaultValue');
+    }
+
+    /**
+     * Returns the field type.
+     * @returns {string}
+     */
     getFieldType() {
         return lcFirst(this.constructor.name.replace('Field', '')) || 'field';
     }
 
+    /**
+     * Returns the HTML ID for the field.
+     * @returns {string}
+     */
     getHtmlId() {
         let id = '';
         if (this.form) {
@@ -175,15 +337,135 @@ class Field extends HTMLElement {
         return id;
     }
 
+    /**
+     * Returns a copy of the i18n object for the field.
+     * @returns {Record<string, unknown>}
+     */
+    getI18n() {
+        return { ...this.i18n };
+    }
+
+    /**
+     * Returns the icon for the field.
+     * @returns {string}
+     */
+    getIcon() {
+        return this.getProperty('icon');
+    }
+
+    /**
+     * Returns the right icon for the field.
+     * @returns {string}
+     */
+    getIconRight() {
+        return this.getProperty('icon-right');
+    }
+
+    /**
+     * Returns the label for the field.
+     * @returns {string}
+     */
+    getLabel() {
+        return this.getProperty('label');
+    }
+
+    /**
+     * Returns the length for the field.
+     * @returns {number}
+     */
+    getLength() {
+        return this.getProperty('length');
+    }
+
+    /**
+     * Returns the maximum length for the field.
+     * @returns {number}
+     */
+    getMaxLength() {
+        return this.getProperty('maxLength');
+    }
+
+    /**
+     * Returns the minimum length for the field.
+     * @returns {number}
+     */
+    getMinLength() {
+        return this.getProperty('minLength');
+    }
+
+    /**
+     * Returns the placeholder for the field.
+     * @returns {string}
+     */
+    getPlaceholder() {
+        return this.getProperty('placeholder');
+    }
+
+    /**
+     * Returns the regular expression for the field.
+     * @returns {string}
+     */
+    getRegex() {
+        return this.getProperty('regex');
+    }
+
+    /**
+     * Returns the size for the field.
+     * @returns {string[]}
+     */
+    getSize() {
+        return this.getProperty('size') ?? [];
+    }
+
+    /**
+     * Returns whether the field is required or not.
+     * @returns {boolean}
+     */
     isRequired() {
         return this.hasAttribute('required') || this._config.required;
     }
 
-    setOnChange(onChange) {
-        this._config.onChange = onChange;
-        return this;
+    /**
+     * Sets the maximum length for the field.
+     * @param {number} maxLength
+     */
+    setMaxLength(maxLength) {
+        this.setAttribute('maxLength', maxLength);
     }
 
+    /**
+     * Sets the minimum length for the field.
+     * @param {number} minLength
+     */
+    setMinLength(minLength) {
+        this.setAttribute('minLength', minLength);
+    }
+
+    /**
+     * Sets a regex validation.
+     * @param {string | RegExp} regex
+     * @param {string} message
+     */
+    setRegex(regex, message) {
+        this.setAttribute('regex', regex);
+        if (message) {
+            this.setRegexMessage(message);
+        }
+    }
+
+    /**
+     * Sets the message for the regex validation.
+     * @param {string} message
+     */
+    setRegexMessage(message) {
+        this.setAttribute('regex-message', message);
+    }
+
+    /**
+     * Sets whether the field is required or not.
+     * @param {boolean} required
+     * @returns {Field}
+     */
     setRequired(required = true) {
         if (required) {
             this.setAttribute('required', '');
@@ -193,81 +475,12 @@ class Field extends HTMLElement {
         return this;
     }
 
-    getCustomValidator() {
-        return this._config?.validation;
-    }
-
-    getPlaceholder() {
-        return this.getProperty('placeholder');
-    }
-
-    setPlaceholder(placeholder) {
-        this.setAttribute('placeholder', placeholder);
-    }
-
-    getDefaultValue() {
-        return this.getProperty('defaultValue');
-    }
-
-    getMaxLength() {
-        return this.getProperty('maxLength');
-    }
-
-    getLength() {
-        return this.getProperty('length');
-    }
-
-    getLabel() {
-        return this.getProperty('label');
-    }
-
-    setMaxLength(maxLength) {
-        this.setAttribute('maxLength', maxLength);
-    }
-
-    getMinLength() {
-        return this.getProperty('minLength');
-    }
-
-    setMinLength(minLength) {
-        this.setAttribute('minLength', minLength);
-    }
-
-    getRegex() {
-        return this.getProperty('regex');
-    }
-
-    getIcon() {
-        return this.getProperty('icon');
-    }
-
-    setRegex(regex) {
-        this.setAttribute('regex', regex);
-    }
-
-    getSize() {
-        return this.getProperty('size') ?? [];
-    }
-
+    /**
+     * Sets the size for the field.
+     * @param {string} size
+     */
     setSize(size) {
         this.setAttribute('size', size);
-    }
-
-    getErrorsComponent() {
-        return this.querySelector('field-errors');
-    }
-
-    getErrorMessages() {
-        return this.validator?.getErrors() ?? [];
-    }
-
-    updateErrors() {
-        this.getErrorsComponent().setErrors(this.getErrorMessages());
-    }
-
-    setError(text) {
-        this.validator.setError(text);
-        this.updateErrors();
     }
 }
 
