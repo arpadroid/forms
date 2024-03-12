@@ -93,9 +93,13 @@ class CheckboxesField extends ArrayField {
         }
         const val = this.getValue();
         const value = {};
-        for (const [optionValue, option] of Object.entries(this._optionsByValue)) {
-            value[optionValue] = val?.includes(option.value) ?? false;
-        }
+        this.getOptions().forEach(option => {
+            const optionValue = option.getAttribute('value');
+            value[optionValue] = val?.includes(optionValue) ?? false;
+        });
+        // for (const [optionValue, option] of Object.entries(this._optionsByValue)) {
+        //     value[optionValue] = val?.includes(option.value) ?? false;
+        // }
         if (mergeOutput) {
             for (const [key, checked] of Object.entries(value)) {
                 values[key] = checked;

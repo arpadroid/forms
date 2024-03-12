@@ -28,3 +28,4 @@ export { default as CheckboxOption } from './fields/checkboxesField/checkboxOpti
 export { default as SelectField } from './fields/selectField/selectField.js';
 export { default as SelectCombo } from './fields/selectCombo/selectCombo.js';
 export { default as SelectOption } from './fields/selectField/selectOption/selectOption.js';
+export { default as GroupField } from './fields/groupField/groupField.js';

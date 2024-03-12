@@ -18,7 +18,7 @@ class SelectField extends OptionsField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             iconRight: 'keyboard_arrow_down',
-            inputTemplate: html`<select class="optionsField__options fieldInput">{options}</select>`,
+            inputTemplate: html`<select id="{id}" class="optionsField__options fieldInput">{options}</select>`,
             optionTemplate: html`<option role="option">{label}</option>`
         });
     }

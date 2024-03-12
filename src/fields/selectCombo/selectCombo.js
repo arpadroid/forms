@@ -40,6 +40,17 @@ class SelectCombo extends SelectField {
     }
 
     /**
+     * Event handler for when the select combo field is connected to the DOM.
+     * Calls the necessary methods to initialize the input combo.
+     * @protected
+     */
+    _onConnected() {
+        super._onConnected();
+        this._initializeInputCombo();
+        this?.label.addEventListener('click', () => this.inputButton.focus());
+    }
+
+    /**
      * Updates the value of the select combo field based on the selected option.
      */
     updateValue() {
@@ -51,26 +62,13 @@ class SelectCombo extends SelectField {
     }
 
     /**
-     * Returns the template variables for the input element of the select combo field.
-     * @returns {Record<string, string>} The template variables object.
-     */
-    getInputTemplateVars() {
-        return mergeObjects(super.getInputTemplateVars(), {
-            // input: html``,
-            button: html``
-        });
-    }
-
-    /**
      * Initializes the properties of the select combo field.
      */
     initializeProperties() {
         super.initializeProperties();
         this.inputButton = this.querySelector('button.optionsField__input');
         this.optionsNode = this.querySelector('.selectCombo__options');
-        customElements.whenDefined('select-option').then(() => {
-            this.updateValue();
-        });
+        customElements.whenDefined('select-option').then(() => this.updateValue());
     }
 
     /**
@@ -82,16 +80,6 @@ class SelectCombo extends SelectField {
     }
 
     /**
-     * Event handler for when the select combo field is connected to the DOM.
-     * Calls the necessary methods to initialize the input combo.
-     * @protected
-     */
-    _onConnected() {
-        super._onConnected();
-        this._initializeInputCombo();
-    }
-
-    /**
      * Initializes the input combo for the select combo field.
      * @protected
      */
@@ -99,7 +87,7 @@ class SelectCombo extends SelectField {
         const handler = this.inputButton;
         if (handler) {
             this.inputCombo = new InputCombo(handler, this.optionsNode, {
-                containerSelector: 'select-option',
+                containerSelector: 'select-option'
             });
         }
     }

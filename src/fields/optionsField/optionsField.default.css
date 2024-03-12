@@ -4,3 +4,8 @@
     align-items: center;
     gap: 24px;
 }
+
+.optionsField__input {
+    text-align: left;
+    cursor: pointer;
+}

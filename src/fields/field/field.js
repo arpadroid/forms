@@ -151,7 +151,11 @@ class Field extends ArpaElement {
         const { inputTemplate } = this._config;
         return {
             input: processTemplate(inputTemplate, this.getInputTemplateVars()),
-            tooltip: this.getTooltip()
+            tooltip: this.getTooltip(),
+            label: this.getLabel(),
+            icon: this.getIcon(),
+            iconRight: this.getIconRight(),
+            content: this._content
         };
     }
 
@@ -160,7 +164,9 @@ class Field extends ArpaElement {
      * @returns {string} The rendered input template.
      */
     getInputTemplateVars() {
-        return {};
+        return {
+            id: this.getHtmlId(),
+        };
     }
 
     /**
@@ -181,6 +187,20 @@ class Field extends ArpaElement {
     _onConnected() {
         this._initializeValue();
         // abstract method
+    }
+
+    /**
+     * Sends an onChange signal when the field's value changes.
+     * @param {Event} event
+     */
+    _callOnChange(event) {
+        if (this.form.isConnected) {
+            this.signal('onChange', this.getOnChangeValue(), this, event);
+        }
+    }
+    
+    getOnChangeValue() {
+        return this.getValue();
     }
 
     /**

@@ -11,10 +11,9 @@
         <title>Form Demo</title>
     </head>
     <body>
-        <script type="module" src="index.js"></script>
         <form id="demoForm" is="arpa-form" title="My Form">
-            
-            <group-field label="Text fields"> 
+            <group-field id="tex-fields-group" label="Text fields"> 
+
               <text-field
                 id="fullText"
                 label="Full Featured Text Field"
@@ -26,23 +25,35 @@
                 icon-right="abc"
                 regex="alphaLower"
                 regex-message="Only letters and numbers are allowed"
-                value="Some value">
+                value="abc">
               </text-field>
-              <text-field id="simpleText" label="Simple Text Field" ,></text-field>
-              <password-field id="password" label="Password" confirm></password-field>
+
+              <text-field id="simpleText" label="Simple Text Field"></text-field>
+
+              <password-field id="password" label="Password" confirm value="P455w0rd!?"></password-field>
+
               <text-area-field id="textarea" label="Text Area" value="some value"></text-area-field>
+
               <email-field id="email" label="Email" required value="andriusain@hotmail.com"> </email-field>
+
             </group-field>
 
-            <group-field label="Dates">
+            <group-field id="dates-group" label="Dates">
+
               <date-field id="date" label="Date with future disabled" disable-future></date-field>
+
               <date-field id="dateMinMax" label="Date with min and max" min="2023-10-01" max="2024-10-01"></date-field>
+
               <date-time-field id="dateTime" label="Date Time with past disabled" disable-past></date-time-field>
+
             </group-field>
             
-            <group-field label="Misc">
+            <group-field id="misc-group" label="Misc">
+
               <number-field id="number" label="Number" min="1" max="100" step="3" value="50"> </number-field>
+
               <color-field id="color" label="Color" value="yellowgreen"></color-field>
+
               <checkbox-field
                 icon="check_circle"
                 id="checkbox"
@@ -52,97 +63,50 @@
                 description="This is a checkbox"
                 checked
               ></checkbox-field>
+
             </group-field>
-              
-            <group-field label="Options">
-              <!-- <options-field id="options-programmed" label="Options programmed"></options-field>
-              <options-field id="options-field" label="Options field">
-                  <field-option value="option1" icon="grocery" icon-right="nutrition">
-                      optionContent
-                  </field-option>
-              </options-field> -->
 
-              <radio-field id="radio" label="radio">
-                <radio-option value="option1" label="Option 1" icon="grocery"></radio-option>
-                <radio-option value="option2" label="Option 2" icon="nutrition"></radio-option>
-                <radio-option value="option3" label="Option 3" icon="person"></radio-option>
-              </radio-field>
-              <checkboxes-field id="checkboxes" label="Checkboxes" binary>
-                <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
-                <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
-                <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
-              </checkboxes-field>
+            <group-field id="options-group" label="Options">
 
-              <select-field icon="person" id="cars" label="cars">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
-              </select-field>
+                <options-field id="options-programmed" label="Options programmed"></options-field>
 
-              <select-combo value="option3" id="select-combo" label="Select Combo" icon="person">
-              </select-combo>
+                <options-field id="options-field" label="Options field">
+                    <field-option value="option1" icon="grocery" icon-right="nutrition">
+                        optionContent
+                    </field-option>
+                </options-field>
+
+                <radio-field id="radio" label="radio">
+                    <radio-option value="option1" label="Option 1" icon="grocery"></radio-option>
+                    <radio-option value="option2" label="Option 2" icon="nutrition"></radio-option>
+                    <radio-option value="option3" label="Option 3" icon="person"></radio-option>
+                </radio-field>
+
+                <checkboxes-field id="checkboxes" label="Checkboxes" binary>
+                    <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
+                    <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
+                    <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
+                </checkboxes-field>
+
+                <select-field icon="person" id="cars" label="cars">
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select-field>
+
+                <select-combo id="select-combo" label="Select Combo" value="grocery"></select-combo>
+
+                <select-combo
+                    id="select-combo-search"
+                    label="Select Combo with search"
+                    icon="search"
+                    value="grocery"
+                    has-search
+                ></select-combo>
+
             </group-field>
-            
-
-            
         </form>
-        <script type="text/javascript">
-            const form = document.getElementById('demoForm');
-            console.log('form', form);
-
-            customElements.whenDefined('arpa-form').then(() => {
-                const options = [
-                  { value: 'option1', label: 'Option 1', icon: 'grocery' },
-                  { value: 'option2', label: 'Option 2', icon: 'nutrition' },
-                  { value: 'option3', label: 'Option 3', icon: 'person', onChange: () => {
-                    console.log('Option 3 changed');
-                  } },
-                  { value: 'option4', label: 'Option 4', icon: 'car' },
-                  { value: 'option5', label: 'Option 5', icon: 'home' },
-                  { value: 'option6', label: 'Option 6', icon: 'music' },
-                  { value: 'option7', label: 'Option 7', icon: 'book' },
-                  { value: 'option8', label: 'Option 8', icon: 'camera' },
-                  { value: 'option9', label: 'Option 9', icon: 'globe' },
-                  { value: 'option10', label: 'Option 10', icon: 'heart' },
-                  { value: 'option11', label: 'Option 11', icon: 'star' },
-                  { value: 'option12', label: 'Option 12', icon: 'game' },
-                  { value: 'option13', label: 'Option 13', icon: 'movie' },
-                  { value: 'option14', label: 'Option 14', icon: 'phone' },
-                  { value: 'option15', label: 'Option 15', icon: 'mail' },
-                  { value: 'option16', label: 'Option 16', icon: 'clock' },
-                  { value: 'option17', label: 'Option 17', icon: 'money' },
-                  { value: 'option18', label: 'Option 18', icon: 'gift' },
-                  { value: 'option19', label: 'Option 19', icon: 'food' },
-                  { value: 'option20', label: 'Option 20', icon: 'computer' }
-                ];
-
-                // form.getField('options-programmed')?.setOptions(options);
-                const radio = form.getField('radio');
-
-                
-                // radio.setOptions(options);
-                radio.listen('onChange', (value) => {
-                  console.log('radio on change', value);
-                })
-
-                const checks = form.getField('checkboxes');
-                // checks.setOptions(options);
-                checks.listen('onChange', (payload) => {
-                  console.log('checkboxes changed', payload);
-                })
-                const selectCombo = form.getField('select-combo');
-                selectCombo.setOptions(options);
-                
-                // const simpleText = form.getField('simpleText');
-                // simpleText.setValue('Hello World');
-                // const fullText = form.getField('fullText');
-                // fullText.setValue('Hello World');
-
-                form.onSubmit(payload => {
-                    console.log('Form submitted', payload);
-                });
-            });
-        </script>
+        <script type="module" src="demo/demoForm.js"></script>
     </body>
 </html>

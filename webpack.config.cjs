@@ -99,6 +99,10 @@ module.exports = (async () => {
                             to: cwd + '/dist/ui/material-symbols'
                         },
                         {
+                            from: 'src/demo',
+                            to: cwd + '/dist/demo'
+                        },
+                        {
                             from: `src/themes/default/default.${themeExt}`,
                             to: cwd + `/dist/themes/default/default.${themeExt}`
                         }
