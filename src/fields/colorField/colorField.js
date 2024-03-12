@@ -4,7 +4,7 @@ const html = String.raw;
 const inputTemplate = html`
     <input type="text" class="fieldInput colorField__textInput" />
     <div class="colorField__colorInputWrapper">
-        <input class="colorField__colorInput" type="color" />
+        <input id="{id}" class="colorField__colorInput" type="color" />
     </div>
 `;
 
@@ -32,25 +32,18 @@ class ColorField extends Field {
     }
 
     /**
-     * Called when the color field is connected to the DOM.
-     * @protected
-     */
-    connectedCallback() {
-        super.connectedCallback();
-    }
-
-    /**
      * Initializes the input elements of the color field.
      * @protected
      */
-    initializeInput() {
+    _initializeInputNode() {
         /**
          * The color input element.
          * @type {HTMLInputElement}
          */
         this.input = this.querySelector('input[type="color"]');
-        this.input.addEventListener('input', () => {
+        this.input.addEventListener('input', event => {
             this.textInput.value = this.input.value;
+            this._callOnChange(event);
         });
 
         /**
@@ -65,19 +58,23 @@ class ColorField extends Field {
 
     /**
      * Updates the color input based on the value of the text input.
+     * @param {Event} event - The event that triggered the update.
      */
-    updateColorInput() {
+    updateColorInput(event) {
         /**
          * The text input element.
          * @type {HTMLInputElement}
          */
+        
         const value = this.textInput?.value;
         const hexValue = stringToHex(value);
-        if (validateColor(hexValue)) {
+        const isValid = validateColor(hexValue);
+        if (isValid) {
             this.input.value = hexValue;
         } else {
             this.input.value = undefined;
         }
+        requestAnimationFrame(() => this._callOnChange(event));
     }
 }
 

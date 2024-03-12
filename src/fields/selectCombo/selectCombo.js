@@ -40,17 +40,6 @@ class SelectCombo extends SelectField {
     }
 
     /**
-     * Event handler for when the select combo field is connected to the DOM.
-     * Calls the necessary methods to initialize the input combo.
-     * @protected
-     */
-    _onConnected() {
-        super._onConnected();
-        this._initializeInputCombo();
-        this?.label.addEventListener('click', () => this.inputButton.focus());
-    }
-
-    /**
      * Updates the value of the select combo field based on the selected option.
      */
     updateValue() {
@@ -61,14 +50,18 @@ class SelectCombo extends SelectField {
         }
     }
 
-    /**
-     * Initializes the properties of the select combo field.
-     */
-    initializeProperties() {
-        super.initializeProperties();
+    _initializeNodes() {
+        super._initializeNodes();
         this.inputButton = this.querySelector('button.optionsField__input');
         this.optionsNode = this.querySelector('.selectCombo__options');
-        customElements.whenDefined('select-option').then(() => this.updateValue());
+        this._initializeInputCombo();
+        this.updateValue();
+        this?.label.addEventListener('click', () => this.inputButton.focus());
+    }
+
+    setOptions(options) {
+        super.setOptions(options);
+        this.updateValue();
     }
 
     /**

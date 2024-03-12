@@ -18,8 +18,10 @@ class SelectField extends OptionsField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             iconRight: 'keyboard_arrow_down',
-            inputTemplate: html`<select id="{id}" class="optionsField__options fieldInput">{options}</select>`,
-            optionTemplate: html`<option role="option">{label}</option>`
+            inputTemplate: html`<select id="{id}" class="optionsField__options fieldInput">
+                {options}
+            </select>`,
+            optionTemplate: html`<option role="option" {selected}>{label}</option>`
         });
     }
 
@@ -27,12 +29,19 @@ class SelectField extends OptionsField {
      * Initializes the input element for the select field.
      * @protected
      */
-    initializeInput() {
-        /**
-         * The input element for the select field.
-         * @type {HTMLSelectElement}
-         */
-        this.input = this.querySelector('select');
+    _initializeInputNode() {
+        const input = this.querySelector('select');
+        super._initializeInputNode(input);
+        input?.addEventListener('change', event => {
+            this.signal('onChange', this.getValue(), event);
+        });
+    }
+
+    _initializeValue() {
+        const value = this.getProperty('value');
+        if (value && this.input) {
+            this.input.value = value;
+        }
     }
 }
 

@@ -45,6 +45,7 @@ class PasswordField extends TextField {
      * @protected
      */
     _onConnected() {
+        super._onConnected();
         if (this.hasConfirm()) {
             this._initializeConfirmField();
         }
@@ -60,6 +61,7 @@ class PasswordField extends TextField {
      */
     _initializeConfirmField() {
         this.confirmField = new PasswordField({
+            form: this.form,
             id: this._id + '-confirmField',
             label: this.i18n?.lblConfirmPassword,
             required: true,

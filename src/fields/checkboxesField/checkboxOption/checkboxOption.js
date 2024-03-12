@@ -18,14 +18,9 @@ class CheckboxOption extends RadioOption {
         return super.renderInput('checkbox', name);
     }
 
-    /**
-     * Renders the checkbox option.
-     * @protected
-     */
-    render() {
-        super.render();
-        this.input = this.querySelector('input');
-        this.input.addEventListener('change', this._onChange.bind(this));
+    _onConnected() {
+        super._onConnected();
+        this.input.checked = this.field.hasValue(this.getAttribute('value'));
     }
 
     /**
@@ -35,17 +30,8 @@ class CheckboxOption extends RadioOption {
      * @protected
      */
     _onChange(event, callOnChange = true) {
-        const { onChange } = this._config;
-        let value = event.target.value;
         const checked = event.target.checked;
-        if (typeof onChange === 'function' && callOnChange) {
-            onChange(checked, {
-                value,
-                event,
-                optionNode: this,
-                field: this.field
-            });
-        }
+        let value = event.target.value;
         if (value == Number(value)) {
             value = Number(value);
         }

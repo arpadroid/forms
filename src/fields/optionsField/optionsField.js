@@ -57,6 +57,10 @@ class OptionsField extends Field {
     initializeProperties() {
         super.initializeProperties();
         this.initializeOptions();
+    }
+
+    _initializeNodes() {
+        super._initializeNodes();
         this.optionsNode = this.querySelector('.optionsField__options');
     }
 
@@ -156,7 +160,7 @@ class OptionsField extends Field {
      * @returns {FieldOptionInterface[]}
      */
     getOptions() {
-        return Array.from(this.optionsNode.children ?? []);
+        return Array.from(this.optionsNode?.children ?? []);
     }
 
     /**

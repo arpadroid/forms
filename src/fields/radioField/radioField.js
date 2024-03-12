@@ -26,7 +26,7 @@ class RadioField extends OptionsField {
      * @returns {string|null} The value of the selected radio option, or null if no option is selected.
      */
     getValue() {
-        return this.optionsNode.querySelector('input[type="radio"]:checked')?.value;
+        return this.optionsNode?.querySelector('input[type="radio"]:checked')?.value || super.getValue();
     }
 }
 

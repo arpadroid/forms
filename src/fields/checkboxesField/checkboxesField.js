@@ -23,7 +23,7 @@ class CheckboxesField extends ArrayField {
 
     /**
      * Event handler for when the checkboxes field is connected to the DOM.
-     * @private
+     * @protected
      */
     _onConnected() {
         super._onConnected();
@@ -33,7 +33,6 @@ class CheckboxesField extends ArrayField {
             });
         }
     }
-
     /**
      * Check if the checkboxes field has label toggle.
      * @returns {boolean} True if the checkboxes field has label toggle, false otherwise.

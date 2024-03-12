@@ -43,8 +43,8 @@ class NumberField extends Field {
     /**
      * Initializes the input element of the number field.
      */
-    initializeInput() {
-        super.initializeInput();
+    _initializeInputNode() {
+        super._initializeInputNode();
         attr(this.input, {
             min: this.getProperty('min'),
             max: this.getProperty('max'),

@@ -21,6 +21,11 @@ class TextField extends Field {
         this.setRegexValidation();
     }
 
+    _initializeInputNode(input) {
+        super._initializeInputNode(input);
+        this?.input.addEventListener('input', event => this._callOnChange(event));
+    }
+
     /**
      * Sets the regex validation for the text field.
      * @param {string | RegExp} [regex] - The regular expression or the name of a predefined regex pattern.

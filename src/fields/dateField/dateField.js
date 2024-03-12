@@ -25,6 +25,7 @@ class DateField extends Field {
         return {
             ...super.getDefaultConfig(),
             format: 'YYYY-MM-DD',
+            outputFormat: undefined,
             disableFuture: false,
             disablePast: false,
             inputAttributes: {
@@ -34,27 +35,21 @@ class DateField extends Field {
     }
 
     /**
-     * Initializes the input element of the date field.
-     */
-    initializeInput() {
-        super.initializeInput();
-        const min = this.getProperty('min');
-        const max = this.getProperty('max');
-        attr(this.input, { min, max });
-        if (this.isFutureDisabled()) {
-            this.input.setAttribute('max', formatDate(new Date(), this._config.format));
-        }
-        if (this.isPastDisabled()) {
-            this.input.setAttribute('min', formatDate(new Date(), this._config.format));
-        }
-    }
-
-    /**
      * Event handler for when the date field is connected to the DOM.
      * Renders the calendar button.
      * @protected
      */
     _onConnected() {
+        super._onConnected();
+        const min = this.getProperty('min');
+        const max = this.getProperty('max');
+        attr(this.input, { min, max });
+        if (this.isFutureDisabled()) {
+            this.input.setAttribute('max', formatDate(new Date(), this.getFormat()));
+        }
+        if (this.isPastDisabled()) {
+            this.input.setAttribute('min', formatDate(new Date(), this.getFormat()));
+        }
         this.calendarButton = this.renderCalendarButton();
     }
 
@@ -135,6 +130,15 @@ class DateField extends Field {
         }
 
         return true;
+    }
+
+    getOutputValue() {
+        const value = this.getValue();
+        if (!value) {
+            return value;
+        }
+        const format = this._config.outputFormat ?? this.getFormat();
+        return formatDate(value, format);
     }
 }
 

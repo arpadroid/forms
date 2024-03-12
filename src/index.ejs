@@ -40,7 +40,7 @@
 
             <group-field id="dates-group" label="Dates">
 
-              <date-field id="date" label="Date with future disabled" disable-future></date-field>
+              <date-field id="date" label="Date with future disabled" format="DD MMMM YYYY" disable-future></date-field>
 
               <date-field id="dateMinMax" label="Date with min and max" min="2023-10-01" max="2024-10-01"></date-field>
 
@@ -68,40 +68,38 @@
 
             <group-field id="options-group" label="Options">
 
-                <options-field id="options-programmed" label="Options programmed"></options-field>
-
-                <options-field id="options-field" label="Options field">
-                    <field-option value="option1" icon="grocery" icon-right="nutrition">
-                        optionContent
-                    </field-option>
-                </options-field>
-
-                <radio-field id="radio" label="radio">
+                <radio-field id="radio" label="radio" value="option2">
                     <radio-option value="option1" label="Option 1" icon="grocery"></radio-option>
                     <radio-option value="option2" label="Option 2" icon="nutrition"></radio-option>
                     <radio-option value="option3" label="Option 3" icon="person"></radio-option>
                 </radio-field>
 
-                <checkboxes-field id="checkboxes" label="Checkboxes" binary>
+                <checkboxes-field id="binaryCheckboxes" label="Binary Checkboxes" value="option1,option2" binary>
                     <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
                     <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
                     <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
                 </checkboxes-field>
 
-                <select-field icon="person" id="cars" label="cars">
+                <checkboxes-field id="nonBinaryCheckboxes" label="Non-binary Checkboxes" value="option1">
+                  <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
+                  <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
+                  <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
+              </checkboxes-field>
+
+                <select-field icon="person" id="selectField" label="cars" value="mercedes">
                     <option value="volvo">Volvo</option>
                     <option value="saab">Saab</option>
                     <option value="mercedes">Mercedes</option>
                     <option value="audi">Audi</option>
                 </select-field>
 
-                <select-combo id="select-combo" label="Select Combo" value="grocery"></select-combo>
+                <select-combo icon="info" id="selectCombo" label="Select Combo" value="grocery"></select-combo>
 
                 <select-combo
                     id="select-combo-search"
                     label="Select Combo with search"
                     icon="search"
-                    value="grocery"
+                    value="es"
                     has-search
                 ></select-combo>
 

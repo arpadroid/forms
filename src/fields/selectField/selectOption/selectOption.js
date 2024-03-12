@@ -9,6 +9,12 @@ const html = String.raw;
  * Represents a select option element.
  */
 class SelectOption extends FieldOption {
+
+    constructor(config) {
+        super(config);
+        this._onClick = this._onClick.bind(this);
+    }
+
     /**
      * Returns default config.
      * @returns {FieldOptionInterface}
@@ -30,14 +36,17 @@ class SelectOption extends FieldOption {
      */
     _onConnected() {
         this.handler = this.querySelector('.fieldOption__handler');
-        this.handler?.addEventListener('click', this._onClick.bind(this));
+        this.handler?.removeEventListener('click', this._onClick);
+        this.handler?.addEventListener('click', this._onClick);
     }
 
     /**
      * Called when the element is clicked.
+     * @param {MouseEvent} event - The event object.
      */
-    _onClick() {
+    _onClick(event) {
         this.field.setValue(this.getAttribute('value'));
+        this.field._callOnChange(event);
     }
 }
 

@@ -31,13 +31,17 @@ class Field extends ArpaElement {
      * @protected
      */
     _initialize() {
-        ObserverTool.mixin(this);
-        super._initialize();
         const id = this.getId();
         if (!id) {
             throw new Error('Field must have an id');
         }
+        ObserverTool.mixin(this);
         ComponentTool.applyOnReady(this);
+        this.form = this.getForm();
+        this.classList.add('arpaField');
+        super._initialize();
+        this.initializeProperties();
+        this.initializeValidation();
     }
 
     /**
@@ -103,44 +107,31 @@ class Field extends ArpaElement {
     }
 
     /**
-     * Handles the change event for the field.
-     * @protected
-     */
-    connectedCallback() {
-        /** @type {FormComponent} */
-        this.form = this.closest('form');
-        this.classList.add('arpaField');
-        super.connectedCallback();
-        this.initializeInput();
-        this.initializeProperties();
-        this.initializeValidation();
-        this._onConnected();
-    }
-
-    /**
      * Initializes the properties for the field.
      * @protected
      */
     initializeProperties() {
         /** @type {FormComponent} */
-        this.form = this.closest('form');
-        this.form.registerField(this);
-        if (this.input) {
-            attr(this.input, this._config.inputAttributes);
-        }
-        this.inputMask = this.querySelector('field-input-mask');
-        this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
-        this.label = this.querySelector('label[is="field-label"]');
+        this.form = this.getForm();
+        this.form?.registerField(this);
         this._id = this.id;
         this.removeAttribute('id');
     }
 
+    getForm() {
+        return this.closest('form') || this._config.form;
+    }
+
     /**
      * Initializes the input element for the field.
+     * @param {HTMLInputElement} input
      * @protected
      */
-    initializeInput() {
-        this.input = this.querySelector('input');
+    _initializeInputNode(input = this.querySelector('input')) {
+        this.input = input;
+        if (this.input) {
+            attr(this.input, this._config.inputAttributes);
+        }
     }
 
     /**
@@ -165,7 +156,7 @@ class Field extends ArpaElement {
      */
     getInputTemplateVars() {
         return {
-            id: this.getHtmlId(),
+            id: this.getHtmlId()
         };
     }
 
@@ -185,8 +176,17 @@ class Field extends ArpaElement {
      * @protected
      */
     _onConnected() {
+        this._initializeNodes();
         this._initializeValue();
-        // abstract method
+    }
+
+    _initializeNodes() {
+        /** @type {FormComponent} */
+        this.form = this.getForm();
+        this._initializeInputNode();
+        this.inputMask = this.querySelector('field-input-mask');
+        this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
+        this.label = this.querySelector('label[is="field-label"]');
     }
 
     /**
@@ -198,7 +198,7 @@ class Field extends ArpaElement {
             this.signal('onChange', this.getOnChangeValue(), this, event);
         }
     }
-    
+
     getOnChangeValue() {
         return this.getValue();
     }

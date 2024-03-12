@@ -22,6 +22,15 @@ class ArrayField extends OptionsField {
         });
     }
 
+    _initializeValue() {
+        const attrValue = this.getAttribute('value');
+        if (attrValue) {
+            this.setValue(attrValue.split(','));
+        } else {
+            super._initializeValue();
+        }
+    }
+
     /**
      * Gets the current value of the array field.
      * @returns {*} The current value.
