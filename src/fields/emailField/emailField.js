@@ -8,7 +8,8 @@ class EmailField extends TextField {
             regexMessage: 'Invalid email',
             icon: 'email',
             inputAttributes: {
-                type: 'email'
+                type: 'email',
+                autocomplete: 'email'
             }
         };
     }

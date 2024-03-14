@@ -26,9 +26,8 @@ class FieldInputMask extends HTMLElement {
 
     connectedCallback() {
         /** @type {Field} */
-        this.innerHTML = '';
-        this.field = this.closest('.arpaField');
         this.render();
+        this.field = this.closest('.arpaField');
         this.rhs = this.querySelector('.fieldInputMask__rhs');
         this.lhs = this.querySelector('.fieldInputMask__lhs');
     }

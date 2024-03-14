@@ -1,5 +1,4 @@
 import { attr } from '@arpadroid/tools';
-import Field from '../field/field.js';
 import TextField from '../textField/textField.js';
 const html = String.raw;
 /**
@@ -22,20 +21,13 @@ class TextAreaField extends TextField {
         };
     }
 
-    /**
-     * Called when the element is connected to the DOM.
-     */
-    connectedCallback() {
-        const value = this.innerHTML || this.getProperty('value');
-        super.connectedCallback();
-        if (value) {
-            this.textarea.value = value;
-        }
+    _initialize() {
+        this.value = this.innerHTML || this.getProperty('value');
+        super._initialize();
     }
 
     _initializeInputNode() {
         super._initializeInputNode(this.querySelector('textarea'));
-        this.textarea = this.input;
         attr(this.input, {
             rows: this.getProperty('rows')
         });

@@ -53,19 +53,15 @@ class ColorField extends Field {
         this.textInput = this.querySelector('input[type="text"');
         this.textInput.addEventListener('keyup', this.updateColorInput.bind(this));
         this.textInput.value = this.getProperty('value');
-        requestAnimationFrame(() => this.updateColorInput());
+        requestAnimationFrame(event => this.updateColorInput(event, false));
     }
 
     /**
      * Updates the color input based on the value of the text input.
      * @param {Event} event - The event that triggered the update.
+     * @param {boolean} [callOnChange] - Whether to call the onChange method of the field.
      */
-    updateColorInput(event) {
-        /**
-         * The text input element.
-         * @type {HTMLInputElement}
-         */
-        
+    updateColorInput(event, callOnChange = true) {
         const value = this.textInput?.value;
         const hexValue = stringToHex(value);
         const isValid = validateColor(hexValue);
@@ -74,7 +70,9 @@ class ColorField extends Field {
         } else {
             this.input.value = undefined;
         }
-        requestAnimationFrame(() => this._callOnChange(event));
+        if (callOnChange) {
+            requestAnimationFrame(() => this._callOnChange(event));
+        }
     }
 }
 

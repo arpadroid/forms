@@ -1,17 +1,18 @@
 <!-- This is a demo form page -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <link rel="stylesheet" href="/ui/material-symbols/outlined.css" />
-        <!-- <link rel="stylesheet" href="/ui/themes/default/default.min.css" /> -->
-        <link rel="stylesheet" href="/themes/default/default.bundled.css" />
-        <% for (key in htmlWebpackPlugin.files.js) { %>
-        <script type="module" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
-        <% } %>
         <title>Form Demo</title>
+        <link rel="stylesheet" href="/ui/material-symbols/outlined.css">
+        <!-- <link rel="stylesheet" href="/ui/themes/default/default.min.css" /> -->
+        <link rel="stylesheet" href="/themes/default/default.bundled.css">
+        <% for (key in htmlWebpackPlugin.files.js) { %>
+          <script type="module" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
+        <% } %>
     </head>
     <body>
         <form id="demoForm" is="arpa-form" title="My Form">
+
             <group-field id="tex-fields-group" label="Text fields"> 
 
               <text-field
@@ -50,7 +51,7 @@
             
             <group-field id="misc-group" label="Misc">
 
-              <number-field id="number" label="Number" min="1" max="100" step="3" value="50"> </number-field>
+              <number-field id="number" label="Number" min="1" max="100" step="3" value="50" required> </number-field>
 
               <color-field id="color" label="Color" value="yellowgreen"></color-field>
 

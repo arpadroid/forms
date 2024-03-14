@@ -50,7 +50,9 @@ class DateField extends Field {
         if (this.isPastDisabled()) {
             this.input.setAttribute('min', formatDate(new Date(), this.getFormat()));
         }
-        this.calendarButton = this.renderCalendarButton();
+        if (!this.calendarButton) {
+            this.calendarButton = this.renderCalendarButton();
+        }
     }
 
     /**
@@ -64,7 +66,8 @@ class DateField extends Field {
             label: 'show date picker'
         });
         attr(button, { variant: 'minimal', 'tooltip-position': 'left' });
-        this.inputMask.rhs.appendChild(button);
+        customElements.whenDefined('field-input-mask').then(() => this.inputMask.rhs.appendChild(button));
+        // this.inputMask.rhs.appendChild(button);
         return button;
     }
 

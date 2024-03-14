@@ -33,12 +33,6 @@ class PasswordField extends TextField {
         return this.hasAttribute('confirm') ?? this._config.confirm;
     }
 
-    /**
-     * Called when the PasswordField is connected to the DOM.
-     */
-    connectedCallback() {
-        super.connectedCallback();
-    }
 
     /**
      * Initializes the confirm field if the PasswordField has a confirm field.
@@ -60,11 +54,17 @@ class PasswordField extends TextField {
      * @protected
      */
     _initializeConfirmField() {
+        if (this.confirmField) {
+            return;
+        }
         this.confirmField = new PasswordField({
             form: this.form,
             id: this._id + '-confirmField',
             label: this.i18n?.lblConfirmPassword,
             required: true,
+            inputAttributes: {
+                autocomplete: 'new-password'
+            },
             ...this._config.confirmField,
             validation: () => this.validateConfirm()
         });

@@ -1,12 +1,10 @@
 import { CountryOptions, IconOptions } from './demoFormOptions.js';
 
 const form = document.getElementById('demoForm');
-console.log('form', form);
 
 customElements.whenDefined('arpa-form').then(() => {
-    // form.getField('options-programmed')?.setOptions(options);
     const radio = form.getField('radio');
-    radio.listen('onChange', value => {
+    radio?.listen('onChange', value => {
         console.log('radio on change', value);
     });
 

@@ -18,6 +18,7 @@ class RadioField extends OptionsField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             optionTemplate: html`<radio-option role="option"></radio-option>`,
+            inputAttributes: { type: 'radio' }
         });
     }
 

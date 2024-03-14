@@ -93,6 +93,18 @@ class Field extends ArpaElement {
     }
 
     /**
+     * Initializes the properties for the field.
+     * @protected
+     */
+    initializeProperties() {
+        /** @type {FormComponent} */
+        this.form = this.getForm();
+        this.form?.registerField(this);
+        this._id = this.id;
+        this.removeAttribute('id');
+    }
+
+    /**
      * Initializes the value for the field.
      * @param {unknown} value
      * @protected
@@ -104,18 +116,6 @@ class Field extends ArpaElement {
         if (typeof value !== 'undefined') {
             this.setValue(value);
         }
-    }
-
-    /**
-     * Initializes the properties for the field.
-     * @protected
-     */
-    initializeProperties() {
-        /** @type {FormComponent} */
-        this.form = this.getForm();
-        this.form?.registerField(this);
-        this._id = this.id;
-        this.removeAttribute('id');
     }
 
     getForm() {

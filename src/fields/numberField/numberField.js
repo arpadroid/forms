@@ -24,6 +24,7 @@ class NumberField extends Field {
     getDefaultConfig() {
         return {
             ...super.getDefaultConfig(),
+            icon: 'numbers',
             inputAttributes: {
                 type: 'number'
             }

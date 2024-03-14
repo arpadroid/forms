@@ -23,7 +23,9 @@ class TextField extends Field {
 
     _initializeInputNode(input) {
         super._initializeInputNode(input);
-        this?.input.addEventListener('input', event => this._callOnChange(event));
+        this?.input.addEventListener('input', event => {
+            this._callOnChange(event);
+        });
     }
 
     /**

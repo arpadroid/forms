@@ -22,10 +22,10 @@
     --input-icon-padding: 40px;
 }
 
-.arpaField:has(.arpaField__icon) .fieldInput {
+.arpaField:has(> .arpaField__body field-input-mask .arpaField__icon) .fieldInput {
     padding-left: var(--input-icon-padding);
 }
 
-.arpaField:has(.arpaField__iconRight) .fieldInput {
+.arpaField:has(> .arpaField__body field-input-mask .arpaField__iconRight) .fieldInput {
     padding-right: var(--input-icon-padding);
 }

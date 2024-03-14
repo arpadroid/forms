@@ -17,7 +17,8 @@ class CheckboxesField extends ArrayField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             optionTemplate: html`<checkbox-option role="option"></checkbox-option>`,
-            hasLabelToggle: true
+            hasLabelToggle: true,
+            inputAttributes: { type: 'checkbox' }
         });
     }
 
