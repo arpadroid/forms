@@ -50,6 +50,7 @@ class FormComponent extends HTMLFormElement {
         ObserverTool.mixin(this);
         ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
+        this.classList.add('arpaForm');
     }
 
     connectedCallback() {

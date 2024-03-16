@@ -3,108 +3,129 @@
 <html lang="en">
     <head>
         <title>Form Demo</title>
-        <link rel="stylesheet" href="/ui/material-symbols/outlined.css">
+        <link rel="stylesheet" href="/ui/material-symbols/outlined.css" />
         <!-- <link rel="stylesheet" href="/ui/themes/default/default.min.css" /> -->
-        <link rel="stylesheet" href="/themes/default/default.bundled.css">
+        <link rel="stylesheet" href="/themes/default/default.bundled.css" />
         <% for (key in htmlWebpackPlugin.files.js) { %>
-          <script type="module" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
+        <script type="module" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
         <% } %>
     </head>
     <body>
         <form id="demoForm" is="arpa-form" title="My Form">
+            <div class="arpaForm__column">
+                <group-field icon="title" id="tex-fields-group" label="Text fields">
+                    <text-field id="simpleText" label="Simple Text Field"></text-field>
+                    <email-field
+                        id="email"
+                        label="Email"
+                        required
+                        value="andriusain@hotmail.com"
+                    ></email-field>
+                    <number-field
+                        id="number"
+                        label="Number"
+                        min="1"
+                        max="100"
+                        step="3"
+                        value="50"
+                        required
+                    ></number-field>
+                    <color-field id="color" label="Color" value="yellowgreen"></color-field>
+                    <password-field
+                        id="password"
+                        label="Password"
+                        confirm
+                        value="P455w0rd!?"
+                    ></password-field>
+                    <text-area-field id="textarea" label="Text Area" value="some value"></text-area-field>
 
-            <group-field id="tex-fields-group" label="Text fields"> 
-
-              <text-field
-                id="fullText"
-                label="Full Featured Text Field"
-                description="This text is configured with every possible option"
-                footnote="This is a footnote with some sample text. Lorem ipsum dolor sit amet"
-                tooltip="Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
-                required
-                icon="abc"
-                icon-right="abc"
-                regex="alphaLower"
-                regex-message="Only letters and numbers are allowed"
-                value="abc">
-              </text-field>
-
-              <text-field id="simpleText" label="Simple Text Field"></text-field>
-
-              <password-field id="password" label="Password" confirm value="P455w0rd!?"></password-field>
-
-              <text-area-field id="textarea" label="Text Area" value="some value"></text-area-field>
-
-              <email-field id="email" label="Email" required value="andriusain@hotmail.com"> </email-field>
-
-            </group-field>
-
-            <group-field id="dates-group" label="Dates">
-
-              <date-field id="date" label="Date with future disabled" format="DD MMMM YYYY" disable-future></date-field>
-
-              <date-field id="dateMinMax" label="Date with min and max" min="2023-10-01" max="2024-10-01"></date-field>
-
-              <date-time-field id="dateTime" label="Date Time with past disabled" disable-past></date-time-field>
-
-            </group-field>
-            
-            <group-field id="misc-group" label="Misc">
-
-              <number-field id="number" label="Number" min="1" max="100" step="3" value="50" required> </number-field>
-
-              <color-field id="color" label="Color" value="yellowgreen"></color-field>
-
-              <checkbox-field
-                icon="check_circle"
-                id="checkbox"
-                tooltip="This is a tooltip"
-                label="Checkbox"
-                value="true"
-                description="This is a checkbox"
-                checked
-              ></checkbox-field>
-
-            </group-field>
-
-            <group-field id="options-group" label="Options">
-
-                <radio-field id="radio" label="radio" value="option2">
-                    <radio-option value="option1" label="Option 1" icon="grocery"></radio-option>
-                    <radio-option value="option2" label="Option 2" icon="nutrition"></radio-option>
-                    <radio-option value="option3" label="Option 3" icon="person"></radio-option>
-                </radio-field>
-
-                <checkboxes-field id="binaryCheckboxes" label="Binary Checkboxes" value="option1,option2" binary>
-                    <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
-                    <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
-                    <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
-                </checkboxes-field>
-
-                <checkboxes-field id="nonBinaryCheckboxes" label="Non-binary Checkboxes" value="option1">
-                  <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
-                  <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
-                  <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
-              </checkboxes-field>
-
-                <select-field icon="person" id="selectField" label="cars" value="mercedes">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
-                </select-field>
-
-                <select-combo icon="info" id="selectCombo" label="Select Combo" value="grocery"></select-combo>
-
-                <select-combo
-                    id="select-combo-search"
-                    label="Select Combo with search"
-                    icon="search"
-                    value="es"
-                    has-search
-                ></select-combo>
-
-            </group-field>
+                    <text-field
+                        id="fullText"
+                        label="Full Featured Text Field"
+                        description="This text is configured with every possible option"
+                        footnote="This is a footnote with some sample text. Lorem ipsum dolor sit amet"
+                        tooltip="Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
+                        required
+                        icon="abc"
+                        icon-right="abc"
+                        regex="alphaLower"
+                        regex-message="Only letters and numbers are allowed"
+                        value="abc"
+                    ></text-field>
+                </group-field>
+                <group-field icon="calendar_month" id="dates-group" label="Dates">
+                    <date-field
+                        id="date"
+                        label="Date with future disabled"
+                        format="DD MMMM YYYY"
+                        disable-future
+                    ></date-field>
+                    <date-field
+                        id="dateMinMax"
+                        label="Date with min and max"
+                        min="2023-10-01"
+                        max="2024-10-01"
+                    ></date-field>
+                    <date-time-field
+                        id="dateTime"
+                        label="Date Time with past disabled"
+                        disable-past
+                    ></date-time-field>
+                </group-field>
+            </div>
+            <div class="arpaForm__column">
+                <group-field icon="lists" id="select-group" label="Select fields">
+                    <select-field icon="person" id="selectField" label="cars" value="mercedes">
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </select-field>
+                    <select-combo
+                        icon="info"
+                        id="selectCombo"
+                        label="Select Combo"
+                        value="grocery"
+                    ></select-combo>
+                    <select-combo
+                        id="select-combo-search"
+                        label="Select Combo with search"
+                        icon="search"
+                        value="es"
+                        has-search
+                    ></select-combo>
+                </group-field>
+                <group-field open icon="check_box" id="options-group" label="Options">
+                    <checkbox-field
+                        icon="check_circle"
+                        id="checkbox"
+                        tooltip="This is a tooltip"
+                        label="Checkbox"
+                        value="true"
+                        checked
+                    ></checkbox-field>
+                    <radio-field id="radio" label="radio" value="option2">
+                        <radio-option value="option1" label="Option 1" icon="grocery"></radio-option>
+                        <radio-option value="option2" label="Option 2" icon="nutrition"></radio-option>
+                        <radio-option value="option3" label="Option 3" icon="person"></radio-option>
+                    </radio-field>
+                    <checkboxes-field
+                        id="binaryCheckboxes"
+                        label="Binary Checkboxes"
+                        value="option1,option2"
+                        binary
+                    >
+                        <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
+                        <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
+                        <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
+                    </checkboxes-field>
+                    <checkboxes-field id="nonBinaryCheckboxes" label="Non-binary Checkboxes" value="option1">
+                        <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
+                        <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
+                        <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
+                    </checkboxes-field>
+                </group-field>
+            </div>
         </form>
         <script type="module" src="demo/demoForm.js"></script>
     </body>

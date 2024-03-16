@@ -1,0 +1,81 @@
+.groupField {
+    margin-bottom: 0;
+    position: relative;
+    container-type: inline-size;
+    container-name: groupfield-input;
+    width: 100%;
+    display: block;
+}
+
+.groupField__summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    padding: 16px 0px;
+    text-transform: uppercase;
+    transition: var(--theme-transition);
+
+    .groupField__iconRight {
+        margin-left: auto;
+    }
+    arpa-icon {
+        color: var(--grey-600);
+    }
+}
+
+.groupField > details[open] {
+    > summary {
+        border-bottom: none;
+        .groupField__summary__label {
+            color: var(--grey-800);
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 6px;
+            text-decoration-color: var(--grey-800);
+        }
+        arpa-icon {
+            color: var(--color-primary);
+        }
+    }
+
+    > .groupField__fields {
+        padding: 24px;
+        border: none;
+        box-shadow: var(--group-box-shadow);
+        border-radius: 16px;
+        margin-bottom: 20px;
+    }
+}
+
+.groupField__summary__label {
+    font-family: var(--font-family-avant-garde-gothic);
+    color: var(--grey-600);
+    font-weight: normal;
+}
+
+@container groupfield-input (min-width: 550px) {
+    .groupField__fields {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        gap: 24px 24px;
+    }
+
+    .groupField__fields > .arpaField {
+        flex: 1 1 50%;
+        max-width: calc(50% - 16px);
+        /* min-width: 250px; */
+    }
+}
+
+@container groupfield-input (max-width: 549px) {
+    .groupField__fields {
+        display: flex;
+        flex-direction: column;
+        gap: 32px 0px;
+    }
+}

@@ -3,23 +3,25 @@
     flex: 1 1 auto;
     position: relative;
     cursor: pointer;
-    font-size: 13px;
     align-items: center;
+    padding: 4px 0px 12px;
 }
 
 .fieldLabel__required {
     color: var(--color-red);
     padding: 0px 6px;
+    display: flex;
     position: relative;
     font-size: 20px;
+    height: 14px;
+    top: -6px;
 }
 
 .fieldLabel__text {
     flex: 0 1 auto;
     color: var(--grey-800);
-    font-weight: normal;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .fieldLabel__icon.fieldLabel__icon {

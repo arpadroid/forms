@@ -3,7 +3,7 @@
     flex-direction: row;
     align-items: center;
     gap: 12px;
-    height: 48px;
+    height: var(--input-height);
     label {
         cursor: pointer;
     }
@@ -14,10 +14,12 @@
     flex-direction: row;
     align-items: center;
     gap: 12px;
-    height: 48px;
+    cursor: pointer;
+    height: var(--input-height);
 }
 
 .fieldOption__content {
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
 }

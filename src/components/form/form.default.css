@@ -1,9 +1,41 @@
+.arpaForm {
+    container: arpa-form;
+    container-type: inline-size;
+}
+
 .arpaForm__fields {
     margin: 24px 0px;
     position: relative;
 }
 
-.arpaForm__fields .arpaField {
+.arpaForm__fields > .arpaField {
     margin: 24px 0px;
     position: relative;
+    &:first-child {
+        margin-top: 0px;
+    }
+    &:last-child {
+        margin-bottom: 0px;
+    }
+}
+
+.arpaForm__column {
+    width: 100%;
+}
+
+@container arpa-form (min-width: 1001px) {
+    .arpaForm__fields {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 24px;
+        > .groupField {
+            max-width: calc(50% - 16px);
+            flex: 1 1 auto;
+        }
+    }
+
+    .arpaForm__column {
+        width: calc(50% - 12px);
+    }
 }

@@ -1,9 +1,10 @@
 checkbox-field.arpaField {
-    margin: 8px 0px;
+    margin-top: 10px;
     position: relative;
 
     label {
         cursor: pointer;
+        flex: 0;
     }
 
     .arpaField__icon {

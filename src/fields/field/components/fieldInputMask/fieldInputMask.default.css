@@ -8,7 +8,7 @@ field-input-mask {
     left: 0;
     right: 0;
     bottom: 0;
-    max-height: 48px;
+    max-height: var(--input-height);
 
     arpa-icon {
         font-size: 23px;
