@@ -7,13 +7,14 @@
         <!-- <link rel="stylesheet" href="/ui/themes/default/default.min.css" /> -->
         <link rel="stylesheet" href="/themes/default/default.bundled.css" />
         <% for (key in htmlWebpackPlugin.files.js) { %>
+        <script src="//unpkg.com/@ungap/custom-elements"></script>
         <script type="module" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
         <% } %>
     </head>
     <body>
         <form id="demoForm" is="arpa-form" title="My Form">
             <div class="arpaForm__column">
-                <group-field icon="title" id="tex-fields-group" label="Text fields">
+                <group-field label="Text fields" id="tex-fields-group" icon="title" open>
                     <text-field id="simpleText" label="Simple Text Field"></text-field>
                     <email-field
                         id="email"
@@ -53,7 +54,7 @@
                         value="abc"
                     ></text-field>
                 </group-field>
-                <group-field icon="calendar_month" id="dates-group" label="Dates">
+                <group-field open icon="calendar_month" id="dates-group" label="Dates">
                     <date-field
                         id="date"
                         label="Date with future disabled"
@@ -74,7 +75,7 @@
                 </group-field>
             </div>
             <div class="arpaForm__column">
-                <group-field icon="lists" id="select-group" label="Select fields">
+                <group-field open icon="lists" id="select-group" label="Select fields">
                     <select-field icon="person" id="selectField" label="cars" value="mercedes">
                         <option value="volvo">Volvo</option>
                         <option value="saab">Saab</option>
@@ -109,17 +110,12 @@
                         <radio-option value="option2" label="Option 2" icon="nutrition"></radio-option>
                         <radio-option value="option3" label="Option 3" icon="person"></radio-option>
                     </radio-field>
-                    <checkboxes-field
-                        id="binaryCheckboxes"
-                        label="Binary Checkboxes"
-                        value="option1,option2"
-                        binary
-                    >
+                    <checkboxes-field id="binaryChecks" label="Binary Checkboxes" value="option1" binary>
                         <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
                         <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
                         <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
                     </checkboxes-field>
-                    <checkboxes-field id="nonBinaryCheckboxes" label="Non-binary Checkboxes" value="option1">
+                    <checkboxes-field id="arrayCheckboxes" label="Array Checkboxes" value="option1">
                         <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
                         <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
                         <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>

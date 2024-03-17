@@ -16,8 +16,8 @@ class TextField extends Field {
      * Called when the element is connected to the DOM.
      * @override
      */
-    connectedCallback() {
-        super.connectedCallback();
+    _onConnected() {
+        super._onConnected();
         this.setRegexValidation();
     }
 

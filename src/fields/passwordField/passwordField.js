@@ -33,20 +33,20 @@ class PasswordField extends TextField {
         return this.hasAttribute('confirm') ?? this._config.confirm;
     }
 
-
     /**
      * Initializes the confirm field if the PasswordField has a confirm field.
      * @protected
      */
-    _onConnected() {
+    async _onConnected() {
+        await this.onReady();
         super._onConnected();
         if (this.hasConfirm()) {
             this._initializeConfirmField();
         }
-        this.visButton = this.renderVisibilityButton();
-        customElements.whenDefined('field-input-mask').then(() => {
+        if (!this.visButton) {
+            this.visButton = this.renderVisibilityButton();
             this.inputMask.rhs.appendChild(this.visButton);
-        });
+        }
     }
 
     /**

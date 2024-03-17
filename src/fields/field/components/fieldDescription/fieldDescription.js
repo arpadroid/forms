@@ -15,7 +15,7 @@ class FieldDescription extends HTMLParagraphElement {
     }
 
     getDescription() {
-        return this.field.getAttribute('description');
+        return this.field?.getAttribute('description');
     }
 }
 

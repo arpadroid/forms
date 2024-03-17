@@ -28,6 +28,10 @@ class FieldOption extends ArpaElement {
         };
     }
 
+    onReady() {
+        return customElements.whenDefined('arpa-field');
+    }
+
     /**
      * The HTML template for the field option element.
      * @type {string}
@@ -55,9 +59,13 @@ class FieldOption extends ArpaElement {
     /**
      * Renders the field option element.
      */
-    render() {
+    async render() {
+        await this.onReady();
         /** @type {Field} */
         this.field = this.closest('.arpaField');
+        if (!this.field) {
+            return;
+        }
         super.render();
         this.classList.add(this._config.className);
         this._onConnected();

@@ -29,7 +29,7 @@ module.exports = (async () => {
             mode: MODE,
             stats: 'errors-only',
             devServer: {
-                port: 9000,
+                port: 8000,
                 hot: true,
                 open: true,
                 watchFiles: ['src/**/*.js', 'src/**/*.ejs', 'src/**/*.html'],

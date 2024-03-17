@@ -10,6 +10,11 @@ const html = String.raw;
  * Represents a group of checkboxes field.
  */
 class CheckboxesField extends ArrayField {
+    constructor(config) {
+        super(config);
+        this._onLabelClick = this._onLabelClick.bind(this);
+    }
+
     /**
      * Get the default configuration for the checkboxes field.
      * @returns {CheckboxesFieldInterface} The default configuration.
@@ -28,12 +33,20 @@ class CheckboxesField extends ArrayField {
      */
     _onConnected() {
         super._onConnected();
+        this._handleLabelToggle();
+    }
+
+    _handleLabelToggle() {
         if (this.hasLabelToggle()) {
-            this.label.addEventListener('click', () => {
-                this.toggleAll();
-            });
+            this.label?.removeEventListener('click', this._onLabelClick);
+            this.label?.addEventListener('click', this._onLabelClick);
         }
     }
+
+    _onLabelClick() {
+        this.toggleAll();
+    }
+
     /**
      * Check if the checkboxes field has label toggle.
      * @returns {boolean} True if the checkboxes field has label toggle, false otherwise.
@@ -73,7 +86,7 @@ class CheckboxesField extends ArrayField {
 
     /**
      * Check if the checkboxes field is binary.
-     * If the field is binary, it means the value returned to the form submit function will consist of a key-value pair object, 
+     * If the field is binary, it means the value returned to the form submit function will consist of a key-value pair object,
      * which specifies whether each option is checked or not through a boolean.
      * @returns {boolean} True if the checkboxes field is binary, false otherwise.
      */

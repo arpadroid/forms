@@ -18,9 +18,11 @@ class CheckboxOption extends RadioOption {
         return super.renderInput('checkbox', name);
     }
 
-    _onConnected() {
-        super._onConnected();
-        this.input.checked = this.field.hasValue(this.getAttribute('value'));
+    async _onConnected() {
+        await super._onConnected();
+        if (this.input && this.field) {
+            this.input.checked = this.field?.hasValue(this.getAttribute('value'));
+        }
     }
 
     /**

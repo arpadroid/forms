@@ -37,7 +37,7 @@ class RadioOption extends FieldOption {
      */
     renderInput(
         type = 'radio',
-        name = this.field.getId(),
+        name = this.field?.getId(),
         optionId = this.getOptionId(),
         value = this.getProperty('value')
     ) {
@@ -74,11 +74,14 @@ class RadioOption extends FieldOption {
         }
     }
 
-    _onConnected() {
+    async _onConnected() {
+        await this.onReady();
         super._onConnected();
         this.input = this.querySelector('input');
-        this.input.removeEventListener('change', this._onChange);
-        this.input.addEventListener('change', this._onChange);
+        if (this.input) {
+            this.input.removeEventListener('change', this._onChange);
+            this.input.addEventListener('change', this._onChange);
+        }
     }
 }
 

@@ -1,8 +1,7 @@
 import { CountryOptions, IconOptions } from './demoFormOptions.js';
 
-const form = document.getElementById('demoForm');
-
 customElements.whenDefined('arpa-form').then(() => {
+    const form = document.getElementById('demoForm');
     const radio = form.getField('radio');
     radio?.listen('onChange', value => {
         console.log('radio on change', value);
@@ -42,7 +41,6 @@ customElements.whenDefined('arpa-form').then(() => {
     colorField?.listen('onChange', value => {
         console.log('colorField on change', value);
     });
-    
 
     form.onSubmit(payload => {
         console.log('Form submitted', payload);

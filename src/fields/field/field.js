@@ -1,18 +1,17 @@
-import { attr, lcFirst, mergeObjects, processTemplate, ComponentTool, ObserverTool } from '@arpadroid/tools';
+import { attr, lcFirst, mergeObjects, processTemplate, ObserverTool } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 import { FieldTemplate, InputTemplate } from './fieldTemplate.js';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
 /**
- * @typedef {import('../../components/form/form.js').default} FormComponent
- * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
+ * @typedef {import('../../components/form/form').default} FormComponent
+ * @typedef {import('./fieldInterface').FieldInterface} FieldInterface
  * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
  */
 
 class Field extends ArpaElement {
     _validations = ['required', 'minLength', 'maxLength', 'size'];
-    _onReadyCallbacks = [];
-    _isReady = false;
+    static _isReady = false;
 
     static template = FieldTemplate;
     static inputTemplate = InputTemplate;
@@ -30,13 +29,27 @@ class Field extends ArpaElement {
      * @throws {Error} If the field does not have an id.
      * @protected
      */
-    _initialize() {
+    async _initialize() {
+        ObserverTool.mixin(this);
         const id = this.getId();
         if (!id) {
             throw new Error('Field must have an id');
         }
-        ObserverTool.mixin(this);
-        ComponentTool.applyOnReady(this);
+        await this.onReady();
+        this._onReady();
+    }
+
+    onReady() {
+        if (Field._isReady) {
+            return Promise.resolve();
+        }
+        return customElements.whenDefined('arpa-form').then(response => {
+            Field._isReady = true;
+            return Promise.resolve(response);
+        });
+    }
+
+    _onReady() {
         this.form = this.getForm();
         this.classList.add('arpaField');
         super._initialize();
@@ -99,9 +112,14 @@ class Field extends ArpaElement {
     initializeProperties() {
         /** @type {FormComponent} */
         this.form = this.getForm();
-        this.form?.registerField(this);
-        this._id = this.id;
-        this.removeAttribute('id');
+        if (this.form?.registerField) {
+            this.form.registerField(this);
+        }
+        if (this.id) {
+            this._id = this.id;
+            this.removeAttribute('id');
+            delete this.id;
+        }
     }
 
     /**
@@ -171,6 +189,14 @@ class Field extends ArpaElement {
         }
     }
 
+    async connectedCallback() {
+        await this.onReady();
+        if (!this.form) {
+            this.initializeProperties();
+        }
+        super.connectedCallback();
+    }
+
     /**
      * Called after the component has rendered.
      * @protected
@@ -208,7 +234,7 @@ class Field extends ArpaElement {
      * @returns {string}
      */
     getId() {
-        return this._id || this.id || this._config.id;
+        return this._id || this.id || this.getProperty('id');
     }
 
     /**
