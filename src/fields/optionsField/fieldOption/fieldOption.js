@@ -74,12 +74,12 @@ class FieldOption extends ArpaElement {
      * @returns {Record<string, unknown>} The template variables.
      */
     getTemplateVars() {
-        const subTitle = this.getAttribute('sub-title');
+        const subTitle = this.getProperty('sub-title');
         return {
             content: this._content,
-            icon: this.getAttribute('icon'),
-            iconLeft: this.getAttribute('icon-left'),
-            label: this.getAttribute('label'),
+            icon: this.getProperty('icon'),
+            iconLeft: this.getProperty('icon-left'),
+            label: this.getProperty('label'),
             subTitle: subTitle && html`<span class="fieldOption__subTitle">${subTitle}</span>`,
             input: this.renderInput(),
             optionId: this.getOptionId()

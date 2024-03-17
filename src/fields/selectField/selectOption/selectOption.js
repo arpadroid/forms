@@ -3,12 +3,17 @@ import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
 const html = String.raw;
 /**
  * @typedef {import('../../optionsField/fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
+ * @typedef {import('../../selectCombo/selectCombo.js').default} SelectCombo
  */
 
 /**
  * Represents a select option element.
  */
 class SelectOption extends FieldOption {
+
+    /**
+     * @property {SelectCombo} field - The select field.
+     */
 
     constructor(config) {
         super(config);
@@ -47,6 +52,7 @@ class SelectOption extends FieldOption {
     _onClick(event) {
         this.field.setValue(this.getAttribute('value'));
         this.field._callOnChange(event);
+        // this.field.getInput()?.focus();
     }
 }
 
