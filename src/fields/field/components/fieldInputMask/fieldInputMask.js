@@ -24,41 +24,69 @@ class FieldInputMask extends HTMLElement {
         </div>
     `;
 
-    connectedCallback() {
+    rhs = {};
+    lhs = {};
+
+    addRhs(id, node) {
+        if (typeof id === 'string' && node instanceof HTMLElement) {
+            this.rhs[id] = node;
+        }
+    }
+
+    getRhsNodes() {
+        return Object.values(this.rhs);
+    }
+
+    getLhsNodes() {
+        return Object.values(this.lhs);
+    }
+
+    addLhs(id, node) {
+        if (typeof id === 'string' && node instanceof HTMLElement) {
+            this.lhs[id] = node;
+        }
+    }
+
+    async connectedCallback() {
+        // await this.onReady();
         /** @type {Field} */
-        this.render();
         this.field = this.closest('.arpaField');
-        this.rhs = this.querySelector('.fieldInputMask__rhs');
-        this.lhs = this.querySelector('.fieldInputMask__lhs');
+        this.render();
+        this.update();
     }
 
-    /**
-     * Retrieves the icon for the field.
-     * @returns {string} The icon for the field.
-     */
-    getIcon() {
-        return this.field?.getIcon();
+    onReady() {
+        return Promise.all([customElements.whenDefined('arpa-field')]);
     }
 
-    /**
-     * Retrieves the right icon for the field.
-     * @returns {string} The right icon for the field.
-     */
-    getIconRight() {
-        return this.field?.getIconRight();
+    update() {
+        if (this.icon) {
+            this.icon.innerHTML = this.field?.getIcon();
+        }
+        if (this.iconRight) {
+            this.iconRight.innerHTML = this.field?.getIconRight();
+        }
     }
 
     /**
      * Renders the field input mask.
      */
-    render() {
-        const icon = this.getIcon();
-        const iconRight = this.getIconRight();
+    async render() {
+        await this.onReady();
+        if (!this.field) {
+            return;
+        }
         this.innerHTML = processTemplate(this.template, {
-            icon,
-            iconRight,
+            icon: this.field?.getIcon(),
+            iconRight: this.field?.getIconRight(),
             fieldId: this.field?.getHtmlId()
         });
+        this.rhsNode = this.querySelector('.fieldInputMask__rhs');
+        this.rhsNode?.append(...this.getRhsNodes());
+        this.lhsNode = this.querySelector('.fieldInputMask__lhs');
+        this.lhsNode?.append(...this.getLhsNodes());
+        this.icon = this.querySelector('.arpaField__icon');
+        this.iconRight = this.querySelector('.arpaField__iconRight');
     }
 }
 

@@ -39,7 +39,8 @@ class DateField extends Field {
      * Renders the calendar button.
      * @protected
      */
-    _onConnected() {
+    async _onConnected() {
+        await this.onReady();
         super._onConnected();
         const min = this.getProperty('min');
         const max = this.getProperty('max');
@@ -52,6 +53,7 @@ class DateField extends Field {
         }
         if (!this.calendarButton) {
             this.calendarButton = this.renderCalendarButton();
+            this.inputMask.addRhs('calendarButton', this.calendarButton);
         }
     }
 
@@ -66,8 +68,6 @@ class DateField extends Field {
             label: 'show date picker'
         });
         attr(button, { variant: 'minimal', 'tooltip-position': 'left' });
-        customElements.whenDefined('field-input-mask').then(() => this.inputMask.rhs.appendChild(button));
-        // this.inputMask.rhs.appendChild(button);
         return button;
     }
 

@@ -45,7 +45,7 @@ class PasswordField extends TextField {
         }
         if (!this.visButton) {
             this.visButton = this.renderVisibilityButton();
-            this.inputMask.rhs.appendChild(this.visButton);
+            this.inputMask.addRhs('visibilityButton', this.visButton);
         }
     }
 
