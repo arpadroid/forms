@@ -52,7 +52,6 @@ class SelectOption extends FieldOption {
     _onClick(event) {
         this.field.setValue(this.getAttribute('value'));
         this.field._callOnChange(event);
-        // this.field.getInput()?.focus();
     }
 }
 

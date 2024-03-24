@@ -12,6 +12,7 @@ import { I18n } from '@arpadroid/i18n';
 class Field extends ArpaElement {
     _validations = ['required', 'minLength', 'maxLength', 'size'];
     static _isReady = false;
+    _hasInitialized = false;
 
     static template = FieldTemplate;
     static inputTemplate = InputTemplate;
@@ -52,9 +53,7 @@ class Field extends ArpaElement {
     _onReady() {
         this.form = this.getForm();
         this.classList.add('arpaField');
-        super._initialize();
         this.initializeProperties();
-        this.initializeValidation();
     }
 
     /**
@@ -111,15 +110,21 @@ class Field extends ArpaElement {
      */
     initializeProperties() {
         /** @type {FormComponent} */
-        this.form = this.getForm();
-        if (this.form?.registerField) {
-            this.form.registerField(this);
-        }
         if (this.id) {
             this._id = this.id;
             this.removeAttribute('id');
             delete this.id;
         }
+        this.form = this.getForm();
+        if (this.form) {
+            this.form.registerField(this);
+            this._onInitialized();
+            this._hasInitialized = true;
+        }
+    }
+
+    _onInitialized() {
+        this.initializeValidation();
     }
 
     /**
@@ -183,7 +188,7 @@ class Field extends ArpaElement {
      */
     initializeValidation() {
         const { validator } = this._config;
-        if (validator) {
+        if (validator && !this.validator) {
             /** @type {FieldValidator} */
             this.validator = new validator(this);
         }
@@ -191,7 +196,7 @@ class Field extends ArpaElement {
 
     async connectedCallback() {
         await this.onReady();
-        if (!this.form) {
+        if (!this._hasInitialized) {
             this.initializeProperties();
         }
         super.connectedCallback();

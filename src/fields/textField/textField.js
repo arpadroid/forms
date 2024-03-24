@@ -12,22 +12,29 @@ class TextField extends Field {
      */
     _validations = [...super.getValidations(), 'regex'];
 
+    constructor(config) {
+        super(config);
+        this._onInput = this._onInput.bind(this);
+    }
+
     /**
      * Called when the element is connected to the DOM.
      * @override
      */
-    _onConnected() {
-        super._onConnected();
+    _onInitialized() {
+        super._onInitialized();
         this.setRegexValidation();
     }
 
     _initializeInputNode(input) {
         super._initializeInputNode(input);
-        this?.input.addEventListener('input', event => {
-            this._callOnChange(event);
-        });
+        this.input?.removeEventListener('input', this._onInput);
+        this.input?.addEventListener('input', this._onInput);
     }
 
+    _onInput(event) {
+        this._callOnChange(event);
+    }
     /**
      * Sets the regex validation for the text field.
      * @param {string | RegExp} [regex] - The regular expression or the name of a predefined regex pattern.

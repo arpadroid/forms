@@ -21,6 +21,20 @@ customElements.whenDefined('arpa-form').then(() => {
         console.log('selectCombo on change', value);
     });
 
+    const selectFetch = form.getField('select-combo-fetch');
+    selectFetch?.setFetchOptions(async query => {
+        return await import('./demoFormOptions.js').then(({ People }) => {
+            if (!query) {
+                return [...People].splice(0, 10);
+            }
+            return [...People].filter(
+                option =>
+                    option.label.toLowerCase().includes(query.toLowerCase()) ||
+                    option.subTitle.toLowerCase().includes(query.toLowerCase())
+            );
+        });
+    });
+
     const simpleText = form.getField('simpleText');
     simpleText?.setValue('Hello World');
     simpleText?.listen('onChange', value => {

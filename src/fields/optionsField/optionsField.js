@@ -51,11 +51,8 @@ class OptionsField extends Field {
         });
     }
 
-    /**
-     * Initializes the properties of the options field.
-     */
-    initializeProperties() {
-        super.initializeProperties();
+    _onInitialized() {
+        super._onInitialized();
         this.initializeOptions();
     }
 
@@ -95,32 +92,32 @@ class OptionsField extends Field {
      * @returns {number}
      */
     getOptionCount() {
-        return this.getOptions()?.length || (this.optionsNode?.children?.length ?? 0);
+        return this.getOptions()?.length || this.optionsNode?.children?.length || 0;
     }
 
     /**
      * Initializes the options of the options field.
      */
-    initializeOptions() {
-        const { options, autoFetchOptions } = this._config;
+    async initializeOptions() {
+        const { options, autoFetchOptions, fetchOptions } = this._config;
         if (Array.isArray(options)) {
             this.setOptions(options);
         }
-
-        if (autoFetchOptions) {
+        if (autoFetchOptions && typeof fetchOptions === 'function') {
+            await this.onReady();
             this.fetchOptions();
         }
     }
 
     /**
      * Fetches the options for the options field.
+     * @param {string} query - The query to fetch the options.
      * @returns {Promise} A promise that resolves with the fetched options.
      */
-    fetchOptions() {
+    fetchOptions(query = '') {
+        this.fetchQuery = query;
         const { fetchOptions } = this._config;
         if (typeof fetchOptions === 'function') {
-            const input = this.getInputNode();
-            const query = input?.value ?? '';
             return fetchOptions(query, undefined, this)?.then(opt => {
                 this.onOptionsFetched(opt);
                 return Promise.resolve(opt);
@@ -129,14 +126,17 @@ class OptionsField extends Field {
         return Promise.resolve();
     }
 
+    async setFetchOptions(fetchOptions) {
+        this._config.fetchOptions = fetchOptions;
+        this.initializeOptions();
+    }
+
     /**
      * Handles the fetched options for the options field.
      * @param {FieldOptionInterface[]} opt
      */
     onOptionsFetched(opt) {
         this.setOptions(opt);
-        this.renderOptions(opt);
-        //this.getInputComponent()?.updateOptions();
     }
 
     /**
@@ -145,9 +145,10 @@ class OptionsField extends Field {
      */
     renderOptions(options) {
         this.optionsNode.innerHTML = '';
+        this.appendChild(this.optionsNode);
         const node = document.createElement('div');
         node.innerHTML = this._config.optionTemplate;
-        options.forEach(option => {
+        options?.forEach(option => {
             const optionNode = node.firstElementChild.cloneNode(true);
             optionNode.setConfig(option);
             attr(optionNode, option);
