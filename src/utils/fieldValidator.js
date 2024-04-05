@@ -209,7 +209,6 @@ class FieldValidator {
         }
         const valid = !regex || validateRegex(value, regex);
         const message = this.field?.regexMessage;
-
         if (!valid && message) {
             this.setError(message);
         }

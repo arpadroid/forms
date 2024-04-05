@@ -22,7 +22,7 @@
 }
 
 :root {
-    --input-icon-padding: 40px;
+    --input-icon-padding: 45px;
 }
 
 .arpaField:has(> .arpaField__body field-input-mask .arpaField__icon) .fieldInput {

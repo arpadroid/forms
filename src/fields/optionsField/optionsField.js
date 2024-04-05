@@ -1,4 +1,5 @@
 import { attr, mergeObjects } from '@arpadroid/tools';
+import { CircularPreloader } from '@arpadroid/ui';
 import Field from '../field/field.js';
 const html = String.raw;
 /**
@@ -118,7 +119,10 @@ class OptionsField extends Field {
         this.fetchQuery = query;
         const { fetchOptions } = this._config;
         if (typeof fetchOptions === 'function') {
+            this.isLoadingOptions = true;
+            this.renderOptions();
             return fetchOptions(query, undefined, this)?.then(opt => {
+                this.isLoadingOptions = false;
                 this.onOptionsFetched(opt);
                 return Promise.resolve(opt);
             });
@@ -144,6 +148,22 @@ class OptionsField extends Field {
      * @param {FieldOptionInterface[]} options - The options to render.
      */
     renderOptions(options) {
+        if (this.isLoadingOptions) {
+            this._renderOptionsPreloader();
+        } else {
+            this._renderOptions(options);
+            this.optionsPreloader?.remove();
+        }
+    }
+
+    _renderOptionsPreloader() {
+        if (!this.optionsPreloader) {
+            this.optionsPreloader = new CircularPreloader();
+        }
+        this.optionsNode.append(this.optionsPreloader);
+    }
+
+    _renderOptions(options) {
         this.optionsNode.innerHTML = '';
         this.appendChild(this.optionsNode);
         const node = document.createElement('div');

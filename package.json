@@ -52,8 +52,9 @@
         "webpack-dev-server": "^5.0.2"
     },
     "dependencies": {
-        "@arpadroid/i18n": "^1.0.3",
+        "@arpadroid/i18n": "file:../i18n",
         "@arpadroid/tools": "file:../tools",
+        "@arpadroid/application": "file:../application",
         "@arpadroid/ui": "file:../ui"
     }
 }

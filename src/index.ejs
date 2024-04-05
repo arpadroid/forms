@@ -13,8 +13,34 @@
     </head>
     <body>
         <form id="demoForm" is="arpa-form" title="My Form">
+            
+            <arpa-messages id="form-messages">
+                <!-- <info-message>This is an information message</info-message> -->
+                <!-- <error-message can-close title="There are errors in your form">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+                    been the industry’s standard dummy text ever since the 1500s, when an unknown printer took
+                    a galley of type and scrambled it to make a type specimen book. It has survived not only
+                    five centuries, but also the leap into electronic typesetting, remaining essentially
+                    unchanged. It was popularised in the 1960s with the release of Letraset sheets containing
+                    Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
+                    PageMaker including versions of Lorem Ipsum.
+                </error-message>
+                <warning-message timeout="5000" can-close>This is a warning message</warning-message>
+                <success-message sub-title="Great Success!">This is a success message</success-message> -->
+                <list-item
+                    title-link="http://museovaquero.local/api/image/convert?source=%2Fcmsx%2Fassets%2Fhqrvutmy_museovaquero_assets%2Fgallery%2Fimages%2F449.jpg&width=400&height=400&quality=70"
+                    image="http://museovaquero.local/api/image/convert?source=%2Fcmsx%2Fassets%2Fhqrvutmy_museovaquero_assets%2Fgallery%2Fimages%2F449.jpg&width=400&height=400&quality=70"
+                    title="Some title"
+                    has-selection
+                    sub-title="test subtitle"
+                >
+                    Some message
+                </list-item>
+            </arpa-messages>
+
             <div class="arpaForm__column">
                 <group-field label="Text fields" id="tex-fields-group" icon="title" open>
+                    <hidden-field id="hiddenField" value="hidden value"></hidden-field>
                     <text-field id="simpleText" label="Simple Text Field"></text-field>
                     <email-field
                         id="email"
@@ -22,6 +48,8 @@
                         required
                         value="andriusain@hotmail.com"
                     ></email-field>
+                    <url-field id="url" label="URL" value="https://www.google.com"></url-field>
+                    <tel-field id="tel" label="Tel" value="1234567890"></tel-field>
                     <number-field
                         id="number"
                         label="Number"
@@ -32,12 +60,12 @@
                         required
                     ></number-field>
                     <color-field id="color" label="Color" value="yellowgreen"></color-field>
-                    <password-field
+                    <!-- <password-field
                         id="password"
                         label="Password"
                         confirm
                         value="P455w0rd!?"
-                    ></password-field>
+                    ></password-field> -->
                     <text-area-field id="textarea" label="Text Area" value="some value"></text-area-field>
 
                     <text-field
@@ -53,8 +81,10 @@
                         regex-message="Only letters and numbers are allowed"
                         value="abc"
                     ></text-field>
+                    <range-field id="range" label="Range" min="1" max="100" step="3" value="50">
+                    </range-field>
                 </group-field>
-                <group-field open icon="calendar_month" id="dates-group" label="Dates">
+                <!-- <group-field icon="calendar_month" id="dates-group" label="Dates" open>
                     <date-field
                         id="date"
                         label="Date with future disabled"
@@ -72,9 +102,12 @@
                         label="Date Time with past disabled"
                         disable-past
                     ></date-time-field>
-                </group-field>
+                    <time-field id="time" label="Time"></time-field>
+                    <week-field id="week" label="Week"></week-field>
+                    <month-field id="month" label="Month"></month-field>
+                </group-field> -->
             </div>
-            <div class="arpaForm__column">
+            <!-- <div class="arpaForm__column">
                 <group-field open icon="lists" id="select-group" label="Select fields">
                     <select-field icon="person" id="selectField" label="cars" value="mercedes">
                         <option value="volvo">Volvo</option>
@@ -95,6 +128,14 @@
                         value="es"
                         has-search
                     ></select-combo>
+                    <select-combo
+                        id="select-combo-fetch"
+                        label="Select Combo Fetch"
+                        icon="search"
+                        value="AB-E"
+                        has-search
+                    >
+                    </select-combo>
                 </group-field>
                 <group-field open icon="check_box" id="options-group" label="Options">
                     <checkbox-field
@@ -121,7 +162,7 @@
                         <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
                     </checkboxes-field>
                 </group-field>
-            </div>
+            </div> -->
         </form>
         <script type="module" src="demo/demoForm.js"></script>
     </body>

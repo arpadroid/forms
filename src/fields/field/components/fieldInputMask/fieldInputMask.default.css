@@ -24,13 +24,14 @@ field-input-mask > * {
     visibility: visible;
 }
 
-.fieldInputMask__rhs {
-    margin-left: auto;
-}
-
 .fieldInputMask__rhs,
 .fieldInputMask__lhs {
-    padding: 0px 12px;
+    padding: 0px 14px;
     display: flex;
     align-items: center;
+}
+
+.fieldInputMask__rhs {
+    margin-left: auto;
+    padding-right: 8px;
 }

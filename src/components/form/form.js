@@ -1,4 +1,12 @@
-import { ComponentTool, ObserverTool, attr, isObject, mergeObjects, processTemplate } from '@arpadroid/tools';
+/* eslint-disable sonarjs/no-duplicate-string */
+/**
+ * @typedef {import('@arpadroid/ui/src/index').Messages} Messages
+ * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
+ */
+import { mergeObjects, processTemplate, copyObjectProps } from '@arpadroid/tools';
+import { ComponentTool, ObserverTool, attr } from '@arpadroid/tools';
+import { CircularPreloader } from '@arpadroid/ui';
+import { I18n } from '@arpadroid/i18n';
 
 /**
  * The form configuration.
@@ -23,9 +31,10 @@ class FormComponent extends HTMLFormElement {
             <form-title></form-title>
             <form-description></form-description>
         </form-header>
-        <form-body>
+        <arpa-messages class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
+        <div class="arpaForm__body">
             <div class="arpaForm__fields"></div>
-        </form-body>
+        </div>
 
         <form-footer>
             <form-controls>
@@ -41,20 +50,26 @@ class FormComponent extends HTMLFormElement {
         </form-footer>
     `;
 
-    static get observedAttributes() {
-        return ['initialValues'];
+    /**
+     * CUSTOM ELEMENT.
+     */
+
+    static get observedAttributes() {}
+
+    connectedCallback() {
+        this.render();
+    }
+
+    attributeChangedCallback() {
+        this.update();
     }
 
     constructor(config) {
         super();
         ObserverTool.mixin(this);
+        this.i18n = I18n.get('modules.form.formComponent');
         ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
-        this.classList.add('arpaForm');
-    }
-
-    connectedCallback() {
-        this.render();
     }
 
     /**
@@ -77,71 +92,54 @@ class FormComponent extends HTMLFormElement {
             initialValues: {},
             onSubmit: undefined,
             debounce: 1000,
-            useTemplate: true
+            useTemplate: true,
+            successMessage: this.i18n.msgSuccess,
+            errorMessage: this.i18n.msgError
         };
     }
 
-    attributeChangedCallback() {
-        this.update();
-    }
-
     /**
-     * Renders the form.
+     * ACCESSORS.
      */
-    render() {
-        // this.content = this.innerHTML;
-        attr(this, { novalidate: true });
-        const { variant } = this._config;
-        const contentNodes = [...this.childNodes];
-        this.renderTemplate();
-        this.formFields = this.querySelector('.arpaForm__fields');
-        if (this.formFields) {
-            this.formFields.append(...contentNodes);
-        }
-        // if (!this._hasRendered) {
-        //     this.setInitialValues(initialValues);
-        //     this.setValues(initialValues);
-        // }
-        this._hasRendered = true;
-        if (variant) {
-            this.classList.add(`arpaForm--${variant}`);
-        }
-        this.submitButton = this.querySelector('button[type="submit"]');
-        this.addEventListener('submit', this._onSubmit.bind(this));
-    }
-
-    /**
-     * Renders the form template.
-     */
-    renderTemplate() {
-        const { template } = this._config;
-        if (template && this.canUseTemplate()) {
-            this.innerHTML = processTemplate(template, {
-                submitLabel: this.getSubmitText()
-            });
-        }
-    }
 
     canUseTemplate() {
         return this.getAttribute('useTemplate') !== 'false' && this._config.useTemplate;
     }
 
+    getSubmitText() {
+        return (
+            this.getAttribute('submitText') ||
+            this._config.submitText ||
+            '<i18n-text key="common.labels.lblSubmit" />'
+        );
+    }
+
+    getFields() {
+        return Object.values(this.fields);
+    }
+
+    getField(fieldId) {
+        return this.fields[fieldId];
+    }
+
+    reset() {
+        if (!this.hasInitialValues()) {
+            // this.render();
+        }
+        this.messageResource.deleteMessages();
+    }
+
+    hasInitialValues() {
+        const { initialValues = {} } = this._config;
+        return Object.keys(initialValues).length > 0;
+    }
+
     /**
      * Sets the initial values for the form.
-     * @param {Record<string, unknown>} _values
+     * @param {Record<string, unknown>} values
      */
-    setInitialValues(_values = {}) {
-        const values = {};
-        for (const [key, value] of Object.entries(_values)) {
-            if (Array.isArray(value)) {
-                values[key] = [...value];
-            } else if (isObject(value)) {
-                values[key] = { ...value };
-            } else {
-                values[key] = value;
-            }
-        }
-        this._config.initialValues = values;
+    setInitialValues(values = {}) {
+        this._config.initialValues = copyObjectProps(values);
     }
 
     /**
@@ -158,13 +156,93 @@ class FormComponent extends HTMLFormElement {
         }
     }
 
-    getSubmitText() {
-        return (
-            this.getAttribute('submitText') ||
-            this._config.submitText ||
-            '<i18n-text key="common.labels.lblSubmit" />'
-        );
+    getValues() {
+        this._values = {};
+        this.getFields().forEach(field => {
+            const value = field.getOutputValue(this._values);
+            if (typeof value !== 'undefined') {
+                this._values[field.getId()] = value;
+            }
+        });
+        return this._values;
     }
+
+    /**
+     * Registers a field to the form.
+     * @param {*} field
+     */
+    registerField(field) {
+        this.fields[field.getId()] = field;
+    }
+
+    /**
+     * RENDER.
+     */
+
+    /**
+     * Renders the form.
+     */
+    render() {
+        attr(this, { novalidate: true });
+        const { variant } = this._config;
+        const contentNodes = [...this.childNodes];
+        this.renderTemplate();
+        this._initializeFields(contentNodes);
+        this._initializeNodes();
+        this._initializeSubmit();
+        this._initializeMessages();
+        this._hasRendered = true;
+        this.classList.add('arpaForm');
+        if (variant) {
+            this.classList.add(`arpaForm--${variant}`);
+        }
+    }
+
+    /**
+     * Renders the form template.
+     */
+    renderTemplate() {
+        const { template } = this._config;
+        if (template && this.canUseTemplate()) {
+            this.innerHTML = processTemplate(template, this.getTemplateVariables());
+        }
+    }
+
+    getTemplateVariables() {
+        return {
+            submitLabel: this.getSubmitText(),
+            formId: this.id
+        };
+    }
+
+    _initializeNodes() {
+        this.bodyNode = this.querySelector('.arpaForm__body');
+        this.messagesNode = this.querySelector('arpa-messages');
+    }
+
+    async _initializeMessages() {
+        await customElements.whenDefined('arpa-messages');
+        /** @type {Messages} */
+        this.messages = this.querySelector('arpa-messages');
+        /** @type {MessageResource} */
+        this.messageResource = this.messages?.resource;
+    }
+
+    _initializeSubmit() {
+        this.submitButton = this.querySelector('button[type="submit"]');
+        this.addEventListener('submit', this._onSubmit.bind(this));
+    }
+
+    _initializeFields(contentNodes) {
+        this.formFields = this.querySelector('.arpaForm__fields');
+        if (this.formFields) {
+            this.formFields.append(...contentNodes);
+        }
+    }
+
+    /**
+     * VALIDATION.
+     */
 
     /**
      * Validates the form.
@@ -177,33 +255,21 @@ class FormComponent extends HTMLFormElement {
         if (this._isValid) {
             this.classList.remove('formComponent--invalid');
         } else {
+            this.messageResource.deleteMessages();
+            this.messageResource.error(this._config.errorMessage, {
+                canClose: true
+            });
             this.classList.add('formComponent--invalid');
-        }
-        if (!this._isValid) {
-            // this.messenger.deleteMessages();
-            // this.messenger.error(this.i18n.errForm);
         }
         return this._isValid;
     }
 
-    getValues() {
-        this._values = {};
-        this.getFields().forEach(field => {
-            const value = field.getOutputValue(this._values);
-            if (typeof value !== 'undefined') {
-                this._values[field.getId()] = value;
-            }
-        });
+    /**
+     * SUBMISSION.
+     */
 
-        return this._values;
-    }
-
-    getFields() {
-        return Object.values(this.fields);
-    }
-
-    getField(fieldId) {
-        return this.fields[fieldId];
+    onSubmit(callback) {
+        this._config.onSubmit = callback;
     }
 
     getOnSubmit() {
@@ -219,7 +285,6 @@ class FormComponent extends HTMLFormElement {
         if (event) {
             event.preventDefault();
         }
-
         const time = new Date().getTime();
         const diff = time - this.submitTime;
         const debounce = Number(this._config.debounce);
@@ -230,6 +295,7 @@ class FormComponent extends HTMLFormElement {
         if (this.validate()) {
             return this._callOnSubmit();
         } else {
+            this.scrollIntoView();
             this.focusFirstErroredInput();
         }
     }
@@ -239,45 +305,62 @@ class FormComponent extends HTMLFormElement {
      * @returns {Promise<Response> | undefined}
      */
     _callOnSubmit() {
-        // this?.messenger?.deleteMessages();
+        this?.messageResource?.deleteMessages();
         const onSubmit = this.getOnSubmit();
         if (typeof onSubmit === 'function') {
             const payload = this._values;
-            // this.startLoading();
+            this.startLoading();
             const rv = onSubmit(payload);
             if (typeof rv?.finally === 'function') {
-                rv.then(response => {
-                    // this._onSubmitSuccess();
-                    // if (response?.formValues) {
-                    //     this.setInitialValues(response.formValues);
-                    //     this.setValues(response.formValues);
-                    // } else if (!this.hasInitialValues()) {
-                    //     // this.reset();
-                    // }
-                    return Promise.resolve(response);
-                }).finally(() => {
-                    // this.stopLoading();
-                });
-            } else {
-                if (rv) {
-                    this._onSubmitSuccess();
-                }
-                // this.stopLoading();
+                this.handlePromise(rv);
+                return rv;
             }
+            if (rv) {
+                this._onSubmitSuccess();
+            }
+            this.stopLoading();
             return rv;
         }
     }
 
-    onSubmit(callback) {
-        this._config.onSubmit = callback;
+    handlePromise(promise) {
+        return promise
+            .then(response => {
+                this._onSubmitSuccess();
+                if (response?.formValues) {
+                    this.setInitialValues(response.formValues);
+                    this.setValues(response.formValues);
+                } else if (!this.hasInitialValues()) {
+                    this.reset();
+                }
+                return Promise.resolve(response);
+            })
+            .finally(() => this.stopLoading());
     }
 
-    /**
-     * Registers a field to the form.
-     * @param {*} field
-     */
-    registerField(field) {
-        this.fields[field.getId()] = field;
+    _onSubmitSuccess() {
+        this.getFields().forEach(field => {
+            field.onSubmitSuccess();
+        });
+        const { successMessage } = this._config;
+        if (successMessage) {
+            this?.messageResource.success(successMessage);
+        }
+    }
+
+    startLoading() {
+        if (!this.preloader) {
+            this.preloader = new CircularPreloader();
+        }
+        this.bodyNode.append(this.preloader);
+    }
+
+    stopLoading() {
+        this.preloader?.remove();
+        const { variant } = this._config;
+        if (variant !== 'mini') {
+            this.scrollIntoView();
+        }
     }
 
     focusFirstErroredInput() {

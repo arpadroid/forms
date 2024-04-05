@@ -20,11 +20,16 @@ class FieldInput extends HTMLInputElement {
     async connectedCallback() {
         this.update();
         /** @type {Field} */
-        this.field = this.closest('.arpaField');
-        this.id = this.field.getHtmlId();
-        this.name = this.field.id;
+        if (!this.field) {
+            this.field = this.closest('.arpaField');
+        }
+        if (this.field) {
+            this.id = this.field.getHtmlId();
+            this.name = this.field.getId();
+            this.value = this.field.getAttribute('value');
+        }
+
         this.classList.add('fieldInput');
-        this.value = this.field.getAttribute('value');
     }
 
     update() {}

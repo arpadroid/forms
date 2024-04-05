@@ -2,6 +2,15 @@ import { CountryOptions, IconOptions } from './demoFormOptions.js';
 
 customElements.whenDefined('arpa-form').then(() => {
     const form = document.getElementById('demoForm');
+
+    // const messages = form.querySelector('arpa-messages');
+    // const message = messages.resource.error('This is a dynamically added error message.', {
+    //     canClose: true
+    // });
+    // setTimeout(() => {
+    //     messages.resource.deleteMessage(message);
+    // }, 2000);
+
     const radio = form.getField('radio');
     radio?.listen('onChange', value => {
         console.log('radio on change', value);
@@ -23,7 +32,8 @@ customElements.whenDefined('arpa-form').then(() => {
 
     const selectFetch = form.getField('select-combo-fetch');
     selectFetch?.setFetchOptions(async query => {
-        return await import('./demoFormOptions.js').then(({ People }) => {
+        return await import('./demoFormOptions.js').then(async ({ People }) => {
+            // await new Promise(resolve => setTimeout(resolve, 1600));
             if (!query) {
                 return [...People].splice(0, 10);
             }
@@ -57,6 +67,12 @@ customElements.whenDefined('arpa-form').then(() => {
     });
 
     form.onSubmit(payload => {
+        // return new Promise(resolve => {
+        //     setTimeout(() => {
+        //         resolve(payload);
+        //     }, 2000);
+        // });
         console.log('Form submitted', payload);
+        return true;
     });
 });

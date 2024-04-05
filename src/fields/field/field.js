@@ -50,6 +50,8 @@ class Field extends ArpaElement {
         });
     }
 
+    onSubmitSuccess() {}
+
     _onReady() {
         this.form = this.getForm();
         this.classList.add('arpaField');

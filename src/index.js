@@ -23,10 +23,20 @@ export { default as TextField } from './fields/textField/textField.js';
 export { default as PasswordField } from './fields/passwordField/passwordField.js';
 export { default as TextAreaField } from './fields/textAreaField/textAreaField.js';
 export { default as NumberField } from './fields/numberField/numberField.js';
-export { default as DateTimeField } from './fields/dateTimeField/dateTimeField.js';
-export { default as DateField } from './fields/dateField/dateField.js';
 export { default as ColorField } from './fields/colorField/colorField.js';
 export { default as EmailField } from './fields/emailField/emailField.js';
+export { default as UrlField } from './fields/urlField/urlField.js';
+export { default as TelField } from './fields/telField/telField.js';
+export { default as RangeField } from './fields/rangeField/rangeField.js';
+export { default as MonthField } from './fields/monthField/monthField.js';
+
+/**
+ * Date & Time Fields.
+ */
+export { default as DateTimeField } from './fields/dateTimeField/dateTimeField.js';
+export { default as DateField } from './fields/dateField/dateField.js';
+export { default as TimeField } from './fields/timeField/timeField.js';
+export { default as WeekField } from './fields/weekField/weekField.js';
 
 /**
  * Options Fields.
@@ -51,3 +61,4 @@ export { default as SelectOption } from './fields/selectField/selectOption/selec
 export { default as ArrayField } from './fields/arrayField/arrayField.js';
 export { default as CheckboxField } from './fields/checkboxField/checkboxField.js';
 export { default as GroupField } from './fields/groupField/groupField.js';
+export { default as HiddenField } from './fields/hiddenField/hiddenField.js';
