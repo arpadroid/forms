@@ -79,3 +79,8 @@
         gap: 32px 0px;
     }
 }
+
+.groupField__fields > .arpaField:only-child {
+    flex: 1 1 100%;
+    max-width: 100%;
+}

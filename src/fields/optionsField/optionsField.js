@@ -33,6 +33,10 @@ class OptionsField extends Field {
         });
     }
 
+    getFieldType() {
+        return 'options';
+    }
+
     /**
      * Renders the input element of the options field.
      * @returns {string} The rendered input element.

@@ -1,4 +1,4 @@
-import { attr, lcFirst, mergeObjects, processTemplate, ObserverTool } from '@arpadroid/tools';
+import { attr, mergeObjects, processTemplate, ObserverTool } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 import { FieldTemplate, InputTemplate } from './fieldTemplate.js';
 import FieldValidator from '../../utils/fieldValidator.js';
@@ -9,6 +9,7 @@ import { I18n } from '@arpadroid/i18n';
  * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
  */
 
+const html = String.raw;
 class Field extends ArpaElement {
     _validations = ['required', 'minLength', 'maxLength', 'size'];
     static _isReady = false;
@@ -69,6 +70,7 @@ class Field extends ArpaElement {
             inputTemplate: Field.inputTemplate,
             variant: undefined,
             validator: FieldValidator,
+            hasInputMask: true,
             inputAttributes: {
                 type: 'text'
             },
@@ -166,13 +168,19 @@ class Field extends ArpaElement {
     getTemplateVars() {
         const { inputTemplate } = this._config;
         return {
+            id: this.getHtmlId(),
             input: processTemplate(inputTemplate, this.getInputTemplateVars()),
             tooltip: this.getTooltip(),
             label: this.getLabel(),
             icon: this.getIcon(),
             iconRight: this.getIconRight(),
-            content: this._content
+            content: this._content,
+            inputMask: this.hasInputMask() && html`<field-input-mask></field-input-mask>`,
         };
+    }
+
+    hasInputMask() {
+        return this.hasAttribute('has-input-mask') || this._config.hasInputMask;
     }
 
     /**
@@ -370,11 +378,11 @@ class Field extends ArpaElement {
     }
 
     /**
-     * Returns the field type.
+     * Returns the field type, override in child classes.
      * @returns {string}
      */
     getFieldType() {
-        return lcFirst(this.constructor.name.replace('Field', '')) || 'field';
+        return 'field';
     }
 
     /**

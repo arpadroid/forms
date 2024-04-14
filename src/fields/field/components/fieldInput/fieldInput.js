@@ -17,10 +17,10 @@ class FieldInput extends HTMLInputElement {
         return customElements.whenDefined('arpa-field');
     }
 
-    async connectedCallback() {
+    connectedCallback() {
         this.update();
-        /** @type {Field} */
         if (!this.field) {
+            /** @type {Field} */
             this.field = this.closest('.arpaField');
         }
         if (this.field) {

@@ -13,7 +13,7 @@ export const FieldTemplate = html`
         <p is="field-description"></p>
         <div class="arpaField__inputWrapper">
             {input}
-            <field-input-mask></field-input-mask>
+            {inputMask}
         </div>
     </div>
 
