@@ -1,4 +1,6 @@
 node_modules/
 dist/
+*.min.css
 *.bundled.css
 junit.xml
+*storybook.log
