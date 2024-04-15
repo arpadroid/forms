@@ -83,7 +83,7 @@ class FileItem extends ListItem {
 
     renderTitleContent(title = this.getTitle()) {
         return html`
-            <div class="filteItem__titleContent">
+            <div class="fileItem__titleContent">
                 <arpa-icon>{titleIcon}</arpa-icon>
                 <span class="fileItem__name">${title}</span>
                 <span class="fileItem__extension">.{extension}</span>
@@ -158,7 +158,7 @@ class FileItem extends ListItem {
                 return promise.then(() => this.delete());
             }
             if (promise !== false) {
-                this.remove();
+                this.removeItem();
             }
             return promise;
         }

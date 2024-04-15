@@ -6,7 +6,6 @@ class FileList extends List {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'fileList',
-            heading: 'Files',
             itemComponent: FileItem,
         });
     }

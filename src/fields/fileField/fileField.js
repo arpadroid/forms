@@ -186,24 +186,17 @@ class FileField extends Field {
               `;
     }
 
-    renderUploadList(inputId = this.getHtmlId()) {
+    renderUploadList(id = this.getHtmlId()) {
+        const { uploadListLabel: heading = '' } = this._config;
         return html`
-            <file-list
-                id="${inputId}-uploadList"
-                class="fileField__uploadList"
-                heading="${this._config.uploadListLabel}"
-            ></file-list>
+            <file-list id="${id}-uploadList" class="fileField__uploadList" heading="${heading}"></file-list>
         `;
     }
 
-    renderFileList(inputId = this.getHtmlId()) {
+    renderFileList(id = this.getHtmlId()) {
+        const { fileListLabel: heading = '' } = this._config;
         return html`
-            <file-list
-                id="${inputId}-fileList"
-                class="fileField__fileList"
-                heading="${this._config.fileListLabel}"
-            >
-            </file-list>
+            <file-list id="${id}-fileList" class="fileField__fileList" heading="${heading}"></file-list>
         `;
     }
 

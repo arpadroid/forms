@@ -19,7 +19,7 @@ export default {
                 >
                     <file-item
                         size="10000"
-                        src="http://localhost:8000/demo/assets/document.txt"
+                        src="http://localhost:8000/demo/assets/very long document name to test for layout.txt"
                     ></file-item>
                 </file-field>
             </form>
