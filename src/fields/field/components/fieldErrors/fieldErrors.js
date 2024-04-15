@@ -49,7 +49,7 @@ class FieldErrors extends HTMLElement {
     renderError(error) {
         const errorItem = document.createElement('li');
         errorItem.classList.add('fieldErrors__item');
-        errorItem.textContent = error;
+        errorItem.innerHTML = error;
         return errorItem;
     }
 

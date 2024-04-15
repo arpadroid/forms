@@ -1,0 +1,27 @@
+.fileField__fileList:has(.arpaList__items:empty),
+.fileField__uploadList:has(.arpaList__items:empty) {
+    display: none;
+}
+
+.fileField__fileLists {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    margin-top: 8px;
+    flex: 0;
+
+    .arpaList {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-width: 300px;
+    }
+
+    .arpaList__items {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

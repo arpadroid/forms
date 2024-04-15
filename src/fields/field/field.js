@@ -228,6 +228,7 @@ class Field extends ArpaElement {
         this.inputMask = this.querySelector('field-input-mask');
         this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
         this.label = this.querySelector('label[is="field-label"]');
+        this.headerNode = this.querySelector('.arpaField__header');
     }
 
     /**

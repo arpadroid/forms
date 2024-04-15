@@ -62,3 +62,12 @@ export { default as ArrayField } from './fields/arrayField/arrayField.js';
 export { default as CheckboxField } from './fields/checkboxField/checkboxField.js';
 export { default as GroupField } from './fields/groupField/groupField.js';
 export { default as HiddenField } from './fields/hiddenField/hiddenField.js';
+
+/**
+ * File Fields.
+ */
+
+export { default as FileField } from './fields/fileField/fileField.js';
+export { default as FileFieldInput } from './fields/fileField/components/fileFieldInput/fileFieldInput.js';
+export { default as FileItem } from './fields/fileField/components/fileItem/fileItem.js';
+export { default as FileList } from './fields/fileField/components/fileList/fileList.js';

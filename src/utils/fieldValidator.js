@@ -3,21 +3,11 @@
  * @typedef {import('../fields/field/field.js').default} Field
  */
 
-import {
-    formatBytes,
-    getExtension,
-    megaBytesToBytes,
-    ucFirst,
-    validateColor,
-    validateLength,
-    validateMaxLength,
-    validateMinLength,
-    validateNumber,
-    validateRegex,
-    validateRequired,
-    validateSize
-} from '@arpadroid/tools';
+import { formatBytes, getExtension, megaBytesToBytes, ucFirst, processTemplate } from '@arpadroid/tools';
+import { validateMinLength, validateNumber, validateRegex, validateRequired } from '@arpadroid/tools';
+import { validateColor, validateLength, validateMaxLength, validateSize } from '@arpadroid/tools';
 
+const html = String.raw;
 /**
  * Represents a field validator.
  */
@@ -280,12 +270,12 @@ class FieldValidator {
         if (minSize) {
             const minBytes = megaBytesToBytes(minSize);
             if (file?.size < minBytes) {
-                const messageNode = document.createElement('span');
-                messageNode.innerHTML = this.i18n.errMinSize
-                    .replace('{filename}', `<strong>${file.name}</strong>`)
-                    .replace('{size}', `<strong>${formatBytes(file.size, 0)}</strong>`)
-                    .replace('{minSize}', `<strong>${formatBytes(minBytes, 0)}</strong>`);
-                this.setError(messageNode);
+                const message = processTemplate(this.i18n.errMinSize, {
+                    file: html`<strong>${file.name}</strong>`,
+                    size: html`<strong>${formatBytes(file.size, 0)}</strong>`,
+                    minSize: html`<strong>${formatBytes(minBytes, 0)}</strong>`
+                });
+                this.setError(message);
                 valid = false;
             }
         }
@@ -303,12 +293,12 @@ class FieldValidator {
         const extension = getExtension(file);
         if (extensions?.length && !extensions.includes(extension)) {
             valid = false;
-            const messageNode = document.createElement('span');
-            messageNode.innerHTML = this.i18n.errExtensions
-                .replace('{extensions}', `<strong>${extensions.join(', ')}</strong>`)
-                .replace('{size}', `<strong>${formatBytes(file.size, 1)}</strong>`)
-                .replace('{file}', `<strong>${file.name}</strong>`);
-            this.setError(messageNode);
+            const message = processTemplate(this.i18n.errExtensions, {
+                extensions: html`<span>${extensions.join(', ')}</span>`,
+                size: html`<span>${formatBytes(file.size, 1)}</span>`,
+                file: html`<span>${file.name}</span>`
+            });
+            this.setError(message);
         }
         return valid;
     }
@@ -324,12 +314,12 @@ class FieldValidator {
         if (maxSize) {
             const maxBytes = megaBytesToBytes(maxSize);
             if (file?.size > maxBytes) {
-                const messageNode = document.createElement('span');
-                messageNode.innerHTML = this.i18n.errMaxSize
-                    .replace('{filename}', `<strong>${file.name}</strong>`)
-                    .replace('{size}', `<strong>${formatBytes(file.size, 1)}</strong>`)
-                    .replace('{maxSize}', `<strong>${formatBytes(maxBytes, 1)}</strong>`);
-                this.setError(messageNode);
+                const message = processTemplate(this.i18n.errMaxSize, {
+                    file: html`<strong>${file.name}</strong>`,
+                    size: html`<strong>${formatBytes(file.size, 1)}</strong>`,
+                    maxSize: html`<strong>${formatBytes(maxBytes, 1)}</strong>`
+                });
+                this.setError(message);
                 valid = false;
             }
         }

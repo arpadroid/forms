@@ -1,0 +1,6 @@
+file-field {
+    .arpaField__inputWrapper {
+        display: flex;
+        flex-direction: column;
+    }
+}
