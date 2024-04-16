@@ -62,6 +62,7 @@ export { default as ArrayField } from './fields/arrayField/arrayField.js';
 export { default as CheckboxField } from './fields/checkboxField/checkboxField.js';
 export { default as GroupField } from './fields/groupField/groupField.js';
 export { default as HiddenField } from './fields/hiddenField/hiddenField.js';
+export { default as SearchField } from './fields/searchField/searchField.js';
 
 /**
  * File Fields.

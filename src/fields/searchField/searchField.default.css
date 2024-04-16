@@ -1,0 +1,63 @@
+/* .searchField .fieldComponent__body:focus-within .searchField__button,
+.searchField__button.searchField__button:hover,
+.searchField__button.searchField__button:focus {
+    background-color: var(--primary-hilight);
+}
+
+@media screen and (max-width: 609px) {
+    .searchField--mini.searchField--mini {
+        flex: 0 0 auto;
+        max-width: 40px;
+        max-height: 40px;
+        overflow: visible;
+    }
+
+    .searchField--mini .inputComponent {
+        transition: width, opacity, border-color 0.5s ease-in-out;
+        position: absolute;
+        opacity: 0;
+        left: 100%;
+        z-index: 1;
+        padding-left: 24px;
+        margin-left: -43px;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-radius: 24px;
+        height: 44px;
+        border: 2px solid var(--grey-300);
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+            rgba(17, 17, 26, 0.1) 0px 16px 48px;
+        width: 0px;
+    }
+
+    .searchField__button.searchField__button {
+        z-index: 2;
+    }
+
+    .searchField__button.searchField__button:hover,
+    .searchField__button.searchField__button:focus {
+        border: 2px solid transparent;
+    }
+
+    .searchField--mini .searchField__button:focus + .inputComponent,
+    .searchField--mini .inputComponent.inputComponent:focus {
+        border: 2px solid var(--color-primary);
+        opacity: 1;
+        width: 240px;
+        padding-left: 42px;
+    }
+
+    .searchField--mini .inputMaskComponent {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 610px) {
+    .searchField__button.searchField__button {
+        display: none;
+    }
+
+    .sortByField .inputComponent {
+        background-color: var(--color-background);
+    }
+} */

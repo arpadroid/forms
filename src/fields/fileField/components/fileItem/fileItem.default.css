@@ -31,9 +31,18 @@
 .fileItem__titleContent {
     flex: 0 1 auto;
     font-weight: bold;
-
     font-family: var(--font-family-avant-garde-gothicbook);
     color: var(--color--text-light) !important;
+    display: inline-flex;
+    overflow: hidden;
+}
+
+.fileItem__name {
+    flex: 1 1 auto;
+    min-width: 0;
+    position: relative;
+    flex-basis: 0px;
+    flex-grow: 1;
 }
 
 .fileItem__titleContent .listItem__titleText {
@@ -60,6 +69,6 @@
     padding: 4px 0px;
     display: flex;
     align-items: center;
-    width: 100%;
     justify-content: space-between;
+    margin-left: auto;
 }
