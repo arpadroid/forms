@@ -1,0 +1,111 @@
+.imageItem.imageItem {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    box-shadow: none;
+}
+
+/* Title */
+
+.imageItem .listItem__title {
+    overflow: visible;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+}
+
+.imageItem .fileItem__titleContent {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-bottom: 0;
+    padding-left: 4px;
+}
+
+.imageItem.imageItem .fileItem__titleContent .icon {
+    margin-right: 8px;
+    position: relative;
+}
+
+/* Image */
+
+.imageItem .listItem__imageContainer {
+    width: 100%;
+    height: 100%;
+    max-height: 340px;
+    min-height: 240px;
+    background-color: var(--color-background);
+    margin-right: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.imageItem .imageComponent__image {
+    width: 100%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 400px;
+    padding: 4px;
+    object-fit: contain;
+}
+
+.imageItem .listItem__imageError {
+    width: 100%;
+}
+
+.imageItem .listItem__imageError .icon {
+    min-width: 100%;
+}
+
+/* Content */
+
+.imageItem .listItem__contentContainer {
+    flex: 0 1 auto;
+}
+
+.imageItem .listItem__contentContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Metadata */
+
+.imageItem .fileItem__metadata {
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    display: flex;
+    flex: 0 1 auto;
+}
+
+/* Filesize */
+.imageItem .fileItem__size.fileItem__size {
+    margin-left: auto;
+    flex: 0 0 auto;
+}
+
+/* Icon */
+.imageItem .listItem__contentContainer .icon {
+    color: var(--color-primary);
+    font-size: 20px;
+    margin-right: 0;
+    padding-right: 0;
+}
+
+/* Marked to DELETE */
+
+.imageItem.fileItem--markedForDeletion .listItem__imageContainer {
+    border: 1px dotted var(--color-red);
+    border-radius: 4px;
+}
+.imageItem.fileItem--markedForDeletion img {
+    opacity: 0.3;
+}

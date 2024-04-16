@@ -56,6 +56,9 @@ class Field extends ArpaElement {
     _onReady() {
         this.form = this.getForm();
         this.classList.add('arpaField');
+        if (this._config?.className) {
+            this.classList.add(this._config?.className);
+        }
         this.initializeProperties();
     }
 

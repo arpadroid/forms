@@ -72,3 +72,6 @@ export { default as FileField } from './fields/fileField/fileField.js';
 export { default as FileFieldInput } from './fields/fileField/components/fileFieldInput/fileFieldInput.js';
 export { default as FileItem } from './fields/fileField/components/fileItem/fileItem.js';
 export { default as FileList } from './fields/fileField/components/fileList/fileList.js';
+export { default as ImageField } from './fields/imageField/imageField.js';
+export { default as ImageList } from './fields/imageField/components/imageList/imageList.js';
+export { default as ImageItem } from './fields/imageField/components/imageItem/imageItem.js';

@@ -17,7 +17,6 @@ class ArrayField extends OptionsField {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            className: 'fieldComponent multiOptionsFieldComponent',
             value: []
         });
     }

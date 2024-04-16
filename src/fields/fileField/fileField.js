@@ -5,7 +5,6 @@
 
 import Field from '../field/field.js';
 import { mergeObjects, renderNode } from '@arpadroid/tools';
-import FileItem from './components/fileItem/fileItem.js';
 
 const html = String.raw;
 class FileField extends Field {
@@ -23,13 +22,15 @@ class FileField extends Field {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
+            className: 'fileField',
             inputTemplate: html`
                 <input is="file-field-input" />
                 <div class="fileField__fileLists">{fileList} {uploadList}</div>
                 {fileSelect}
             `,
-            fileComponent: FileItem,
-            fileTagName: 'file-item',
+            listComponent: 'file-list',
+            uploadListComponent: 'file-list',
+            fileComponent: 'file-item',
             uploadListLabel: this.i18n.common?.labels?.lblUploads,
             fileListLabel: this.i18n?.lblUploadedFiles,
             hasDropArea: true,
@@ -64,8 +65,8 @@ class FileField extends Field {
     }
 
     getFileNodes() {
-        const { fileTagName } = this._config;
-        return this._childNodes.filter(node => node?.tagName?.toLowerCase() === fileTagName);
+        const { fileComponent } = this._config;
+        return this._childNodes.filter(node => node?.tagName?.toLowerCase() === fileComponent);
     }
 
     hasDropArea() {
@@ -96,14 +97,6 @@ class FileField extends Field {
 
     resetValue() {
         this.clearUploads();
-    }
-
-    getFileComponent() {
-        return this._config.fileComponent;
-    }
-
-    getUploadComponent() {
-        return this._config.uploadComponent;
     }
 
     allowMultiple() {
@@ -187,16 +180,16 @@ class FileField extends Field {
     }
 
     renderUploadList(id = this.getHtmlId()) {
-        const { uploadListLabel: heading = '' } = this._config;
+        const { uploadListLabel: heading = '', uploadListComponent: list } = this._config;
         return html`
-            <file-list id="${id}-uploadList" class="fileField__uploadList" heading="${heading}"></file-list>
+            <${list} id="${id}-uploadList" class="fileField__uploadList" heading="${heading}"></${list}>
         `;
     }
 
     renderFileList(id = this.getHtmlId()) {
-        const { fileListLabel: heading = '' } = this._config;
+        const { fileListLabel: heading = '', listComponent: list } = this._config;
         return html`
-            <file-list id="${id}-fileList" class="fileField__fileList" heading="${heading}"></file-list>
+            <${list} id="${id}-fileList" class="fileField__fileList" heading="${heading}"></${list}>
         `;
     }
 

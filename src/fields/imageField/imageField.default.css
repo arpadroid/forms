@@ -1,0 +1,45 @@
+.imageField {
+    width: 100%;
+
+    .arpaField__body {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .fileField__fileLists {
+        margin-top: 0;
+
+        .arpaList__body {
+            width: 100%;
+            flex: 1 1 auto;
+        }
+    }
+
+    .arpaList {
+        flex: 1 1 auto;
+        align-items: center;
+        justify-content: flex-start;
+        max-width: 100%;
+    }
+}
+
+/* Multiple Images */
+.imageField.fileField--multiple {
+    .fileField__fileLists {
+        .arpaList__items {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: space-between;
+        }
+
+        .imageItem {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: auto;
+            margin: 0;
+            min-width: 300px;
+        }
+    }
+}
