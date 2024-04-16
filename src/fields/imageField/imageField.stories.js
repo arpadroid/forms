@@ -2,7 +2,7 @@ import { fn } from '@storybook/test';
 const html = String.raw;
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-    title: 'Fields/Image',
+    title: 'Fields/File/Image',
     tags: ['autodocs'],
     render: args => {
         const { allowMultiple, hasDropArea, minSize, maxSize } = args;

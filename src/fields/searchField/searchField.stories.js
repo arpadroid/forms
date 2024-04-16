@@ -1,7 +1,7 @@
 import { fn } from '@storybook/test';
 const html = String.raw;
 export default {
-    title: 'Fields/Search',
+    title: 'Fields/Text/Search',
     tags: ['autodocs'],
     render: args => {
         return html`
