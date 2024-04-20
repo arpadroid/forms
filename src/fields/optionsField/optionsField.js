@@ -1,4 +1,4 @@
-import { attr, mergeObjects } from '@arpadroid/tools';
+import { attr, mergeObjects, processTemplate } from '@arpadroid/tools';
 import { CircularPreloader } from '@arpadroid/ui';
 import Field from '../field/field.js';
 const html = String.raw;
@@ -28,7 +28,8 @@ class OptionsField extends Field {
                 {input}
                 <div role="listbox" class="optionsField__options">{options}</div>
             `,
-            optionTemplate: html`<field-option role="option"></field-option>`,
+            optionComponent: 'field-option',
+            optionTemplate: html`<{optionComponent} role="option"></{optionComponent}`,
             autoFetchOptions: true
         });
     }
@@ -168,10 +169,11 @@ class OptionsField extends Field {
     }
 
     _renderOptions(options) {
+        const { optionComponent, optionTemplate } = this._config;
         this.optionsNode.innerHTML = '';
         this.appendChild(this.optionsNode);
         const node = document.createElement('div');
-        node.innerHTML = this._config.optionTemplate;
+        node.innerHTML = processTemplate(optionTemplate, { optionComponent });
         options?.forEach(option => {
             const optionNode = node.firstElementChild.cloneNode(true);
             optionNode.setConfig(option);

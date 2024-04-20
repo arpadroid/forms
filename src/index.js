@@ -54,6 +54,9 @@ export { default as SelectField } from './fields/selectField/selectField.js';
 export { default as SelectCombo } from './fields/selectCombo/selectCombo.js';
 export { default as SelectOption } from './fields/selectField/selectOption/selectOption.js';
 
+export { default as TagField } from './fields/tagField/tagField.js';
+export { default as TagOption } from './fields/tagField/components/tagOption/tagOption.js';
+
 /**
  * Other Fields.
  */

@@ -1,6 +1,5 @@
 import { mergeObjects } from '@arpadroid/tools';
 import ArrayField from '../arrayField/arrayField.js';
-const html = String.raw;
 
 /**
  * @typedef {import('./checkboxesFieldInterface').CheckboxesFieldInterface} CheckboxesFieldInterface
@@ -21,10 +20,14 @@ class CheckboxesField extends ArrayField {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            optionTemplate: html`<checkbox-option role="option"></checkbox-option>`,
+            optionComponent: 'checkbox-option',
             hasLabelToggle: true,
             inputAttributes: { type: 'checkbox' }
         });
+    }
+
+    getFieldType() {
+        return 'checkboxes';
     }
 
     /**

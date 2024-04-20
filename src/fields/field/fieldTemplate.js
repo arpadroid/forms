@@ -8,7 +8,7 @@ export const FieldTemplate = html`
         <field-errors></field-errors>
         <arpa-tooltip position="bottom-right">{tooltip}</arpa-tooltip>
     </div>
-
+    {subHeader}
     <div class="arpaField__body">
         <p is="field-description"></p>
         <div class="arpaField__inputWrapper">

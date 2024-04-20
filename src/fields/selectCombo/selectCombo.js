@@ -49,8 +49,12 @@ class SelectCombo extends SelectField {
                 {input} {button}
                 <div class="selectCombo__options comboBox">{options}</div>
             `,
-            optionTemplate: html`<select-option role="option"></select-option>`
+            optionComponent: 'select-option'
         });
+    }
+
+    getFieldType() {
+        return 'selectCombo';
     }
 
     getInput() {
@@ -206,7 +210,7 @@ class SelectCombo extends SelectField {
             return false;
         }
     }
-    
+
     renderOptions(options) {
         super.renderOptions(options);
         requestAnimationFrame(() => this.inputCombo?.place());

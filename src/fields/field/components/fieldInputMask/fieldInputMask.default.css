@@ -26,12 +26,12 @@ field-input-mask > * {
 
 .fieldInputMask__rhs,
 .fieldInputMask__lhs {
-    padding: 0px 14px;
+    padding: 0px 16px;
     display: flex;
     align-items: center;
 }
 
 .fieldInputMask__rhs {
     margin-left: auto;
-    padding-right: 8px;
+    padding-right: 16px;
 }

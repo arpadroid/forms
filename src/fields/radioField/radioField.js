@@ -1,8 +1,6 @@
 import { mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
 
-const html = String.raw;
-
 /**
  * @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface
  */
@@ -17,9 +15,13 @@ class RadioField extends OptionsField {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            optionTemplate: html`<radio-option role="option"></radio-option>`,
+            optionComponent: 'radio-option',
             inputAttributes: { type: 'radio' }
         });
+    }
+
+    getFieldType() {
+        return 'radio';
     }
 
     /**

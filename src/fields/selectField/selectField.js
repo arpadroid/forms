@@ -21,8 +21,13 @@ class SelectField extends OptionsField {
             inputTemplate: html`<select id="{id}" class="optionsField__options fieldInput">
                 {options}
             </select>`,
-            optionTemplate: html`<option role="option" {selected}>{label}</option>`
+            optionComponent: 'option',
+            optionTemplate: html`<{optionComponent} role="option" {selected}>{label}</{optionComponent}>`
         });
+    }
+
+    getFieldType() {
+        return 'select';
     }
 
     /**

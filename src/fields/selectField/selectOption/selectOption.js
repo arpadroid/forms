@@ -16,7 +16,7 @@ class SelectOption extends FieldOption {
 
     constructor(config) {
         super(config);
-        this._onClick = this._onClick.bind(this);
+        this._onSelected = this._onSelected.bind(this);
     }
 
     /**
@@ -27,11 +27,18 @@ class SelectOption extends FieldOption {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'comboBox__item',
             template: html`
-                <button type="button" class="fieldOption__handler" for="{optionId}" tabindex="-1">
+                <button type="button" class="fieldOption__handler" data-value="{value}" tabindex="-1">
                     ${FieldOption.template}
                 </button>
             `
         });
+    }
+
+    getTemplateVars() {
+        return {
+            ...super.getTemplateVars(),
+            value: this.getProperty('value')
+        };
     }
 
     /**
@@ -40,15 +47,15 @@ class SelectOption extends FieldOption {
      */
     _onConnected() {
         this.handler = this.querySelector('.fieldOption__handler');
-        this.handler?.removeEventListener('click', this._onClick);
-        this.handler?.addEventListener('click', this._onClick);
+        this.handler?.removeEventListener('click', this._onSelected);
+        this.handler?.addEventListener('click', this._onSelected);
     }
 
     /**
-     * Called when the element is clicked.
+     * Called when the element is selected.
      * @param {MouseEvent} event - The event object.
      */
-    _onClick(event) {
+    _onSelected(event) {
         this.field.setValue(this.getAttribute('value'));
         this.field._callOnChange(event);
     }

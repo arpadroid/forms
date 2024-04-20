@@ -1,4 +1,4 @@
-import { attr, mergeObjects, processTemplate, ObserverTool } from '@arpadroid/tools';
+import { attr, mergeObjects, processTemplate, ObserverTool, render } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 import { FieldTemplate, InputTemplate } from './fieldTemplate.js';
 import FieldValidator from '../../utils/fieldValidator.js';
@@ -58,6 +58,9 @@ class Field extends ArpaElement {
         this.classList.add('arpaField');
         if (this._config?.className) {
             this.classList.add(this._config?.className);
+        }
+        if (Array.isArray(this._config.classNames)) {
+            this.classList.add(...this._config.classNames);
         }
         this.initializeProperties();
     }
@@ -179,7 +182,13 @@ class Field extends ArpaElement {
             iconRight: this.getIconRight(),
             content: this._content,
             inputMask: this.hasInputMask() && html`<field-input-mask></field-input-mask>`,
+            subHeader: this.renderSubHeader(),
         };
+    }
+
+    renderSubHeader() {
+        const subHeader = this.getProperty('sub-header');
+        return render(subHeader, html`<div class="arpaField__subHeader">${subHeader}</div>`);
     }
 
     hasInputMask() {
