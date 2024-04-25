@@ -7,7 +7,7 @@ export default {
     render: args => {
         // const { allowMultiple, hasDropArea, extensions, minSize, maxSize } = args;
         return html`
-            <form id="demoForm" is="arpa-form">
+            <form id="checkboxesFieldForm" is="arpa-form">
                 <checkboxes-field
                     id="checkboxes"
                     label="Checkboxes Field"
@@ -21,7 +21,7 @@ export default {
             </form>
             <script type="module">
                 customElements.whenDefined('arpa-form').then(() => {
-                    const form = document.getElementById('demoForm');
+                    const form = document.getElementById('checkboxesFieldForm');
                     form.onSubmit(values => {
                         console.log('Form values', values);
                         return true;

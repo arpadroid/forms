@@ -1,4 +1,3 @@
-const html = String.raw;
 class FieldFootnote extends HTMLParagraphElement {
     connectedCallback() {
         this.field = this.closest('.arpaField');
@@ -16,7 +15,8 @@ class FieldFootnote extends HTMLParagraphElement {
     }
 
     getFootnote() {
-        return this.field.getAttribute('footnote');
+        this.field = this.closest('.arpaField');
+        return this.field.getProperty('footnote');
     }
 }
 

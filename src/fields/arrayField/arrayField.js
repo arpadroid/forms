@@ -21,6 +21,10 @@ class ArrayField extends OptionsField {
         });
     }
 
+    getFieldType() {
+        return 'array';
+    }
+
     _initializeValue() {
         const attrValue = this.getAttribute('value');
         if (attrValue) {

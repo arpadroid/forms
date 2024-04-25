@@ -4,7 +4,7 @@ const html = String.raw;
 export default {
     title: 'Fields/Select/Tag',
     tags: ['autodocs'],
-    render: args => {
+    render: () => {
         return html`
             <form id="demoForm" is="arpa-form">
                 <tag-field id="tag-field" label="Tag field">

@@ -7,13 +7,12 @@
         <!-- <link rel="stylesheet" href="/ui/themes/default/default.min.css" /> -->
         <link rel="stylesheet" href="/themes/default/default.bundled.css" />
         <% for (key in htmlWebpackPlugin.files.js) { %>
-        <script src="//unpkg.com/@ungap/custom-elements"></script>
+        <!-- <script src="//unpkg.com/@ungap/custom-elements"></script> -->
         <script type="module" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
         <% } %>
     </head>
     <body>
         <form id="demoForm" is="arpa-form" title="My Form">
-            
             <arpa-messages id="form-messages">
                 <!-- <info-message>This is an information message</info-message> -->
                 <!-- <error-message can-close title="There are errors in your form">
@@ -60,12 +59,12 @@
                         required
                     ></number-field>
                     <color-field id="color" label="Color" value="yellowgreen"></color-field>
-                    <!-- <password-field
+                    <password-field
                         id="password"
                         label="Password"
                         confirm
                         value="P455w0rd!?"
-                    ></password-field> -->
+                    ></password-field>
                     <text-area-field id="textarea" label="Text Area" value="some value"></text-area-field>
 
                     <text-field
@@ -106,6 +105,14 @@
                     <week-field id="week" label="Week"></week-field>
                     <month-field id="month" label="Month"></month-field>
                 </group-field> -->
+            </div>
+            <div class="arpaForm__column">
+                <group-field open id="files-group" label="File Fields">
+                    <file-field allow-multiple id="file" label="File">
+                        <file-item size="10000" src="http://localhost:8000/demo/assets/andrea-segovia.jpg"></file-item>
+                    </file-field>
+                    <!-- <file-field id="files" label="Files" allow-multiple></file-field> -->
+                </group-field>
             </div>
             <!-- <div class="arpaForm__column">
                 <group-field open icon="lists" id="select-group" label="Select fields">

@@ -1,6 +1,5 @@
 import { attr, mergeObjects, processTemplate, ObserverTool, render } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
-import { FieldTemplate, InputTemplate } from './fieldTemplate.js';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
 /**
@@ -11,20 +10,19 @@ import { I18n } from '@arpadroid/i18n';
 
 const html = String.raw;
 class Field extends ArpaElement {
-    _validations = ['required', 'minLength', 'maxLength', 'size'];
+    //////////////////////
+    // #region PROPERTIES
+    /////////////////////
+
     static _isReady = false;
+    _validations = ['required', 'minLength', 'maxLength', 'size'];
     _hasInitialized = false;
 
-    static template = FieldTemplate;
-    static inputTemplate = InputTemplate;
+    // #endregion
 
-    /**
-     * Returns the observed attributes for the field element.
-     * @type {string[]}
-     */
-    static get observedAttributes() {
-        return ['value'];
-    }
+    //////////////////////////
+    // #region INITIALIZATION
+    //////////////////////////
 
     /**
      * Initializes the field after constructor.
@@ -39,30 +37,6 @@ class Field extends ArpaElement {
         }
         await this.onReady();
         this._onReady();
-    }
-
-    onReady() {
-        if (Field._isReady) {
-            return Promise.resolve();
-        }
-        return customElements.whenDefined('arpa-form').then(response => {
-            Field._isReady = true;
-            return Promise.resolve(response);
-        });
-    }
-
-    onSubmitSuccess() {}
-
-    _onReady() {
-        this.form = this.getForm();
-        this.classList.add('arpaField');
-        if (this._config?.className) {
-            this.classList.add(this._config?.className);
-        }
-        if (Array.isArray(this._config.classNames)) {
-            this.classList.add(...this._config.classNames);
-        }
-        this.initializeProperties();
     }
 
     /**
@@ -151,10 +125,6 @@ class Field extends ArpaElement {
         }
     }
 
-    getForm() {
-        return this.closest('form') || this._config.form;
-    }
-
     /**
      * Initializes the input element for the field.
      * @param {HTMLInputElement} input
@@ -166,6 +136,42 @@ class Field extends ArpaElement {
             attr(this.input, this._config.inputAttributes);
         }
     }
+
+    _initializeNodes() {
+        /** @type {FormComponent} */
+        this.form = this.getForm();
+        this._initializeInputNode();
+        this.inputMask = this.querySelector('field-input-mask');
+        this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
+        this.label = this.querySelector('label[is="field-label"]');
+        this.headerNode = this.querySelector('.arpaField__header');
+        this.bodyNode = this.querySelector('.arpaField__body');
+    }
+
+    // #endregion
+
+    /////////////////////
+    // #region RENDERING
+    ////////////////////
+
+    static template = html`
+        <div class="arpaField__header">
+            <label is="field-label"></label>
+            <field-errors></field-errors>
+            <arpa-tooltip position="bottom-right">{tooltip}</arpa-tooltip>
+        </div>
+        {subHeader}
+        <div class="arpaField__body">
+            <p is="field-description"></p>
+            <div class="arpaField__inputWrapper">{input} {inputMask}</div>
+        </div>
+
+        <div class="arpaField__footer">
+            <p is="field-footnote"></p>
+        </div>
+    `;
+
+    static inputTemplate = html`<input is="field-input" />`;
 
     /**
      * Returns the template variables for the field.
@@ -182,17 +188,13 @@ class Field extends ArpaElement {
             iconRight: this.getIconRight(),
             content: this._content,
             inputMask: this.hasInputMask() && html`<field-input-mask></field-input-mask>`,
-            subHeader: this.renderSubHeader(),
+            subHeader: this.renderSubHeader()
         };
     }
 
     renderSubHeader() {
         const subHeader = this.getProperty('sub-header');
         return render(subHeader, html`<div class="arpaField__subHeader">${subHeader}</div>`);
-    }
-
-    hasInputMask() {
-        return this.hasAttribute('has-input-mask') || this._config.hasInputMask;
     }
 
     /**
@@ -205,15 +207,14 @@ class Field extends ArpaElement {
         };
     }
 
-    /**
-     * Initializes the validation for the field.
-     */
-    initializeValidation() {
-        const { validator } = this._config;
-        if (validator && !this.validator) {
-            /** @type {FieldValidator} */
-            this.validator = new validator(this);
-        }
+    // #endregion
+
+    /////////////////////
+    // #region LIFECYCLE
+    ////////////////////
+
+    static get observedAttributes() {
+        return ['value'];
     }
 
     async connectedCallback() {
@@ -222,6 +223,28 @@ class Field extends ArpaElement {
             this.initializeProperties();
         }
         super.connectedCallback();
+    }
+
+    onReady() {
+        if (Field._isReady) {
+            return Promise.resolve();
+        }
+        return customElements.whenDefined('arpa-form').then(response => {
+            Field._isReady = true;
+            return Promise.resolve(response);
+        });
+    }
+
+    _onReady() {
+        this.form = this.getForm();
+        this.classList.add('arpaField');
+        if (this._config?.className) {
+            this.classList.add(this._config?.className);
+        }
+        if (Array.isArray(this._config.classNames)) {
+            this.classList.add(...this._config.classNames);
+        }
+        this.initializeProperties();
     }
 
     /**
@@ -233,25 +256,87 @@ class Field extends ArpaElement {
         this._initializeValue();
     }
 
-    _initializeNodes() {
-        /** @type {FormComponent} */
-        this.form = this.getForm();
-        this._initializeInputNode();
-        this.inputMask = this.querySelector('field-input-mask');
-        this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
-        this.label = this.querySelector('label[is="field-label"]');
-        this.headerNode = this.querySelector('.arpaField__header');
-        this.bodyNode = this.querySelector('.arpaField__body');
+    // #endregion
+
+    //////////////////////
+    // #region VALIDATION
+    /////////////////////
+
+    /**
+     * Initializes the validation for the field.
+     */
+    initializeValidation() {
+        const { validator } = this._config;
+        if (validator && !this.validator) {
+            /** @type {FieldValidator} */
+            this.validator = new validator(this);
+        }
     }
 
     /**
-     * Sends an onChange signal when the field's value changes.
-     * @param {Event} event
+     * Validates the field.
+     * @param {unknown} value
+     * @param {boolean} update - Whether to update the field's state.
+     * @returns {boolean}
      */
-    _callOnChange(event) {
-        if (this.form.isConnected) {
-            this.signal('onChange', this.getOnChangeValue(), this, event);
+    validate(value = this.getValue(), update = true) {
+        const isValid = this?.validator?.validate(value) ?? true;
+        if (isValid) {
+            this.classList.remove('arpaField--hasError');
+        } else {
+            this.classList.add('arpaField--hasError');
         }
+        if (update) {
+            this._isValid = isValid;
+        }
+        this.updateErrors();
+        return isValid;
+    }
+
+    /**
+     * Returns the error messages for the field.
+     * @returns {string[]}
+     */
+    getErrorMessages() {
+        return this.validator?.getErrors() ?? [];
+    }
+
+    /**
+     * Updates the errors for the field.
+     */
+    updateErrors() {
+        this.getErrorsComponent()?.setErrors(this.getErrorMessages());
+    }
+
+    /**
+     * Sets an error to the field.
+     * @param {string} text
+     */
+    setError(text) {
+        this.validator.setError(text);
+        this.updateErrors();
+    }
+
+    /**
+     * Returns the field errors component.
+     * @returns {FieldErrors}
+     */
+    getErrorsComponent() {
+        return this.querySelector('field-errors');
+    }
+
+    // #endregion
+
+    /////////////////////
+    // #region ACCESSORS
+    ////////////////////
+
+    getForm() {
+        return this.closest('form') || this._config.form;
+    }
+
+    hasInputMask() {
+        return this.hasAttribute('has-input-mask') || this._config.hasInputMask;
     }
 
     getOnChangeValue() {
@@ -314,66 +399,6 @@ class Field extends ArpaElement {
         }
         return this;
     }
-
-    /**
-     * VALIDATION.
-     */
-
-    /**
-     * Validates the field.
-     * @param {unknown} value
-     * @param {boolean} update - Whether to update the field's state.
-     * @returns {boolean}
-     */
-    validate(value = this.getValue(), update = true) {
-        const isValid = this?.validator?.validate(value) ?? true;
-        if (isValid) {
-            this.classList.remove('arpaField--hasError');
-        } else {
-            this.classList.add('arpaField--hasError');
-        }
-        if (update) {
-            this._isValid = isValid;
-        }
-        this.updateErrors();
-        return isValid;
-    }
-
-    /**
-     * Returns the error messages for the field.
-     * @returns {string[]}
-     */
-    getErrorMessages() {
-        return this.validator?.getErrors() ?? [];
-    }
-
-    /**
-     * Updates the errors for the field.
-     */
-    updateErrors() {
-        this.getErrorsComponent()?.setErrors(this.getErrorMessages());
-    }
-
-    /**
-     * Sets an error to the field.
-     * @param {string} text
-     */
-    setError(text) {
-        this.validator.setError(text);
-        this.updateErrors();
-    }
-
-    /**
-     * Returns the field errors component.
-     * @returns {FieldErrors}
-     */
-    getErrorsComponent() {
-        return this.querySelector('field-errors');
-    }
-
-    /**
-     * ACCESSORS.
-     */
 
     /**
      * Returns the custom validator for the field.
@@ -461,7 +486,7 @@ class Field extends ArpaElement {
      * @returns {number}
      */
     getMaxLength() {
-        return this.getProperty('maxLength');
+        return this.getProperty('max-length');
     }
 
     /**
@@ -469,7 +494,7 @@ class Field extends ArpaElement {
      * @returns {number}
      */
     getMinLength() {
-        return this.getProperty('minLength');
+        return this.getProperty('min-length');
     }
 
     /**
@@ -478,6 +503,10 @@ class Field extends ArpaElement {
      */
     getPlaceholder() {
         return this.getProperty('placeholder');
+    }
+
+    getOnFocus() {
+        return this._config?.onFocus;
     }
 
     /**
@@ -561,6 +590,36 @@ class Field extends ArpaElement {
     setSize(size) {
         this.setAttribute('size', size);
     }
+
+    isDisabled() {
+        const hasAttr = this.hasAttribute('disabled');
+        const attrValue = this.getAttribute('disabled');
+        return Boolean((hasAttr && attrValue !== 'false') || (!hasAttr && this._config.disabled));
+    }
+
+    // #endregion
+
+    //////////////////
+    // #region Events
+    /////////////////
+
+    /**
+     * Sends an onChange signal when the field's value changes.
+     * @param {Event} event
+     */
+    _callOnChange(event) {
+        if (this.form.isConnected) {
+            this.signal('onChange', this.getOnChangeValue(), this, event);
+        }
+    }
+
+    _onFocus() {
+        this.signal('onFocus', this);
+    }
+
+    onSubmitSuccess() {}
+
+    // #endregion
 }
 
 customElements.define('arpa-field', Field);

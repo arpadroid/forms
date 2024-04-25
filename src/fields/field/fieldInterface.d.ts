@@ -1,27 +1,26 @@
 export interface FieldInterface {
+    className?: string;
+    classNames?: string[],
+    description?: string;
     disabled?: boolean;
+    footNote?: string;
+    icon?: string;
+    iconRight?: string;
     id?: string;
-    name?: string;
-    inputTagName?: string;
     inputAttributes?: Record<string, unknown>;
-    onInitialized?: (value, field) => boolean;
+    inputTemplate?: string;
+    label?: string;
+    name?: string;
+    // onChange?: (value, field, event) => unknown;
     onFocus?: (field) => boolean;
-    onChange?: (value, field, event) => unknown;
     outputObject?: string;
     placeholder?: string;
     readOnly?: boolean;
-    type?: string;
     regex?: string;
-    required?: boolean;
     regexMessage?: string;
-    value?: unknown;
+    required?: boolean;
     template?: string;
-    inputTemplate?: string;
-    description?: string;
-    icon?: string;
-    iconRight?: string;
-    label?: string;
-    footNote?: string;
     tooltip?: string;
+    value?: unknown;
     variant?: string;
 }

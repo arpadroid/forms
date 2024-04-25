@@ -34,6 +34,10 @@ class DateField extends Field {
         };
     }
 
+    getFieldType() {
+        return 'date';
+    }
+
     /**
      * Event handler for when the date field is connected to the DOM.
      * Renders the calendar button.

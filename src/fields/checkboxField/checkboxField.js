@@ -37,6 +37,10 @@ class CheckboxField extends Field {
         });
     }
 
+    getFieldType() {
+        return 'checkbox';
+    }
+
     /**
      * Returns the template variables for the checkbox field.
      * @returns {Record<string, string>} The template variables.
