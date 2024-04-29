@@ -16,7 +16,7 @@ class FieldFootnote extends HTMLParagraphElement {
 
     getFootnote() {
         this.field = this.closest('.arpaField');
-        return this.field.getProperty('footnote');
+        return this.field?.getProperty('footnote');
     }
 }
 

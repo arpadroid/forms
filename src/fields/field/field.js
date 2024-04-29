@@ -33,7 +33,7 @@ class Field extends ArpaElement {
         ObserverTool.mixin(this);
         const id = this.getId();
         if (!id) {
-            throw new Error('Field must have an id');
+            throw new Error('Field must have an id', this);
         }
         await this.onReady();
         this._onReady();
@@ -290,6 +290,9 @@ class Field extends ArpaElement {
             this._isValid = isValid;
         }
         this.updateErrors();
+        if (!isValid) {
+            this.signal('onError', this.getErrorMessages(), this);
+        }
         return isValid;
     }
 
@@ -364,7 +367,7 @@ class Field extends ArpaElement {
      * @returns {unknown}
      */
     getValue() {
-        return this?.input?.value ?? this.getProperty('value');
+        return this?.input?.value ?? this?.input.getAttribute('value') ?? this.getProperty('value');
     }
 
     getTooltip() {

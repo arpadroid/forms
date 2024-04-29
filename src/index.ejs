@@ -14,8 +14,8 @@
     <body>
         <form id="demoForm" is="arpa-form" title="My Form">
             <arpa-messages id="form-messages">
-                <!-- <info-message>This is an information message</info-message> -->
-                <!-- <error-message can-close title="There are errors in your form">
+                <info-message>This is an information message</info-message>
+                <error-message can-close title="There are errors in your form">
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
                     been the industry’s standard dummy text ever since the 1500s, when an unknown printer took
                     a galley of type and scrambled it to make a type specimen book. It has survived not only
@@ -25,7 +25,7 @@
                     PageMaker including versions of Lorem Ipsum.
                 </error-message>
                 <warning-message timeout="5000" can-close>This is a warning message</warning-message>
-                <success-message sub-title="Great Success!">This is a success message</success-message> -->
+                <success-message sub-title="Great Success!">This is a success message</success-message>
                 <list-item
                     title-link="http://museovaquero.local/api/image/convert?source=%2Fcmsx%2Fassets%2Fhqrvutmy_museovaquero_assets%2Fgallery%2Fimages%2F449.jpg&width=400&height=400&quality=70"
                     image="http://museovaquero.local/api/image/convert?source=%2Fcmsx%2Fassets%2Fhqrvutmy_museovaquero_assets%2Fgallery%2Fimages%2F449.jpg&width=400&height=400&quality=70"
@@ -83,7 +83,7 @@
                     <range-field id="range" label="Range" min="1" max="100" step="3" value="50">
                     </range-field>
                 </group-field>
-                <!-- <group-field icon="calendar_month" id="dates-group" label="Dates" open>
+                <group-field icon="calendar_month" id="dates-group" label="Dates" open>
                     <date-field
                         id="date"
                         label="Date with future disabled"
@@ -104,17 +104,17 @@
                     <time-field id="time" label="Time"></time-field>
                     <week-field id="week" label="Week"></week-field>
                     <month-field id="month" label="Month"></month-field>
-                </group-field> -->
+                </group-field>
             </div>
             <div class="arpaForm__column">
                 <group-field open id="files-group" label="File Fields">
                     <file-field allow-multiple id="file" label="File">
                         <file-item size="10000" src="http://localhost:8000/demo/assets/andrea-segovia.jpg"></file-item>
                     </file-field>
-                    <!-- <file-field id="files" label="Files" allow-multiple></file-field> -->
+                    <file-field id="files" label="Files" allow-multiple></file-field>
                 </group-field>
             </div>
-            <!-- <div class="arpaForm__column">
+            <div class="arpaForm__column">
                 <group-field open icon="lists" id="select-group" label="Select fields">
                     <select-field icon="person" id="selectField" label="cars" value="mercedes">
                         <option value="volvo">Volvo</option>
@@ -169,7 +169,7 @@
                         <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
                     </checkboxes-field>
                 </group-field>
-            </div> -->
+            </div>
         </form>
         <script type="module" src="demo/demoForm.js"></script>
     </body>

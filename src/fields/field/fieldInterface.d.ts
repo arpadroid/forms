@@ -11,7 +11,7 @@ export interface FieldInterface {
     inputTemplate?: string;
     label?: string;
     name?: string;
-    // onChange?: (value, field, event) => unknown;
+    onChange?: (value, field, event) => unknown;
     onFocus?: (field) => boolean;
     outputObject?: string;
     placeholder?: string;

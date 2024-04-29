@@ -1,3 +1,4 @@
+import '@ungap/custom-elements';
 /**
  * Form.
  */

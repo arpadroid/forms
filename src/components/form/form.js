@@ -287,7 +287,7 @@ class FormComponent extends HTMLFormElement {
         }
         const time = new Date().getTime();
         const diff = time - this.submitTime;
-        const debounce = Number(this._config.debounce);
+        const debounce = this.getDebounce();
         if (debounce && this.submitTime && diff < debounce) {
             return;
         }
@@ -298,6 +298,13 @@ class FormComponent extends HTMLFormElement {
             this.scrollIntoView();
             this.focusFirstErroredInput();
         }
+    }
+
+    getDebounce() {
+        if (this.hasAttribute('debounce')) {
+            return parseFloat(this.getAttribute('debounce'));
+        }
+        return Number(this._config.debounce);
     }
 
     /**

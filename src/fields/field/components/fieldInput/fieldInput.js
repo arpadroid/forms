@@ -1,17 +1,15 @@
 import Field from '../../field.js';
 import { attr } from '@arpadroid/tools';
 class FieldInput extends HTMLInputElement {
+    
     constructor() {
         super();
         this._onFocus = this._onFocus.bind(this);
-    }
-
-    static get observedAttributes() {
-        return ['value'];
+        this._onInput = this._onInput.bind(this);
     }
 
     setValue(value) {
-        this.value = value;
+        this.setAttribute('value', value);
     }
 
     attributeChangedCallback() {
@@ -31,26 +29,33 @@ class FieldInput extends HTMLInputElement {
         if (this.field) {
             this.id = this.field.getHtmlId();
             this.name = this.field.getId();
-            this.value = this.field.getAttribute('value');
         }
 
         this.classList.add('fieldInput');
-        if (this.field.isDisabled()) {
+        if (this.field?.isDisabled()) {
             this.setAttribute('disabled', '');
         }
         attr(this, {
-            placeholder: this.field.getPlaceholder()
+            placeholder: this.field?.getPlaceholder()
         });
+        this.initializeListeners();
+    }
+
+    initializeListeners() {
         this.removeEventListener('focus', this._onFocus);
         this.addEventListener('focus', this._onFocus);
-        // const type = this.getAttribute('type');
-        // console.log('type', type);
-        // this.setAttribute('inputmode', 'numeric');
+        this.removeEventListener('input', this._onInput);
+        this.addEventListener('input', this._onInput);
+    }
+
+    _onInput(event) {
+        this.field._callOnChange(event);
     }
 
     _onFocus() {
         this.field?._onFocus();
     }
+
 
     update() {}
 }

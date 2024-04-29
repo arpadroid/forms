@@ -12,7 +12,7 @@ const { defineConfig, devices } = require('@playwright/test');
  */
 module.exports = defineConfig({
     globalSetup: './test/playwright/playwright.setup.js',
-    testDir: './src',
+    testDir: './',
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -69,11 +69,15 @@ module.exports = defineConfig({
         //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
         // },
     ],
-
-    /* Run your local dev server before starting the tests */
     webServer: {
-        command: 'npm run storybook:dev',
-        url: 'http://localhost:6006'
+        command: 'npm run dev',
+        url: 'http://localhost:8000'
         //   reuseExistingServer: !process.env.CI,
     }
+    /* Run your local dev server before starting the tests */
+    // webServer: {
+    //     command: 'npm run storybook:dev',
+    //     url: 'http://localhost:6006'
+    //     //   reuseExistingServer: !process.env.CI,
+    // }
 });
