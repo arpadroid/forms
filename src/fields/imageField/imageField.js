@@ -1,6 +1,4 @@
-/**
- * @typedef {import('./imageFieldInterface.js').ImageFieldInterface} ImageFieldInterface
- */
+/** @typedef {import('./imageFieldInterface.js').ImageFieldInterface} ImageFieldInterface */
 import { I18n } from '@arpadroid/i18n';
 import { mergeObjects } from '@arpadroid/tools';
 import FileField from '../fileField/fileField.js';
@@ -20,24 +18,25 @@ class ImageField extends FileField {
         });
     }
 
-    addUpload(file) {
-        return this.uploadList?.addItem({ file });
+    getFieldType() {
+        return 'image';
+    }
+
+    getTagName() {
+        return 'image-field';
+    }
+
+    getI18nKey() {
+        return 'modules.form.fields.image';
     }
 
     _getI18n() {
         const i18n = super._getI18n();
-        const fileI18n = I18n.get('modules.form.fields.file', false);
+        const fileI18n = I18n.get(this.getI18nKey(), false);
         return mergeObjects(fileI18n, i18n);
-    }
-
-    onSubmitSuccess() {
-        super.onSubmitSuccess();
-        // /** @type {ImageFieldInput} */
-        // const inputComponent = this.getInputComponent();
-        // inputComponent.removeUploads();
     }
 }
 
-customElements.define('image-field', ImageField);
+customElements.define(ImageField.prototype.getTagName(), ImageField);
 
 export default ImageField;

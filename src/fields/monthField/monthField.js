@@ -1,32 +1,24 @@
-import { mergeObjects, attr } from '@arpadroid/tools';
-import { IconButton } from '@arpadroid/ui';
-import TextField from '../textField/textField.js';
+import { mergeObjects } from '@arpadroid/tools';
+import DateField from '../dateField/dateField.js';
 
-class MonthField extends TextField {
+class MonthField extends DateField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
+            format: 'YYYY-MM',
+            inputFormat: 'YYYY-MM',
             inputAttributes: { type: 'month' }
         });
     }
 
-    async _onInitialized() {
-        await this.onReady();
-        super._onInitialized();
-        this.monthButton = this.renderMonthButton();
-        this.inputMask.addRhs('monthButton', this.monthButton);
+    getFieldType() {
+        return 'month';
     }
 
-    renderMonthButton() {
-        const button = new IconButton({
-            icon: 'calendar_month',
-            onClick: () => this.input?.showPicker(),
-            label: 'show month picker'
-        });
-        attr(button, { variant: 'minimal', 'tooltip-position': 'left' });
-        return button;
+    getTagName() {
+        return 'month-field';
     }
 }
 
-customElements.define('month-field', MonthField);
+customElements.define(MonthField.prototype.getTagName(), MonthField);
 
 export default MonthField;

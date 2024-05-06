@@ -1,34 +1,109 @@
-import { fn } from '@storybook/test';
+/**
+ * @typedef {import('./groupField.js').default} GroupField
+ */
+/* eslint-disable sonarjs/no-duplicate-string */
+import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { waitFor, expect, userEvent } from '@storybook/test';
+
 const html = String.raw;
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
-export default {
-    title: 'Fields/Other/Group',
-    tags: ['autodocs'],
-    render: () => {
+
+const GroupFieldStory = {
+    title: 'Fields/Group',
+    tags: [],
+    render: (args, story) =>
+        FieldStory.render(args, story, 'group-field', GroupFieldStory.renderFieldContent, GroupFieldStory.renderScript),
+    renderFieldContent: () => html`
+        <email-field id="email" label="Email" required value="some@email.com"></email-field>
+        <text-field id="text" label="Text" required value="some more text"></text-field>
+        <text-area-field id="text-area" label="Text area" required value="some text"></text-area-field>
+        <number-field id="number" label="Number" required value="1"></number-field>
+    `,
+    renderScript: (args, story) => {
+        if (story.name === 'Test') {
+            return '';
+        }
         return html`
-            <form id="groupFieldForm" is="arpa-form">
-                <group-field label="Text fields" id="tex-fields-group" icon="title" open>
-                    <email-field id="email" label="Email" required value=""></email-field>
-                    <text-field id="text" label="Text" required value=""></text-field>
-                    <text-area-field id="text-area" label="Text area" required value=""></text-area-field>
-                    <number-field id="number" label="Number" required value=""></number-field>
-                </group-field>
-            </form>
             <script type="module">
                 customElements.whenDefined('arpa-form').then(() => {
-                    const form = document.getElementById('groupFieldForm');
+                    const form = document.getElementById('field-form');
                     form.onSubmit(values => {
-                        console.log('form values', values);
+                        console.log('Form values', values);
                         return true;
                     });
                 });
             </script>
         `;
+    }
+};
+export const Default = {
+    name: 'Render',
+    parameters: { ...FieldDefault.parameters },
+    argTypes: {
+        open: { control: 'boolean', table: { category: 'Props' } },
+        isCollapsible: { control: 'boolean', table: { category: 'Props' } },
+        rememberToggle: { control: 'boolean', table: { category: 'Props' } },
+        ...FieldDefault.argTypes
     },
-    argTypes: {},
-    args: { onClick: fn() }
+    args: {
+        open: true,
+        isCollapsible: true,
+        rememberToggle: false,
+        ...FieldDefault.defaultArgs,
+        label: 'Field Group'
+    }
 };
 
-export const Default = {
-    args: {}
+export const Test = {
+    parameters: { ...FieldTest.parameters },
+    args: {
+        ...Default.args,
+        rememberToggle: false,
+        open: true
+    },
+    play: async ({ canvasElement, step }) => {
+        const setup = await FieldTest.playSetup(canvasElement);
+        const { submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
+        /** @type {GroupField} */
+        const field = setup.field;
+
+        await step('Renders the group and the fields', () => {
+            expect(canvas.getByText('Field Group')).toBeInTheDocument();
+            const fields = field.getFields();
+            expect(fields).toHaveLength(4);
+        });
+
+        const toggle = canvas.getByText('Field Group');
+        const emailLabel = canvas.getByText('Email');
+        await step('Collapses the group', async () => {
+            expect(emailLabel).toBeVisible();
+            userEvent.click(toggle);
+            await waitFor(() => {
+                expect(emailLabel).not.toBeVisible();
+                expect(field.isOpen()).toBe(false);
+            });
+        });
+
+        await step('Expands the group', async () => {
+            expect(emailLabel).not.toBeVisible();
+            userEvent.click(toggle);
+            await waitFor(() => {
+                expect(emailLabel).toBeVisible();
+                expect(field.isOpen()).toBe(true);
+            });
+        });
+
+        await step('Submits the form and receives expected values', async () => {
+            userEvent.click(submitButton);
+            await waitFor(() => {
+                expect(onSubmitMock).toHaveBeenLastCalledWith({
+                    email: 'some@email.com',
+                    text: 'some more text',
+                    'text-area': 'some text',
+                    number: 1
+                });
+            });
+        });
+    }
 };
+
+export default GroupFieldStory;

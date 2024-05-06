@@ -3,9 +3,10 @@
  * @typedef {import('../fields/field/field.js').default} Field
  */
 
-import { formatBytes, getExtension, megaBytesToBytes, ucFirst, processTemplate } from '@arpadroid/tools';
+import { formatBytes, getExtension, megaBytesToBytes, ucFirst } from '@arpadroid/tools';
 import { validateMinLength, validateNumber, validateRegex, validateRequired } from '@arpadroid/tools';
 import { validateColor, validateLength, validateMaxLength, validateSize } from '@arpadroid/tools';
+import { I18nTool } from '@arpadroid/i18n';
 
 const html = String.raw;
 /**
@@ -143,7 +144,7 @@ class FieldValidator {
      */
     maxLength(value = this.field.getValue(), report = true) {
         const maxLength = this.field.getMaxLength();
-        const valid = !maxLength ?? validateMaxLength(value, maxLength);
+        const valid = !maxLength || validateMaxLength(value, maxLength);
         if (!valid && report) {
             this.setError(this.i18n.errMaxLength.replace('{maxLength}', maxLength));
         }
@@ -152,7 +153,7 @@ class FieldValidator {
 
     minLength(value = this.field.getValue(), report = true) {
         const minLength = this.field.getMinLength();
-        const valid = !minLength ?? validateMinLength(value, minLength);
+        const valid = !minLength || validateMinLength(value, minLength);
         if (!valid && report) {
             this.setError(this.i18n.errMinLength.replace('{minLength}', minLength));
         }
@@ -270,7 +271,7 @@ class FieldValidator {
         if (minSize) {
             const minBytes = megaBytesToBytes(minSize);
             if (file?.size < minBytes) {
-                const message = processTemplate(this.i18n.errMinSize, {
+                const message = I18nTool.processTemplate(this.i18n.errMinSize, {
                     file: html`<strong>${file.name}</strong>`,
                     size: html`<strong>${formatBytes(file.size, 0)}</strong>`,
                     minSize: html`<strong>${formatBytes(minBytes, 0)}</strong>`
@@ -293,7 +294,7 @@ class FieldValidator {
         const extension = getExtension(file);
         if (extensions?.length && !extensions.includes(extension)) {
             valid = false;
-            const message = processTemplate(this.i18n.errExtensions, {
+            const message = I18nTool.processTemplate(this.i18n.errExtensions, {
                 extensions: html`<span>${extensions.join(', ')}</span>`,
                 size: html`<span>${formatBytes(file.size, 1)}</span>`,
                 file: html`<span>${file.name}</span>`
@@ -314,7 +315,7 @@ class FieldValidator {
         if (maxSize) {
             const maxBytes = megaBytesToBytes(maxSize);
             if (file?.size > maxBytes) {
-                const message = processTemplate(this.i18n.errMaxSize, {
+                const message = I18nTool.processTemplate(this.i18n.errMaxSize, {
                     file: html`<strong>${file.name}</strong>`,
                     size: html`<strong>${formatBytes(file.size, 1)}</strong>`,
                     maxSize: html`<strong>${formatBytes(maxBytes, 1)}</strong>`

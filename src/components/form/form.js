@@ -3,10 +3,10 @@
  * @typedef {import('@arpadroid/ui/src/index').Messages} Messages
  * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
  */
-import { mergeObjects, processTemplate, copyObjectProps } from '@arpadroid/tools';
+import { mergeObjects, copyObjectProps } from '@arpadroid/tools';
 import { ComponentTool, ObserverTool, attr } from '@arpadroid/tools';
 import { CircularPreloader } from '@arpadroid/ui';
-import { I18n } from '@arpadroid/i18n';
+import { I18n, I18nTool } from '@arpadroid/i18n';
 
 /**
  * The form configuration.
@@ -204,7 +204,7 @@ class FormComponent extends HTMLFormElement {
     renderTemplate() {
         const { template } = this._config;
         if (template && this.canUseTemplate()) {
-            this.innerHTML = processTemplate(template, this.getTemplateVariables());
+            this.innerHTML = I18nTool.processTemplate(template, this.getTemplateVariables());
         }
     }
 

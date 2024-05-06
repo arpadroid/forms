@@ -1,7 +1,7 @@
-import { attr, mergeObjects, processTemplate, ObserverTool, render } from '@arpadroid/tools';
+import { attr, mergeObjects, ObserverTool, render } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 import FieldValidator from '../../utils/fieldValidator.js';
-import { I18n } from '@arpadroid/i18n';
+import { I18n, I18nTool } from '@arpadroid/i18n';
 /**
  * @typedef {import('../../components/form/form').default} FormComponent
  * @typedef {import('./fieldInterface').FieldInterface} FieldInterface
@@ -13,17 +13,13 @@ class Field extends ArpaElement {
     //////////////////////
     // #region PROPERTIES
     /////////////////////
-
     static _isReady = false;
     _validations = ['required', 'minLength', 'maxLength', 'size'];
     _hasInitialized = false;
-
     // #endregion
-
     //////////////////////////
     // #region INITIALIZATION
     //////////////////////////
-
     /**
      * Initializes the field after constructor.
      * @throws {Error} If the field does not have an id.
@@ -178,10 +174,9 @@ class Field extends ArpaElement {
      * @returns {Record<string, unknown>} The template variables.
      */
     getTemplateVars() {
-        const { inputTemplate } = this._config;
         return {
             id: this.getHtmlId(),
-            input: processTemplate(inputTemplate, this.getInputTemplateVars()),
+            input: this.renderInput(),
             tooltip: this.getTooltip(),
             label: this.getLabel(),
             icon: this.getIcon(),
@@ -190,6 +185,14 @@ class Field extends ArpaElement {
             inputMask: this.hasInputMask() && html`<field-input-mask></field-input-mask>`,
             subHeader: this.renderSubHeader()
         };
+    }
+
+    renderInput() {
+        const { inputTemplate } = this._config;
+        if (this.isReadOnly()) {
+            return html`<div class="arpaField__readOnly fieldInput">${this.getValue()}</div>`;
+        }
+        return I18nTool.processTemplate(inputTemplate, this.getInputTemplateVars());
     }
 
     renderSubHeader() {
@@ -367,7 +370,7 @@ class Field extends ArpaElement {
      * @returns {unknown}
      */
     getValue() {
-        return this?.input?.value ?? this?.input.getAttribute('value') ?? this.getProperty('value');
+        return this?.input?.value ?? this?.input?.getAttribute('value') ?? this.getProperty('value') ?? this.value ?? '';
     }
 
     getTooltip() {
@@ -425,6 +428,10 @@ class Field extends ArpaElement {
      */
     getFieldType() {
         return 'field';
+    }
+
+    getTagName() {
+        return 'arpa-field';
     }
 
     /**
@@ -489,7 +496,7 @@ class Field extends ArpaElement {
      * @returns {number}
      */
     getMaxLength() {
-        return this.getProperty('max-length');
+        return parseFloat(this.getProperty('max-length'));
     }
 
     /**
@@ -497,7 +504,7 @@ class Field extends ArpaElement {
      * @returns {number}
      */
     getMinLength() {
-        return this.getProperty('min-length');
+        return parseFloat(this.getProperty('min-length'));
     }
 
     /**
@@ -526,6 +533,10 @@ class Field extends ArpaElement {
      */
     getSize() {
         return this.getProperty('size') ?? [];
+    }
+
+    isReadOnly() {
+        return this.hasAttribute('read-only') || this._config.readOnly;
     }
 
     /**
@@ -625,5 +636,5 @@ class Field extends ArpaElement {
     // #endregion
 }
 
-customElements.define('arpa-field', Field);
+customElements.define(Field.prototype.getTagName(), Field);
 export default Field;

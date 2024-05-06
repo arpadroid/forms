@@ -4,6 +4,10 @@ image-field  {
         display: flex;
         flex-direction: column;
     }
+
+    .fieldErrors .tooltip__content:has(.fieldErrors__list:not(:empty)) {
+        display: block;
+    }
 }
 
 .fileField__fileList:has(.arpaList__items:empty),

@@ -1,22 +1,26 @@
+/** @typedef {import('./dateFieldInterface.js').DateFieldInterface} DateFieldInterface */
 import DateField from '../dateField/dateField.js';
-
-/**
- * @typedef {import('./dateFieldInterface.js').DateFieldInterface} DateFieldInterface
- */
-
-/**
- * Represents a custom date and time field.
- */
+import { mergeObjects } from '@arpadroid/tools';
 class DateTimeField extends DateField {
     /**
      * Returns the default configuration for the DateTimeField.
      * @returns {Date} The default configuration object.
      */
     getDefaultConfig() {
-        return {
-            ...super.getDefaultConfig(),
-            inputAttributes: { type: 'datetime-local' }
-        };
+        return mergeObjects(super.getDefaultConfig(), {
+            inputAttributes: { type: 'datetime-local' },
+            inputFormat: 'YYYY-MM-DD HH:mm:ss',
+            format: 'D MMM YYYY HH:MM',
+            outputFormat: 'D MMM YYYY HH:MM'
+        });
+    }
+
+    getFieldType() {
+        return 'dateTime';
+    }
+
+    getTagName() {
+        return 'date-time-field';
     }
 
     /**
@@ -30,6 +34,6 @@ class DateTimeField extends DateField {
     }
 }
 
-customElements.define('date-time-field', DateTimeField);
+customElements.define(DateTimeField.prototype.getTagName(), DateTimeField);
 
 export default DateTimeField;

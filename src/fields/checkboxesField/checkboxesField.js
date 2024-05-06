@@ -1,13 +1,9 @@
-import { mergeObjects } from '@arpadroid/tools';
-import ArrayField from '../arrayField/arrayField.js';
-
 /**
  * @typedef {import('./checkboxesFieldInterface').CheckboxesFieldInterface} CheckboxesFieldInterface
  */
+import { mergeObjects } from '@arpadroid/tools';
+import ArrayField from '../arrayField/arrayField.js';
 
-/**
- * Represents a group of checkboxes field.
- */
 class CheckboxesField extends ArrayField {
     constructor(config) {
         super(config);
@@ -30,9 +26,12 @@ class CheckboxesField extends ArrayField {
         return 'checkboxes';
     }
 
+    getTagName() {
+        return 'checkboxes-field';
+    }
+
     /**
      * Event handler for when the checkboxes field is connected to the DOM.
-     * @protected
      */
     _onConnected() {
         super._onConnected();
@@ -126,6 +125,6 @@ class CheckboxesField extends ArrayField {
     }
 }
 
-customElements.define('checkboxes-field', CheckboxesField);
+customElements.define(CheckboxesField.prototype.getTagName(), CheckboxesField);
 
 export default CheckboxesField;

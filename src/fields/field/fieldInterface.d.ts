@@ -15,6 +15,8 @@ export interface FieldInterface {
     onFocus?: (field) => boolean;
     outputObject?: string;
     placeholder?: string;
+    minLength?: number;
+    maxLength?: number;
     readOnly?: boolean;
     regex?: string;
     regexMessage?: string;

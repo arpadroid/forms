@@ -1,3 +1,4 @@
+import { I18n } from '@arpadroid/i18n';
 import TextField from '../textField/textField.js';
 
 class EmailField extends TextField {
@@ -5,7 +6,7 @@ class EmailField extends TextField {
         return {
             ...super.getDefaultConfig(),
             regex: 'email',
-            regexMessage: 'Invalid email',
+            regexMessage: I18n.getText('modules.form.fields.email.errRegex'),
             icon: 'email',
             inputAttributes: {
                 type: 'email',
@@ -13,8 +14,16 @@ class EmailField extends TextField {
             }
         };
     }
+
+    getFieldType() {
+        return 'email';
+    }
+
+    getTagName() {
+        return 'email-field';
+    }
 }
 
-customElements.define('email-field', EmailField);
+customElements.define(EmailField.prototype.getTagName(), EmailField);
 
 export default EmailField;

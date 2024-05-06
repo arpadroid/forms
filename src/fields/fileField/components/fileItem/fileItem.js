@@ -4,10 +4,15 @@
  */
 
 import { ListItem } from '@arpadroid/ui';
-import { mergeObjects, processFile, render } from '@arpadroid/tools';
+import { mergeObjects, processFile, render, formatBytes } from '@arpadroid/tools';
+import { I18n } from '@arpadroid/i18n';
 
 const html = String.raw;
 class FileItem extends ListItem {
+    //////////////////////////
+    // #region INITIALIZATION
+    //////////////////////////
+
     /**
      * Creates a new file item.
      * @param {FileItemInterface} config - The configuration object.
@@ -29,7 +34,8 @@ class FileItem extends ListItem {
         return mergeObjects(super.getDefaultConfig(), {
             icon: 'text_snippet',
             onDelete: true,
-            onEdit: false
+            onEdit: false,
+            lblRemoveFile: I18n.getText('modules.form.fields.file.lblRemoveFile'),
         });
     }
 
@@ -43,9 +49,11 @@ class FileItem extends ListItem {
         }
     }
 
-    /**
-     * Custom Elements.
-     */
+    // #endregion
+
+    //////////////////////
+    // #region LIFECYCLE
+    /////////////////////
 
     async connectedCallback() {
         /** @type {FileField} */
@@ -56,9 +64,11 @@ class FileItem extends ListItem {
         this.classList.add('fileItem');
     }
 
-    /**
-     * Accessors.
-     */
+    // #endregion
+
+    /////////////////////
+    // #region ACCESSORS
+    ////////////////////
 
     getTitle() {
         return this.payload?.title || super.getTitle();
@@ -68,14 +78,30 @@ class FileItem extends ListItem {
         return Boolean(this.fieldConfig.onEdit || this._config.onEdit);
     }
 
-    /**
-     * Rendering.
-     */
+    getSize() {
+        return this.payload?.size || this.getSizeFromAttribute();
+    }
+
+    getSizeFromAttribute() {
+        const size = this.getProperty('size');
+        if (Number(size).toString() === size) {
+            return formatBytes(size);
+        }
+        if (typeof size === 'string') {
+            return size;
+        }
+    }
+
+    // #endregion
+
+    //////////////////
+    // #region RENDER
+    //////////////////
 
     getTemplateVars() {
         return {
             ...super.getTemplateVars(),
-            size: this.payload?.size,
+            size: this.getSize(),
             extension: this.payload?.extension,
             metaData: this.renderMetadata()
         };
@@ -92,7 +118,7 @@ class FileItem extends ListItem {
         `;
     }
 
-    renderMetadata(size = this.payload?.size) {
+    renderMetadata(size = this.getSize()) {
         return render(
             size,
             html`
@@ -109,22 +135,22 @@ class FileItem extends ListItem {
     }
 
     renderEditButton() {
-        return render(
-            this.hasEditButton(),
-            html`<button is="icon-button" icon="edit" class="fileItem__editButton"></button>`
-        );
+        return render(this.hasEditButton(), html`<button is="icon-button" icon="edit" class="fileItem__editButton"></button>`);
     }
 
     renderDeleteButton(fieldOnDelete = this.fieldConfig.onDelete, onDelete = this._config.onDelete) {
         return render(
             Boolean(fieldOnDelete || onDelete),
-            html`<button is="icon-button" variant="delete" class="fileItem__deleteButton"></button>`
+            html`<button
+                is="icon-button"
+                variant="delete"
+                class="fileItem__deleteButton"
+                label="${this.getProperty('lbl-remove-file')}"
+            ></button>`
         );
     }
 
-    /**
-     * Nodes.
-     */
+    // #endregion
 
     _initializeNodes() {
         super._initializeNodes();
@@ -141,10 +167,9 @@ class FileItem extends ListItem {
         this.deleteButtonNode = this.querySelector('.fileItem__deleteButton');
         this.deleteButtonNode?.addEventListener('click', this.onDelete);
     }
-
-    /**
-     * Actions.
-     */
+    //////////////////
+    // #region EVENTS
+    /////////////////
 
     onDelete() {
         const fieldOnDelete = this.fieldConfig.onDelete;
@@ -162,7 +187,7 @@ class FileItem extends ListItem {
             }
             return promise;
         }
-        this.remove();
+        // this.remove();
     }
 
     onEdit() {
@@ -175,6 +200,8 @@ class FileItem extends ListItem {
             fieldOnEdit(this);
         }
     }
+
+    // #endregion
 }
 
 customElements.define('file-item', FileItem);

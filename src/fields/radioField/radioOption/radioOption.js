@@ -1,4 +1,4 @@
-import { processTemplate } from '@arpadroid/tools';
+import { I18nTool } from '@arpadroid/i18n';
 import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
 const html = String.raw;
 
@@ -21,9 +21,7 @@ class RadioOption extends FieldOption {
      */
     getDefaultConfig() {
         return {
-            template: html`<label class="fieldOption__handler" for="{optionId}">
-                ${FieldOption.template}
-            </label> `
+            template: html`<label class="fieldOption__handler" for="{optionId}"> ${FieldOption.template} </label> `
         };
     }
 
@@ -35,21 +33,10 @@ class RadioOption extends FieldOption {
      * @param {string} [value] - The value attribute of the input element.
      * @returns {string} The rendered input element.
      */
-    renderInput(
-        type = 'radio',
-        name = this.field?.getId(),
-        optionId = this.getOptionId(),
-        value = this.getProperty('value')
-    ) {
+    renderInput(type = 'radio', name = this.field?.getId(), optionId = this.getOptionId(), value = this.getProperty('value')) {
         const checked = this.field?.getValue() === value ? 'checked' : '';
-        const template = html`<input
-            type="${type}"
-            id="{optionId}"
-            name="{name}"
-            value="{value}"
-            {checked}
-        />`;
-        return processTemplate(template, { name, optionId, value, checked });
+        const template = html`<input type="${type}" id="{optionId}" name="{name}" value="{value}" {checked} />`;
+        return I18nTool.processTemplate(template, { name, optionId, value, checked });
     }
 
     /**

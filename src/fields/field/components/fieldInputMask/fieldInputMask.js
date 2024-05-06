@@ -1,4 +1,4 @@
-import { processTemplate } from '@arpadroid/tools';
+import { I18nTool } from '@arpadroid/i18n';
 /**
  * @typedef {import('../../field').Field} Field
  */
@@ -76,7 +76,7 @@ class FieldInputMask extends HTMLElement {
         if (!this.field) {
             return;
         }
-        this.innerHTML = processTemplate(this.template, {
+        this.innerHTML = I18nTool.processTemplate(this.template, {
             icon: this.field?.getIcon(),
             iconRight: this.field?.getIconRight(),
             fieldId: this.field?.getHtmlId()

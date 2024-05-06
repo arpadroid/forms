@@ -1,43 +1,34 @@
-import { attr, formatDate, isAfter, isBefore } from '@arpadroid/tools';
+/** @typedef {import('./dateFieldInterface.js').DateFieldInterface} DateFieldInterface */
+import { attr, formatDate, isAfter, isBefore, renderNode, mergeObjects } from '@arpadroid/tools';
 import { IconButton } from '@arpadroid/ui';
 import Field from '../field/field.js';
-
-/**
- * @typedef {import('./dateFieldInterface.js').DateFieldInterface} DateFieldInterface
- */
-
-/**
- * Represents a date field.
- */
+import { I18n } from '@arpadroid/i18n';
+const html = String.raw;
 class DateField extends Field {
-    /**
-     * Array of validations for the date field.
-     * @type {string[]}
-     * @protected
-     */
+    /** @type {string[]} _validations - The validation method signatures for the date field.*/
     _validations = [...super.getValidations(), 'date'];
-
+    i18nKey = this.getI18nKey();
+    //////////////////////////
+    // #region INITIALIZATION
+    //////////////////////////
     /**
      * Returns the default configuration for the date field.
      * @returns {DateFieldInterface} The default configuration.
      */
     getDefaultConfig() {
-        return {
-            ...super.getDefaultConfig(),
+        return mergeObjects(super.getDefaultConfig(), {
             format: 'YYYY-MM-DD',
+            inputFormat: 'YYYY-MM-DD',
             outputFormat: undefined,
             disableFuture: false,
             disablePast: false,
-            inputAttributes: {
-                type: 'date'
-            }
-        };
+            inputAttributes: { type: 'date' }
+        });
     }
-
-    getFieldType() {
-        return 'date';
-    }
-
+    // #endregion
+    //////////////////////
+    // #region LIFECYCLE
+    /////////////////////
     /**
      * Event handler for when the date field is connected to the DOM.
      * Renders the calendar button.
@@ -60,30 +51,37 @@ class DateField extends Field {
             this.inputMask.addRhs('calendarButton', this.calendarButton);
         }
     }
-
-    /**
-     * Renders the calendar button for the date field.
-     * @returns {IconButton}
-     */
-    renderCalendarButton() {
-        const button = new IconButton({
-            icon: 'calendar_month',
-            onClick: () => this.showPicker(),
-            label: 'show date picker'
-        });
-        attr(button, { variant: 'minimal', 'tooltip-position': 'left' });
-        return button;
+    // #endregion
+    //////////////////////
+    // #region ACCESSORS
+    /////////////////////
+    getFieldType() {
+        return 'date';
     }
 
-    /**
-     * Shows the date picker for the date field.
-     */
-    showPicker() {
-        try {
-            this.input.showPicker();
-        } catch (error) {
-            // do nothing
+    getTagName() {
+        return 'date-field';
+    }
+
+    getI18nKey() {
+        return 'modules.form.fields.date';
+    }
+
+    setValue(value, update = true) {
+        console.log('this._config.inputFormat', this._config.inputFormat);
+        const val = formatDate(value, this._config.inputFormat);
+        console.log('val', val);
+        return super.setValue(val, update);
+    }
+
+    getOutputValue() {
+        const value = this.getValue();
+        if (!value) {
+            return value;
         }
+        const format = this.getProperty('output-format') ?? this.getFormat();
+        console.log('format', this.getFormat());
+        return formatDate(value, format);
     }
 
     /**
@@ -111,44 +109,75 @@ class DateField extends Field {
     }
 
     /**
+     * Shows the date picker for the date field.
+     */
+    showPicker() {
+        try {
+            this.input.showPicker();
+        } catch (error) {
+            // do nothing
+        }
+    }
+    // #endregion
+    //////////////////////
+    // #region RENDER
+    /////////////////////
+    /**
+     * Renders the calendar button for the date field.
+     * @returns {IconButton}
+     */
+    renderCalendarButton() {
+        const label = I18n.getText(`${this.getI18nKey()}.txtShowPicker`);
+        const buttonHTML = html`
+            <button is="icon-button" label="${label}" variant="minimal" tooltip-position="left">
+                calendar_month
+            </icon-button>
+        `;
+        const button = renderNode(buttonHTML);
+        button.addEventListener('click', () => this.showPicker());
+        return button;
+    }
+    // #endregion
+    //////////////////////
+    // #region VALIDATION
+    /////////////////////
+    /**
      * Validates the date entered in the date field.
      * @returns {boolean} True if the date is valid, false otherwise.
      */
     validateDate() {
         const value = this.input.value;
         if (this.isPastDisabled() && isBefore(value, new Date())) {
-            this.validator.setError('Past dates are not allowed');
+            this.validator.setError(html`<i18n-text key="${this.i18nKey}.errPastDisabled"></i18n-text>`);
             return false;
         }
 
         if (this.isFutureDisabled() && isAfter(value, new Date())) {
-            this.validator.setError('Future dates are not allowed');
+            this.validator.setError(html`<i18n-text key="${this.i18nKey}.errFutureDisabled"></i18n-text>`);
             return false;
         }
         const min = this.getProperty('min');
         const max = this.getProperty('max');
         if (min && isBefore(value, min)) {
-            this.validator.setError(`Date must be after ${formatDate(min, this.getFormat())}`);
+            const minDate = formatDate(min, this.getFormat());
+            this.validator.setError(
+                html`<i18n-text key="${this.i18nKey}.errMinDate" replacements="date:${minDate}"></i18n-text>`
+            );
             return false;
         }
         if (max && isBefore(max, value)) {
-            this.validator.setError(`Date must be before ${formatDate(max, this.getFormat())}`);
+            const maxDate = formatDate(max, this.getFormat());
+            this.validator.setError(
+                html`<i18n-text key="${this.i18nKey}.errMaxDate" replacements="date:${maxDate}"></i18n-text>`
+            );
             return false;
         }
 
         return true;
     }
-
-    getOutputValue() {
-        const value = this.getValue();
-        if (!value) {
-            return value;
-        }
-        const format = this._config.outputFormat ?? this.getFormat();
-        return formatDate(value, format);
-    }
+    // #endregion
 }
 
-customElements.define('date-field', DateField);
+customElements.define(DateField.prototype.getTagName(), DateField);
 
 export default DateField;

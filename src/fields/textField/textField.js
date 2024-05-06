@@ -1,9 +1,6 @@
 import Field from '../field/field.js';
 import { Regex } from '@arpadroid/tools';
 
-/**
- * Represents a text field element.
- */
 class TextField extends Field {
     /**
      * Array of validations for the text field.
@@ -12,11 +9,6 @@ class TextField extends Field {
      */
     _validations = [...super.getValidations(), 'regex'];
 
-    constructor(config) {
-        super(config);
-        this._onInput = this._onInput.bind(this);
-    }
-
     /**
      * Called when the element is connected to the DOM.
      * @override
@@ -24,6 +16,14 @@ class TextField extends Field {
     _onInitialized() {
         super._onInitialized();
         this.setRegexValidation();
+    }
+
+    getFieldType() {
+        return 'text';
+    }
+
+    getTagName() {
+        return 'text-field';
     }
 
     /**
@@ -50,6 +50,6 @@ class TextField extends Field {
     }
 }
 
-customElements.define('text-field', TextField);
+customElements.define(TextField.prototype.getTagName(), TextField);
 
 export default TextField;

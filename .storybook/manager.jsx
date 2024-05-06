@@ -3,12 +3,14 @@ import { Source } from '@storybook/blocks';
 import { AddonPanel } from '@storybook/components';
 
 import { addons, types } from '@storybook/manager-api';
-import { getStoryContextValue } from './storybookUtil';
+import { getStoryContextValue } from '@arpadroid/tools';
 
 addons.register('usage/panel', api => {
     addons.add('usage/panel', {
         title: 'Usage',
         paramKey: 'usage',
+
+        match: ({ viewMode }) => viewMode === 'blak',
         type: types.PANEL,
         render: props => {
             const story = api.getCurrentStoryData();
@@ -16,7 +18,7 @@ addons.register('usage/panel', api => {
 
             return (
                 <AddonPanel active={props.active}>
-                    <Source code={usage} language="jsx" dark format="html" />
+                    <Source code={usage} language="html" dark format="html" />
                 </AddonPanel>
             );
         }

@@ -28,7 +28,7 @@ class ArrayField extends OptionsField {
     _initializeValue() {
         const attrValue = this.getAttribute('value');
         if (attrValue) {
-            this.setValue(attrValue.split(','));
+            this.setValue(attrValue.split(',').map(value => value.trim()));
         } else {
             super._initializeValue();
         }

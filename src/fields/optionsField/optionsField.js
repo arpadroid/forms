@@ -1,4 +1,5 @@
-import { attr, mergeObjects, processTemplate } from '@arpadroid/tools';
+import { attr, mergeObjects } from '@arpadroid/tools';
+import { I18nTool } from '@arpadroid/i18n';
 import { CircularPreloader } from '@arpadroid/ui';
 import Field from '../field/field.js';
 const html = String.raw;
@@ -39,21 +40,12 @@ class OptionsField extends Field {
     }
 
     /**
-     * Renders the input element of the options field.
-     * @returns {string} The rendered input element.
-     */
-    renderInput() {
-        return html``;
-    }
-
-    /**
      * Returns the template variables for the input element.
      * @returns {Record<string, any>} The template variables.
      */
     getInputTemplateVars() {
         return mergeObjects(super.getInputTemplateVars(), {
-            options: this._content,
-            input: this.renderInput()
+            options: this._content
         });
     }
 
@@ -115,6 +107,11 @@ class OptionsField extends Field {
         }
     }
 
+    _getOptionNodes() {
+        const { optionComponent } = this._config;
+        return this._childNodes.filter(node => node?.tagName?.toLowerCase() === optionComponent);
+    }
+
     /**
      * Fetches the options for the options field.
      * @param {string} query - The query to fetch the options.
@@ -173,7 +170,7 @@ class OptionsField extends Field {
         this.optionsNode.innerHTML = '';
         this.appendChild(this.optionsNode);
         const node = document.createElement('div');
-        node.innerHTML = processTemplate(optionTemplate, { optionComponent });
+        node.innerHTML = I18nTool.processTemplate(optionTemplate, { optionComponent });
         options?.forEach(option => {
             const optionNode = node.firstElementChild.cloneNode(true);
             optionNode.setConfig(option);

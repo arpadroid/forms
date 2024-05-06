@@ -1,5 +1,4 @@
-import { ListItemInterface } from "@arpadroid/ui/src/types";
-
+import type { ListItemInterface } from '../../../../../../ui/src/types.d.ts';
 
 export interface FileItemInterface extends ListItemInterface {
     fileSize?: number;

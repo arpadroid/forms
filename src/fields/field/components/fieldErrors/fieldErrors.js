@@ -7,12 +7,6 @@ class FieldErrors extends HTMLElement {
         return ['errors'];
     }
 
-    template = html`
-        <arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="bottom-right">
-            <ul class="fieldErrors__list"></ul>
-        </arpa-tooltip>
-    `;
-
     connectedCallback() {
         this.field = this.closest('.arpaField');
         this.classList.add('fieldErrors');
@@ -23,7 +17,12 @@ class FieldErrors extends HTMLElement {
      * Renders the content.
      */
     render() {
-        this.innerHTML = this.template;
+        const content = html`
+            <arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="bottom-right">
+                <ul class="fieldErrors__list"></ul>
+            </arpa-tooltip>
+        `;
+        this.innerHTML = content;
         this.errorList = this.querySelector('.fieldErrors__list');
         this.updateErrors();
     }

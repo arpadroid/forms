@@ -47,7 +47,20 @@ class FileFieldInput extends FieldInput {
             this.uploads = [];
             this.field.clearUploads();
         }
-        files.forEach(file => !this.addUpload(file) && invalidUploads.push(file));
+        const uploads = files.filter(file => {
+            const isValid = this.addUpload(file);
+            if (!isValid) {
+                invalidUploads.push(file);
+            }
+            return isValid;
+        });
+        if (uploads.length) {
+            this.field?.signal('onFilesAdded', uploads, this);
+        }
+        if (invalidUploads.length) {
+            this.field?.signal('onError', invalidUploads, this);
+        }
+        
         this.field.updateErrors();
     }
 

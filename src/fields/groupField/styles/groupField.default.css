@@ -27,8 +27,8 @@
     }
 }
 
-.groupField > details[open] {
-    > summary {
+.groupField > .groupField__details[open] {
+    > .groupField__summary {
         border-bottom: none;
         .groupField__summary__label {
             color: var(--grey-800);

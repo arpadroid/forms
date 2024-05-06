@@ -1,35 +1,66 @@
-import { fn } from '@storybook/test';
-const html = String.raw;
-export default {
-    title: 'Fields/Text/Color',
-    tags: ['autodocs'],
-    render: () => {
-        return html`
-            <form id="demoForm" is="arpa-form">
-                <color-field id="color" label="Color" value="yellowgreen"></color-field>
-            </form>
-            <script type="module">
-                customElements.whenDefined('arpa-form').then(() => {
-                    const form = document.getElementById('demoForm');
-                    form.onSubmit(values => {
-                        console.log('Form values', values);
-                        return true;
-                    });
-                });
-            </script>
-        `;
-    },
-    argTypes: {
-        variant: {
-            control: 'select',
-            options: ['default', 'mini']
-        }
-    },
-    args: { onClick: fn() }
+import { I18n } from '@arpadroid/i18n';
+import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
+import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+
+const ColorFieldStory = {
+    title: 'Fields/Color',
+    tags: ['a11y'],
+    render: (args, story) => FieldStory.render(args, story, 'color-field')
 };
 
 export const Default = {
+    name: 'Render',
+    parameters: { ...FieldDefault.parameters },
+    argTypes: {
+        ...FieldDefault.argTypes
+    },
     args: {
-        variant: 'default',
+        ...FieldDefault.args,
+        id: 'color-field',
+        label: 'Color Field',
+        required: true
     }
 };
+
+export const Test = {
+    args: Default.args,
+    parameters: { ...FieldTest.parameters },
+    args: {
+        ...Default.args,
+        required: true
+    },
+    play: async ({ canvasElement, step }) => {
+        const { submitButton, canvas, onErrorMock, form, onSubmitMock, field } =
+            await FieldTest.playSetup(canvasElement);
+        const textInput = field.textInput;
+        await step(
+            'sets value red to text input and checks that color input has appropriate value',
+            async () => {
+                textInput.value = 'red';
+                await waitFor(() => expect(field.getValue()).toBe('#ff0000'));
+            }
+        );
+
+        await step('Sets invalid value and checks for error message', async () => {
+            textInput.value = 'invalid';
+            submitButton.click();
+            await waitFor(() => {
+                canvas.getByText(field.i18n.errColor);
+                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                expect(onErrorMock).toHaveBeenCalled();
+            });
+        });
+
+        await step('Submits form with valid field value.', async () => {
+            textInput.value = '';
+            await userEvent.type(textInput, 'blue');
+            await fireEvent.submit(form);
+            await waitFor(() => {
+                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'color-field': '#0000ff' });
+                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+            });
+        });
+    }
+};
+
+export default ColorFieldStory;

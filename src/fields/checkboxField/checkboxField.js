@@ -1,19 +1,14 @@
+/**
+ * @typedef {import('../field/fieldInterface.js').FieldInterface} FieldInterface
+ */
 import { mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 
 /**
- * @typedef {import('../field/fieldInterface.js').FieldInterface} FieldInterface
- */
-
-/**
- * Represents a checkbox field.
+ * @module CheckboxField
  */
 class CheckboxField extends Field {
-    /**
-     * The template for the checkbox field.
-     * @type {string}
-     */
     static template = html`
         <label is="field-label" class="fieldInput">
             <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
@@ -27,8 +22,8 @@ class CheckboxField extends Field {
     `;
 
     /**
-     * Get the default configuration for the checkbox field.
-     * @returns {FieldInterface} The default configuration object.
+     * Returns the default configuration for the checkbox field.
+     * @returns {FieldInterface}
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -39,6 +34,10 @@ class CheckboxField extends Field {
 
     getFieldType() {
         return 'checkbox';
+    }
+
+    getTagName() {
+        return 'checkbox-field';
     }
 
     /**
@@ -57,13 +56,24 @@ class CheckboxField extends Field {
     /**
      * Returns the value for the checkbox.
      * @returns {boolean}
-     * @protected
      */
     getValue() {
         return this?.input?.checked ?? super.getValue();
     }
+
+    /**
+     * Validates the checkbox field is checked.
+     * @returns {boolean}
+     */
+    validateRequired() {
+        if (!this.input?.checked) {
+            const message = this.i18n.errRequired;
+            this.setError(message);
+        }
+        return this.input?.checked;
+    }
 }
 
-customElements.define('checkbox-field', CheckboxField);
+customElements.define(CheckboxField.prototype.getTagName(), CheckboxField);
 
 export default CheckboxField;

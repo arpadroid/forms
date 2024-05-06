@@ -2,7 +2,8 @@
  * @typedef {import('../../field').default} Field
  */
 
-import { mergeObjects, processTemplate } from '@arpadroid/tools';
+import { mergeObjects } from '@arpadroid/tools';
+import { I18nTool } from '@arpadroid/i18n';
 
 const html = String.raw;
 class FieldLabel extends HTMLLabelElement {
@@ -37,7 +38,7 @@ class FieldLabel extends HTMLLabelElement {
         if (this.labelNode) {
             this.labelNode.innerHTML = this?.field?.getLabel() ?? '';
         } else {
-            this.innerHTML = processTemplate(FieldLabel.template, this.getTemplateVars());    
+            this.innerHTML = I18nTool.processTemplate(FieldLabel.template, this.getTemplateVars());    
         }
     }
 

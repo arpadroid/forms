@@ -7,17 +7,9 @@ import Field from '../field/field.js';
 
 const html = String.raw;
 class GroupField extends Field {
-    static template = html`
-        <details {isOpen}>
-            <summary class="groupField__summary">
-                <arpa-icon class="groupField__icon">{icon}</arpa-icon>
-                <span class="groupField__summary__label">{label}</span>
-                <arpa-tooltip position="bottom-right">{tooltip}</arpa-tooltip>
-                <arpa-icon class="groupField__iconRight">{iconRight}</arpa-icon>
-            </summary>
-            <div class="groupField__fields"></div>
-        </details>
-    `;
+    /////////////////////////
+    // #region INITIALIZATION
+    /////////////////////////
 
     /**
      * Creates a new GroupField instance.
@@ -32,11 +24,6 @@ class GroupField extends Field {
         this.classList.remove('arpaField');
     }
 
-    getIconRight() {
-        const { openIcon, closedIcon } = this._config;
-        return this.details && this.details.open ? openIcon : closedIcon || super.getIconRight();
-    }
-
     /**
      * Returns the default configuration for the GroupField.
      * @returns {GroupFieldInterface} The default configuration object.
@@ -45,30 +32,118 @@ class GroupField extends Field {
         return mergeObjects(super.getDefaultConfig(), {
             isOpen: false,
             rememberToggle: false,
-            isCollapsible: true,
+            isCollapsible: false,
             openIcon: 'keyboard_arrow_down',
             closedIcon: 'keyboard_arrow_right',
             template: GroupField.template
         });
     }
 
-    _onConnected() {
-        super._onConnected();
-        this.fieldsNode = this.querySelector('.groupField__fields');
-        this.fieldsNode.append(...this._fields);
-        this.details = this.querySelector('details');
-        if (this.details) {
-            this.details.addEventListener('toggle', () => {
-                this.update();
-            });
-        }
+    // #endregion
+
+    //////////////////////
+    // #region ACCESSORS
+    /////////////////////
+
+    getFieldType() {
+        return 'group';
     }
+
+    getFields() {
+        return this.fieldsNode?.children;
+    }
+
+    getIconRight() {
+        const { openIcon, closedIcon } = this._config;
+        return this.details && this.details.open ? openIcon : closedIcon || super.getIconRight();
+    }
+
+    getOutputValue() {
+        return undefined;
+    }
+
+    getRememberToggle() {
+        return (
+            (this.hasAttribute('remember-toggle') && this.getAttribute('remember-toggle') !== 'false') ||
+            this._config.rememberToggle
+        );
+    }
+
+    getSavedToggleState() {
+        return localStorage.getItem(this.getHtmlId() + '-toggleState');
+    }
+
+    getTagName() {
+        return 'group-field';
+    }
+
+    isCollapsible() {
+        return (
+            (this.hasAttribute('is-collapsible') && this.getAttribute('is-collapsible') !== 'false') || this._config.isCollapsible
+        );
+    }
+
+    _isOpen() {
+        const savedToggle = this.getSavedToggleState();
+        if (this.getRememberToggle() && typeof savedToggle !== 'undefined') {
+            return savedToggle === 'true';
+        }
+        return this.hasAttribute('open') && this.getAttribute('open') !== 'false';
+    }
+
+    isOpen() {
+        return this.details.open;
+    }
+
+    // #endregion
+
+    //////////////////////
+    // #region RENDERING
+    /////////////////////
+
+    static template = html`
+        <{detailsTag} {isOpen} class="groupField__details">
+            <{summaryTag} class="groupField__summary">
+                <arpa-icon class="groupField__icon">{icon}</arpa-icon>
+                <span class="groupField__summary__label">{label}</span>
+                <arpa-tooltip position="bottom-right">{tooltip}</arpa-tooltip>
+                <arpa-icon class="groupField__iconRight">{iconRight}</arpa-icon>
+            </{summaryTag}>
+            <div class="groupField__fields"></div>
+        </{detailsTag}>
+    `;
 
     getTemplateVars() {
         return {
             ...super.getTemplateVars(),
-            isOpen: (this.hasAttribute('open') || this._config.isOpen) && 'open'
+            isOpen: this._isOpen() && 'open',
+            detailsTag: this.isCollapsible() ? 'details' : 'div',
+            summaryTag: this.isCollapsible() ? 'summary' : 'div',
+            iconRight: this.isCollapsible() && this.getIconRight()
         };
+    }
+
+    // #endregion
+
+    /////////////////////////
+    // #region LIFECYCLE
+    /////////////////////////
+
+    _onConnected() {
+        super._onConnected();
+        this.fieldsNode = this.querySelector('.groupField__fields');
+        this.fieldsNode.append(...this._fields);
+
+        this.details = this.querySelector('details');
+        if (this.isCollapsible()) {
+            this?.details.addEventListener('toggle', event => {
+                const isOpen = event.target.open;
+                if (this.getRememberToggle()) {
+                    localStorage.setItem(this.getHtmlId() + '-toggleState', isOpen);
+                }
+                this.update();
+            });
+        }
     }
 
     update() {
@@ -80,11 +155,14 @@ class GroupField extends Field {
         }
     }
 
-    getOutputValue() {
-        return undefined;
+    _initializeNodes() {
+        super._initializeNodes();
+        this.fieldsNode = this.querySelector('.groupField__fields');
     }
+
+    // #endregion
 }
 
-customElements.define('group-field', GroupField);
+customElements.define(GroupField.prototype.getTagName(), GroupField);
 
 export default GroupField;
