@@ -63,6 +63,7 @@ class FieldOption extends ArpaElement {
         await this.onReady();
         /** @type {Field} */
         this.field = this.closest('.arpaField');
+        this.setAttribute('role', 'option');
         if (!this.field) {
             return;
         }
@@ -90,7 +91,8 @@ class FieldOption extends ArpaElement {
             label: this.getProperty('label'),
             subTitle: subTitle && html`<span class="fieldOption__subTitle">${subTitle}</span>`,
             input: this.renderInput(),
-            optionId: this.getOptionId()
+            optionId: this.getOptionId(),
+            value: this.getProperty('value')
         };
     }
 

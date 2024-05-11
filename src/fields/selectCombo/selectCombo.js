@@ -1,40 +1,17 @@
-import { mergeObjects, addSearchMatchMarkers, SearchTool } from '@arpadroid/tools';
-import { InputCombo } from '@arpadroid/ui';
-import SelectField from '../selectField/selectField.js';
-
+/* eslint-disable sonarjs/no-duplicate-string */
 /**
  * @typedef {import('../selectField/selectOption/selectOption.js').default} SelectOption
  * @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface
  */
+import { mergeObjects, addSearchMatchMarkers, SearchTool } from '@arpadroid/tools';
+import { InputCombo } from '@arpadroid/ui';
+import SelectField from '../selectField/selectField.js';
 
 const html = String.raw;
-
-/**
- * Represents a custom select combo field.
- */
 class SelectCombo extends SelectField {
-    constructor(config) {
-        super(config);
-        this._searchTimeout = null;
-        this._onLabelClick = this._onLabelClick.bind(this);
-        this._onSearch = this._onSearch.bind(this);
-        this._onOpenCombo = this._onOpenCombo.bind(this);
-        this._onCloseCombo = this._onCloseCombo.bind(this);
-        this._onSearchInputFocus = this._onSearchInputFocus.bind(this);
-        this._onSearchInputBlur = this._onSearchInputBlur.bind(this);
-    }
-
-    /**
-     * Handles attribute changes and updates the value if the 'value' attribute has changed.
-     * @param {string} name - The name of the attribute that changed.
-     * @param {string} oldValue
-     * @param {string} newValue
-     */
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'value' && oldValue !== newValue) {
-            this.updateValue();
-        }
-    }
+    //////////////////////////
+    // #region INITIALIZATION
+    //////////////////////////
 
     /**
      * Returns the default configuration for the select combo field.
@@ -46,67 +23,44 @@ class SelectCombo extends SelectField {
             debounceSearch: 500,
             searchItemContentSelector: '.fieldOption__label, .fieldOption__subTitle',
             inputTemplate: html`
-                {input} {button}
+                {input}
                 <div class="selectCombo__options comboBox">{options}</div>
             `,
             optionComponent: 'select-option'
         });
     }
 
-    getFieldType() {
-        return 'selectCombo';
+    _bindMethods() {
+        super._bindMethods();
+        this._onLabelClick = this._onLabelClick.bind(this);
+        this._onSearch = this._onSearch.bind(this);
+        this._onOpenCombo = this._onOpenCombo.bind(this);
+        this._onCloseCombo = this._onCloseCombo.bind(this);
+        this._onSearchInputFocus = this._onSearchInputFocus.bind(this);
+        this._onSearchInputBlur = this._onSearchInputBlur.bind(this);
     }
 
-    getInput() {
-        return this.searchInput ?? this.buttonInput;
+    // #endregion
+
+    ////////////////////
+    // #region LIFECYCLE
+    ////////////////////
+
+    static get observedAttributes() {
+        return ['value', 'has-search'];
     }
 
-    getContentSelector() {
-        return this.getProperty('search-item-content-selector');
-    }
-
-    hasSearch() {
-        const { fetchOptions } = this._config;
-        const hasSearch = this.hasAttribute('has-search') || this._config.hasSearch;
-        return Boolean(hasSearch || (fetchOptions && !this.getOptionCount()));
-    }
-
-    setOptions(options) {
-        super.setOptions(options);
-        if (options.length && !this._initializedOptions) {
+    /**
+     * Handles attribute changes and updates the value if the 'value' attribute has changed.
+     * @param {string} name - The name of the attribute that changed.
+     * @param {string} oldValue
+     * @param {string} newValue
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'value' && oldValue !== newValue) {
             this.updateValue();
-            this._initializedOptions = true;
-        }
-        return this;
-    }
-
-    /**
-     * Renders the input element of the select combo field.
-     * @returns {string} The rendered input element.
-     */
-    renderInput() {
-        if (this.hasSearch()) {
-            return html`<input type="text" class="optionsField__searchInput fieldInput" />`;
-        }
-        return html`<button type="button" class="optionsField__input fieldInput"></button>`;
-    }
-
-    /**
-     * Updates the value of the select combo field based on the selected option.
-     */
-    updateValue() {
-        /** @type {SelectOption} */
-        const selectedOption = this.getSelectedOption();
-        const label = selectedOption?.getProperty('label');
-        this.getOptions().forEach(option => option.removeAttribute('aria-selected'));
-        if (selectedOption) {
-            if (this.buttonInput) {
-                this.buttonInput.textContent = label;
-            }
-            if (this.searchInput) {
-                this.searchInput.value = label;
-            }
-            selectedOption.setAttribute('aria-selected', 'true');
+        } else if (name === 'has-search') {
+            this.reRender();
         }
     }
 
@@ -141,7 +95,8 @@ class SelectCombo extends SelectField {
             this.search = new SearchTool(this.searchInput, {
                 container: this.optionsNode,
                 searchSelector: this.getProperty('search-item-content-selector'),
-                onSearch: this._onSearch
+                onSearch: this._onSearch,
+                debounceDelay: this.getProperty('debounce-search')
             });
         }
     }
@@ -153,6 +108,7 @@ class SelectCombo extends SelectField {
     _initializeInputCombo() {
         const handler = this.getInput();
         if (handler && !this.inputCombo) {
+            this.optionsNode = this.querySelector('.selectCombo__options');
             this.inputCombo = new InputCombo(handler, this.optionsNode, {
                 containerSelector: 'select-option',
                 onOpen: () => this._onOpenCombo(),
@@ -160,6 +116,83 @@ class SelectCombo extends SelectField {
             });
         }
     }
+
+    // #endregion
+
+    ////////////////////
+    // #region ACCESSORS
+    ////////////////////
+
+    getFieldType() {
+        return 'selectCombo';
+    }
+
+    getTagName() {
+        return 'select-combo';
+    }
+
+    getInput() {
+        return this.hasSearch() ? this.querySelector('.optionsField__searchInput') : this.querySelector('.optionsField__input');
+    }
+
+    getContentSelector() {
+        return this.getProperty('search-item-content-selector');
+    }
+
+    hasSearch() {
+        const { fetchOptions } = this._config;
+        const hasSearch = this.hasAttribute('has-search') || this._config.hasSearch;
+        return Boolean(hasSearch || (fetchOptions && !this.getOptionCount()));
+    }
+
+    setOptions(options) {
+        super.setOptions(options);
+        if (options.length && !this._initializedOptions) {
+            this.updateValue();
+            this._initializedOptions = true;
+        }
+        return this;
+    }
+
+    /**
+     * Updates the value of the select combo field based on the selected option.
+     */
+    updateValue() {
+        /** @type {SelectOption} */
+        const selectedOption = this.getSelectedOption();
+        const label = selectedOption?.getProperty('label');
+        this.getOptions().forEach(option => option.removeAttribute('aria-selected'));
+        if (selectedOption) {
+            if (this.buttonInput) {
+                this.buttonInput.textContent = label;
+            }
+            if (this.searchInput) {
+                this.searchInput.value = label;
+            }
+            selectedOption.setAttribute('aria-selected', 'true');
+        }
+    }
+
+    // #endregion
+
+    /////////////////////
+    // #region RENDERING
+    /////////////////////
+
+    /**
+     * Renders the input element of the select combo field.
+     * @returns {string} The rendered input element.
+     */
+    getInputTemplateVars() {
+        return {
+            ...super.getInputTemplateVars(),
+            input: this.hasSearch()
+                ? html`<input type="text" class="optionsField__searchInput fieldInput" />`
+                : html`<button type="button" class="optionsField__input fieldInput"></button>`
+        };
+    }
+
+    // #endregion
 
     /**
      * Events.

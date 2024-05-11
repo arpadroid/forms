@@ -13,13 +13,16 @@ class Field extends ArpaElement {
     //////////////////////
     // #region PROPERTIES
     /////////////////////
-    static _isReady = false;
     _validations = ['required', 'minLength', 'maxLength', 'size'];
-    _hasInitialized = false;
     // #endregion
     //////////////////////////
     // #region INITIALIZATION
     //////////////////////////
+
+    _bindMethods() {
+        this._callOnChange = this._callOnChange.bind(this);
+    }
+
     /**
      * Initializes the field after constructor.
      * @throws {Error} If the field does not have an id.
@@ -86,9 +89,9 @@ class Field extends ArpaElement {
 
     /**
      * Initializes the properties for the field.
-     * @protected
+     * @returns {boolean}
      */
-    initializeProperties() {
+    async initializeProperties() {
         /** @type {FormComponent} */
         if (this.id) {
             this._id = this.id;
@@ -98,9 +101,9 @@ class Field extends ArpaElement {
         this.form = this.getForm();
         if (this.form) {
             this.form.registerField(this);
-            this._onInitialized();
-            this._hasInitialized = true;
+            return true;
         }
+        return false;
     }
 
     _onInitialized() {
@@ -206,7 +209,8 @@ class Field extends ArpaElement {
      */
     getInputTemplateVars() {
         return {
-            id: this.getHtmlId()
+            id: this.getHtmlId(),
+            labelId: this.getLabelId()
         };
     }
 
@@ -220,22 +224,8 @@ class Field extends ArpaElement {
         return ['value'];
     }
 
-    async connectedCallback() {
-        await this.onReady();
-        if (!this._hasInitialized) {
-            this.initializeProperties();
-        }
-        super.connectedCallback();
-    }
-
     onReady() {
-        if (Field._isReady) {
-            return Promise.resolve();
-        }
-        return customElements.whenDefined('arpa-form').then(response => {
-            Field._isReady = true;
-            return Promise.resolve(response);
-        });
+        return customElements.whenDefined('arpa-form');
     }
 
     _onReady() {
@@ -355,6 +345,10 @@ class Field extends ArpaElement {
      */
     getId() {
         return this._id || this.id || this.getProperty('id');
+    }
+
+    getInput() {
+        return this.input;
     }
 
     /**
@@ -481,6 +475,10 @@ class Field extends ArpaElement {
      */
     getLabel() {
         return this.getProperty('label');
+    }
+
+    getLabelId() {
+        return this.getHtmlId() + '-label';
     }
 
     /**

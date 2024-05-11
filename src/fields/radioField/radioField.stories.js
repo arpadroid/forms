@@ -1,33 +1,70 @@
-import { fn } from '@storybook/test';
+import { I18n } from '@arpadroid/i18n';
+import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
+
 const html = String.raw;
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
-export default {
-    title: 'Fields/Select/Radio',
-    tags: ['autodocs'],
-    render: () => {
-        return html`
-            <form id="radioForm" is="arpa-form">
-                <radio-field id="radio" label="radio" value="option2">
-                    <radio-option value="option1" label="Option 1" icon="grocery"></radio-option>
-                    <radio-option value="option2" label="Option 2" icon="nutrition"></radio-option>
-                    <radio-option value="option3" label="Option 3" icon="person"></radio-option>
-                </radio-field>
-            </form>
-            <script type="module">
-                customElements.whenDefined('arpa-form').then(() => {
-                    const form = document.getElementById('radioForm');
-                    form.onSubmit(values => {
-                        console.log('form values', values);
-                        return true;
-                    });
-                });
-            </script>
-        `;
-    },
-    argTypes: {},
-    args: { onClick: fn() }
+
+const RadioFieldStory = {
+    title: 'Fields/Radio',
+    tags: [],
+    render: (args, story) =>
+        FieldStory.render(args, story, 'radio-field', RadioFieldStory.renderFieldContent, FieldStory.renderScript),
+    renderFieldContent: () => html`
+        <radio-option value="option1" label="Option 1"></radio-option>
+        <radio-option value="option2" label="Option 2"></radio-option>
+        <radio-option value="option3" label="Option 3"></radio-option>
+    `
 };
 
 export const Default = {
-    args: {}
+    name: 'Render',
+    parameters: { ...FieldDefault.parameters },
+    argTypes: { ...FieldStory.getArgTypes('Field Props') },
+    args: {
+        ...FieldStory.getArgs(),
+        id: 'radio-field',
+        label: 'Radio field',
+        required: true
+    }
 };
+
+export const Test = {
+    parameters: { ...FieldTest.parameters },
+    args: {
+        ...Default.args
+    },
+    play: async ({ canvasElement, step }) => {
+        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = await FieldTest.playSetup(canvasElement);
+
+        await step('Renders the field with three radio options', async () => {
+            expect(canvas.getByText('Radio field')).toBeInTheDocument();
+            expect(canvas.getByText('Option 1')).toBeInTheDocument();
+            expect(canvas.getByText('Option 2')).toBeInTheDocument();
+            expect(canvas.getByText('Option 3')).toBeInTheDocument();
+        });
+
+        await step('Submits the form without selecting a radio option', async () => {
+            userEvent.click(submitButton);
+            await waitFor(() => {
+                expect(onErrorMock).toHaveBeenCalled();
+                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
+            });
+        });
+
+        await step('Select the first radio option', async () => {
+            const options = field.getOptions();
+            fireEvent.click(options[1].input);
+            await waitFor(() => expect(onChangeMock).toHaveBeenCalledWith('option2', field));
+            expect(options[1].input).toBeChecked(true);
+        });
+
+        await step('Submits the form with the selected radio option', async () => {
+            userEvent.click(submitButton);
+            await waitFor(() => expect(onSubmitMock).toHaveBeenCalled());
+            expect(onSubmitMock).toHaveBeenCalledWith({ 'radio-field': 'option2' });
+        });
+    }
+};
+
+export default RadioFieldStory;

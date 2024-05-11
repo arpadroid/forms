@@ -28,7 +28,6 @@ export const CountryOptions = [
     { value: 'uk', label: 'United Kingdom', subTitle: 'UK' },
     { value: 'de', label: 'Germany', subTitle: 'DE' },
     { value: 'fr', label: 'France', subTitle: 'FR' },
-    { value: 'es', label: 'Spain', subTitle: 'ES' },
     { value: 'it', label: 'Italy', subTitle: 'IT' },
     { value: 'jp', label: 'Japan', subTitle: 'JP' },
     { value: 'cn', label: 'China', subTitle: 'CN' },
@@ -60,6 +59,9 @@ export const CountryOptions = [
     { value: 'pt', label: 'Portugal', subTitle: 'PT' },
     { value: 'se', label: 'Sweden', subTitle: 'SE' },
     { value: 'sg', label: 'Singapore', subTitle: 'SG' },
+    { value: 'es', label: 'Spain', subTitle: 'ES' },
+    { value: 'ph', label: 'Philippines', subTitle: 'PH' },
+    { value: 'co', label: 'Colombia', subTitle: 'CO' },
     { value: 'th', label: 'Thailand', subTitle: 'TH' },
     { value: 'tw', label: 'Taiwan', subTitle: 'TW' },
     { value: 'vn', label: 'Vietnam', subTitle: 'VN' }

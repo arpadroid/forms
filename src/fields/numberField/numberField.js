@@ -1,25 +1,14 @@
+/** @typedef {import('./numberFIeldInterface.js').NumberFieldInterface} NumberFieldInterface */
 import { attr, validateNumber } from '@arpadroid/tools';
 import Field from '../field/field.js';
-
-/**
- * @typedef {import('./numberFIeldInterface.js').NumberFieldInterface} NumberFieldInterface
- */
-
-/**
- * Represents a number input field.
- */
+const html = String.raw;
 class NumberField extends Field {
-    /**
-     * Array of validations for the number field.
-     * @type {string[]}
-     * @protected
-     */
+    i18nKey = this.getI18nKey();
     _validations = [...super.getValidations(), 'number'];
 
     /**
      * Returns the default configuration for the number field.
      * @returns {NumberFieldInterface} The default configuration object.
-     * @protected
      */
     getDefaultConfig() {
         return {
@@ -29,6 +18,18 @@ class NumberField extends Field {
                 type: 'number'
             }
         };
+    }
+
+    getFieldType() {
+        return 'number';
+    }
+
+    getTagName() {
+        return 'number-field';
+    }
+
+    getI18nKey() {
+        return 'modules.form.fields.number';
     }
 
     /**
@@ -60,23 +61,34 @@ class NumberField extends Field {
     validateNumber() {
         const value = this.getValue();
         if (!validateNumber(value)) {
-            this.validator.setError('Invalid number');
+            this.validator.setError(html`<i18n-text key="modules.form.fields.number.errNumber"></i18n-text>`);
             return false;
         }
         const min = this.getProperty('min');
         if (min && value < min) {
-            this.validator.setError(`Value must be greater than ${min}`);
+            this.validator.setError(
+                html`<i18n-text key="modules.form.fields.number.errMin" replacements="min:${min}"></i18n-text>`
+            );
             return false;
         }
         const max = this.getProperty('max');
         if (max && value > max) {
-            this.validator.setError(`Value must be greater than ${min}`);
+            this.validator.setError(
+                html`<i18n-text key="modules.form.fields.number.errMax" replacements="max:${max}"></i18n-text>`
+            );
+            return false;
+        }
+        const step = this.getProperty('step');
+        if (step && value % step !== 0) {
+            this.validator.setError(
+                html`<i18n-text key="modules.form.fields.number.errStep" replacements="step:${step}"></i18n-text>`
+            );
             return false;
         }
         return true;
     }
 }
 
-customElements.define('number-field', NumberField);
+customElements.define(NumberField.prototype.getTagName(), NumberField);
 
 export default NumberField;

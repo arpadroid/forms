@@ -1,19 +1,12 @@
+/** @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface */
 import { mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
 const html = String.raw;
 
-/**
- * @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface
- */
-
-/**
- * Represents a custom select field element.
- */
 class SelectField extends OptionsField {
     /**
      * Returns the default configuration for the select field.
      * @returns {OptionsFieldInterface} The default configuration object.
-     * @protected
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -30,16 +23,10 @@ class SelectField extends OptionsField {
         return 'select';
     }
 
-    /**
-     * Initializes the input element for the select field.
-     * @protected
-     */
     _initializeInputNode() {
         const input = this.querySelector('select');
         super._initializeInputNode(input);
-        input?.addEventListener('change', event => {
-            this.signal('onChange', this.getValue(), event);
-        });
+        input?.addEventListener('change', this._callOnChange);
     }
 
     _initializeValue() {

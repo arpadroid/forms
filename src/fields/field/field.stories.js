@@ -1,192 +1,15 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
  * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
+ * @typedef {import('./field.js').default} Field
  */
+/* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
 import { attrString } from '@arpadroid/tools';
 import { action } from '@storybook/addon-actions';
 import { waitFor, within, expect, fn, getByText } from '@storybook/test';
+import Field from './field.js';
 
 const html = String.raw;
-
-/**
- * Initialize the form component.
- */
-
-const DefaultArgs = {
-    id: 'test-field',
-    label: 'Field label',
-    placeholder: '',
-    description: '',
-    footnote: '',
-    tooltip: '',
-    icon: '',
-    iconRight: '',
-    variant: 'default',
-    value: '',
-    readOnly: false,
-    disabled: false,
-    required: false,
-    maxLength: 0,
-    minLength: 0,
-    content: '',
-    onChange: action('onChange'),
-    onFocus: action('onFocus'),
-    onSubmit: action('onSubmit')
-};
-
-export const Default = {
-    name: 'Render',
-    /** @type {FieldInterface} */
-
-    parameters: {
-        // actions: { disable: true },
-        interactions: { disable: true },
-        a11y: { disable: true },
-        'storybook/interactions/panel': { disable: true },
-        options: {
-            selectedPanel: 'storybook/controls/panel'
-        }
-    },
-    defaultArgs: DefaultArgs,
-    args: {
-        required: false,
-        ...DefaultArgs,
-        placeholder: 'Please enter a value',
-        description: 'Test description',
-        footnote: 'This is a footnote',
-        tooltip: 'test tooltip'
-    },
-    argTypes: {
-        required: {
-            control: { type: 'boolean' },
-            description: 'The field required state.',
-            table: {
-                category: 'Validation'
-            }
-        },
-        maxLength: {
-            control: { type: 'number' },
-            description: 'The field maximum length.',
-            table: {
-                category: 'Validation'
-            }
-        },
-        minLength: {
-            control: { type: 'number' },
-            description: 'The field minimum length.',
-            table: {
-                category: 'Validation'
-            }
-        },
-        id: {
-            description: 'The field id is required.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        label: {
-            description: 'The field label.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        placeholder: {
-            description: "The field's input placeholder.",
-            table: {
-                category: 'Base props'
-            }
-        },
-        description: {
-            description: 'The field description.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        footnote: {
-            description: 'The field footnote.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        tooltip: {
-            description: 'The field tooltip.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        icon: {
-            description: 'The field icon.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        iconRight: {
-            description: 'The field right icon.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        variant: {
-            description: 'The field variant.',
-            options: ['default', 'minimal', 'mini', 'large'],
-            control: { type: 'select' },
-            table: {
-                category: 'Base props'
-            }
-        },
-        value: {
-            description: 'The field value.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        readOnly: {
-            control: { type: 'boolean' },
-            defaultValue: false,
-            description: 'The field read-only state.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        disabled: {
-            description: 'The field disabled state.',
-            control: { type: 'boolean' },
-            table: {
-                category: 'Base props'
-            }
-        },
-        content: {
-            control: { type: 'text' },
-            defaultValue: 'a',
-            description: 'The field content.',
-            table: {
-                category: 'Base props'
-            }
-        },
-        onFocus: {
-            action: 'onFocus',
-            description: 'The field focus event.',
-            table: {
-                category: 'Events'
-            }
-        },
-        onSubmit: {
-            action: 'onSubmit',
-            description: "The form's submit event.",
-            table: {
-                category: 'Events'
-            }
-        },
-        onChange: {
-            action: 'onChange',
-            description: 'The field change event.',
-            table: {
-                category: 'Events'
-            }
-        }
-    }
-};
 
 const FieldStory = {
     title: 'Components/Field',
@@ -226,7 +49,186 @@ const FieldStory = {
                 });
             </script>
         `;
+    },
+    getArgs: () => {
+        return {
+            id: 'test-field',
+            label: 'Field label',
+            placeholder: '',
+            description: '',
+            footnote: '',
+            tooltip: '',
+            icon: '',
+            iconRight: '',
+            variant: 'default',
+            value: '',
+            readOnly: false,
+            disabled: false,
+            required: false,
+            maxLength: 0,
+            minLength: 0,
+            content: '',
+            onChange: action('onChange'),
+            onFocus: action('onFocus'),
+            onSubmit: action('onSubmit')
+        };
+    },
+    getArgTypes: (catName = 'Props') => {
+        return {
+            required: {
+                control: { type: 'boolean' },
+                description: 'The field required state.',
+                table: {
+                    category: 'Validation'
+                }
+            },
+            maxLength: {
+                control: { type: 'number' },
+                description: 'The field maximum length.',
+                table: {
+                    category: 'Validation'
+                }
+            },
+            minLength: {
+                control: { type: 'number' },
+                description: 'The field minimum length.',
+                table: {
+                    category: 'Validation'
+                }
+            },
+            id: {
+                description: 'The field id is required.',
+                table: {
+                    category: catName
+                }
+            },
+            label: {
+                description: 'The field label.',
+                table: {
+                    category: catName
+                }
+            },
+            placeholder: {
+                description: "The field's input placeholder.",
+                table: {
+                    category: catName
+                }
+            },
+            description: {
+                description: 'The field description.',
+                table: {
+                    category: catName
+                }
+            },
+            footnote: {
+                description: 'The field footnote.',
+                table: {
+                    category: catName
+                }
+            },
+            tooltip: {
+                description: 'The field tooltip.',
+                table: {
+                    category: catName
+                }
+            },
+            icon: {
+                description: 'The field icon.',
+                table: {
+                    category: catName
+                }
+            },
+            iconRight: {
+                description: 'The field right icon.',
+                table: {
+                    category: catName
+                }
+            },
+            variant: {
+                description: 'The field variant.',
+                options: ['default', 'minimal', 'mini', 'large'],
+                control: { type: 'select' },
+                table: {
+                    category: catName
+                }
+            },
+            value: {
+                description: 'The field value.',
+                table: {
+                    category: catName
+                }
+            },
+            readOnly: {
+                control: { type: 'boolean' },
+                defaultValue: false,
+                description: 'The field read-only state.',
+                table: {
+                    category: catName
+                }
+            },
+            disabled: {
+                description: 'The field disabled state.',
+                control: { type: 'boolean' },
+                table: {
+                    category: catName
+                }
+            },
+            content: {
+                control: { type: 'text' },
+                defaultValue: 'a',
+                description: 'The field content.',
+                table: {
+                    category: catName
+                }
+            },
+            onFocus: {
+                action: 'onFocus',
+                description: 'The field focus event.',
+                table: {
+                    category: 'Events'
+                }
+            },
+            onSubmit: {
+                action: 'onSubmit',
+                description: "The form's submit event.",
+                table: {
+                    category: 'Events'
+                }
+            },
+            onChange: {
+                action: 'onChange',
+                description: 'The field change event.',
+                table: {
+                    category: 'Events'
+                }
+            }
+        };
     }
+};
+
+export const Default = {
+    name: 'Render',
+    /** @type {FieldInterface} */
+
+    parameters: {
+        // actions: { disable: true },
+        interactions: { disable: true },
+        a11y: { disable: true },
+        'storybook/interactions/panel': { disable: true },
+        options: {
+            selectedPanel: 'storybook/controls/panel'
+        }
+    },
+    defaultArgs: FieldStory.getArgs(),
+    args: {
+        required: false,
+        ...FieldStory.getArgs(),
+        placeholder: 'Please enter a value',
+        description: 'Test description',
+        footnote: 'This is a footnote',
+        tooltip: 'test tooltip'
+    },
+    argTypes: FieldStory.getArgTypes()
 };
 
 export const Test = {
@@ -245,6 +247,7 @@ export const Test = {
     playSetup: async canvasElement => {
         const canvas = within(canvasElement);
         await waitFor(() => customElements.whenDefined('arpa-field'));
+        /** @type {Field} */
         const field = canvasElement.querySelector('.arpaField');
         const form = canvasElement.querySelector('form');
         form.setAttribute('debounce', '0');
@@ -257,7 +260,7 @@ export const Test = {
             field.listen('onError', onErrorMock);
             field.listen('onChange', onChangeMock);
         }
-        const input = field?.input;
+        const input = typeof field?.getInput === 'function' && field?.getInput();
         return { canvas, field, form, submitButton, onSubmitMock, onErrorMock, onChangeMock, input };
     },
     play: async ({ canvasElement, step, args }) => {

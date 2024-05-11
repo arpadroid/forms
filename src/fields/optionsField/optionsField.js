@@ -1,17 +1,18 @@
+/**
+ * @typedef {import('./fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
+ * @typedef {import('./optionsFieldInterface').OptionsFieldInterface} OptionsFieldInterface
+ */
 import { attr, mergeObjects } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 import { CircularPreloader } from '@arpadroid/ui';
 import Field from '../field/field.js';
 const html = String.raw;
-/**
- * @typedef {import('./fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
- * @typedef {import('./optionsFieldInterface').OptionsFieldInterface} OptionsFieldInterface
- */
 
-/**
- * Represents an options field.
- */
 class OptionsField extends Field {
+    //////////////////////////
+    // #region CONFIGURATION
+    /////////////////////////
+
     /** @type {Record<string, FieldOptionInterface>} */
     _optionsByValue = {};
     /** @type {FieldOptionInterface} */
@@ -24,10 +25,9 @@ class OptionsField extends Field {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             options: undefined,
-            hasInput: true,
             inputTemplate: html`
                 {input}
-                <div role="listbox" class="optionsField__options">{options}</div>
+                <div role="listbox" class="optionsField__options" aria-labelledby="{labelId}">{options}</div>
             `,
             optionComponent: 'field-option',
             optionTemplate: html`<{optionComponent} role="option"></{optionComponent}`,
@@ -39,33 +39,15 @@ class OptionsField extends Field {
         return 'options';
     }
 
-    /**
-     * Returns the template variables for the input element.
-     * @returns {Record<string, any>} The template variables.
-     */
-    getInputTemplateVars() {
-        return mergeObjects(super.getInputTemplateVars(), {
-            options: this._content
-        });
+    getTagName() {
+        return 'options-field';
     }
 
-    _onInitialized() {
-        super._onInitialized();
-        this.initializeOptions();
-    }
+    // #endregion
 
-    _initializeNodes() {
-        super._initializeNodes();
-        this.optionsNode = this.querySelector('.optionsField__options');
-    }
-
-    /**
-     * Initializes the value of the options field.
-     * @protected
-     */
-    _initializeValue() {
-        this.selectedOption = this.getSelectedOption();
-    }
+    /////////////////////
+    // #region ACCESSORS
+    /////////////////////
 
     /**
      * Sets the options for the options field.
@@ -76,107 +58,11 @@ class OptionsField extends Field {
     setOptions(_options = [], update = true) {
         this._optionsByValue = {};
         this._options = this.normalizeOptions(_options);
-        if (this._config.hasEmptyOption) {
-            this._options.unshift(this._config.emptyOption);
-        }
+        this._config.options = this._options;
         if (update) {
             this.renderOptions(this._options);
         }
         return this;
-    }
-
-    /**
-     * Returns the count of options in the options field.
-     * @returns {number}
-     */
-    getOptionCount() {
-        return this.getOptions()?.length || this.optionsNode?.children?.length || 0;
-    }
-
-    /**
-     * Initializes the options of the options field.
-     */
-    async initializeOptions() {
-        const { options, autoFetchOptions, fetchOptions } = this._config;
-        if (Array.isArray(options)) {
-            this.setOptions(options);
-        }
-        if (autoFetchOptions && typeof fetchOptions === 'function') {
-            await this.onReady();
-            this.fetchOptions();
-        }
-    }
-
-    _getOptionNodes() {
-        const { optionComponent } = this._config;
-        return this._childNodes.filter(node => node?.tagName?.toLowerCase() === optionComponent);
-    }
-
-    /**
-     * Fetches the options for the options field.
-     * @param {string} query - The query to fetch the options.
-     * @returns {Promise} A promise that resolves with the fetched options.
-     */
-    fetchOptions(query = '') {
-        this.fetchQuery = query;
-        const { fetchOptions } = this._config;
-        if (typeof fetchOptions === 'function') {
-            this.isLoadingOptions = true;
-            this.renderOptions();
-            return fetchOptions(query, undefined, this)?.then(opt => {
-                this.isLoadingOptions = false;
-                this.onOptionsFetched(opt);
-                return Promise.resolve(opt);
-            });
-        }
-        return Promise.resolve();
-    }
-
-    async setFetchOptions(fetchOptions) {
-        this._config.fetchOptions = fetchOptions;
-        this.initializeOptions();
-    }
-
-    /**
-     * Handles the fetched options for the options field.
-     * @param {FieldOptionInterface[]} opt
-     */
-    onOptionsFetched(opt) {
-        this.setOptions(opt);
-    }
-
-    /**
-     * Renders the options for the options field.
-     * @param {FieldOptionInterface[]} options - The options to render.
-     */
-    renderOptions(options) {
-        if (this.isLoadingOptions) {
-            this._renderOptionsPreloader();
-        } else {
-            this._renderOptions(options);
-            this.optionsPreloader?.remove();
-        }
-    }
-
-    _renderOptionsPreloader() {
-        if (!this.optionsPreloader) {
-            this.optionsPreloader = new CircularPreloader();
-        }
-        this.optionsNode.append(this.optionsPreloader);
-    }
-
-    _renderOptions(options) {
-        const { optionComponent, optionTemplate } = this._config;
-        this.optionsNode.innerHTML = '';
-        this.appendChild(this.optionsNode);
-        const node = document.createElement('div');
-        node.innerHTML = I18nTool.processTemplate(optionTemplate, { optionComponent });
-        options?.forEach(option => {
-            const optionNode = node.firstElementChild.cloneNode(true);
-            optionNode.setConfig(option);
-            attr(optionNode, option);
-            this.optionsNode.appendChild(optionNode);
-        });
     }
 
     /**
@@ -185,6 +71,14 @@ class OptionsField extends Field {
      */
     getOptions() {
         return Array.from(this.optionsNode?.children ?? []);
+    }
+
+    /**
+     * Returns the count of options in the options field.
+     * @returns {number}
+     */
+    getOptionCount() {
+        return this.getOptions()?.length || this.optionsNode?.children?.length || 0;
     }
 
     /**
@@ -207,6 +101,31 @@ class OptionsField extends Field {
         return [...(this.optionsNode?.children ?? [])].find(option => {
             return option?.getAttribute('value') === value;
         });
+    }
+
+    async setFetchOptions(fetchOptions) {
+        this._config.fetchOptions = fetchOptions;
+        this.initializeOptions();
+    }
+
+    /**
+     * Fetches the options for the options field.
+     * @param {string} query - The query to fetch the options.
+     * @returns {Promise} A promise that resolves with the fetched options.
+     */
+    fetchOptions(query = '') {
+        this.fetchQuery = query;
+        const { fetchOptions } = this._config;
+        if (typeof fetchOptions === 'function') {
+            this.isLoadingOptions = true;
+            this.renderOptions();
+            return fetchOptions(query, undefined, this)?.then(opt => {
+                this.isLoadingOptions = false;
+                this.onOptionsFetched(opt);
+                return Promise.resolve(opt);
+            });
+        }
+        return Promise.resolve();
     }
 
     /**
@@ -242,8 +161,127 @@ class OptionsField extends Field {
         }
         return rv;
     }
+
+    // #endregion
+
+    //////////////////////
+    // #region LIFECYCLE
+    //////////////////////
+
+    /**
+     * Initializes the value of the options field.
+     * @protected
+     */
+    _initializeValue() {
+        this.selectedOption = this.getSelectedOption();
+    }
+
+    _onInitialized() {
+        super._onInitialized();
+        
+        this.initializeOptions();
+    }
+
+    _initializeNodes() {
+        super._initializeNodes();
+        this.optionsNode = this.querySelector('.optionsField__options');
+    }
+
+    /**
+     * Initializes the options of the options field.
+     */
+    async initializeOptions() {
+        const { options, autoFetchOptions, fetchOptions } = this._config;
+        if (Array.isArray(options)) {
+            this.setOptions(options);
+        }
+        if (autoFetchOptions && typeof fetchOptions === 'function') {
+            await this.onReady();
+            this.fetchOptions();
+        }
+    }
+
+    /**
+     * Handles the fetched options for the options field.
+     * @param {FieldOptionInterface[]} opt
+     */
+    onOptionsFetched(opt) {
+        this.setOptions(opt);
+    }
+
+    // #endregion
+
+    /////////////////////
+    // #region RENDERING
+    /////////////////////
+
+    /**
+     * Returns the template variables for the input element.
+     * @returns {Record<string, any>} The template variables.
+     */
+    getInputTemplateVars() {
+        return mergeObjects(super.getInputTemplateVars(), {
+            options: this._content
+        });
+    }
+
+    render() {
+        const content = super.render();
+        this.optionsNode = this.querySelector('.optionsField__options');
+        return content;
+    }
+
+    reRender() {
+        super.reRender();
+        if (this._options.length) {
+            this.setOptions(this._options);
+        }
+    }
+
+    /**
+     * Renders the options for the options field.
+     * @param {FieldOptionInterface[]} options - The options to render.
+     */
+    renderOptions(options) {
+        
+        if (this.isLoadingOptions) {
+            this._renderOptionsPreloader();
+        } else {
+            
+            this._renderOptions(options);
+            this.optionsPreloader?.remove();
+        }
+    }
+
+    async _renderOptions(options) {
+        await this.onReady();
+        const { optionTemplate } = this._config;
+        const optionComponent = this.getProperty('option-component');
+        if (!this.optionsNode) {
+            return;
+        }
+        this.optionsNode.innerHTML = '';
+        this.appendChild(this.optionsNode);
+        const node = document.createElement('div');
+        node.innerHTML = I18nTool.processTemplate(optionTemplate, { optionComponent });
+        options?.forEach(option => {
+            const optionNode = node.firstElementChild.cloneNode(true);
+            optionNode.setConfig(option);
+            attr(optionNode, option);
+            this.optionsNode.appendChild(optionNode);
+        });
+    }
+
+    _renderOptionsPreloader() {
+        if (!this.optionsPreloader) {
+            this.optionsPreloader = new CircularPreloader();
+        }
+        this.optionsNode.append(this.optionsPreloader);
+    }
+
+    // #endregion
 }
 
-customElements.define('options-field', OptionsField);
+customElements.define(OptionsField.prototype.getTagName(), OptionsField);
 
 export default OptionsField;

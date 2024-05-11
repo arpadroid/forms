@@ -30,6 +30,7 @@ class FieldLabel extends HTMLLabelElement {
     connectedCallback() {
         /** @type {Field} */
         this.field = this.closest('.arpaField');
+        this.id = this.field?.getLabelId();
         this.setAttribute('for', this.field?.getHtmlId());
         this.render();
     }

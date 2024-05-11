@@ -6,6 +6,12 @@ import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect, fireEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
+const TextFieldStory = {
+    title: 'Fields/Text',
+    tags: [],
+    render: (args, story) => FieldStory.render(args, story, 'text-field')
+};
+
 export const Default = {
     name: 'Render',
     /** @type {FieldInterface} */
@@ -28,12 +34,6 @@ export const Default = {
         icon: 'match_case',
         required: true
     }
-};
-
-const TextFieldStory = {
-    title: 'Fields/Text',
-    tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'text-field')
 };
 
 export const Test = {
