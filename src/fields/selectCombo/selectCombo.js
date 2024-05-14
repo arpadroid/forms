@@ -192,11 +192,16 @@ class SelectCombo extends SelectField {
         };
     }
 
+    renderOptions(options) {
+        super.renderOptions(options);
+        requestAnimationFrame(() => this.inputCombo?.place());
+    }
+
     // #endregion
 
-    /**
-     * Events.
-     */
+    //////////////////
+    // #region EVENTS
+    /////////////////
 
     _onLabelClick() {
         return this.getInput()?.focus();
@@ -234,20 +239,21 @@ class SelectCombo extends SelectField {
         if (event) {
             this.query = query;
         }
-        const { fetchOptions } = this._config;
+        const { fetchOptions } = this._config ?? {};
         if (fetchOptions) {
             if (event) {
                 await this.fetchOptions(query);
             }
-            this.getOptions().forEach(node => addSearchMatchMarkers(node, query, this.getContentSelector()));
+            requestAnimationFrame(() => {
+                this.getOptions().forEach(node => {
+                    addSearchMatchMarkers(node, query, this.getContentSelector());
+                });
+            });
             return false;
         }
     }
 
-    renderOptions(options) {
-        super.renderOptions(options);
-        requestAnimationFrame(() => this.inputCombo?.place());
-    }
+    // #endregion
 }
 
 customElements.define('select-combo', SelectCombo);

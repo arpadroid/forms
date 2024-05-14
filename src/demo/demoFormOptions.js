@@ -1,3 +1,6 @@
+/**
+ * @typedef {import("../fields/optionsField/fieldOption/fieldOptionInterface").FieldOptionInterface} FieldOptionInterface
+ */
 export const IconOptions = [
     { value: 'grocery', label: 'Grocery', icon: 'grocery' },
     { value: 'nutrition', label: 'Nutrition', icon: 'nutrition' },
@@ -95,7 +98,6 @@ export const People = [
     { value: 'NE-X', label: 'Emily Dickinson', subTitle: 'Poet' },
     { value: 'NE-W', label: 'Ernest Hemingway', subTitle: 'Writer' },
     { value: 'NE-C', label: 'Frida Kahlo', subTitle: 'Artist' },
-    { value: 'NE-AA', label: 'Galileo', subTitle: 'Astronomer' },
     { value: 'NE-AB', label: 'George Washington', subTitle: 'Politician' },
     { value: 'NE-AC', label: 'Helen Keller', subTitle: 'Activist' },
     { value: 'NE-AD', label: 'Henry Ford', subTitle: 'Industrialist' },
@@ -105,20 +107,23 @@ export const People = [
     { value: 'NE-AI', label: 'John Locke', subTitle: 'Philosopher' },
     { value: 'NE-AJ', label: 'John von Neumann', subTitle: 'Mathematician' },
     { value: 'NE-AL', label: 'Louis Pasteur', subTitle: 'Chemist' },
-    { value: 'NE-AM', label: 'Mahatma Gandhi', subTitle: 'Activist' },
     { value: 'NE-AN', label: 'Marie Curie', subTitle: 'Chemist' },
     { value: 'NE-AO', label: 'Mark Twain', subTitle: 'Writer' },
     { value: 'NE-AP', label: 'Martin Luther King Jr.', subTitle: 'Activist' },
     { value: 'NE-AQ', label: 'Michael Jordan', subTitle: 'Athlete' },
     { value: 'NE-AR', label: 'Mozart', subTitle: 'Composer' },
-    { value: 'NE-AS', label: 'Napoleon Bonaparte', subTitle: 'Military Leader' },
+    { value: 'NE-AS', label: 'Michael Jackson', subTitle: 'Musician' },
+    { value: 'NE-AT', label: 'Michael Phelps', subTitle: 'Swimmer' },
     { value: 'NE-AU', label: 'Nelson Mandela', subTitle: 'Activist' },
+    { value: 'NE-AV', label: 'Michael Faraday', subTitle: 'Physicist' },
     { value: 'NE-AW', label: 'Pablo Picasso', subTitle: 'Artist' },
     { value: 'NE-AX', label: 'Plato', subTitle: 'Philosopher' },
     { value: 'NE-AY', label: 'Pythagoras', subTitle: 'Mathematician' },
     { value: 'NE-AZ', label: 'Rosa Parks', subTitle: 'Activist' },
     { value: 'NE-BA', label: 'Sigmund Freud', subTitle: 'Psychologist' },
+    { value: 'NE-BB', label: 'Michael Caine', subTitle: 'Actor' },
     { value: 'NE-BC', label: 'Steve Jobs', subTitle: 'Entrepreneur' },
+    { value: 'NE-BD', label: 'Michaelangelo', subTitle: 'Artist' },
     { value: 'NE-BE', label: 'Vincent van Gogh', subTitle: 'Artist' },
     { value: 'NE-BF', label: 'Walt Disney', subTitle: 'Entrepreneur' },
     { value: 'NE-BG', label: 'William Shakespeare', subTitle: 'Writer' },
@@ -126,11 +131,6 @@ export const People = [
     { value: 'NE-BI', label: 'Wright Brothers', subTitle: 'Aviators' },
     { value: 'NE-BJ', label: 'Yuri Gagarin', subTitle: 'Astronaut' },
     { value: 'NE-BK', label: 'Zhang Heng', subTitle: 'Inventor' },
-    { value: 'NE-BL', label: 'Ada Lovelace', subTitle: 'Mathematician' },
-    { value: 'NE-BM', label: 'Alan Turing', subTitle: 'Computer Scientist' },
-    { value: 'NE-BN', label: 'Alexander Graham Bell', subTitle: 'Inventor' },
-    { value: 'NE-BO', label: 'Amelia Earhart', subTitle: 'Aviator' },
-    { value: 'NE-BP', label: 'Archimedes', subTitle: 'Mathematician' },
     { value: 'NE-BQ', label: 'Aristotle', subTitle: 'Philosopher' },
     { value: 'NE-BR', label: 'Benjamin Franklin', subTitle: 'Inventor' },
     { value: 'NE-BS', label: 'Bill Gates', subTitle: 'Entrepreneur' },
@@ -143,7 +143,6 @@ export const People = [
     { value: 'NE-CA', label: 'Emily Dickinson', subTitle: 'Poet' },
     { value: 'NE-CB', label: 'Ernest Hemingway', subTitle: 'Writer' },
     { value: 'NE-CC', label: 'Frida Kahlo', subTitle: 'Artist' },
-    { value: 'NE-CD', label: 'Galileo', subTitle: 'Astronomer' },
     { value: 'NE-CE', label: 'George Washington', subTitle: 'Politician' },
     { value: 'NE-CF', label: 'Helen Keller', subTitle: 'Activist' },
     { value: 'NE-CG', label: 'Henry Ford', subTitle: 'Industrialist' },
@@ -159,7 +158,6 @@ export const People = [
     { value: 'NE-CQ', label: 'Martin Luther King Jr.', subTitle: 'Activist' },
     { value: 'NE-CS', label: 'Mozart', subTitle: 'Composer' },
     { value: 'NE-CT', label: 'Napoleon Bonaparte', subTitle: 'Military Leader' },
-    { value: 'NE-CU', label: 'Nelson Mandela', subTitle: 'Activist' },
     { value: 'NE-CV', label: 'Pablo Picasso', subTitle: 'Artist' },
     { value: 'NE-CW', label: 'Plato', subTitle: 'Philosopher' },
     { value: 'NE-CX', label: 'Pythagoras', subTitle: 'Mathematician' },
@@ -173,8 +171,33 @@ export const People = [
     { value: 'NE-DG', label: 'Winston Churchill', subTitle: 'Politician' },
     { value: 'NE-DH', label: 'Wright Brothers', subTitle: 'Aviators' },
     { value: 'NE-DI', label: 'Yuri Gagarin', subTitle: 'Astronaut' },
-    { value: 'NE-DJ', label: 'Zhang Heng', subTitle: 'Inventor' }
+    { value: 'NE-DJ', label: 'Zhang Heng', subTitle: 'Inventor' },
+    { value: 'NE-ZB', label: 'Zhang Sanfeng', subTitle: 'Taoist Priest' },
+    { value: 'NE-ZC', label: 'Zeno of Elea', subTitle: 'Philosopher' },
+    { value: 'NE-ZD', label: 'Zinedine Zidane', subTitle: 'Footballer' },
+    { value: 'NE-ZE', label: 'Zora Neale Hurston', subTitle: 'Writer' },
+    { value: 'NE-ZF', label: 'Zubaida Tariq', subTitle: 'Chef' },
+    { value: 'NE-ZG', label: 'Zygmunt Bauman', subTitle: 'Sociologist' },
+    { value: 'NE-ZH', label: 'Zlatan Ibrahimovic', subTitle: 'Footballer' },
+    { value: 'NE-ZI', label: 'Zhou Enlai', subTitle: 'Politician' },
+    { value: 'NE-ZJ', label: 'Zig Ziglar', subTitle: 'Motivational Speaker' }
 ];
+
+/**
+ * Queries people based on the query string.
+ * @param {string} query - The query string.
+ * @returns {FieldOptionInterface[]} The queried people.
+ */
+export async function queryPeople(query) {
+    if (!query) {
+        return [...People].splice(0, 10);
+    }
+    return [...People].filter(
+        option =>
+            option.label.toLowerCase().includes(query.toLowerCase()) ||
+            option.subTitle.toLowerCase().includes(query.toLowerCase())
+    );
+}
 
 export const MusicGenres = [
     { value: 'ROCK', label: 'Rock' },

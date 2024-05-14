@@ -15,6 +15,7 @@ class Field extends ArpaElement {
     /////////////////////
     _validations = ['required', 'minLength', 'maxLength', 'size'];
     // #endregion
+
     //////////////////////////
     // #region INITIALIZATION
     //////////////////////////
@@ -231,13 +232,17 @@ class Field extends ArpaElement {
     _onReady() {
         this.form = this.getForm();
         this.classList.add('arpaField');
-        if (this._config?.className) {
-            this.classList.add(this._config?.className);
+        this._initializeClassNames();
+        this.initializeProperties();
+    }
+
+    _initializeClassNames() {
+        if (typeof this._config?.className === 'string') {
+            this.classList.add(...this._config.className.trim().split(' '));
         }
         if (Array.isArray(this._config.classNames)) {
             this.classList.add(...this._config.classNames);
         }
-        this.initializeProperties();
     }
 
     /**

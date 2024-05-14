@@ -103,9 +103,11 @@ export const Test = {
         await step(
             "Checks that after submission the old file is removed and the new one now forms part of the field's uploaded files list",
             async () => {
-                const testFile = canvas.queryByText(galaxyImage.name.split('.')[0]);
-                const list = testFile.closest('image-list');
-                expect(list).toBe(field.fileList);
+                await waitFor(() => {
+                    const testFile = canvas.queryByText(galaxyImage.name.split('.')[0]);
+                    const list = testFile.closest('image-list');
+                    expect(list).toBe(field.fileList);
+                });
             }
         );
 

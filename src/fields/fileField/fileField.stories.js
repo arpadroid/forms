@@ -126,15 +126,19 @@ export const Test = {
         const i18nKey = field.i18nKey;
 
         await step('Renders the field', async () => {
-            canvas.getByText('File field');
-            expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeVisible();
-            expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeDefined();
+            await waitFor(() => {
+                expect(canvas.getByText('File field')).toBeInTheDocument();
+                expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeInTheDocument();
+                expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeInTheDocument();
+            });
         });
 
         await step('Renders the default file', async () => {
-            expect(canvas.getByText('The Strange Case of Dr Jekyll and Mr Hyde')).toBeVisible();
-            expect(canvas.getByText('.txt')).toBeVisible();
-            expect(canvas.getByText('10 KB')).toBeVisible();
+            await waitFor(() => {
+                expect(canvas.getByText('The Strange Case of Dr Jekyll and Mr Hyde')).toBeVisible();
+                expect(canvas.getByText('.txt')).toBeVisible();
+                expect(canvas.getByText('10 KB')).toBeVisible();
+            });
         });
 
         await step('Adds an invalid file type and displays an error', async () => {
@@ -219,9 +223,11 @@ export const Test = {
         await step(
             "Checks that after submission the old file is removed and the new one now forms part of the field's uploaded files list",
             async () => {
-                const testFile = canvas.queryByText('test file');
-                const list = testFile.closest('file-list');
-                expect(list).toBe(field.fileList);
+                await waitFor(() => {
+                    const testFile = canvas.queryByText('test file');
+                    const list = testFile.closest('file-list');
+                    expect(list).toBe(field.fileList);
+                });
             }
         );
 

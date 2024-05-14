@@ -1,3 +1,4 @@
+import { I18n } from '@arpadroid/i18n';
 import Field from '../field/field.js';
 import { mergeObjects, prepend, render, renderNode } from '@arpadroid/tools';
 
@@ -11,10 +12,18 @@ class SearchField extends Field {
             iconRight: 'search',
             variant: 'default',
             inputAttributes: {
-                placeholder: 'Search',
+                placeholder: I18n.getText('common.labels.lblSearch'),
                 type: 'search'
             }
         });
+    }
+
+    getFieldType() {
+        return 'search';
+    }
+
+    getTagName() {
+        return 'search-field';
     }
 
     _initialize() {

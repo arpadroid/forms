@@ -1,29 +1,66 @@
-import { fn } from '@storybook/test';
-const html = String.raw;
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
-export default {
-    title: 'Fields/Other/Range',
-    tags: ['autodocs'],
-    render: () => {
-        return html`
-            <form id="rangeForm" is="arpa-form">
-                <range-field id="range" label="Range" min="1" max="100" step="3" value="50"> </range-field>
-            </form>
-            <script type="module">
-                customElements.whenDefined('arpa-form').then(() => {
-                    const form = document.getElementById('rangeForm');
-                    form.onSubmit(values => {
-                        console.log('form values', values);
-                        return true;
-                    });
-                });
-            </script>
-        `;
-    },
-    argTypes: {},
-    args: { onClick: fn() }
+/* eslint-disable sonarjs/no-duplicate-string */
+/**
+ * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
+ */
+import { I18n } from '@arpadroid/i18n';
+import { waitFor, expect, fireEvent } from '@storybook/test';
+import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+
+const RangeFieldStory = {
+    title: 'Fields/Range',
+    tags: [],
+    render: (args, story) => FieldStory.render(args, story, 'range-field')
 };
 
 export const Default = {
-    args: {}
+    name: 'Render',
+    parameters: { ...FieldDefault.parameters },
+    argTypes: {
+        min: {
+            control: 'number',
+            table: { category: 'Range Props' }
+        },
+        max: {
+            control: 'number',
+            table: { category: 'Range Props' }
+        },
+        step: {
+            control: 'number',
+            table: { category: 'Range Props' }
+        },
+        ...FieldStory.getArgTypes('Field Props')
+    },
+    args: {
+        min: '0',
+        max: 100,
+        step: 1,
+        ...FieldDefault.args,
+        id: 'range-field',
+        label: 'Range Field',
+        required: true,
+        value: undefined
+    }
 };
+
+export const Test = {
+    args: Default.args,
+    parameters: { ...FieldTest.parameters },
+    args: {
+        ...Default.args,
+        required: true,
+        value: 25
+    },
+    play: async ({ canvasElement, step }) => {
+        const { submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
+
+        await step('Submits form with valid field value.', async () => {
+            await fireEvent.click(submitButton);
+            await waitFor(() => {
+                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'range-field': 25 });
+                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+            });
+        });
+    }
+};
+
+export default RangeFieldStory;

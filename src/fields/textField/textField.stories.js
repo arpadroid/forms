@@ -14,7 +14,6 @@ const TextFieldStory = {
 
 export const Default = {
     name: 'Render',
-    /** @type {FieldInterface} */
     parameters: { ...FieldDefault.parameters },
     argTypes: {
         regex: {

@@ -11,10 +11,10 @@ class TagOption extends SelectOption {
         const { value, label } = this._config;
         this.classList.add('selectComboOption--selected');
         this.field.addValue({ value, label });
+        this.field._callOnChange(event);
         this.style.display = 'none';
         this.focusNext();
-        // const input = this.field.getInputComponent();
-        // input.inputCombo.place();
+        this.field?.inputCombo?.place();
     }
 
     focusNext() {

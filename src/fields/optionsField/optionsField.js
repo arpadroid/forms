@@ -2,7 +2,7 @@
  * @typedef {import('./fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
  * @typedef {import('./optionsFieldInterface').OptionsFieldInterface} OptionsFieldInterface
  */
-import { attr, mergeObjects } from '@arpadroid/tools';
+import { attr, mergeObjects, renderNode } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 import { CircularPreloader } from '@arpadroid/ui';
 import Field from '../field/field.js';
@@ -243,11 +243,9 @@ class OptionsField extends Field {
      * @param {FieldOptionInterface[]} options - The options to render.
      */
     renderOptions(options) {
-        
         if (this.isLoadingOptions) {
             this._renderOptionsPreloader();
         } else {
-            
             this._renderOptions(options);
             this.optionsPreloader?.remove();
         }
@@ -255,21 +253,23 @@ class OptionsField extends Field {
 
     async _renderOptions(options) {
         await this.onReady();
-        const { optionTemplate } = this._config;
-        const optionComponent = this.getProperty('option-component');
         if (!this.optionsNode) {
             return;
         }
         this.optionsNode.innerHTML = '';
         this.appendChild(this.optionsNode);
-        const node = document.createElement('div');
-        node.innerHTML = I18nTool.processTemplate(optionTemplate, { optionComponent });
-        options?.forEach(option => {
-            const optionNode = node.firstElementChild.cloneNode(true);
-            optionNode.setConfig(option);
-            attr(optionNode, option);
-            this.optionsNode.appendChild(optionNode);
-        });
+        options?.forEach(option => this._renderOption(option));
+    }
+
+    _renderOption(option) {
+        const { optionTemplate } = this._config;
+        const optionComponent = this.getProperty('option-component');
+        const template = I18nTool.processTemplate(optionTemplate, { optionComponent });
+        const optionNode = renderNode(template);
+        attr(optionNode, option);
+        this.optionsNode.appendChild(optionNode);
+        optionNode.setConfig(option);
+        return optionNode;
     }
 
     _renderOptionsPreloader() {
