@@ -11,9 +11,9 @@ const TextFieldStory = {
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: { ...FieldDefault.argTypes },
+    argTypes: { ...FieldStory.getArgTypes() },
     args: {
-        ...FieldDefault.args,
+        ...FieldStory.getArgs(),
         id: 'email-field',
         label: 'Email Field'
     }

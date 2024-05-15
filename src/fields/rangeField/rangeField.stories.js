@@ -34,7 +34,7 @@ export const Default = {
         min: '0',
         max: 100,
         step: 1,
-        ...FieldDefault.args,
+        ...FieldStory.getArgs(),
         id: 'range-field',
         label: 'Range Field',
         required: true,

@@ -3,34 +3,25 @@
  * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
  */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent } from '@storybook/test';
+import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
-const TextFieldStory = {
-    title: 'Fields/Text',
+const TextAreaFieldStory = {
+    title: 'Fields/Textarea',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'text-field')
+    render: (args, story) => FieldStory.render(args, story, 'textarea-field')
 };
 
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
-        regex: {
-            table: { category: 'Text field props' }
-        },
-        regexMessage: {
-            table: { category: 'Text field props' }
-        },
         ...FieldStory.getArgTypes('Field Props')
     },
     args: {
-        regex: '^([a-z0-9]+)$',
-        regexMessage: 'Only lowercase letters and numbers are allowed.',
         ...FieldStory.getArgs(),
-        id: 'text-field',
-        label: 'Text Field',
-        icon: 'match_case',
+        id: 'textarea-field',
+        label: 'Textarea Field',
         required: true
     }
 };
@@ -40,35 +31,35 @@ export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
-        required: true,
-        regex: Default.args.regex,
-        regexMessage: Default.args.regexMessage
+        required: true
     },
     play: async ({ canvasElement, step }) => {
-        const { input, submitButton, canvas, onErrorMock, onSubmitMock } = await FieldTest.playSetup(canvasElement);
-
-        await step('Submits form with invalid regex value: "some value".', () => {
-            input.value = 'some value';
+        const setup = await FieldTest.playSetup(canvasElement);
+        const { field, input, submitButton, canvas, onErrorMock, onChangeMock, onSubmitMock } = setup;
+        await step('Submits empty required field and checks for error message', async () => {
             submitButton.click();
-        });
-
-        await step('Checks for error message.', async () => {
             await waitFor(() => {
-                canvas.getByText('Only lowercase letters and numbers are allowed.');
+                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
 
+        await step('Types a value and receives onChange signal', async () => {
+            userEvent.type(input, 'some text');
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenLastCalledWith('some text', field);
+            });
+        });
+
         await step('Submits form with valid field value.', async () => {
-            input.value = 'valid';
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'text-field': 'valid' });
+                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'textarea-field': 'some text' });
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
             });
         });
     }
 };
 
-export default TextFieldStory;
+export default TextAreaFieldStory;

@@ -19,6 +19,7 @@
         "start:tools": "cd ../tools && npm run build:watch",
         "start:dev": "npm run start:arpadroid & npm run start:ui & npm run start:application & npm run start:i18n & npm run start:tools & npm run build:watch",
         "storybook:dev": "npm run start:dev & storybook dev -p 6006",
+        "test": "npm run test:storybook",
         "test:playwright:ci": "npx playwright test --config playwright.config.cjs",
         "test:playwright:dev": "npm run start:dev & npx playwright test --config playwright.config.cjs --ui",
         "test:storybook": "test-storybook"

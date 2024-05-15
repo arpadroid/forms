@@ -68,9 +68,7 @@ class DateField extends Field {
     }
 
     setValue(value, update = true) {
-        console.log('this._config.inputFormat', this._config.inputFormat);
         const val = formatDate(value, this._config.inputFormat);
-        console.log('val', val);
         return super.setValue(val, update);
     }
 
@@ -80,7 +78,6 @@ class DateField extends Field {
             return value;
         }
         const format = this.getProperty('output-format') ?? this.getFormat();
-        console.log('format', this.getFormat());
         return formatDate(value, format);
     }
 

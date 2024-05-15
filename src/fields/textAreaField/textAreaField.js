@@ -1,14 +1,13 @@
+/** @typedef {import('./textAreaInterface.js').TextAreaInterface} TextAreaInterface */
 import { attr } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 const html = String.raw;
-/**
- * @typedef {import('./textAreaInterface.js').TextAreaInterface} TextAreaInterface
- */
-
-/**
- * Represents a text area field.
- */
 class TextAreaField extends TextField {
+
+    _bindMethods() {
+        super._bindMethods();
+        this._onInput = this._onInput.bind(this);
+    }
     /**
      * Returns the default configuration for the text area field.
      * @returns {TextAreaInterface} The default configuration.
@@ -21,6 +20,14 @@ class TextAreaField extends TextField {
         };
     }
 
+    getFieldType() {
+        return 'textarea';
+    }
+
+    getTagName() {
+        return 'textarea-field';
+    }
+
     _initialize() {
         this.value = this.innerHTML || this.getProperty('value');
         super._initialize();
@@ -31,9 +38,15 @@ class TextAreaField extends TextField {
         attr(this.input, {
             rows: this.getProperty('rows')
         });
+        this.input.removeEventListener('input', this._onInput);
+        this.input.addEventListener('input', this._onInput);
+    }
+
+    _onInput(event) {
+        this._callOnChange(event);
     }
 }
 
-customElements.define('text-area-field', TextAreaField);
+customElements.define(TextAreaField.prototype.getTagName(), TextAreaField);
 
 export default TextAreaField;

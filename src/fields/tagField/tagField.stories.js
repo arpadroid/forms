@@ -1,6 +1,6 @@
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, userEvent, fn } from '@storybook/test';
+import { waitFor, expect, userEvent, fn, fireEvent } from '@storybook/test';
 import { queryPeople } from '../../demo/demoFormOptions.js';
 
 const html = String.raw;
@@ -115,7 +115,7 @@ export const Test = {
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith(['NE-AU'], field);
             });
-            userEvent.click(submitButton);
+            fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'))).toBeVisible();
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'tag-field': ['NE-AU'] });

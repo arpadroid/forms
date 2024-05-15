@@ -33,7 +33,7 @@ class FileFieldInput extends FieldInput {
     async _initializeDropArea() {
         this.dropArea = this.field?.querySelector('drop-area');
         await customElements.whenDefined('drop-area');
-        this.dropArea?.listen('DROP', this._onInputChange);
+        this.dropArea?.listen('onDrop', this._onInputChange);
     }
 
     _onInputChange(event, files = this.files) {

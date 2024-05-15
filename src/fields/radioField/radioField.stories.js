@@ -37,10 +37,12 @@ export const Test = {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = await FieldTest.playSetup(canvasElement);
 
         await step('Renders the field with three radio options', async () => {
-            expect(canvas.getByText('Radio field')).toBeInTheDocument();
-            expect(canvas.getByText('Option 1')).toBeInTheDocument();
-            expect(canvas.getByText('Option 2')).toBeInTheDocument();
-            expect(canvas.getByText('Option 3')).toBeInTheDocument();
+            await waitFor(() => {
+                expect(canvas.getByText('Radio field')).toBeInTheDocument();
+                expect(canvas.getByText('Option 1')).toBeInTheDocument();
+                expect(canvas.getByText('Option 2')).toBeInTheDocument();
+                expect(canvas.getByText('Option 3')).toBeInTheDocument();
+            });
         });
 
         await step('Submits the form without selecting a radio option', async () => {

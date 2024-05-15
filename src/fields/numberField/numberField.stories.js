@@ -25,13 +25,13 @@ export const Default = {
             control: { type: 'number' },
             table: { category: 'Props' }
         },
-        ...FieldDefault.argTypes
+        ...FieldStory.getArgTypes()
     },
     args: {
         step: 1,
         min: 0,
         max: 0,
-        ...FieldDefault.args,
+        ...FieldStory.getArgs(),
         id: 'number-field',
         label: 'Number Field',
         required: true

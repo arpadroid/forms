@@ -63,8 +63,9 @@ export const Test = {
         await step('Renders the field with four select options', async () => {
             expect(canvas.getByText('Select combo')).toBeInTheDocument();
         });
-
-        canvas.getByText('Spain');
+        await waitFor(() => {
+            canvas.getByText('Spain');
+        });
 
         await step('Submits the form without selecting an option and receives required error', async () => {
             userEvent.click(submitButton);
@@ -80,8 +81,11 @@ export const Test = {
             const spainButton = canvas.getByText('Spain').closest('button');
             await userEvent.click(spainButton);
             expect(onChangeMock).toHaveBeenLastCalledWith('es', field);
-            expect(field.getValue()).toBe('es');
-            expect(input).toHaveTextContent('Spain');
+            await waitFor(() => {
+                expect(field.getValue()).toBe('es');
+                expect(input).toHaveTextContent('Spain');
+            });
+
             await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
@@ -96,7 +100,7 @@ export const Test = {
                 expect(input).toHaveAttribute('type', 'text');
             });
             await userEvent.type(input, 'United');
-            await waitFor(() => {
+            await waitFor(async () => {
                 const searchMatches = canvas.getAllByText('United');
                 expect(searchMatches).toHaveLength(2);
                 expect(searchMatches[0]).toBeVisible();

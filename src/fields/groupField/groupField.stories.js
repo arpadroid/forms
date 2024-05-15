@@ -6,7 +6,7 @@ import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field
 import { waitFor, expect, userEvent } from '@storybook/test';
 
 const html = String.raw;
-
+const category = 'Group Field Props';
 const GroupFieldStory = {
     title: 'Fields/Group',
     tags: [],
@@ -15,7 +15,7 @@ const GroupFieldStory = {
     renderFieldContent: () => html`
         <email-field id="email" label="Email" required value="some@email.com"></email-field>
         <text-field id="text" label="Text" required value="some more text"></text-field>
-        <text-area-field id="text-area" label="Text area" required value="some text"></text-area-field>
+        <textarea-field id="text-area" label="Text area" required value="some text"></textarea-field>
         <number-field id="number" label="Number" required value="1"></number-field>
     `,
     renderScript: (args, story) => {
@@ -39,16 +39,16 @@ export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
-        open: { control: 'boolean', table: { category: 'Props' } },
-        isCollapsible: { control: 'boolean', table: { category: 'Props' } },
-        rememberToggle: { control: 'boolean', table: { category: 'Props' } },
-        ...FieldDefault.argTypes
+        open: { control: 'boolean', table: { category } },
+        isCollapsible: { control: 'boolean', table: { category } },
+        rememberToggle: { control: 'boolean', table: { category } },
+        ...FieldStory.getArgTypes()
     },
     args: {
         open: true,
         isCollapsible: true,
         rememberToggle: false,
-        ...FieldDefault.defaultArgs,
+        ...FieldStory.getArgs(),
         label: 'Field Group'
     }
 };

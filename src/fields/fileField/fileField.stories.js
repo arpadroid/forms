@@ -61,7 +61,7 @@ const FileFieldStory = {
                 control: { type: 'boolean' },
                 table: { category }
             },
-            ...FieldDefault.argTypes,
+            ...FieldStory.getArgTypes(),
             onDelete: {
                 action: 'onDelete',
                 table: { category: 'Events' }

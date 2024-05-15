@@ -6,12 +6,12 @@ import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
-const TextFieldStory = {
+const PasswordFieldStory = {
     title: 'Fields/Password',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'password-field')
 };
-
+const category = 'Password Field Props';
 export const Default = {
     name: 'Render',
     /** @type {FieldInterface} */
@@ -19,19 +19,20 @@ export const Default = {
     argTypes: {
         confirm: {
             control: { type: 'boolean' },
-            table: { category: 'Props' }
+            table: { category }
         },
         mode: {
             control: { type: 'select' },
             options: [null, 'login', 'register'],
-            table: { category: 'Props' }
+            table: { category }
         },
-        ...FieldDefault.argTypes
+        ...FieldStory.getArgTypes('Field Props')
     },
     args: {
+        confirm: true,
         mode: 'register',
         // confirm: true,
-        ...FieldDefault.args,
+        ...FieldStory.getArgs(),
         id: 'password-field',
         label: 'Password Field'
     }
@@ -124,4 +125,4 @@ export const Test = {
     }
 };
 
-export default TextFieldStory;
+export default PasswordFieldStory;

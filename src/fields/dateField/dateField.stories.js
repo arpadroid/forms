@@ -2,7 +2,7 @@
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-
+const category = 'Date Field Props';
 const DateFieldStory = {
     title: 'Fields/Date',
     tags: [],
@@ -10,23 +10,23 @@ const DateFieldStory = {
     getArgTypes: () => {
         return {
             format: {
-                table: { category: 'Date Props' }
+                table: { category }
             },
             disablePast: {
-                table: { category: 'Validation' }
+                table: { category }
             },
             disableFuture: {
-                table: { category: 'Validation' }
+                table: { category }
             },
             min: {
                 control: { type: 'text' },
-                table: { category: 'Validation' }
+                table: { category }
             },
             max: {
                 control: { type: 'text' },
-                table: { category: 'Validation' }
+                table: { category }
             },
-            ...FieldDefault.argTypes
+            ...FieldStory.getArgTypes('Field Props')
         };
     },
     getArgs: () => {
@@ -35,7 +35,7 @@ const DateFieldStory = {
             disableFuture: false,
             min: '',
             max: '',
-            ...FieldDefault.args,
+            ...FieldStory.getArgs(),
             id: 'date-field',
             label: 'Date Field',
             required: true
@@ -48,8 +48,8 @@ export const Default = {
     parameters: { ...FieldDefault.parameters },
     argTypes: DateFieldStory.getArgTypes(),
     args: {
-        ...DateFieldStory.getArgs(),
-        format: 'D MMM YYYY'
+        format: 'D MMM YYYY',
+        ...DateFieldStory.getArgs()
     }
 };
 

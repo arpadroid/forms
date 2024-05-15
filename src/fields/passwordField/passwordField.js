@@ -127,7 +127,7 @@ class PasswordField extends TextField {
             id: this._id + '-confirm',
             isConfirm: true,
             label: this.i18n?.lblConfirmPassword,
-            required: true,
+            required: this.getProperty('required'),
             inputAttributes: { autocomplete: 'new-password' },
             ...this._config.confirmField,
             validation: () => this.validateConfirm()

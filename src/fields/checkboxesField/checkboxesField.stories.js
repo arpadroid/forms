@@ -46,9 +46,11 @@ export const Test = {
         const label = canvas.getByText('Checkboxes Field');
 
         await step('Renders the checkboxes field with options.', async () => {
-            expect(canvas.getByText('Option 1')).toBeTruthy();
-            expect(canvas.getByText('Option 2')).toBeTruthy();
-            expect(canvas.getByText('Option 3')).toBeTruthy();
+            await waitFor(() => {
+                expect(canvas.getByText('Option 1')).toBeTruthy();
+                expect(canvas.getByText('Option 2')).toBeTruthy();
+                expect(canvas.getByText('Option 3')).toBeTruthy();
+            });
         });
 
         await step('Checks the field has the correct value', async () => {

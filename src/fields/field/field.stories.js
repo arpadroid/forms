@@ -60,7 +60,7 @@ const FieldStory = {
             tooltip: '',
             icon: '',
             iconRight: '',
-            variant: 'default',
+            variant: '',
             value: '',
             readOnly: false,
             disabled: false,
@@ -73,134 +73,96 @@ const FieldStory = {
             onSubmit: action('onSubmit')
         };
     },
-    getArgTypes: (catName = 'Props') => {
+    getArgTypes: (category = 'Field Config') => {
         return {
             required: {
                 control: { type: 'boolean' },
                 description: 'The field required state.',
-                table: {
-                    category: 'Validation'
-                }
+                table: { category: 'Validation' }
             },
             maxLength: {
                 control: { type: 'number' },
                 description: 'The field maximum length.',
-                table: {
-                    category: 'Validation'
-                }
+                table: { category: 'Validation' }
             },
             minLength: {
                 control: { type: 'number' },
                 description: 'The field minimum length.',
-                table: {
-                    category: 'Validation'
-                }
+                table: { category: 'Validation' }
             },
             id: {
                 description: 'The field id is required.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             label: {
                 description: 'The field label.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             placeholder: {
                 description: "The field's input placeholder.",
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             description: {
                 description: 'The field description.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             footnote: {
                 description: 'The field footnote.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             tooltip: {
                 description: 'The field tooltip.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             icon: {
                 description: 'The field icon.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             iconRight: {
                 description: 'The field right icon.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             variant: {
                 description: 'The field variant.',
-                options: ['default', 'minimal', 'mini', 'large'],
+                options: ['minimal', 'mini', 'large'],
                 control: { type: 'select' },
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             value: {
                 description: 'The field value.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             readOnly: {
                 control: { type: 'boolean' },
                 defaultValue: false,
                 description: 'The field read-only state.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             disabled: {
                 description: 'The field disabled state.',
                 control: { type: 'boolean' },
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             content: {
                 control: { type: 'text' },
                 defaultValue: 'a',
                 description: 'The field content.',
-                table: {
-                    category: catName
-                }
+                table: { category }
             },
             onFocus: {
                 action: 'onFocus',
                 description: 'The field focus event.',
-                table: {
-                    category: 'Events'
-                }
+                table: { category: 'Events' }
             },
             onSubmit: {
                 action: 'onSubmit',
                 description: "The form's submit event.",
-                table: {
-                    category: 'Events'
-                }
+                table: { category: 'Events' }
             },
             onChange: {
                 action: 'onChange',
                 description: 'The field change event.',
-                table: {
-                    category: 'Events'
-                }
+                table: { category: 'Events' }
             }
         };
     }

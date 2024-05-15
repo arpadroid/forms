@@ -11,9 +11,9 @@ const CheckboxFieldStory = {
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: { ...FieldDefault.argTypes },
+    argTypes: { ...FieldStory.getArgTypes() },
     args: {
-        ...FieldDefault.defaultArgs,
+        ...FieldStory.getArgs(),
         icon: 'check_box',
         id: 'checkbox-field',
         label: 'Checkbox Field'

@@ -4,7 +4,7 @@ import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field
 
 const ColorFieldStory = {
     title: 'Fields/Color',
-    tags: ['a11y'],
+    tags: [],
     render: (args, story) => FieldStory.render(args, story, 'color-field')
 };
 
@@ -12,10 +12,10 @@ export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
-        ...FieldDefault.argTypes
+        ...FieldStory.getArgTypes('Field Props')
     },
     args: {
-        ...FieldDefault.args,
+        ...FieldStory.getArgs(),
         id: 'color-field',
         label: 'Color Field',
         required: true
@@ -30,16 +30,13 @@ export const Test = {
         required: true
     },
     play: async ({ canvasElement, step }) => {
-        const { submitButton, canvas, onErrorMock, form, onSubmitMock, field } =
-            await FieldTest.playSetup(canvasElement);
+        const setup = await FieldTest.playSetup(canvasElement);
+        const { submitButton, canvas, onErrorMock, form, onSubmitMock, field } = setup;
         const textInput = field.textInput;
-        await step(
-            'sets value red to text input and checks that color input has appropriate value',
-            async () => {
-                textInput.value = 'red';
-                await waitFor(() => expect(field.getValue()).toBe('#ff0000'));
-            }
-        );
+        await step('sets value red to text input and checks that color input has appropriate value', async () => {
+            textInput.value = 'red';
+            await waitFor(() => expect(field.getValue()).toBe('#ff0000'));
+        });
 
         await step('Sets invalid value and checks for error message', async () => {
             textInput.value = 'invalid';

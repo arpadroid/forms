@@ -233,9 +233,7 @@ class OptionsField extends Field {
 
     reRender() {
         super.reRender();
-        if (this._options.length) {
-            this.setOptions(this._options);
-        }
+        this._options?.length && this.setOptions(this._options);
     }
 
     /**

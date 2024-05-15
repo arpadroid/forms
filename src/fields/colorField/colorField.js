@@ -6,10 +6,12 @@ class ColorField extends Field {
     /** @type {string[]} _validations - The validation method signatures for the color field.*/
     _validations = [...super.getValidations(), 'color'];
 
-    /**
-     * Gets the default configuration for the color field.
-     * @returns {import('../field/fieldInterface.js').FieldInterface} The default configuration object.
-     */
+    _bindMethods() {
+        super._bindMethods();
+        this.updateColorInput = this.updateColorInput.bind(this);
+        this.onInput = this.onInput.bind(this);
+    }
+
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             inputTemplate: html`
@@ -30,19 +32,17 @@ class ColorField extends Field {
         return 'color-field';
     }
 
-    /**
-     * Initializes the input elements of the color field.
-     */
     _initializeInputNode() {
         this.input = this.querySelector('input[type="color"]');
-        this.input.addEventListener('input', event => {
-            this.textInput.value = this.input.value;
-            this._callOnChange(event);
-        });
+        this.input?.removeEventListener('input', this.onInput);
+        this.input?.addEventListener('input', this.onInput);
 
         this.textInput = this.querySelector('input[type="text"]');
-        this.textInput.addEventListener('keyup', this.updateColorInput.bind(this));
-        this.textInput.value = this.getProperty('value') ?? '';
+        if (this.textInput) {
+            this.textInput.removeEventListener('keyup', this.updateColorInput);
+            this.textInput.addEventListener('keyup', this.updateColorInput);
+            this.textInput.value = this.getProperty('value') ?? '';
+        }
         requestAnimationFrame(event => this.updateColorInput(event, false));
     }
 
@@ -62,8 +62,14 @@ class ColorField extends Field {
             requestAnimationFrame(() => this._callOnChange(event));
         }
     }
+
+    onInput() {
+        this.textInput.value = this.input.value;
+        this.textInput.value = this.input.value;
+        this._callOnChange(event);
+    }
 }
 
-customElements.define('color-field', ColorField);
+customElements.define(ColorField.prototype.getTagName(), ColorField);
 
 export default ColorField;
