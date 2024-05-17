@@ -14,6 +14,7 @@ class ColorField extends Field {
 
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
+            icon: 'color_lens',
             inputTemplate: html`
                 <input type="text" class="fieldInput colorField__textInput" />
                 <div class="colorField__colorInputWrapper">

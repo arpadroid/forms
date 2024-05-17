@@ -38,12 +38,7 @@ class FormComponent extends HTMLFormElement {
 
         <form-footer>
             <form-controls>
-                <button
-                    icon-right="check_circle"
-                    type="submit"
-                    class="arpaForm__submitBtn"
-                    is="submit-button"
-                >
+                <button icon-right="check_circle" type="submit" class="arpaForm__submitBtn" is="submit-button">
                     {submitLabel}
                 </button>
             </form-controls>
@@ -107,11 +102,7 @@ class FormComponent extends HTMLFormElement {
     }
 
     getSubmitText() {
-        return (
-            this.getAttribute('submitText') ||
-            this._config.submitText ||
-            '<i18n-text key="common.labels.lblSubmit" />'
-        );
+        return this.getAttribute('submitText') || this._config.submitText || '<i18n-text key="common.labels.lblSubmit" />';
     }
 
     getFields() {
@@ -175,6 +166,10 @@ class FormComponent extends HTMLFormElement {
         this.fields[field.getId()] = field;
     }
 
+    getTitle() {
+        return this.getAttribute('title') || this._config.title;
+    }
+
     /**
      * RENDER.
      */
@@ -183,7 +178,7 @@ class FormComponent extends HTMLFormElement {
      * Renders the form.
      */
     render() {
-        attr(this, { novalidate: true });
+        attr(this, { novalidate: true, 'aria-label': this.getTitle() });
         const { variant } = this._config;
         const contentNodes = [...this.childNodes];
         this.renderTemplate();
@@ -256,12 +251,20 @@ class FormComponent extends HTMLFormElement {
             this.classList.remove('formComponent--invalid');
         } else {
             this.messageResource.deleteMessages();
-            this.messageResource.error(this._config.errorMessage, {
+            this.messageResource.error(this.getErrorMessage(), {
                 canClose: true
             });
             this.classList.add('formComponent--invalid');
         }
         return this._isValid;
+    }
+
+    getErrorMessage() {
+        return this.getAttribute('error-message') || this._config.errorMessage;
+    }
+
+    getSuccessMessage() {
+        return this.getAttribute('success-message') || this._config.successMessage;
     }
 
     /**
@@ -349,9 +352,9 @@ class FormComponent extends HTMLFormElement {
         this.getFields().forEach(field => {
             field.onSubmitSuccess();
         });
-        const { successMessage } = this._config;
+        const successMessage = this.getSuccessMessage();
         if (successMessage) {
-            this?.messageResource.success(successMessage);
+            this?.messageResource.success(successMessage, { canClose: true });
         }
     }
 
@@ -371,8 +374,7 @@ class FormComponent extends HTMLFormElement {
     }
 
     focusFirstErroredInput() {
-        const errorInputSelector =
-            '.arpaField--hasError input, .arpaField--hasError textarea, .arpaField--hasError select';
+        const errorInputSelector = '.arpaField--hasError input, .arpaField--hasError textarea, .arpaField--hasError select';
         const firstInput = this.querySelector(errorInputSelector);
         if (firstInput?.focus) {
             firstInput.focus();

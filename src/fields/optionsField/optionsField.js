@@ -266,7 +266,10 @@ class OptionsField extends Field {
         const optionNode = renderNode(template);
         attr(optionNode, option);
         this.optionsNode.appendChild(optionNode);
-        optionNode.setConfig(option);
+        if (typeof optionNode?.setConfig === 'function') {
+            optionNode.setConfig(option);
+        }
+
         return optionNode;
     }
 

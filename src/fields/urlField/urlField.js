@@ -1,12 +1,24 @@
 import { mergeObjects, removeLastSlash } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
-
+const html = String.raw;
 class UrlField extends TextField {
     _validations = [...super.getValidations(), 'url'];
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             icon: 'link'
         });
+    }
+
+    getFieldType() {
+        return 'url';
+    }
+
+    getTagName() {
+        return 'url-field';
+    }
+
+    getI18nKey() {
+        return 'modules.form.fields.url';
     }
 
     validateUrl(value) {
@@ -20,12 +32,12 @@ class UrlField extends TextField {
             }
         }
         if (!isValid) {
-            this.setError('Invalid URL');
+            this.setError(html`<i18n-text key="${this.getI18nKey()}.errUrl"></i18n-text>`);
         }
         return isValid;
     }
 }
 
-customElements.define('url-field', UrlField);
+customElements.define(UrlField.prototype.getTagName(), UrlField);
 
 export default UrlField;

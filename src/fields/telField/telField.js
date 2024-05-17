@@ -1,19 +1,28 @@
 import { mergeObjects } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
+import { I18n } from '@arpadroid/i18n';
 
 class TelField extends TextField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             icon: 'phone',
             regex: 'telephone',
-            regexMessage: 'Invalid phone number',
+            regexMessage: I18n.getText('modules.form.fields.tel.errRegex'),
             inputAttributes: {
                 type: 'text'
             }
         });
     }
+
+    getFieldType() {
+        return 'tel';
+    }
+
+    getTagName() {
+        return 'tel-field';
+    }
 }
 
-customElements.define('tel-field', TelField);
+customElements.define(TelField.prototype.getTagName(), TelField);
 
 export default TelField;

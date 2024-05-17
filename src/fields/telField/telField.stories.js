@@ -4,27 +4,22 @@ import { waitFor, expect, fireEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const TextFieldStory = {
-    title: 'Fields/Text',
+    title: 'Fields/Tel',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'text-field')
+    render: (args, story) => FieldStory.render(args, story, 'tel-field')
 };
 
-const category = 'Text Field Props';
+// const category = 'Tel Field Props';
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
-        regex: { table: { category } },
-        regexMessage: { table: { category } },
         ...FieldStory.getArgTypes()
     },
     args: {
-        regex: '^([a-z0-9]+)$',
-        regexMessage: 'Only lowercase letters and numbers are allowed.',
         ...FieldStory.getArgs(),
-        id: 'text-field',
-        label: 'Text Field',
-        icon: 'match_case',
+        id: 'tel-field',
+        label: 'Tel Field',
         required: true
     }
 };
@@ -42,6 +37,10 @@ export const Test = {
         const setup = await FieldTest.playSetup(canvasElement);
         const { input, submitButton, canvas, onErrorMock, onSubmitMock } = setup;
 
+        await step('Render the tel field.', () => {
+            expect(canvas.getByText('Tel Field')).toBeTruthy();
+        });
+
         await step('Submits form with invalid regex value: "some value".', () => {
             input.value = 'some value';
             submitButton.click();
@@ -49,17 +48,17 @@ export const Test = {
 
         await step('Checks for error message.', async () => {
             await waitFor(() => {
-                canvas.getByText('Only lowercase letters and numbers are allowed.');
+                canvas.getByText(I18n.getText('modules.form.fields.tel.errRegex'));
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
 
         await step('Submits form with valid field value.', async () => {
-            input.value = 'valid';
+            input.value = '0400124033';
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'text-field': 'valid' });
+                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'tel-field': '0400124033' });
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
             });
         });

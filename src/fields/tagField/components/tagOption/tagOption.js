@@ -13,8 +13,10 @@ class TagOption extends SelectOption {
         this.field.addValue({ value, label });
         this.field._callOnChange(event);
         this.style.display = 'none';
-        this.focusNext();
-        this.field?.inputCombo?.place();
+        requestAnimationFrame(() => {
+            this.focusNext();
+            this.field?.inputCombo?.place();
+        });
     }
 
     focusNext() {

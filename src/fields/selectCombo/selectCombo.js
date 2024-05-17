@@ -3,9 +3,10 @@
  * @typedef {import('../selectField/selectOption/selectOption.js').default} SelectOption
  * @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface
  */
-import { mergeObjects, addSearchMatchMarkers, SearchTool } from '@arpadroid/tools';
+import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString } from '@arpadroid/tools';
 import { InputCombo } from '@arpadroid/ui';
 import SelectField from '../selectField/selectField.js';
+import { I18n } from '@arpadroid/i18n';
 
 const html = String.raw;
 class SelectCombo extends SelectField {
@@ -22,6 +23,7 @@ class SelectCombo extends SelectField {
             hasSearch: false,
             debounceSearch: 500,
             searchItemContentSelector: '.fieldOption__label, .fieldOption__subTitle',
+            placeholder: I18n.getText('modules.form.fields.selectCombo.lblNoSelection'),
             inputTemplate: html`
                 {input}
                 <div class="selectCombo__options comboBox">{options}</div>
@@ -186,10 +188,16 @@ class SelectCombo extends SelectField {
     getInputTemplateVars() {
         return {
             ...super.getInputTemplateVars(),
-            input: this.hasSearch()
-                ? html`<input type="text" class="optionsField__searchInput fieldInput" />`
-                : html`<button type="button" class="optionsField__input fieldInput"></button>`
+            input: this.renderComboInput()
         };
+    }
+
+    renderComboInput() {
+        const placeholder = this.getPlaceholder();
+        const inputAttributes = attrString({ placeholder });
+        return this.hasSearch()
+            ? html`<input id="${this.getHtmlId()}" type="text" class="optionsField__searchInput fieldInput" ${inputAttributes} />`
+            : html`<button type="button" class="optionsField__input fieldInput">${placeholder}</button>`;
     }
 
     renderOptions(options) {

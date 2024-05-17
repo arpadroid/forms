@@ -66,6 +66,9 @@ class CheckboxField extends Field {
      * @returns {boolean}
      */
     validateRequired() {
+        if (!this.isRequired()) {
+            return true;
+        }
         if (!this.input?.checked) {
             const message = this.i18n.errRequired;
             this.setError(message);

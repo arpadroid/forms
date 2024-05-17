@@ -87,7 +87,7 @@ export const Test = {
                 expect(field.getValue()).toEqual([]);
             });
             await waitFor(() => {
-                expect(canvas.getByText(I18n.getText('modules.form.fields.tag.txtNoTagsSelected'))).toBeVisible();
+                expect(input).toHaveAttribute('placeholder', I18n.getText('modules.form.fields.tag.lblSearchTags'));
             });
         });
 

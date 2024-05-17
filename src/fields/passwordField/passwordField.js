@@ -50,13 +50,17 @@ class PasswordField extends TextField {
         return this._config?.isConfirm ? undefined : super.getOutputValue();
     }
 
+    getMode() {
+        return this.getProperty('mode');
+    }
+
     /**
      * Checks if the PasswordField has a confirm field.
      * @returns {boolean} True if the PasswordField has a confirm field, false otherwise.
      */
     hasConfirm() {
-        const mode = this.getProperty('mode');
-        return mode !== 'login' && (this.hasAttribute('confirm') || this._config.confirm);
+        const { isConfirm } = this._config;
+        return (!isConfirm && this.getMode() !== 'login' && this.hasProperty('confirm')) ?? true;
     }
 
     /**
@@ -112,6 +116,9 @@ class PasswordField extends TextField {
      * @protected
      */
     _initializeConfirmField() {
+        if (this._config.isConfirm) {
+            return;
+        }
         if (!this.hasConfirm()) {
             if (this.confirmField) {
                 this.confirmField.remove();
@@ -119,20 +126,19 @@ class PasswordField extends TextField {
             }
             return;
         }
-        if (this.confirmField) {
-            return;
+        if (!this.confirmField) {
+            this.confirmField = new PasswordField({
+                form: this.form,
+                id: this._id + '-confirm',
+                isConfirm: true,
+                label: this.i18n?.lblConfirmPassword,
+                required: true,
+                inputAttributes: { autocomplete: 'new-password' },
+                ...this._config.confirmField,
+                validation: () => this.validateConfirm()
+            });
+            this.form?.registerField(this.confirmField);
         }
-        this.confirmField = new PasswordField({
-            form: this.form,
-            id: this._id + '-confirm',
-            isConfirm: true,
-            label: this.i18n?.lblConfirmPassword,
-            required: this.getProperty('required'),
-            inputAttributes: { autocomplete: 'new-password' },
-            ...this._config.confirmField,
-            validation: () => this.validateConfirm()
-        });
-        this.form?.registerField(this.confirmField);
         this.after(this.confirmField);
     }
 

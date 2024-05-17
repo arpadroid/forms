@@ -30,9 +30,9 @@ class GroupField extends Field {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            isOpen: false,
-            rememberToggle: false,
-            isCollapsible: false,
+            isOpen: undefined,
+            rememberToggle: undefined,
+            isCollapsible: undefined,
             openIcon: 'keyboard_arrow_down',
             closedIcon: 'keyboard_arrow_right',
             template: GroupField.template
@@ -63,10 +63,7 @@ class GroupField extends Field {
     }
 
     getRememberToggle() {
-        return (
-            (this.hasAttribute('remember-toggle') && this.getAttribute('remember-toggle') !== 'false') ||
-            this._config.rememberToggle
-        );
+        return this.hasProperty('remember-toggle');
     }
 
     getSavedToggleState() {
@@ -78,17 +75,15 @@ class GroupField extends Field {
     }
 
     isCollapsible() {
-        return (
-            (this.hasAttribute('is-collapsible') && this.getAttribute('is-collapsible') !== 'false') || this._config.isCollapsible
-        );
+        return this.hasProperty('is-collapsible') ?? true;
     }
 
     _isOpen() {
         const savedToggle = this.getSavedToggleState();
-        if (this.getRememberToggle() && typeof savedToggle !== 'undefined') {
+        if (this.getRememberToggle() && savedToggle) {
             return savedToggle === 'true';
         }
-        return this.hasAttribute('open') && this.getAttribute('open') !== 'false';
+        return this.hasProperty('open');
     }
 
     isOpen() {

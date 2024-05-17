@@ -163,7 +163,9 @@ class Field extends ArpaElement {
         {subHeader}
         <div class="arpaField__body">
             <p is="field-description"></p>
+            {beforeInput}
             <div class="arpaField__inputWrapper">{input} {inputMask}</div>
+            {afterInput}
         </div>
 
         <div class="arpaField__footer">

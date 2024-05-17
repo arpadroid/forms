@@ -9,7 +9,7 @@ class SearchField extends Field {
         this._callOnSubmit = this._callOnSubmit.bind(this);
         return mergeObjects(super.getDefaultConfig(), {
             className: 'searchField fieldComponent',
-            iconRight: 'search',
+            icon: 'search',
             variant: 'default',
             inputAttributes: {
                 placeholder: I18n.getText('common.labels.lblSearch'),

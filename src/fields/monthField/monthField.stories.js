@@ -34,7 +34,7 @@ export const Test = {
     },
     play: async ({ canvasElement, step }) => {
         const { submitButton, canvas, onErrorMock, onSubmitMock, field, input } = await FieldTest.playSetup(canvasElement);
-        console.log('input', input);
+        
         await step('Default value is OK.', async () => {
             expect(input.value).toBe('2021-06');
         });

@@ -1,7 +1,7 @@
 import Field from '../../field.js';
 import { attr } from '@arpadroid/tools';
 class FieldInput extends HTMLInputElement {
-    
+
     constructor() {
         super();
         this._onFocus = this._onFocus.bind(this);

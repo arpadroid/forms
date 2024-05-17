@@ -73,7 +73,7 @@ const FieldStory = {
             onSubmit: action('onSubmit')
         };
     },
-    getArgTypes: (category = 'Field Config') => {
+    getArgTypes: (category = 'Field Props') => {
         return {
             required: {
                 control: { type: 'boolean' },
@@ -183,8 +183,8 @@ export const Default = {
     },
     defaultArgs: FieldStory.getArgs(),
     args: {
-        required: false,
         ...FieldStory.getArgs(),
+        required: true,
         placeholder: 'Please enter a value',
         description: 'Test description',
         footnote: 'This is a footnote',

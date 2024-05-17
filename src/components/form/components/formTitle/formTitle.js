@@ -8,7 +8,7 @@ class FormTitle extends HTMLElement {
     render() {
         const title = this.getTitle();
         if (title) {
-            this.innerHTML = html` <h2>${title}</h2> `;
+            this.innerHTML = html`<h2>${title}</h2>`;
         } else {
             this.remove();
         }

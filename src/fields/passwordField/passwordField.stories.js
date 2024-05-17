@@ -112,7 +112,6 @@ export const Test = {
                     expect(canvas.queryByText('Confirm Password')).not.toBeInTheDocument();
                 });
                 input.value = 'pass';
-                console.log('input', input);
                 await userEvent.click(submitButton);
                 await waitFor(() => {
                     expect(onSubmitMock).toHaveBeenLastCalledWith({

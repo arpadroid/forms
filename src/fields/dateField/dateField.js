@@ -158,14 +158,14 @@ class DateField extends Field {
         if (min && isBefore(value, min)) {
             const minDate = formatDate(min, this.getFormat());
             this.validator.setError(
-                html`<i18n-text key="${this.i18nKey}.errMinDate" replacements="date:${minDate}"></i18n-text>`
+                html`<i18n-text key="${this.i18nKey}.errMinDate" replacements="date::${minDate}"></i18n-text>`
             );
             return false;
         }
         if (max && isBefore(max, value)) {
             const maxDate = formatDate(max, this.getFormat());
             this.validator.setError(
-                html`<i18n-text key="${this.i18nKey}.errMaxDate" replacements="date:${maxDate}"></i18n-text>`
+                html`<i18n-text key="${this.i18nKey}.errMaxDate" replacements="date::${maxDate}"></i18n-text>`
             );
             return false;
         }

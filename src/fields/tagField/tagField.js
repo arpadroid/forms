@@ -1,8 +1,8 @@
 import { mergeObjects, isObject } from '@arpadroid/tools';
-import { TagList } from '@arpadroid/ui';
 import SelectCombo from '../selectCombo/selectCombo.js';
 import Field from '../field/field.js';
 import ArrayField from '../arrayField/arrayField.js';
+import { I18n } from '@arpadroid/i18n';
 
 const html = String.raw;
 class TagField extends SelectCombo {
@@ -26,13 +26,20 @@ class TagField extends SelectCombo {
         return mergeObjects(super.getDefaultConfig(), {
             hasSearch: true,
             classNames: ['selectComboField', 'tagField'],
-            placeholder: 'Search tags',
+            placeholder: I18n.getText('modules.form.fields.tag.lblSearchTags'),
             allowTextInput: false,
             optionComponent: 'tag-option',
+            icon: 'label',
             tagDefaults: {
-                onDelete: this._onDeleteTag,
-                icon: 'label'
+                onDelete: this._onDeleteTag
+                // icon: 'label'
             }
+        });
+    }
+
+    getTemplateVars() {
+        return mergeObjects(super.getTemplateVars(), {
+            afterInput: this.renderTagList()
         });
     }
 
@@ -48,13 +55,7 @@ class TagField extends SelectCombo {
 
     async _initializeNodes() {
         super._initializeNodes();
-        if (!this.tagList) {
-            /** @type {TagList} */
-            this.tagList = this.renderTagList();
-        }
-        if (this.tagList) {
-            this.headerNode.after(this.tagList);
-        }
+        this.tagList = this.querySelector('tag-list');
     }
 
     _initializeSearchInput() {
@@ -72,14 +73,9 @@ class TagField extends SelectCombo {
     /////////////////////
 
     renderTagList() {
-        const node = new TagList({
-            id: this.getHtmlId() + '--tagList',
-            noItemsContent: html`<i18n-text key="modules.form.fields.tag.txtNoTagsSelected"></i18n-text>`,
-            noItemsIcon: 'label'
-        });
-        node.setAttribute('variant', 'mini');
-        node.innerHTML = this.renderTags();
-        return node;
+        return html`
+            <tag-list id="${this.getHtmlId()}--tagList" no-items-content="" variant="mini"> ${this.renderTags()} </tag-list>
+        `;
     }
 
     renderTags() {
@@ -141,7 +137,6 @@ class TagField extends SelectCombo {
     addValue(item) {
         const { tagDefaults } = this._config;
         const value = this.getValue();
-        
         if (!value.includes(item.value)) {
             this?.tagList.addItem({
                 ...tagDefaults,

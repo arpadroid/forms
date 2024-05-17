@@ -14,8 +14,15 @@ class ResetField extends Field {
         return 'reset';
     }
 
+    getTagName() {
+        return 'reset-field';
+    }
+
     _initializeProperties() {
         super._initializeProperties();
     }
 }
+
+customElements.define('reset-field', ResetField);
+
 export default ResetField;

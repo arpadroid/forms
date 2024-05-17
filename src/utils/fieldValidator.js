@@ -195,7 +195,7 @@ class FieldValidator {
      * @returns {boolean} - True if the value matches the regular expression, false otherwise.
      */
     regex(value = this.field.getValue(), regex = this.field.getProperty('regex')) {
-        if (!regex || (this.field.isRequired() && !value)) {
+        if (!regex || (!value.trim() && !this.field.isRequired())) {
             return true;
         }
         const valid = !regex || validateRegex(value, regex);
@@ -284,27 +284,6 @@ class FieldValidator {
     }
 
     /**
-     * Validates if the file extension is included in the specified extensions.
-     * @param {File} file - The file to validate.
-     * @param {string[]} [extensions] - The allowed extensions.
-     * @returns {boolean} - True if the file extension is included in the extensions, false otherwise.
-     */
-    validateExtensions(file, extensions = this.field?.getExtensions()) {
-        let valid = true;
-        const extension = getExtension(file);
-        if (extensions?.length && !extensions.includes(extension)) {
-            valid = false;
-            const message = I18nTool.processTemplate(this.i18n.errExtensions, {
-                extensions: html`<span>${extensions.join(', ')}</span>`,
-                size: html`<span>${formatBytes(file.size, 1)}</span>`,
-                file: html`<span>${file.name}</span>`
-            });
-            this.setError(message);
-        }
-        return valid;
-    }
-
-    /**
      * Validates if the file size is less than or equal to the specified maximum size.
      * @param {File} file - The file to validate.
      * @param {number} [maxSize] - The maximum size allowed.
@@ -323,6 +302,27 @@ class FieldValidator {
                 this.setError(message);
                 valid = false;
             }
+        }
+        return valid;
+    }
+
+    /**
+     * Validates if the file extension is included in the specified extensions.
+     * @param {File} file - The file to validate.
+     * @param {string[]} [extensions] - The allowed extensions.
+     * @returns {boolean} - True if the file extension is included in the extensions, false otherwise.
+     */
+    validateExtensions(file, extensions = this.field?.getExtensions()) {
+        let valid = true;
+        const extension = getExtension(file);
+        if (extensions?.length && !extensions.includes(extension)) {
+            valid = false;
+            const message = I18nTool.processTemplate(this.i18n.errExtensions, {
+                extensions: html`<span>${extensions.join(', ')}</span>`,
+                size: html`<span>${formatBytes(file.size, 1)}</span>`,
+                file: html`<span>${file.name}</span>`
+            });
+            this.setError(message);
         }
         return valid;
     }

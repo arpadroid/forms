@@ -167,7 +167,6 @@ export const People = [
     { value: 'NE-DC', label: 'Thomas Edison', subTitle: 'Inventor' },
     { value: 'NE-DD', label: 'Vincent van Gogh', subTitle: 'Artist' },
     { value: 'NE-DE', label: 'Walt Disney', subTitle: 'Entrepreneur' },
-    { value: 'NE-DF', label: 'William Shakespeare', subTitle: 'Writer' },
     { value: 'NE-DG', label: 'Winston Churchill', subTitle: 'Politician' },
     { value: 'NE-DH', label: 'Wright Brothers', subTitle: 'Aviators' },
     { value: 'NE-DI', label: 'Yuri Gagarin', subTitle: 'Astronaut' },
