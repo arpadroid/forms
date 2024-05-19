@@ -28,7 +28,7 @@ const FormStory = {
                     <color-field id="color" label="Color" value="yellowgreen"></color-field>
                     <search-field id="search" label="Search" value="search"></search-field>
                     <textarea-field id="textarea-field" label="Text Area" value="some value"></textarea-field>
-                    <password-field id="password-field" label="Password Field"></password-field>
+                    <password-field id="password-field" label="Password Field" confirm></password-field>
                     <hidden-field id="hiddenField" value="hidden value"></hidden-field>
                 </group-field>
                 <group-field icon="calendar_clock" label="Date & Time Fields" id="date-group" ${commonGroupConfig}>

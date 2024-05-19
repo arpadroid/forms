@@ -195,7 +195,7 @@ class FieldValidator {
      * @returns {boolean} - True if the value matches the regular expression, false otherwise.
      */
     regex(value = this.field.getValue(), regex = this.field.getProperty('regex')) {
-        if (!regex || (!value.trim() && !this.field.isRequired())) {
+        if (!regex || !value.trim()) {
             return true;
         }
         const valid = !regex || validateRegex(value, regex);
