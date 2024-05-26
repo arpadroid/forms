@@ -99,6 +99,10 @@ module.exports = (async () => {
                             to: cwd + '/dist/ui/material-symbols'
                         },
                         {
+                            from: 'node_modules/@arpadroid/ui/dist/arpadroid-ui.js',
+                            to: cwd + '/dist/arpadroid-ui.js'
+                        },
+                        {
                             from: 'src/demo',
                             to: cwd + '/dist/demo'
                         },

@@ -1,11 +1,11 @@
-import { mergeObjects, attr } from '@arpadroid/tools';
-import { IconButton } from '@arpadroid/ui';
+import { mergeObjects, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
-
+const html = String.raw;
 class WeekField extends TextField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
+            pickerLabel: I18n.getText('modules.form.fields.week.lblShowPicker'),
             inputAttributes: { type: 'week' }
         });
     }
@@ -26,12 +26,11 @@ class WeekField extends TextField {
     }
 
     renderWeekButton() {
-        const button = new IconButton({
-            icon: 'date_range',
-            onClick: () => this.input?.showPicker(),
-            label: I18n.getText('modules.form.fields.week.lblShowPicker')
-        });
-        attr(button, { variant: 'minimal', 'tooltip-position': 'left' });
+        const { pickerLabel } = this._config;
+        const button = renderNode(
+            html`<button is="icon-button" icon="date_range" label="${pickerLabel}" tooltip-position="left "variant="minimal"></icon-button>`
+        );
+        button.addEventListener('click', () => this.input?.showPicker());
         return button;
     }
 }

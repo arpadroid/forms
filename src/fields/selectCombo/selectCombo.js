@@ -4,7 +4,6 @@
  * @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface
  */
 import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString } from '@arpadroid/tools';
-import { InputCombo } from '@arpadroid/ui';
 import SelectField from '../selectField/selectField.js';
 import { I18n } from '@arpadroid/i18n';
 
@@ -111,11 +110,14 @@ class SelectCombo extends SelectField {
         const handler = this.getInput();
         if (handler && !this.inputCombo) {
             this.optionsNode = this.querySelector('.selectCombo__options');
-            this.inputCombo = new InputCombo(handler, this.optionsNode, {
-                containerSelector: 'select-option',
-                onOpen: () => this._onOpenCombo(),
-                onClose: () => this._onCloseCombo()
-            });
+            const InputCombo = window?.arpadroid?.ui?.InputCombo;
+            this.inputCombo =
+                InputCombo &&
+                new InputCombo(handler, this.optionsNode, {
+                    containerSelector: 'select-option',
+                    onOpen: () => this._onOpenCombo(),
+                    onClose: () => this._onCloseCombo()
+                });
         }
     }
 

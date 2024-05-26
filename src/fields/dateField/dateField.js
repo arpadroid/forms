@@ -1,6 +1,5 @@
 /** @typedef {import('./dateFieldInterface.js').DateFieldInterface} DateFieldInterface */
 import { attr, formatDate, isAfter, isBefore, renderNode, mergeObjects } from '@arpadroid/tools';
-import { IconButton } from '@arpadroid/ui';
 import Field from '../field/field.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
@@ -121,7 +120,7 @@ class DateField extends Field {
     /////////////////////
     /**
      * Renders the calendar button for the date field.
-     * @returns {IconButton}
+     * @returns {HTMLButtonElement}
      */
     renderCalendarButton() {
         const label = I18n.getText(`${this.getI18nKey()}.txtShowPicker`);

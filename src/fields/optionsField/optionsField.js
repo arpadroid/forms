@@ -4,7 +4,6 @@
  */
 import { attr, mergeObjects, renderNode } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
-import { CircularPreloader } from '@arpadroid/ui';
 import Field from '../field/field.js';
 const html = String.raw;
 
@@ -242,7 +241,7 @@ class OptionsField extends Field {
      */
     renderOptions(options) {
         if (this.isLoadingOptions) {
-            this._renderOptionsPreloader();
+            this.renderOptionsPreloader();
         } else {
             this._renderOptions(options);
             this.optionsPreloader?.remove();
@@ -273,9 +272,9 @@ class OptionsField extends Field {
         return optionNode;
     }
 
-    _renderOptionsPreloader() {
+    renderOptionsPreloader() {
         if (!this.optionsPreloader) {
-            this.optionsPreloader = new CircularPreloader();
+            this.optionsPreloader = renderNode(html`<circular-preloader></circular-preloader>`);
         }
         this.optionsNode.append(this.optionsPreloader);
     }

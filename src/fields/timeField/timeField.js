@@ -1,12 +1,13 @@
-import { mergeObjects, attr, timeStringToSeconds } from '@arpadroid/tools';
-import { IconButton } from '@arpadroid/ui';
+import { mergeObjects, attr, timeStringToSeconds, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
+import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
 class TimeField extends TextField {
     _validations = [...super.getValidations(), 'min', 'max'];
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            inputAttributes: { type: 'time' }
+            inputAttributes: { type: 'time' },
+            pickerLabel: I18n.getText('modules.form.fields.time.lblShowPicker')
         });
     }
 
@@ -38,12 +39,17 @@ class TimeField extends TextField {
     }
 
     renderTimeButton() {
-        const button = new IconButton({
-            icon: 'schedule',
-            onClick: () => this.input?.showPicker(),
-            label: 'show time picker'
-        });
-        attr(button, { variant: 'minimal', 'tooltip-position': 'left' });
+        const { pickerLabel } = this._config;
+        const button = renderNode(
+            html`<button
+                is="icon-button"
+                icon="schedule"
+                label="${pickerLabel}"
+                tooltip-position="left"
+                variant="minimal"
+            ></button>`
+        );
+        button.addEventListener('click', () => this.input?.showPicker());
         return button;
     }
 

@@ -7,17 +7,16 @@ const config = {
         '@storybook/addon-links',
         '@storybook/addon-essentials',
         '@storybook/addon-a11y',
-        '@storybook/addon-interactions',
         // '@chromatic-com/storybook',
         // '@storybook/addon-storysource',
+        '@storybook/addon-interactions',
+        '@chromatic-com/storybook'
     ],
     framework: {
         name: '@storybook/web-components-webpack5',
         options: {}
     },
-    docs: {
-        autodocs: 'tag'
-    }
+    docs: {}
 };
 
 export default config;

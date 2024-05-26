@@ -1,6 +1,7 @@
-import { mergeObjects, Regex } from '@arpadroid/tools';
-import { IconButton } from '@arpadroid/ui';
+import { mergeObjects, Regex, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
+
+const html = String.raw;
 class PasswordField extends TextField {
     /**
      * Returns the default configuration for the PasswordField.
@@ -15,7 +16,8 @@ class PasswordField extends TextField {
             mode: 'register',
             inputAttributes: { type: 'password' },
             confirmField: {},
-            isConfirm: false
+            isConfirm: false,
+            lblShowPassword: this.i18n?.lblShowPassword
         });
     }
 
@@ -65,16 +67,20 @@ class PasswordField extends TextField {
 
     /**
      * Renders the visibility button for toggling password visibility.
-     * @returns {IconButton}
+     * @returns {HTMLButtonElement}
      */
     renderVisibilityButton() {
-        const button = new IconButton({
-            icon: 'visibility',
-            label: 'Show password',
-            tooltipPosition: 'left',
-            onClick: () => this.togglePasswordVisibility()
-        });
-        button.setAttribute('variant', 'minimal');
+        const { lblShowPassword } = this._config;
+        const button = renderNode(
+            html`<button
+                is="icon-button"
+                icon="visibility"
+                label="${lblShowPassword}"
+                variant="minimal"
+                tooltip-position="left"
+            ></button>`
+        );
+        button.addEventListener('click', () => this.togglePasswordVisibility());
         return button;
     }
 

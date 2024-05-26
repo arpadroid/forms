@@ -3,12 +3,11 @@
  * @typedef {import('../../fileField.js').default} FileField
  */
 
-import { ListItem } from '@arpadroid/ui';
 import { mergeObjects, processFile, render, formatBytes } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
 
 const html = String.raw;
-class FileItem extends ListItem {
+class FileItem extends window.arpadroid.ui.ListItem {
     //////////////////////////
     // #region INITIALIZATION
     //////////////////////////
@@ -35,7 +34,7 @@ class FileItem extends ListItem {
             icon: 'text_snippet',
             onDelete: true,
             onEdit: false,
-            lblRemoveFile: I18n.getText('modules.form.fields.file.lblRemoveFile'),
+            lblRemoveFile: I18n.getText('modules.form.fields.file.lblRemoveFile')
         });
     }
 

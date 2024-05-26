@@ -100,15 +100,13 @@ export const Test = {
                 expect(input).toHaveAttribute('type', 'text');
             });
             await userEvent.type(input, 'United');
-            await waitFor(async () => {
-                const searchMatches = canvas.getAllByText('United');
-                expect(searchMatches).toHaveLength(2);
-                expect(searchMatches[0]).toBeVisible();
-                expect(searchMatches[1]).toBeVisible();
-                expect(canvas.getByText('Spain')).not.toBeVisible();
-                userEvent.click(searchMatches[1]);
-                expect(onChangeMock).toHaveBeenLastCalledWith('uk', field);
-            });
+            const searchMatches = canvas.getAllByText('United');
+            expect(searchMatches).toHaveLength(2);
+            expect(searchMatches[0]).toBeVisible();
+            expect(searchMatches[1]).toBeVisible();
+            expect(canvas.getByText('Spain')).not.toBeVisible();
+            await userEvent.click(searchMatches[1]);
+            expect(onChangeMock).toHaveBeenLastCalledWith('uk', field);
         });
     }
 };

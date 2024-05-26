@@ -217,6 +217,7 @@ class FileField extends Field {
         this.classList.add(!this.allowMultiple() ? 'fileField--single' : 'fileField--multiple');
         this._initializeFileList();
         this.uploadList = this.querySelector('.fileField__uploadList');
+        this.fileList = this.querySelector('.fileField__fileList');
         this.dropArea = this.querySelector('drop-area');
         this.input = this.getInput();
         this.input.removeEventListener('change', this._onChange);

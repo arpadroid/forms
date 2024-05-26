@@ -4,8 +4,7 @@
  * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
  */
 import { mergeObjects, copyObjectProps } from '@arpadroid/tools';
-import { ComponentTool, ObserverTool, attr } from '@arpadroid/tools';
-import { CircularPreloader } from '@arpadroid/ui';
+import { ComponentTool, ObserverTool, attr, renderNode } from '@arpadroid/tools';
 import { I18n, I18nTool } from '@arpadroid/i18n';
 
 /**
@@ -360,7 +359,7 @@ class FormComponent extends HTMLFormElement {
 
     startLoading() {
         if (!this.preloader) {
-            this.preloader = new CircularPreloader();
+            this.preloader = renderNode(html`<circular-preloader></circular-preloader>`);
         }
         this.bodyNode.append(this.preloader);
     }
