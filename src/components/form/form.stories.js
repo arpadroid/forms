@@ -2,6 +2,7 @@
  * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
  * @typedef {import('./field.js').default} Field
  */
+import { I18n } from '@arpadroid/i18n';
 import { attrString } from '@arpadroid/tools';
 import { waitFor, within, expect, fn, getByText } from '@storybook/test';
 
@@ -104,7 +105,10 @@ const FormStory = {
         return {
             id: 'demo-form',
             title: 'Demo Form',
-            debounce: 1000
+            debounce: 1000,
+            successMessage: I18n.getText('modules.form.formComponent.msgSuccess'),
+            errorMessage: I18n.getText('modules.form.formComponent.msgError'),
+            variant: undefined
         };
     },
     getArgTypes: (category = 'Form Props') => {
@@ -113,7 +117,11 @@ const FormStory = {
             title: { control: 'text', table: { category } },
             debounce: { control: 'number', table: { category } },
             successMessage: { control: 'text', table: { category } },
-            errorMessage: { control: 'text', table: { category } }
+            errorMessage: { control: 'text', table: { category } },
+            variant: { 
+                control: 'select', 
+                options : [undefined, 'mini'],
+                table: { category } }
         };
     }
 };

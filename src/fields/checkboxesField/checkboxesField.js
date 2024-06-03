@@ -7,7 +7,7 @@ import ArrayField from '../arrayField/arrayField.js';
 class CheckboxesField extends ArrayField {
     constructor(config) {
         super(config);
-        this._onLabelClick = this._onLabelClick.bind(this);
+        this.onLabelClick = this.onLabelClick.bind(this);
     }
 
     /**
@@ -40,12 +40,12 @@ class CheckboxesField extends ArrayField {
 
     _handleLabelToggle() {
         if (this.hasLabelToggle()) {
-            this.label?.removeEventListener('click', this._onLabelClick);
-            this.label?.addEventListener('click', this._onLabelClick);
+            this.label?.removeEventListener('click', this.onLabelClick);
+            this.label?.addEventListener('click', this.onLabelClick);
         }
     }
 
-    _onLabelClick() {
+    onLabelClick() {
         this.toggleAll();
     }
 

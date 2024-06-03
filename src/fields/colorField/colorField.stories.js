@@ -40,12 +40,12 @@ export const Test = {
 
         await step('Sets invalid value and checks for error message', async () => {
             textInput.value = 'invalid';
-            submitButton.click();
+            await fireEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(field.i18n.errColor);
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
-                expect(onErrorMock).toHaveBeenCalled();
             });
+            expect(onErrorMock).toHaveBeenCalledOnce();
         });
 
         await step('Submits form with valid field value.', async () => {

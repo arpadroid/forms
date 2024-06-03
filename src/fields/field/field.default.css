@@ -29,4 +29,15 @@
     display: flex;
     flex: 1 1 auto;
     position: relative;
+    align-items: center;
+}
+
+
+
+.arpaField:has(> .arpaField__body .fieldInputMask__lhs:not(:empty)) .fieldInput {
+    padding-left: var(--input-icon-padding);
+}
+
+.arpaField:has(> .arpaField__body .fieldInputMask__rhs:not(:empty)) .fieldInput {
+    padding-right: var(--input-icon-padding);
 }

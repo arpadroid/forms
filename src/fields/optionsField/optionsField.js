@@ -23,14 +23,14 @@ class OptionsField extends Field {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            options: undefined,
+            autoFetchOptions: true,
             inputTemplate: html`
                 {input}
                 <div role="listbox" class="optionsField__options" aria-labelledby="{labelId}">{options}</div>
             `,
             optionComponent: 'field-option',
-            optionTemplate: html`<{optionComponent} role="option"></{optionComponent}`,
-            autoFetchOptions: true
+            options: undefined,
+            optionTemplate: html`<{optionComponent} role="option"></{optionComponent}`
         });
     }
 
@@ -134,6 +134,12 @@ class OptionsField extends Field {
      */
     normalizeOptions(_options) {
         let options = _options;
+        if (typeof _options === 'string') {
+            options = _options.split(',').map(option => {
+                const [value, label] = option.trim().split('::');
+                return { value, label: label || value };
+            });
+        }
         if (!Array.isArray(options)) {
             options = [];
         }

@@ -1,7 +1,9 @@
 :root {
     --input-height: 54px;
 }
+
 .fieldInput {
+    font-family: var(--primary-font);
     background-color: var(--grey-30);
     border-radius: 16px;
     border: 2px solid var(--border-color);
@@ -21,14 +23,17 @@
     }
 }
 
+button.fieldInput {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    arpa-icon {
+        position: relative;
+        top: -1px;
+    }
+}
+
 :root {
-    --input-icon-padding: 45px;
-}
-
-.arpaField:has(> .arpaField__body field-input-mask .arpaField__icon) .fieldInput {
-    padding-left: var(--input-icon-padding);
-}
-
-.arpaField:has(> .arpaField__body field-input-mask .arpaField__iconRight) .fieldInput {
-    padding-right: var(--input-icon-padding);
+    --input-icon-padding: 46px;
 }

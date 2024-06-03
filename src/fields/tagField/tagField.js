@@ -166,6 +166,10 @@ class TagField extends SelectCombo {
         return this.getProperty('allow-text-input');
     }
 
+    async updateSearchInputLabel() {
+        // override
+    }
+
     // #endregion
 
     //////////////////

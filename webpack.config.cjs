@@ -109,7 +109,11 @@ module.exports = (async () => {
                         {
                             from: `src/themes/default/default.${themeExt}`,
                             to: cwd + `/dist/themes/default/default.${themeExt}`
-                        }
+                        },
+                        {
+                            from: 'node_modules/@arpadroid/ui/dist/themes/default/fonts',
+                            to: cwd + '/dist/themes/default/fonts'
+                        },
                     ]
                 })
             ]

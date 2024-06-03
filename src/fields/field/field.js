@@ -216,6 +216,13 @@ class Field extends window.arpadroid.ui.ArpaElement {
         };
     }
 
+    async addInputRHS(node) {
+        await this.onReady();
+        if (node instanceof HTMLElement) {
+            this.inputWrapper.appendChild(node);
+        }
+    }
+
     // #endregion
 
     /////////////////////

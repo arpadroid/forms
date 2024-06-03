@@ -4,8 +4,10 @@
  * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
  */
 import { mergeObjects, copyObjectProps } from '@arpadroid/tools';
-import { ComponentTool, ObserverTool, attr, renderNode } from '@arpadroid/tools';
+import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool } from '@arpadroid/tools';
 import { I18n, I18nTool } from '@arpadroid/i18n';
+
+const { hasProperty, getProperty } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -36,27 +38,13 @@ class FormComponent extends HTMLFormElement {
         </div>
 
         <form-footer>
-            <form-controls>
-                <button icon-right="check_circle" type="submit" class="arpaForm__submitBtn" is="submit-button">
-                    {submitLabel}
-                </button>
-            </form-controls>
+            <form-controls> {submitButton} </form-controls>
         </form-footer>
     `;
 
-    /**
-     * CUSTOM ELEMENT.
-     */
-
-    static get observedAttributes() {}
-
-    connectedCallback() {
-        this.render();
-    }
-
-    attributeChangedCallback() {
-        this.update();
-    }
+    /////////////////////////
+    // #region INITIALIZATION
+    /////////////////////////
 
     constructor(config) {
         super();
@@ -64,14 +52,6 @@ class FormComponent extends HTMLFormElement {
         this.i18n = I18n.get('modules.form.formComponent');
         ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
-    }
-
-    /**
-     * Sets the form configuration.
-     * @param {FormConfigInterface} config - The form configuration.
-     */
-    setConfig(config) {
-        this._config = mergeObjects(this.getDefaultConfig(), config);
     }
 
     /**
@@ -93,15 +73,66 @@ class FormComponent extends HTMLFormElement {
     }
 
     /**
-     * ACCESSORS.
+     * Sets the form configuration.
+     * @param {FormConfigInterface} config - The form configuration.
      */
+    setConfig(config) {
+        this._config = mergeObjects(this.getDefaultConfig(), config);
+    }
+
+    // #endregion
+
+    ////////////////////
+    // #region LIFECYCLE
+    ////////////////////
+
+    static get observedAttributes() {}
+
+    connectedCallback() {
+        this.render();
+    }
+
+    attributeChangedCallback() {
+        this.update();
+    }
+
+    _initializeNodes() {
+        this.bodyNode = this.querySelector('.arpaForm__body');
+        this.messagesNode = this.querySelector('arpa-messages');
+    }
+
+    async _initializeMessages() {
+        await customElements.whenDefined('arpa-messages');
+        /** @type {Messages} */
+        this.messages = this.querySelector('arpa-messages');
+        /** @type {MessageResource} */
+        this.messageResource = this.messages?.resource;
+    }
+
+    _initializeSubmit() {
+        this.submitButton = this.querySelector('button[type="submit"]');
+        this.addEventListener('submit', this._onSubmit.bind(this));
+    }
+
+    _initializeFields(contentNodes) {
+        this.formFields = this.querySelector('.arpaForm__fields');
+        if (this.formFields) {
+            this.formFields.append(...contentNodes);
+        }
+    }
+
+    // #endregion
+
+    /////////////////////
+    // #region ACCESSORS
+    /////////////////////
 
     canUseTemplate() {
         return this.getAttribute('useTemplate') !== 'false' && this._config.useTemplate;
     }
 
     getSubmitText() {
-        return this.getAttribute('submitText') || this._config.submitText || '<i18n-text key="common.labels.lblSubmit" />';
+        return getProperty(this, 'submit-text') || html`<i18n-text key="common.labels.lblSubmit" />`;
     }
 
     getFields() {
@@ -169,9 +200,11 @@ class FormComponent extends HTMLFormElement {
         return this.getAttribute('title') || this._config.title;
     }
 
-    /**
-     * RENDER.
-     */
+    // #endregion
+
+    ////////////////////
+    // #region RENDERING
+    ////////////////////
 
     /**
      * Renders the form.
@@ -205,38 +238,29 @@ class FormComponent extends HTMLFormElement {
     getTemplateVariables() {
         return {
             submitLabel: this.getSubmitText(),
-            formId: this.id
+            formId: this.id,
+            submitButton: this.renderSubmitButton()
         };
     }
 
-    _initializeNodes() {
-        this.bodyNode = this.querySelector('.arpaForm__body');
-        this.messagesNode = this.querySelector('arpa-messages');
+    renderSubmitButton() {
+        return render(
+            this.hasSubmitButton() && getProperty(this, 'variant') !== 'mini',
+            html`<button icon-right="check_circle" type="submit" class="arpaForm__submitBtn" is="submit-button">
+                ${this.getSubmitText()}
+            </button>`
+        );
     }
 
-    async _initializeMessages() {
-        await customElements.whenDefined('arpa-messages');
-        /** @type {Messages} */
-        this.messages = this.querySelector('arpa-messages');
-        /** @type {MessageResource} */
-        this.messageResource = this.messages?.resource;
+    hasSubmitButton() {
+        return hasProperty(this, 'has-submit-button');
     }
 
-    _initializeSubmit() {
-        this.submitButton = this.querySelector('button[type="submit"]');
-        this.addEventListener('submit', this._onSubmit.bind(this));
-    }
+    // #endregion
 
-    _initializeFields(contentNodes) {
-        this.formFields = this.querySelector('.arpaForm__fields');
-        if (this.formFields) {
-            this.formFields.append(...contentNodes);
-        }
-    }
-
-    /**
-     * VALIDATION.
-     */
+    //////////////////////
+    // #region VALIDATION
+    //////////////////////
 
     /**
      * Validates the form.
@@ -379,6 +403,8 @@ class FormComponent extends HTMLFormElement {
             firstInput.focus();
         }
     }
+
+    // #endregion
 }
 
 customElements.define('arpa-form', FormComponent, { extends: 'form' });

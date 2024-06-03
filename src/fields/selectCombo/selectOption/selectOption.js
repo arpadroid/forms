@@ -3,7 +3,7 @@ import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
 const html = String.raw;
 /**
  * @typedef {import('../../optionsField/fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
- * @typedef {import('../../selectCombo/selectCombo.js').default} SelectCombo
+ * @typedef {import('../selectCombo.js').default} SelectCombo
  */
 
 /**

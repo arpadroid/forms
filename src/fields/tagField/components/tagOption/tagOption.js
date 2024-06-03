@@ -1,4 +1,4 @@
-import SelectOption from '../../../selectField/selectOption/selectOption.js';
+import SelectOption from '../../../selectCombo/selectOption/selectOption.js';
 
 class TagOption extends SelectOption {
     _onSelected(event) {
