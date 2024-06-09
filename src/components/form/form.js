@@ -27,20 +27,6 @@ const html = String.raw;
 
 class FormComponent extends HTMLFormElement {
     fields = {};
-    template = html`
-        <form-header>
-            <form-title></form-title>
-            <form-description></form-description>
-        </form-header>
-        <arpa-messages class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
-        <div class="arpaForm__body">
-            <div class="arpaForm__fields"></div>
-        </div>
-
-        <form-footer>
-            <form-controls> {submitButton} </form-controls>
-        </form-footer>
-    `;
 
     /////////////////////////
     // #region INITIALIZATION
@@ -61,7 +47,6 @@ class FormComponent extends HTMLFormElement {
     getDefaultConfig() {
         return {
             variant: 'default',
-            template: this.template,
             hasSubmitButton: true,
             initialValues: {},
             onSubmit: undefined,
@@ -200,6 +185,10 @@ class FormComponent extends HTMLFormElement {
         return this.getAttribute('title') || this._config.title;
     }
 
+    getVariant() {
+        return this.getAttribute('variant') || this._config.variant;
+    }
+
     // #endregion
 
     ////////////////////
@@ -229,10 +218,28 @@ class FormComponent extends HTMLFormElement {
      * Renders the form template.
      */
     renderTemplate() {
-        const { template } = this._config;
+        const template = html`
+            <form-header>
+                <form-title></form-title>
+                <form-description></form-description>
+            </form-header>
+            <arpa-messages class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
+            <div class="arpaForm__body">
+                <div class="arpaForm__fields"></div>
+            </div>
+
+            ${this.renderFooter()}
+        `;
         if (template && this.canUseTemplate()) {
             this.innerHTML = I18nTool.processTemplate(template, this.getTemplateVariables());
         }
+    }
+
+    renderFooter() {
+        if (this.getVariant() === 'mini') {
+            return '';
+        }
+        return html`<form-footer><form-controls>{submitButton}</form-controls></form-footer>`;
     }
 
     getTemplateVariables() {

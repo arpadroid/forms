@@ -14,9 +14,13 @@ const FormStory = {
     render: (args, story, renderContent = FormStory.renderContent, renderScript = FormStory.renderScript) => {
         return html`
             <form is="arpa-form" ${attrString(args)}>${renderContent(args, story)}</form>
-            ${renderScript(args, story)}
+            ${renderScript(args, story)}  
         `.trim();
     },
+    /**
+     * Renders the content of the form component.
+     * @returns {string} The HTML content of the form.
+     */
     renderContent() {
         const commonGroupConfig = attrString({ open: false, 'remember-toggle': true });
 
@@ -161,7 +165,6 @@ export const Test = {
         await waitFor(() => customElements.whenDefined('arpa-form'));
         const form = canvasElement.querySelector('form');
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
-        console.log('submitButton', submitButton);
         const onSubmitMock = fn(() => true);
         form.onSubmit(onSubmitMock);
         return { canvas, form, submitButton, onSubmitMock };

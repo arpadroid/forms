@@ -8,7 +8,7 @@ class SearchField extends Field {
     getDefaultConfig() {
         this._callOnSubmit = this._callOnSubmit.bind(this);
         return mergeObjects(super.getDefaultConfig(), {
-            className: 'searchField fieldComponent',
+            classNames: ['searchField', 'fieldComponent'],
             icon: 'search',
             variant: 'default',
             inputAttributes: {

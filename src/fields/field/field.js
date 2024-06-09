@@ -47,7 +47,6 @@ class Field extends window.arpadroid.ui.ArpaElement {
         return {
             template: Field.template,
             inputTemplate: Field.inputTemplate,
-            variant: undefined,
             validator: FieldValidator,
             hasInputMask: true,
             inputAttributes: {
@@ -468,10 +467,6 @@ class Field extends window.arpadroid.ui.ArpaElement {
      */
     getIcon() {
         return this.getProperty('icon');
-    }
-
-    getVariant() {
-        return this.getProperty('variant');
     }
 
     /**

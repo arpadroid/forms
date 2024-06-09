@@ -63,12 +63,24 @@ class FieldOption extends window.arpadroid.ui.ArpaElement {
         /** @type {Field} */
         this.field = this.closest('.arpaField');
         this.setAttribute('role', 'option');
-        if (!this.field) {
-            return;
-        }
+        this.setIsSelected();
         super.render();
         this.classList.add(this._config.className);
         this._onConnected();
+    }
+
+    isSelected() {
+        return this.getAttribute('value') === this.field?.getValue();
+    }
+
+    setIsSelected() {
+        this.isSelected() ? this.setAttribute('aria-selected', 'true') : this.removeAttribute('aria-selected');
+    }
+
+    async _onInitialized() {
+        await this.onReady();
+        this.field?.listen('onChange', () => this.setIsSelected());
+        super._onInitialized();
     }
 
     /**

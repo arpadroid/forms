@@ -1,6 +1,6 @@
 /**
  * @typedef {import('./fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
- * @typedef {import('./optionsFieldInterface').OptionsFieldInterface} OptionsFieldInterface
+ * @typedef {import('./optionsFieldInterexface').OptionsFieldInterface} OptionsFieldInterface
  */
 import { attr, mergeObjects, renderNode } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
@@ -260,7 +260,9 @@ class OptionsField extends Field {
             return;
         }
         this.optionsNode.innerHTML = '';
-        this.appendChild(this.optionsNode);
+        if (!this.optionsNode.isConnected) {
+            this.appendChild(this.optionsNode);
+        }
         options?.forEach(option => this._renderOption(option));
     }
 
