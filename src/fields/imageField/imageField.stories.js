@@ -113,9 +113,10 @@ export const Test = {
 
         await step('Sets allow-multiple, adds multiple images and checks the uploaded images list.', async () => {
             field.setAttribute('allow-multiple', '');
-            fireEvent.change(input, { target: { files: [planeImage, flowerImage] } });
+            await fireEvent.change(input, { target: { files: [planeImage, flowerImage] } });
+            const items = uploadList.listResource.getItems();
             await waitFor(() => {
-                expect(uploadList.listResource.getItems()).toHaveLength(2);
+                expect(items).toHaveLength(2);
                 expect(canvas.getByText('plane')).toBeVisible();
                 expect(canvas.getByText('flower')).toBeVisible();
                 expect(canvas.getByText(formatBytes(planeImage.size))).toBeVisible();

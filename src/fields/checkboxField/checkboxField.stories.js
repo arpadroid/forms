@@ -53,8 +53,10 @@ export const Test = {
         await step('Checks the checkbox', async () => {
             fireEvent.click(label);
             expect(input.checked).toBe(true);
-            expect(onChangeMock).toHaveBeenLastCalledWith(true, field);
-            expect(onChangeMock).toHaveBeenCalledTimes(1);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenLastCalledWith(true, field);
+                expect(onChangeMock).toHaveBeenCalledTimes(1);
+            });
         });
 
         await step('Submits the form and receives expected value.', async () => {

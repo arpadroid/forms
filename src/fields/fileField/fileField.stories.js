@@ -227,6 +227,8 @@ export const Test = {
                     const testFile = canvas.queryByText('test file');
                     const list = testFile.closest('file-list');
                     expect(list).toBe(field.fileList);
+                    const items = uploadList.listResource.getItems();
+                    expect(items).toHaveLength(0);
                 });
             }
         );

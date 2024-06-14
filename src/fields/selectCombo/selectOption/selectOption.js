@@ -11,9 +11,9 @@ const html = String.raw;
  */
 class SelectOption extends FieldOption {
     /**
-     * @property {SelectCombo} field - The select field.
+     * Creates a new SelectOption instance.
+     * @param {FieldOptionInterface} config - The configuration object for the SelectOption.
      */
-
     constructor(config) {
         super(config);
         this._onSelected = this._onSelected.bind(this);

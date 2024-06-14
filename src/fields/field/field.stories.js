@@ -214,7 +214,10 @@ export const Test = {
         const form = canvasElement.querySelector('form');
         form.setAttribute('debounce', '0');
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
-        const onSubmitMock = fn(() => true);
+        const onSubmitMock = fn(values => {
+            console.log('values', values);
+            return true;
+        });
         const onChangeMock = fn();
         form.onSubmit(onSubmitMock);
         const onErrorMock = fn();
@@ -275,14 +278,16 @@ export const Test = {
             }
         );
 
-        await step('Calls onChange listener when change event is fired', () => {
+        await step('Calls onChange listener when change event is fired', async () => {
             field.listen('onChange', args.onChange);
             expect(args.onChange).not.toHaveBeenCalled();
             input.value = 'test value';
             const event = new Event('input', { bubbles: true, cancelable: true });
             input.dispatchEvent(event);
-            expect(args.onChange).toHaveBeenLastCalledWith('test value', field);
-            expect(field.getValue()).toBe(input.value).toBe('test value');
+            await waitFor(() => {
+                expect(args.onChange).toHaveBeenLastCalledWith('test value', field);
+                expect(field.getValue()).toBe(input.value).toBe('test value');
+            });
         });
 
         await step('Submits form with valid field value.', async () => {

@@ -63,7 +63,9 @@ export const Test = {
             const option2 = canvas.getByText('Option 2');
             await fireEvent.click(option2);
             expect(field.hasValue('option2')).toBeFalsy();
-            expect(onChangeMock).toHaveBeenLastCalledWith(['option1'], field);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenLastCalledWith(['option1'], field);
+            });
         });
 
         await step('clicks on the label to toggle all options', async () => {
@@ -71,9 +73,13 @@ export const Test = {
             expect(field.hasValue('option1')).toBeTruthy();
             expect(field.hasValue('option2')).toBeTruthy();
             expect(field.hasValue('option3')).toBeTruthy();
-            expect(onChangeMock).toHaveBeenLastCalledWith(['option1', 'option2', 'option3'], field);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenLastCalledWith(['option1', 'option2', 'option3'], field);
+            });
             await fireEvent.click(label);
-            expect(onChangeMock).toHaveBeenLastCalledWith([], field);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenLastCalledWith([], field);
+            });
         });
 
         await step('Submits form with invalid empty value and checks for error messages.', async () => {

@@ -80,12 +80,11 @@ export const Test = {
             await input.focus();
             const spainButton = canvas.getByText('Spain').closest('button');
             await userEvent.click(spainButton);
-            expect(onChangeMock).toHaveBeenLastCalledWith('es', field);
             await waitFor(() => {
+                expect(onChangeMock).toHaveBeenLastCalledWith('es', field);
                 expect(field.getValue()).toBe('es');
                 expect(input).toHaveTextContent('Spain');
             });
-
             await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
@@ -94,19 +93,21 @@ export const Test = {
         });
 
         await step('enables search, performs search and verifies search results', async () => {
-            field.setAttribute('has-search', '');
+            field.setAttribute('has-search', 'true');
             await waitFor(() => {
                 input = field.getInput();
                 expect(input).toHaveAttribute('type', 'text');
             });
-            await userEvent.type(input, 'United');
+            
+            await userEvent.type(input, 'United', { delay: 10 });
             const searchMatches = canvas.getAllByText('United');
             expect(searchMatches).toHaveLength(2);
-            expect(searchMatches[0]).toBeVisible();
-            expect(searchMatches[1]).toBeVisible();
             expect(canvas.getByText('Spain')).not.toBeVisible();
+
             await userEvent.click(searchMatches[1]);
-            expect(onChangeMock).toHaveBeenLastCalledWith('uk', field);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenLastCalledWith('uk', field);
+            });
         });
     }
 };

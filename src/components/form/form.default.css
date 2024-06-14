@@ -5,8 +5,11 @@
 
 .arpaForm__fields {
     position: relative;
-    gap: 12px;
     display: flex;
+}
+
+.arpaForm__fields:has(.arpaForm__column) {
+    gap: 24px;
 }
 
 .arpaForm__body {
@@ -22,7 +25,6 @@
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        gap: 4px 12px;
         > .groupField {
             max-width: calc(50% - 16px);
             flex: 1 1 auto;

@@ -6,7 +6,6 @@ import { I18n, I18nTool } from '@arpadroid/i18n';
  * @typedef {import('./fieldInterface').FieldInterface} FieldInterface
  * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
  */
-
 const html = String.raw;
 class Field extends window.arpadroid.ui.ArpaElement {
     //////////////////////
@@ -628,9 +627,11 @@ class Field extends window.arpadroid.ui.ArpaElement {
      * @param {Event} event
      */
     _callOnChange(event) {
-        if (this.form.isConnected) {
-            this.signal('onChange', this.getOnChangeValue(), this, event);
-        }
+        requestAnimationFrame(() => {
+            if (this.form.isConnected) {
+                this.signal('onChange', this.getOnChangeValue(), this, event);
+            }
+        });
     }
 
     _onFocus() {

@@ -65,10 +65,20 @@
         gap: 24px 24px;
     }
 
-    .groupField__fields > .arpaField {
+    .groupField__fields > .arpaField:not(.fileField, .imageField, .audioField, .videoField) {
         flex: 1 1 50%;
         max-width: calc(50% - 16px);
         /* min-width: 250px; */
+    }
+}
+
+@container groupfield-input (min-width: 850px) {
+    .groupField__fields > .fileField,
+    .groupField__fields > .imageField,
+    .groupField__fields > .audioField,
+    .groupField__fields > .videoField {
+        flex: 1 1 50%;
+        max-width: calc(50% - 16px);
     }
 }
 

@@ -34,6 +34,10 @@ class SearchField extends Field {
         }
     }
 
+    getVariant() {
+        return this.getProperty('variant');
+    }
+
     getIconRight() {
         return this.getVariant() === 'mini' ? undefined : this.getProperty('icon-right');
     }

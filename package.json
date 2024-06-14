@@ -19,7 +19,8 @@
         "start:tools": "cd ../tools && npm run build:watch",
         "start:dev": "npm run start:ui & npm run start:application & npm run start:i18n & npm run start:tools & npm run build:watch",
         "storybook:dev": "npm run start:dev & storybook dev -p 6006",
-        "storybook:start": "npm run build:watch & storybook dev -p 6006",
+        "storybook:start": "npm run build:watch & npm run storybook",
+        "storybook": "storybook dev -p 6006",
         "test": "npm run test:storybook",
         "test:playwright:ci": "npx playwright test --config playwright.config.cjs",
         "test:playwright:dev": "npm run start:dev & npx playwright test --config playwright.config.cjs --ui",
@@ -44,7 +45,7 @@
     },
     "homepage": "https://github.com/arpadroid/forms#readme",
     "devDependencies": {
-        "@arpadroid/stylesheet-bundler": "../stylesheet-bundler",
+        "@arpadroid/stylesheet-bundler": "file:../stylesheet-bundler",
         "@babel/core": "^7.24",
         "@babel/plugin-proposal-optional-chaining-assign": "^7.23.7",
         "@babel/plugin-syntax-import-assertions": "^7.23.3",

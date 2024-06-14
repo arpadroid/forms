@@ -36,7 +36,7 @@ class SelectCombo extends SelectField {
             placeholder: I18n.getText('modules.form.fields.selectCombo.lblNoSelection'),
             inputTemplate: html`
                 {input}
-                <div class="selectCombo__options comboBox">{options}</div>
+                <div class="selectCombo__options optionsField__options comboBox">{options}</div>
             `,
             optionComponent: 'select-option'
         });
@@ -64,6 +64,11 @@ class SelectCombo extends SelectField {
         } else if (name === 'has-search') {
             this.reRender();
         }
+    }
+
+    reRender() {
+        this.inputCombo = null;
+        super.reRender();
     }
 
     _initializeNodes() {

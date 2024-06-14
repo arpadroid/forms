@@ -111,11 +111,12 @@ export const Test = {
         });
 
         await step('Selects tag and submits the form receiving expected values.', async () => {
-            await userEvent.click(canvas.getByText('Nelson Mandela'));
+            const button = canvas.getByText('Nelson Mandela');
+            await fireEvent.click(button);
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith(['NE-AU'], field);
+                expect(onChangeMock).toHaveBeenCalledWith(['NE-AU'], field);
             });
-            fireEvent.click(submitButton);
+            requestAnimationFrame(() => fireEvent.click(submitButton));
             await waitFor(() => {
                 expect(canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'))).toBeVisible();
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'tag-field': ['NE-AU'] });

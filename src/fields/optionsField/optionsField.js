@@ -230,12 +230,6 @@ class OptionsField extends Field {
         });
     }
 
-    render() {
-        const content = super.render();
-        this.optionsNode = this.querySelector('.optionsField__options');
-        return content;
-    }
-
     reRender() {
         super.reRender();
         this._options?.length && this.setOptions(this._options);
@@ -259,8 +253,9 @@ class OptionsField extends Field {
         if (!this.optionsNode) {
             return;
         }
+        this.optionsNode.field = this;
         this.optionsNode.innerHTML = '';
-        if (!this.optionsNode.isConnected) {
+        if (!this.optionsNode.isConnected || this.optionsNode.parentNode === document.body) {
             this.appendChild(this.optionsNode);
         }
         options?.forEach(option => this._renderOption(option));
