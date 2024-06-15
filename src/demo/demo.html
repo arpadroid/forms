@@ -6,10 +6,8 @@
         <link rel="stylesheet" href="/ui/material-symbols/outlined.css" />
         <!-- <link rel="stylesheet" href="/ui/themes/default/default.min.css" /> -->
         <link rel="stylesheet" href="/themes/default/default.bundled.css" />
-        <% for (key in htmlWebpackPlugin.files.js) { %>
-        <!-- <script src="//unpkg.com/@ungap/custom-elements"></script> -->
-        <script type="module" src="<%= htmlWebpackPlugin.files.js[key] %>"></script>
-        <% } %>
+        <script type="module" src="arpadroid-ui.js"></script>
+        <script type="module" src="arpadroid-forms.js"></script>
     </head>
     <body>
         <form id="demoForm" is="arpa-form" title="My Form">
