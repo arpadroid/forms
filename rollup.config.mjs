@@ -3,9 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import { dts } from 'rollup-plugin-dts';
 import watch from 'rollup-plugin-watch';
-
-const cwd = process.cwd();
-
+const WATCH_ALL = process.env['watch'] === 'all';
 export default [
     {
         input: 'src/index.js',
@@ -29,7 +27,8 @@ export default [
                     { src: 'src/demo', dest: 'dist' }
                 ]
             }),
-            watch({ dir: 'src/themes' })
+            watch({ dir: 'src/themes' }),
+            WATCH_ALL && watch({ dir: 'node_modules/@arpadroid/ui/dist' })
         ],
         output: {
             file: 'dist/arpadroid-forms.js',

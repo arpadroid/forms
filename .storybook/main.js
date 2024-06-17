@@ -1,8 +1,8 @@
 /** @type { import('@storybook/web-components-webpack5').StorybookConfig } */
 const html = String.raw;
 const config = {
-    stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-    staticDirs: ['../dist', '../src', '../assets'],
+    stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+    staticDirs: ['../dist', '../src'],
     addons: [
         '@storybook/addon-webpack5-compiler-swc',
         '@storybook/addon-links',

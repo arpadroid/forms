@@ -18,16 +18,6 @@
 guard 'livereload' do
   extensions = {
     css: :css,
-    # scss: :css,
-    # sass: :css,
-    # js: :js,
-    # coffee: :js,
-    # html: :html,
-    # png: :png,
-    # gif: :gif,
-    # jpg: :jpg,
-    # jpeg: :jpeg,
-    # less: :less, # uncomment if you want LESS stylesheets done in browser
   }
 
   rails_view_exts = %w(erb haml slim)
@@ -47,10 +37,7 @@ guard 'livereload' do
     end
   end
 
-  # file needing a full reload of the page anyway
-  #watch(%r{app/views/.+\.(#{rails_view_exts * '|'})$})
-  #watch(%r{app/helpers/.+\.rb})
-  #watch(%r{config/locales/.+\.yml})
-  watch(%r{.+\.(css)})
+  watch(%r{dist/themes/default/.*\.css})
+  watch(%r{dist/ui/arpadroid-ui.js})
   
 end
