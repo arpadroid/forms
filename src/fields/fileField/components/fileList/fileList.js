@@ -1,6 +1,7 @@
 import { mergeObjects } from '@arpadroid/tools';
 import FileItem from '../fileItem/fileItem.js';
-class FileList extends window.arpadroid.ui.List {
+import { List } from '@arpadroid/ui';
+class FileList extends List {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'fileList',

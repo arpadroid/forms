@@ -21,7 +21,7 @@ const config = {
         <script src="http://127.0.0.1:35729/livereload.js?ext=Chrome&amp;extver=2.1.0"></script>
     `,
     webpackFinal: async config => {
-        config.watchOptions.aggregateTimeout = 700;
+        config.watchOptions.aggregateTimeout = 800;
         config.watchOptions.ignored = ['**/*.css'];
         config.module.rules = config.module.rules.filter(rule => {
             const isCSSRule = rule?.test?.toString().includes('css');

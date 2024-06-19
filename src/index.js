@@ -30,13 +30,3 @@ export const FieldsByType = {
     url: forms.UrlField,
     week: forms.WeekField
 };
-
-(function bootstrap() {
-    if (typeof window === 'undefined') {
-        return;
-    }
-    if (typeof window.arpadroid === 'undefined') {
-        window.arpadroid = {};
-    }
-    window.arpadroid.forms = forms;
-})();

@@ -1,4 +1,5 @@
 import { mechanize } from '@arpadroid/tools';
+import { ArpaElement } from '@arpadroid/ui';
 
 /**
  * @typedef {import('../../field/field.js').default} Field
@@ -9,7 +10,7 @@ const html = String.raw;
 /**
  * Represents a field option element.
  */
-class FieldOption extends window.arpadroid.ui.ArpaElement {
+class FieldOption extends ArpaElement {
     /**
      * The observed attributes for the field option element.
      * @type {string[]}

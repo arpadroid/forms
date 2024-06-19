@@ -5,9 +5,10 @@
 
 import { mergeObjects, processFile, render, formatBytes } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
+import { ListItem } from '@arpadroid/ui';
 
 const html = String.raw;
-class FileItem extends window.arpadroid.ui.ListItem {
+class FileItem extends ListItem {
     //////////////////////////
     // #region INITIALIZATION
     //////////////////////////

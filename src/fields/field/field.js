@@ -1,13 +1,14 @@
 import { attr, mergeObjects, ObserverTool, render } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n, I18nTool } from '@arpadroid/i18n';
+import { ArpaElement } from '@arpadroid/ui';
 /**
  * @typedef {import('../../components/form/form').default} FormComponent
  * @typedef {import('./fieldInterface').FieldInterface} FieldInterface
  * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
  */
 const html = String.raw;
-class Field extends window.arpadroid.ui.ArpaElement {
+class Field extends ArpaElement {
     //////////////////////
     // #region PROPERTIES
     /////////////////////

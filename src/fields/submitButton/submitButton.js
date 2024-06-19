@@ -1,4 +1,6 @@
-class SubmitButton extends window.arpadroid.ui.Button {
+import { Button } from '@arpadroid/ui';
+
+class SubmitButton extends Button {
     // static get observedAttributes() {
     //     return ['text'];
     // }
