@@ -6,7 +6,7 @@ const bundler = new StylesheetBundler.ThemesBundler({
     themes: [
         {
             path: cwd + '/src/themes/default',
-            baseTheme: cwd + '/node_modules/@arpadroid/ui/src/themes/default'
+            // baseTheme: cwd + '/node_modules/@arpadroid/ui/src/themes/default'
         }
     ],
     patterns: [cwd + '/src/components/**/*', cwd + '/src/fields/**/*'],

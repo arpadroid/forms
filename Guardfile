@@ -38,6 +38,6 @@ guard 'livereload' do
   end
 
   watch(%r{dist/themes/default/.*\.css})
-  watch(%r{dist/ui/arpadroid-ui.js})
+  #watch(%r{dist/ui/arpadroid-ui.js})
   
 end
