@@ -1,28 +1,15 @@
-import { setStoryContextValue  } from '@arpadroid/tools';
-
+import PreviewConfig from '@arpadroid/arpadroid/src/storybook/preview.ui.js';
+const parameters = PreviewConfig.parameters;
 /** @type { import('@storybook/web-components').Preview } */
-const preview = {
-    decorators: [
-        (story, config) => {
-            const _story = story();
-            setStoryContextValue(config.id, 'usage', _story);
-            return _story;
-        }
-    ],
+export default {
+    ...PreviewConfig,
     parameters: {
-        layout: 'padded', //'centered' | 'fullscreen' | 'padded'
+        ...parameters,
         options: {
+            ...parameters.options,
             storySort: {
                 order: ['Components', 'Fields']
-            }
-        },
-        controls: {
-            matchers: {
-                color: /(background|color)$/i,
-                date: /Date$/i
             }
         }
     }
 };
-
-export default preview;

@@ -5,7 +5,7 @@
 
 import { mergeObjects, processFile, render, formatBytes } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
-import { ListItem } from '@arpadroid/ui';
+import { ListItem } from '@arpadroid/lists';
 
 const html = String.raw;
 class FileItem extends ListItem {
