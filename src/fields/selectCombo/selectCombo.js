@@ -7,6 +7,7 @@
 import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString } from '@arpadroid/tools';
 import SelectField from '../selectField/selectField.js';
 import { I18n } from '@arpadroid/i18n';
+import { InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
 class SelectCombo extends SelectField {
@@ -118,14 +119,11 @@ class SelectCombo extends SelectField {
         const handler = this.getInput();
         if (handler && !this.inputCombo) {
             this.optionsNode = this.querySelector('.selectCombo__options');
-            const InputCombo = window?.arpadroid?.ui?.InputCombo;
-            this.inputCombo =
-                InputCombo &&
-                new InputCombo(handler, this.optionsNode, {
-                    containerSelector: this.getProperty('option-component'),
-                    onOpen: () => this.onOpenCombo(),
-                    onClose: () => this.onCloseCombo()
-                });
+            this.inputCombo = new InputCombo(handler, this.optionsNode, {
+                containerSelector: this.getProperty('option-component'),
+                onOpen: () => this.onOpenCombo(),
+                onClose: () => this.onCloseCombo()
+            });
         }
     }
 
