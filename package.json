@@ -6,17 +6,12 @@
     "exports": "./dist/arpadroid-forms.js",
     "type": "module",
     "scripts": {
-        "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=forms --deps=messages,lists --style-patterns=\"fields/**/*\" --minify",
-        "build:prod": "npm run build -- --mode=production",
-        "build:watch": "npm run build -- --watch",
-        "build:watch:slim": "npm run build -- --watch --slim",
-        "build:slim": "npm run build -- --slim",
+        "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=forms --minify",
         "prepublish": "npm run build",
+        "storybook": "npm run build -- --storybook=6006",
         "storybook:build": "storybook build",
-        "storybook:test": "test-storybook",
-        "storybook": "npm run build -- --watch  & npm run storybook:only",
-        "storybook:only": "storybook dev -p 6006",
-        "test": "npm run storybook:test"
+        "test": "npm run storybook:test",
+        "test:storybook": "test-storybook"
     },
     "repository": {
         "type": "git",
@@ -43,28 +38,10 @@
         "@babel/plugin-proposal-optional-chaining-assign": "^7.23.7",
         "@babel/plugin-syntax-import-assertions": "^7.23.3",
         "@babel/preset-env": "^7.23.9",
-        "@chromatic-com/storybook": "^1.4.0",
         "@playwright/test": "^1.43.1",
-        "@storybook/addon-a11y": "^8.1.1",
-        "@storybook/addon-essentials": "^8.1.1",
-        "@storybook/addon-interactions": "^8.1.1",
-        "@storybook/addon-links": "^8.1.1",
-        "@storybook/addon-webpack5-compiler-swc": "^1.0.2",
-        "@storybook/blocks": "^8.1.1",
-        "@storybook/test": "^8.1.1",
-        "@storybook/test-runner": "^0.18.1",
-        "@storybook/web-components": "^8.1.1",
-        "@storybook/web-components-webpack5": "^8.1.1",
         "babel-loader": "^9.1.3",
-        "chromatic": "^11.3.0",
-        "copy-webpack-plugin": "^12.0.2",
         "dts-bundle-generator": "^9.3.1",
-        "html-webpack-plugin": "^5.6.0",
-        "jsdoc-to-markdown": "^8.0.1",
-        "jsdom": "^24.0.0",
-        "lit": "^3.1.2",
-        "rollup": "^4.18.0",
-        "storybook": "^8.1.1"
+        "jsdoc-to-markdown": "^8.0.1"
     },
     "peerDependencies": {
         "@arpadroid/i18n": "file:../i18n",
@@ -72,7 +49,8 @@
         "@arpadroid/tools": "file:../tools",
         "@arpadroid/navigation": "file:../navigation",
         "@arpadroid/messages": "file:../messages",
-        "@arpadroid/ui": "file:../ui"
+        "@arpadroid/ui": "file:../ui",
+        "@arpadroid/application": "file:../application"
     },
     "dependencies": {
         "@ungap/custom-elements": "^1.3.0"
