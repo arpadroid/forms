@@ -8,7 +8,7 @@
     "scripts": {
         "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=forms --minify",
         "prepublish": "npm run build",
-        "storybook": "npm run build -- --storybook=6006",
+        "storybook": "npm run build -- --storybook=6006 --watch",
         "storybook:build": "storybook build",
         "test": "npm run storybook:test",
         "test:storybook": "test-storybook"
