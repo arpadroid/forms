@@ -7,10 +7,14 @@ class FieldErrors extends HTMLElement {
         return ['errors'];
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         this.field = this.closest('.arpaField');
         this.classList.add('fieldErrors');
         this.render();
+        this.tooltip = this.querySelector('.fieldErrors__tooltip');
+        await this.tooltip.onReady();
+        this.errorList = this.querySelector('.fieldErrors__list');
+        this.updateErrors();
     }
 
     /**
@@ -19,12 +23,12 @@ class FieldErrors extends HTMLElement {
     render() {
         const content = html`
             <arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="bottom-right">
-                <ul class="fieldErrors__list"></ul>
+                <slot name="content">
+                    <ul class="fieldErrors__list"></ul>
+                </slot>
             </arpa-tooltip>
         `;
         this.innerHTML = content;
-        this.errorList = this.querySelector('.fieldErrors__list');
-        this.updateErrors();
     }
 
     /**
@@ -86,9 +90,11 @@ class FieldErrors extends HTMLElement {
      * Updates the displayed errors.
      */
     updateErrors() {
-        this.errorList.innerHTML = '';
-        const errors = this.renderErrors();
-        this.errorList.append(...errors);
+        if (this.errorList) {
+            this.errorList.innerHTML = '';
+            const errors = this.renderErrors();
+            this.errorList.append(...errors);
+        }
     }
 }
 

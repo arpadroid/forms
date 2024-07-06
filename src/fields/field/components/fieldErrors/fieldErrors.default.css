@@ -11,3 +11,7 @@ field-errors {
         margin: 0;
     }
 }
+
+.fieldErrors:has(.tooltip__content:empty) {
+    display: none;
+}
