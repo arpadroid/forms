@@ -5,7 +5,7 @@
 import { mergeObjects, CustomElementTool } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
-const { getProperty, hasProperty } = CustomElementTool;
+const { getProperty, hasProperty, removeIfEmpty } = CustomElementTool;
 const html = String.raw;
 class FieldLabel extends HTMLLabelElement {
     static defaultConfig = {
@@ -18,24 +18,27 @@ class FieldLabel extends HTMLLabelElement {
     constructor(config = {}) {
         super();
         this._config = mergeObjects(FieldLabel.defaultConfig, config);
+        removeIfEmpty(this);
     }
 
     connectedCallback() {
         /** @type {Field} */
         this.field = this.closest('.arpaField');
-        const label = this.getLabel();
-        if (!label) {
-            return this.remove();
-        }
+        
         this.id = this.field?.getLabelId();
         this.field && this.setAttribute('for', this.field?.getHtmlId());
         this.render();
         this.labelNode = this.querySelector('.fieldLabel__text');
         this.classList.add('fieldLabel');
+        this.setAttribute('slot', 'label');
     }
 
     getLabel() {
         return this.field?.getLabel() || getProperty(this, 'label') || '';
+    }
+
+    hasLabel() {
+        return Boolean(this.getLabel() || this.field?.hasSlot('label'));
     }
 
     isRequired() {

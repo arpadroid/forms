@@ -3,11 +3,11 @@
  * @typedef {import('@arpadroid/ui/src/index').Messages} Messages
  * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
  */
-import { mergeObjects, copyObjectProps } from '@arpadroid/tools';
-import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool } from '@arpadroid/tools';
+import { mergeObjects, copyObjectProps, slotMixin } from '@arpadroid/tools';
+import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool, handleSlots } from '@arpadroid/tools';
 import { I18n, I18nTool } from '@arpadroid/i18n';
 
-const { hasProperty, getProperty } = CustomElementTool;
+const { hasProperty, getProperty, removeIfEmpty } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -34,6 +34,7 @@ class FormComponent extends HTMLFormElement {
 
     constructor(config) {
         super();
+        slotMixin(this);
         ObserverTool.mixin(this);
         this.i18n = I18n.get('modules.form.formComponent');
         ComponentTool.applyOnReady(this, 'arpa-form');
@@ -74,7 +75,9 @@ class FormComponent extends HTMLFormElement {
     static get observedAttributes() {}
 
     connectedCallback() {
-        this.render();
+        if (!this._hasRendered) {
+            this.render();
+        }
     }
 
     attributeChangedCallback() {
@@ -197,8 +200,14 @@ class FormComponent extends HTMLFormElement {
 
     /**
      * Renders the form.
+     * @returns {void}
+     * @throws {Error} If the form has no id.
      */
     render() {
+        if (!this.id) {
+            throw new Error('Form must have an id.');
+        }
+
         attr(this, { novalidate: true, 'aria-label': this.getTitle() });
         const { variant } = this._config;
         const contentNodes = [...this.childNodes];
@@ -212,33 +221,54 @@ class FormComponent extends HTMLFormElement {
         if (variant) {
             this.classList.add(`arpaForm--${variant}`);
         }
+        handleSlots(this);
+        this.titleNode = this.querySelector('form-title');
+        this.headerNode = this.querySelector('.arpaForm__header');
+        removeIfEmpty(this.headerNode);
     }
 
     /**
      * Renders the form template.
      */
     renderTemplate() {
-        const template = html`
-            <form-header>
-                <form-title></form-title>
-                <form-description></form-description>
-            </form-header>
-            <arpa-messages class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
-            <div class="arpaForm__body">
-                <div class="arpaForm__fields"></div>
-            </div>
-
-            ${this.renderFooter()}
-        `;
+        const variant = this.getVariant();
+        const template = variant === 'mini' ? this.renderMini() : this.renderFull();
         if (template && this.canUseTemplate()) {
             this.innerHTML = I18nTool.processTemplate(template, this.getTemplateVariables());
         }
     }
 
+    renderFull() {
+        return html`
+            <div class="arpaForm__header" slot="header">
+                <form-title slot="title"></form-title>
+                <form-description slot="description"></form-description>
+            </div>
+            <arpa-messages slot="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
+            <div class="arpaForm__body">
+                <div class="arpaForm__fields"></div>
+            </div>
+            <form-footer><form-controls>{submitButton}</form-controls></form-footer>
+        `;
+    }
+
+    renderMini() {
+        return html`
+            <arpa-messages slot="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
+            <div class="arpaForm__fields"></div>
+        `;
+    }
+
+    renderHeader() {
+        return html`
+            <div class="arpaForm__header" slot="header">
+                <form-title slot="title"></form-title>
+                <form-description slot="description"></form-description>
+            </div>
+        `;
+    }
+
     renderFooter() {
-        if (this.getVariant() === 'mini') {
-            return '';
-        }
         return html`<form-footer><form-controls>{submitButton}</form-controls></form-footer>`;
     }
 

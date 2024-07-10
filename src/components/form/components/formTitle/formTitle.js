@@ -1,16 +1,22 @@
+import { ArpaElement } from '@arpadroid/ui';
+import { mergeObjects } from '@arpadroid/tools';
 const html = String.raw;
-class FormTitle extends HTMLElement {
-    connectedCallback() {
-        this.form = this.closest('form');
+class FormTitle extends ArpaElement {
+    initializeProperties() {
+        super.initializeProperties();
         this.render();
     }
 
+    getDefaultConfig() {
+        return mergeObjects(super.getDefaultConfig(), {
+            removeIfEmpty: true
+        });
+    }
+
     render() {
-        const title = this.getTitle();
+        const title = this.getProperty('title');
         if (title) {
-            this.innerHTML = html`<h2>${title}</h2>`;
-        } else {
-            this.remove();
+            this.innerHTML = html`<h2 class="formTitle__content">${title}</h2>`;
         }
     }
 

@@ -35,6 +35,7 @@ class SelectCombo extends SelectField {
             debounceSearch: 500,
             searchItemContentSelector: '.fieldOption__label, .fieldOption__subTitle',
             placeholder: I18n.getText('modules.form.fields.selectCombo.lblNoSelection'),
+            optionsPosition: 'bottom-left',
             inputTemplate: html`
                 {input}
                 <div class="selectCombo__options optionsField__options comboBox">{options}</div>
@@ -121,6 +122,7 @@ class SelectCombo extends SelectField {
             this.optionsNode = this.querySelector('.selectCombo__options');
             this.inputCombo = new InputCombo(handler, this.optionsNode, {
                 containerSelector: this.getProperty('option-component'),
+                position: this.getProperty('options-position'),
                 onOpen: () => this.onOpenCombo(),
                 onClose: () => this.onCloseCombo()
             });
