@@ -208,7 +208,7 @@ export const Test = {
     },
     playSetup: async canvasElement => {
         const canvas = within(canvasElement);
-        await waitFor(() => customElements.whenDefined('arpa-field'));
+        await customElements.whenDefined('arpa-field');
         /** @type {Field} */
         const field = canvasElement.querySelector('.arpaField');
         const form = canvasElement.querySelector('form');

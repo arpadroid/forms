@@ -24,7 +24,6 @@ class FieldLabel extends HTMLLabelElement {
     connectedCallback() {
         /** @type {Field} */
         this.field = this.closest('.arpaField');
-        
         this.id = this.field?.getLabelId();
         this.field && this.setAttribute('for', this.field?.getHtmlId());
         this.render();
@@ -48,7 +47,10 @@ class FieldLabel extends HTMLLabelElement {
     render() {
         const textNode = this.querySelector('.fieldLabel__text');
         if (textNode) {
-            textNode.innerHTML = this.getLabel();
+            const label = this.getLabel();
+            if (label) {
+                textNode.innerHTML = this.getLabel();
+            }
             return;
         }
         this.innerHTML = I18nTool.processTemplate(this._config.template, this.getTemplateVars());

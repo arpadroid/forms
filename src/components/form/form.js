@@ -7,7 +7,7 @@ import { mergeObjects, copyObjectProps, slotMixin } from '@arpadroid/tools';
 import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool, handleSlots } from '@arpadroid/tools';
 import { I18n, I18nTool } from '@arpadroid/i18n';
 
-const { hasProperty, getProperty, removeIfEmpty } = CustomElementTool;
+const { hasProperty, getProperty } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -39,6 +39,15 @@ class FormComponent extends HTMLFormElement {
         this.i18n = I18n.get('modules.form.formComponent');
         ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
+        this.promise = this.getPromise();
+        this._childNodes = [...this.childNodes];
+    }
+
+    getPromise() {
+        return new Promise((resolve, reject) => {
+            this.resolvePromise = resolve;
+            this.rejectPromise = reject;
+        });
     }
 
     /**
@@ -102,10 +111,10 @@ class FormComponent extends HTMLFormElement {
         this.addEventListener('submit', this._onSubmit.bind(this));
     }
 
-    _initializeFields(contentNodes) {
+    _initializeFields() {
         this.formFields = this.querySelector('.arpaForm__fields');
         if (this.formFields) {
-            this.formFields.append(...contentNodes);
+            this.formFields.append(...this._childNodes);
         }
     }
 
@@ -210,22 +219,27 @@ class FormComponent extends HTMLFormElement {
 
         attr(this, { novalidate: true, 'aria-label': this.getTitle() });
         const { variant } = this._config;
-        const contentNodes = [...this.childNodes];
         this.renderTemplate();
-        this._initializeFields(contentNodes);
+        this._initializeFields();
         this._initializeNodes();
         this._initializeSubmit();
         this._initializeMessages();
-        this._hasRendered = true;
         this.classList.add('arpaForm');
         if (variant) {
             this.classList.add(`arpaForm--${variant}`);
         }
-        handleSlots(this);
+        handleSlots(() => this._onRenderComplete());
         this.titleNode = this.querySelector('form-title');
         this.headerNode = this.querySelector('.arpaForm__header');
-        removeIfEmpty(this.headerNode);
     }
+
+    _onRenderComplete() {
+        this._hasRendered = true;
+        this._onComplete();
+        this.resolvePromise?.();
+    }
+
+    _onComplete() {}
 
     /**
      * Renders the form template.
@@ -254,17 +268,9 @@ class FormComponent extends HTMLFormElement {
 
     renderMini() {
         return html`
+            <form-title slot="title"></form-title>
             <arpa-messages slot="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
             <div class="arpaForm__fields"></div>
-        `;
-    }
-
-    renderHeader() {
-        return html`
-            <div class="arpaForm__header" slot="header">
-                <form-title slot="title"></form-title>
-                <form-description slot="description"></form-description>
-            </div>
         `;
     }
 

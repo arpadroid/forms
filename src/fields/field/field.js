@@ -617,6 +617,15 @@ class Field extends ArpaElement {
         return Boolean((hasAttr && attrValue !== 'false') || (!hasAttr && this._config.disabled));
     }
 
+    disable() {
+        this.getInput()?.setAttribute('disabled', '');
+    }
+
+    enable() {
+        this.getInput()?.removeAttribute('disabled');
+    }
+
+
     // #endregion
 
     //////////////////

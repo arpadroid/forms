@@ -162,11 +162,12 @@ export const Test = {
     },
     playSetup: async canvasElement => {
         const canvas = within(canvasElement);
-        await waitFor(() => customElements.whenDefined('arpa-form'));
+        await customElements.whenDefined('arpa-form');
         const form = canvasElement.querySelector('form');
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
         const onSubmitMock = fn(() => true);
         form.onSubmit(onSubmitMock);
+        await form.promise;
         return { canvas, form, submitButton, onSubmitMock };
     },
     play: async ({ canvasElement, step }) => {

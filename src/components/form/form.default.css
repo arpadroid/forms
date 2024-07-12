@@ -36,3 +36,11 @@
         width: calc(50% - 12px);
     }
 }
+
+
+.arpaForm[variant="compact"] {
+    .arpaForm__fields {
+        gap: 8px;
+        margin-top: 0;
+    }
+}

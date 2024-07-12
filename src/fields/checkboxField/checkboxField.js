@@ -12,7 +12,7 @@ class CheckboxField extends Field {
     static template = html`
         <label is="field-label" class="fieldInput">
             <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
-            <span class="fieldLabel__text"></span>
+            <span class="fieldLabel__text" slot="checkbox-label"></span>
             <arpa-icon class="arpaField__iconRight">{iconRight}</arpa-icon>
             <field-errors></field-errors>
             <arpa-tooltip position="left">{tooltip}</arpa-tooltip>

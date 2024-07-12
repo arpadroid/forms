@@ -41,3 +41,16 @@
 .arpaField:has(> .arpaField__body .fieldInputMask__rhs:not(:empty)) .fieldInput {
     padding-right: var(--input-icon-padding);
 }
+
+
+/* Disabled */
+
+.arpaField:has(.fieldInput:disabled) {
+    opacity: 0.5;
+    .fieldInput {
+        cursor: not-allowed;
+        &:hover {
+            border-color: var(--grey-100);
+        }
+    }
+}

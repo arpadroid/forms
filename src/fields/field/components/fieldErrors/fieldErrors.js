@@ -12,7 +12,7 @@ class FieldErrors extends HTMLElement {
         this.classList.add('fieldErrors');
         this.render();
         this.tooltip = this.querySelector('.fieldErrors__tooltip');
-        await this.tooltip.onReady();
+        await this.tooltip.promise;
         this.errorList = this.querySelector('.fieldErrors__list');
         this.updateErrors();
     }
@@ -90,6 +90,7 @@ class FieldErrors extends HTMLElement {
      * Updates the displayed errors.
      */
     updateErrors() {
+        this.errorList = this.querySelector('.fieldErrors__list');
         if (this.errorList) {
             this.errorList.innerHTML = '';
             const errors = this.renderErrors();

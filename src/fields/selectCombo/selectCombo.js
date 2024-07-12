@@ -182,7 +182,7 @@ class SelectCombo extends SelectField {
         this.updateSearchInputLabel(label);
     }
 
-    async updateButtonLabel(label) {
+    updateButtonLabel(label) {
         if (this.buttonInput) {
             this.buttonInput.innerHTML = '';
             if (typeof label === 'string') {
@@ -193,7 +193,7 @@ class SelectCombo extends SelectField {
         }
     }
 
-    async updateSearchInputLabel(label) {
+    updateSearchInputLabel(label) {
         if (this.searchInput) {
             this.searchInput.value = label?.textContent || label;
         }
