@@ -142,7 +142,7 @@ export const Test = {
         });
 
         await step('Adds an invalid file type and displays an error', async () => {
-            fireEvent.change(input, { target: { files: [EmptyImage] } });
+            await fireEvent.change(input, { target: { files: [EmptyImage] } });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
                 expect(onChangeMock).toHaveBeenLastCalledWith([], field);
@@ -158,7 +158,7 @@ export const Test = {
         });
 
         await step('Adds a file too small not satisfying the minSize validation and displays error.', async () => {
-            fireEvent.change(input, { target: { files: [TextFileSmall] } });
+            await fireEvent.change(input, { target: { files: [TextFileSmall] } });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(2);
                 expect(onChangeMock).toHaveBeenLastCalledWith([], field);
@@ -174,7 +174,7 @@ export const Test = {
         });
 
         await step('Adds file too big not satisfying the max validation and displays error.', async () => {
-            fireEvent.change(input, { target: { files: [TextFileLarge] } });
+            await fireEvent.change(input, { target: { files: [TextFileLarge] } });
             await waitFor(() => {
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeVisible();
@@ -189,20 +189,20 @@ export const Test = {
         });
 
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
-            fireEvent.change(input, { target: { files: [TextFileMock] } });
+            await fireEvent.change(input, { target: { files: [TextFileMock] } });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith([TextFileMock], field);
                 const warning = I18n.getText(`${field.i18nKey}.msgFileOverwriteWarning`);
                 expect(canvas.getByText(warning)).toBeVisible();
                 expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeVisible();
-                expect(canvas.getByText('test file')).toBeVisible();
                 expect(canvas.getByText('109 bytes')).toBeVisible();
             });
+            expect(canvas.getByText('test file')).toBeVisible();
         });
 
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
             const deleteButton = canvas.getByRole('button', { name: 'Remove upload' });
-            userEvent.click(deleteButton);
+            await userEvent.click(deleteButton);
             await waitFor(() => {
                 expect(onDeleteUpload).toHaveBeenLastCalledWith(deleteButton.closest('file-item'));
                 expect(canvas.queryByText('test file')).toBeNull();
@@ -213,7 +213,7 @@ export const Test = {
         await step('Adds a valid file and submits the form receiving expected value', async () => {
             await fireEvent.change(input, { target: { files: [TextFileMock] } });
             expect(uploadList.listResource.getItems()).toHaveLength(1);
-            userEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'file-field': TextFileMock });
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
@@ -235,7 +235,7 @@ export const Test = {
 
         await step('Sets allow-multiple, adds multiple files and checks the uploaded files list.', async () => {
             field.setAttribute('allow-multiple', '');
-            fireEvent.change(input, { target: { files: [TextFileMock2, TextFileMock3] } });
+            await fireEvent.change(input, { target: { files: [TextFileMock2, TextFileMock3] } });
             await waitFor(() => {
                 expect(canvas.queryByText('another text file')).not.toBeNull();
                 expect(uploadList.listResource.getItems()).toHaveLength(2);
@@ -243,8 +243,8 @@ export const Test = {
                 expect(canvas.getByText('yet another text file')).toBeVisible();
                 expect(canvas.getByText('128 bytes')).toBeVisible();
             });
-            fireEvent.click(submitButton);
-
+            
+            await fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'file-field': [TextFileMock2, TextFileMock3] });
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
@@ -255,7 +255,7 @@ export const Test = {
 
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
             const deleteButtons = canvas.getAllByRole('button', { name: I18n.getText('modules.form.fields.file.lblRemoveFile') });
-            userEvent.click(deleteButtons[0]);
+            await userEvent.click(deleteButtons[0]);
             await waitFor(() => {
                 expect(onDelete).toHaveBeenLastCalledWith(deleteButtons[0].closest('file-item'));
                 expect(canvas.queryByText('test file')).toBeNull();

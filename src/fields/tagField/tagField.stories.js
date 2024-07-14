@@ -76,7 +76,7 @@ export const Test = {
             const tag2 = canvasElement.querySelector('tag-item[value="AB-E"]');
             const deleteButtons = canvas.getAllByRole('button', { name: 'Delete' });
 
-            userEvent.click(deleteButtons[0]);
+            await userEvent.click(deleteButtons[0]);
             await waitFor(() => {
                 expect(onDeleteTag).toHaveBeenLastCalledWith(tag, undefined);
                 expect(field.getValue()).toEqual(['AB-E']);
@@ -92,7 +92,7 @@ export const Test = {
         });
 
         await step('Submits the form and receives required error.', async () => {
-            userEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));

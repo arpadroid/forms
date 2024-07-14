@@ -34,7 +34,7 @@ export const Test = {
         const { submitButton, canvas, onErrorMock, form, onSubmitMock, field } = setup;
         const textInput = field.textInput;
         await step('sets value red to text input and checks that color input has appropriate value', async () => {
-            textInput.value = 'red';
+            await userEvent.type(textInput, 'red');
             await waitFor(() => expect(field.getValue()).toBe('#ff0000'));
         });
 

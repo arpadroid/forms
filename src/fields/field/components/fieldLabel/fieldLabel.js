@@ -2,7 +2,7 @@
  * @typedef {import('../../field').default} Field
  */
 
-import { mergeObjects, CustomElementTool } from '@arpadroid/tools';
+import { mergeObjects, CustomElementTool, handleSlots } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
 const { getProperty, hasProperty, removeIfEmpty } = CustomElementTool;
@@ -18,18 +18,6 @@ class FieldLabel extends HTMLLabelElement {
     constructor(config = {}) {
         super();
         this._config = mergeObjects(FieldLabel.defaultConfig, config);
-        removeIfEmpty(this);
-    }
-
-    connectedCallback() {
-        /** @type {Field} */
-        this.field = this.closest('.arpaField');
-        this.id = this.field?.getLabelId();
-        this.field && this.setAttribute('for', this.field?.getHtmlId());
-        this.render();
-        this.labelNode = this.querySelector('.fieldLabel__text');
-        this.classList.add('fieldLabel');
-        this.setAttribute('slot', 'label');
     }
 
     getLabel() {
@@ -46,14 +34,28 @@ class FieldLabel extends HTMLLabelElement {
 
     render() {
         const textNode = this.querySelector('.fieldLabel__text');
-        if (textNode) {
-            const label = this.getLabel();
-            if (label) {
-                textNode.innerHTML = this.getLabel();
-            }
+        const label = this.getLabel();
+        if (textNode && label) {
+            textNode.innerHTML = label;
             return;
         }
         this.innerHTML = I18nTool.processTemplate(this._config.template, this.getTemplateVars());
+    }
+
+    connectedCallback() {
+        /** @type {Field} */
+        this.field = this.closest('.arpaField');
+        this.id = this.field?.getLabelId();
+        this.field && this.setAttribute('for', this.field?.getHtmlId());
+        this.render();
+        this.labelNode = this.querySelector('.fieldLabel__text');
+        this.classList.add('fieldLabel');
+        this.setAttribute('slot', 'label');
+        handleSlots(() => this._onRenderComplete());
+    }
+
+    _onRenderComplete() {
+        removeIfEmpty(this);
     }
 
     getTemplateVars() {

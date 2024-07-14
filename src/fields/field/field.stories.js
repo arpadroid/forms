@@ -226,6 +226,7 @@ export const Test = {
             field.listen('onChange', onChangeMock);
         }
         const input = typeof field?.getInput === 'function' && field?.getInput();
+        await field.promise;
         return { canvas, field, form, submitButton, onSubmitMock, onErrorMock, onChangeMock, input };
     },
     play: async ({ canvasElement, step, args }) => {
