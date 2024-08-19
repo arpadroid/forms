@@ -3,6 +3,7 @@ select-combo {
         left: 0;
         right: auto;
         display: none;
+        position: absolute;
     }
     &:focus-within {
         .comboBox {
