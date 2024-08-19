@@ -145,7 +145,7 @@ export const Test = {
             await fireEvent.change(input, { target: { files: [EmptyImage] } });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
-                expect(onChangeMock).toHaveBeenLastCalledWith([], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeVisible();
                 expect(errorContainer.textContent).toBe(
@@ -161,7 +161,7 @@ export const Test = {
             await fireEvent.change(input, { target: { files: [TextFileSmall] } });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(2);
-                expect(onChangeMock).toHaveBeenLastCalledWith([], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeVisible();
                 const errorText = I18n.getText('modules.form.fields.file.errMinSize', {
@@ -178,7 +178,7 @@ export const Test = {
             await waitFor(() => {
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeVisible();
-                expect(onChangeMock).toHaveBeenLastCalledWith([], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
                 const errorText = I18n.getText('modules.form.fields.file.errMaxSize', {
                     maxSize: formatBytes('0.0002'),
                     size: formatBytes(TextFileLarge.size),
@@ -191,7 +191,7 @@ export const Test = {
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
             await fireEvent.change(input, { target: { files: [TextFileMock] } });
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith([TextFileMock], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith([TextFileMock], field, expect.anything());
                 const warning = I18n.getText(`${field.i18nKey}.msgFileOverwriteWarning`);
                 expect(canvas.getByText(warning)).toBeVisible();
                 expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeVisible();

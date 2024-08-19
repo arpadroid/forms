@@ -78,12 +78,12 @@ export const Test = {
 
             await userEvent.click(deleteButtons[0]);
             await waitFor(() => {
-                expect(onDeleteTag).toHaveBeenLastCalledWith(tag, undefined);
+                expect(onDeleteTag).toHaveBeenLastCalledWith(tag, undefined, undefined);
                 expect(field.getValue()).toEqual(['AB-E']);
             });
             userEvent.click(deleteButtons[1]);
             await waitFor(() => {
-                expect(onDeleteTag).toHaveBeenLastCalledWith(tag2, undefined);
+                expect(onDeleteTag).toHaveBeenLastCalledWith(tag2, undefined, undefined);
                 expect(field.getValue()).toEqual([]);
             });
             await waitFor(() => {
@@ -114,7 +114,7 @@ export const Test = {
             const button = canvas.getByText('Nelson Mandela');
             await fireEvent.click(button);
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenCalledWith(['NE-AU'], field);
+                expect(onChangeMock).toHaveBeenCalledWith(['NE-AU'], field, expect.anything());
             });
             requestAnimationFrame(() => fireEvent.click(submitButton));
             await waitFor(() => {

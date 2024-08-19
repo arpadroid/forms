@@ -8,4 +8,5 @@ export interface OptionsFieldInterface extends FieldInterface {
     optionComponent?: string;
     options?: FieldOptionInterface[];
     optionTemplate?: string;
+    defaultOption?: string;
 }

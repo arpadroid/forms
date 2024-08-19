@@ -54,7 +54,7 @@ export const Test = {
             fireEvent.click(label);
             expect(input.checked).toBe(true);
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith(true, field);
+                expect(onChangeMock).toHaveBeenLastCalledWith(true, field, expect.anything());
                 expect(onChangeMock).toHaveBeenCalledTimes(1);
             });
         });

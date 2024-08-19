@@ -173,11 +173,11 @@ class SelectCombo extends SelectField {
         await this.onReady();
         const { renderValue } = this._config;
         /** @type {SelectOption} */
-        const selectedOption = this.getSelectedOption();
+        this.selectedOption = this.getSelectedOption();
         this.getOptions().forEach(option => option.removeAttribute('aria-selected'));
-        selectedOption?.setAttribute('aria-selected', 'true');
-        const configValue = typeof renderValue === 'function' && renderValue(selectedOption);
-        const label = configValue || selectedOption?.getProperty('label') || this.getPlaceholder();
+        this.selectedOption?.setAttribute('aria-selected', 'true');
+        const configValue = typeof renderValue === 'function' && renderValue(this.selectedOption);
+        const label = configValue || this.selectedOption?.getProperty('label') || this.getPlaceholder();
         this.updateButtonLabel(label);
         this.updateSearchInputLabel(label);
     }

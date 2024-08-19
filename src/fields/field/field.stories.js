@@ -286,7 +286,7 @@ export const Test = {
             const event = new Event('input', { bubbles: true, cancelable: true });
             input.dispatchEvent(event);
             await waitFor(() => {
-                expect(args.onChange).toHaveBeenLastCalledWith('test value', field);
+                expect(args.onChange).toHaveBeenLastCalledWith('test value', field, expect.anything());
                 expect(field.getValue()).toBe(input.value).toBe('test value');
             });
         });

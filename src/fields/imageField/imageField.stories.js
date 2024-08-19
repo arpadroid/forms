@@ -66,7 +66,7 @@ export const Test = {
             fireEvent.change(input, { target: { files: [TextFileSmall] } });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
-                expect(onChangeMock).toHaveBeenLastCalledWith([], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeVisible();
                 expect(errorContainer.textContent).toBe(
@@ -81,7 +81,7 @@ export const Test = {
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
             fireEvent.change(input, { target: { files: [galaxyImage] } });
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith([galaxyImage], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith([galaxyImage], field, expect.anything());
                 const warning = I18n.getText(`${field.i18nKey}.msgFileOverwriteWarning`);
                 expect(canvas.getByText(warning)).toBeVisible();
                 expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeVisible();

@@ -60,7 +60,7 @@ export const Test = {
             await fireEvent.change(input, { target: { value: 'volvo' } });
             fireEvent.click(canvas.getByText('Volvo'));
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith('volvo', field);
+                expect(onChangeMock).toHaveBeenLastCalledWith('volvo', field, expect.anything());
             });
             await userEvent.click(submitButton);
             await waitFor(() => {

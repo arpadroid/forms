@@ -81,7 +81,7 @@ export const Test = {
             const spainButton = canvas.getByText('Spain').closest('button');
             await userEvent.click(spainButton);
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith('es', field);
+                expect(onChangeMock).toHaveBeenLastCalledWith('es', field, expect.anything());
                 expect(field.getValue()).toBe('es');
                 expect(input).toHaveTextContent('Spain');
             });
@@ -106,7 +106,7 @@ export const Test = {
 
             await userEvent.click(searchMatches[1]);
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith('uk', field);
+                expect(onChangeMock).toHaveBeenLastCalledWith('uk', field, expect.anything());
             });
         });
     }

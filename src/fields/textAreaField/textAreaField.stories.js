@@ -46,9 +46,9 @@ export const Test = {
         });
 
         await step('Types a value and receives onChange signal', async () => {
-            userEvent.type(input, 'some text');
+            const event = userEvent.type(input, 'some text');
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith('some text', field);
+                expect(onChangeMock).toHaveBeenLastCalledWith('some text', field, expect.anything());
             });
         });
 

@@ -57,7 +57,7 @@ export const Test = {
         await step('Select the first radio option', async () => {
             const options = field.getOptions();
             fireEvent.click(options[1].input);
-            await waitFor(() => expect(onChangeMock).toHaveBeenCalledWith('option2', field));
+            await waitFor(() => expect(onChangeMock).toHaveBeenCalledWith('option2', field, expect.anything()));
             expect(options[1].input).toBeChecked(true);
         });
 

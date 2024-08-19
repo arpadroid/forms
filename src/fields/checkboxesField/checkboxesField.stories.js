@@ -64,7 +64,7 @@ export const Test = {
             await fireEvent.click(option2);
             expect(field.hasValue('option2')).toBeFalsy();
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith(['option1'], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith(['option1'], field, expect.anything());
             });
         });
 
@@ -74,11 +74,11 @@ export const Test = {
             expect(field.hasValue('option2')).toBeTruthy();
             expect(field.hasValue('option3')).toBeTruthy();
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith(['option1', 'option2', 'option3'], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith(['option1', 'option2', 'option3'], field, undefined);
             });
             await fireEvent.click(label);
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith([], field);
+                expect(onChangeMock).toHaveBeenLastCalledWith([], expect.anything(), undefined);
             });
         });
 

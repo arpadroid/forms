@@ -35,6 +35,10 @@ class SelectField extends OptionsField {
             this.input.value = value;
         }
     }
+
+    updateValue() {
+        this.selectedOption = this.getSelectedOption();
+    }
 }
 
 customElements.define('select-field', SelectField);

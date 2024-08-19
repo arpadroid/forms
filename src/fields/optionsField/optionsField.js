@@ -1,6 +1,6 @@
 /**
  * @typedef {import('./fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
- * @typedef {import('./optionsFieldInterexface').OptionsFieldInterface} OptionsFieldInterface
+ * @typedef {import('./optionsFieldInterface').OptionsFieldInterface} OptionsFieldInterface
  */
 import { attr, mergeObjects, renderNode } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
@@ -85,7 +85,7 @@ class OptionsField extends Field {
      * @returns {HTMLElement}
      */
     getSelectedOption() {
-        return this.getOption(this.getValue());
+        return this.getOption(this.getValue()) || this.getDefaultOption();
     }
 
     /**
@@ -94,12 +94,17 @@ class OptionsField extends Field {
      * @returns {HTMLElement | undefined}
      */
     getOption(value) {
-        if (typeof value === 'undefined' || value === null) {
-            return;
-        }
         return [...(this.optionsNode?.children ?? [])].find(option => {
             return option?.getAttribute('value') === value;
         });
+    }
+
+    getDefaultOption() {
+        return (
+            [...(this.optionsNode?.children ?? [])].find(option => {
+                return option?.hasAttribute('default');
+            }) || this.getOption(this.getProperty('default-option'))
+        );
     }
 
     async setFetchOptions(fetchOptions) {
@@ -177,13 +182,12 @@ class OptionsField extends Field {
      * Initializes the value of the options field.
      * @protected
      */
-    _initializeValue() {
+    async _initializeValue() {
         this.selectedOption = this.getSelectedOption();
     }
 
     _onInitialized() {
         super._onInitialized();
-        
         this.initializeOptions();
     }
 
@@ -197,13 +201,19 @@ class OptionsField extends Field {
      */
     async initializeOptions() {
         const { options, autoFetchOptions, fetchOptions } = this._config;
-        if (Array.isArray(options)) {
-            this.setOptions(options);
-        }
+        Array.isArray(options) && this.setOptions(options);
         if (autoFetchOptions && typeof fetchOptions === 'function') {
             await this.onReady();
             this.fetchOptions();
         }
+    }
+
+    _onSlotPlaced(payload) {
+        payload?.slotContainer && payload.slotContainer === this.optionsNode && this.updateValue();
+    }
+
+    updateValue() {
+        // Abstract method
     }
 
     /**
