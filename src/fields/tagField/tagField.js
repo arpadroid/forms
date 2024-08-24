@@ -49,8 +49,13 @@ class TagField extends SelectCombo {
     // #region LIFECYCLE
     /////////////////////
 
-    _initializeValue() {
+    async _initializeValue() {
+        await this.load;
+        if (this._hasInitializedValue) {
+            return;
+        }
         ArrayField.prototype._initializeValue.call(this);
+        this._hasInitializedValue = true;
     }
 
     async _initializeNodes() {

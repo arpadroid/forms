@@ -3,7 +3,7 @@
  */
 /* eslint-disable sonarjs/no-duplicate-string */
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, userEvent } from '@storybook/test';
+import { waitFor, expect } from '@storybook/test';
 
 const html = String.raw;
 const category = 'Group Field Props';
@@ -76,7 +76,7 @@ export const Test = {
         const emailLabel = canvas.getByText('Email');
         await step('Collapses the group', async () => {
             expect(emailLabel).toBeVisible();
-            userEvent.click(toggle);
+            toggle.click();
             await waitFor(() => {
                 expect(emailLabel).not.toBeVisible();
                 expect(field.isOpen()).toBe(false);
@@ -85,7 +85,7 @@ export const Test = {
 
         await step('Expands the group', async () => {
             expect(emailLabel).not.toBeVisible();
-            userEvent.click(toggle);
+            toggle.click();
             await waitFor(() => {
                 expect(emailLabel).toBeVisible();
                 expect(field.isOpen()).toBe(true);
@@ -93,7 +93,7 @@ export const Test = {
         });
 
         await step('Submits the form and receives expected values', async () => {
-            userEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
                     email: 'some@email.com',

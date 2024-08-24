@@ -64,6 +64,9 @@ class FieldOption extends ArpaElement {
         /** @type {Field} */
         const field = this.getField();
         field && (this.field = field);
+        if (!field) {
+            return;
+        }
         this.setAttribute('role', 'option');
         this.setIsSelected();
         super.render();

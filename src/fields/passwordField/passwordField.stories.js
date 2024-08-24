@@ -3,7 +3,7 @@
  * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
  */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
+import { waitFor, expect, fireEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const PasswordFieldStory = {
@@ -112,7 +112,7 @@ export const Test = {
                     expect(canvas.queryByText('Confirm Password')).not.toBeInTheDocument();
                 });
                 input.value = 'pass';
-                await userEvent.click(submitButton);
+                submitButton.click();
                 await waitFor(() => {
                     expect(onSubmitMock).toHaveBeenLastCalledWith({
                         'password-field': 'pass'

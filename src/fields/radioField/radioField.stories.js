@@ -1,6 +1,6 @@
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
+import { waitFor, expect } from '@storybook/test';
 
 const html = String.raw;
 
@@ -46,7 +46,7 @@ export const Test = {
         });
 
         await step('Submits the form without selecting a radio option', async () => {
-            userEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
@@ -56,13 +56,13 @@ export const Test = {
 
         await step('Select the first radio option', async () => {
             const options = field.getOptions();
-            fireEvent.click(options[1].input);
+            options[1].input.click();
             await waitFor(() => expect(onChangeMock).toHaveBeenCalledWith('option2', field, expect.anything()));
             expect(options[1].input).toBeChecked(true);
         });
 
         await step('Submits the form with the selected radio option', async () => {
-            userEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => expect(onSubmitMock).toHaveBeenCalled());
             expect(onSubmitMock).toHaveBeenCalledWith({ 'radio-field': 'option2' });
         });

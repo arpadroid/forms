@@ -11,10 +11,8 @@ class SearchField extends Field {
             classNames: ['searchField', 'fieldComponent'],
             icon: 'search',
             variant: 'default',
-            inputAttributes: {
-                placeholder: I18n.getText('common.labels.lblSearch'),
-                type: 'search'
-            }
+            placeholder: I18n.getText('common.labels.lblSearch'),
+            inputAttributes: { type: 'search' }
         });
     }
 

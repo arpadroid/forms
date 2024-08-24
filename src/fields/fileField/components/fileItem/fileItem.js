@@ -79,17 +79,21 @@ class FileItem extends ListItem {
     }
 
     getSize() {
-        return this.payload?.size || this.getSizeFromAttribute();
+        return this.payload?.size || this.getProperty('size');
     }
 
-    getSizeFromAttribute() {
-        const size = this.getProperty('size');
+    getReadableSize(size = this.getSize()) {
         if (Number(size).toString() === size) {
             return formatBytes(size);
         }
         if (typeof size === 'string') {
             return size;
         }
+    }
+
+    getBytes() {
+        const size = this.getSize();
+        return Number(size.replace(/\D/g, ''));
     }
 
     // #endregion
@@ -101,7 +105,7 @@ class FileItem extends ListItem {
     getTemplateVars() {
         return {
             ...super.getTemplateVars(),
-            size: this.getSize(),
+            size: this.getReadableSize(),
             extension: this.payload?.extension,
             metaData: this.renderMetadata()
         };
@@ -118,7 +122,7 @@ class FileItem extends ListItem {
         `;
     }
 
-    renderMetadata(size = this.getSize()) {
+    renderMetadata(size = this.getReadableSize()) {
         return render(
             size,
             html`

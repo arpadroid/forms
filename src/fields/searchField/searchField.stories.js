@@ -31,9 +31,11 @@ export const Test = {
     play: async ({ canvasElement, step }) => {
         const { input, submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
 
-        await step('Renders the field', () => {
-            expect(canvas.getByText('Search Field')).toBeInTheDocument();
-            expect(input).toHaveAttribute('placeholder', I18n.getText('common.labels.lblSearch'));
+        await step('Renders the field', async () => {
+            await waitFor(() => {
+                expect(canvas.getByText('Search Field')).toBeInTheDocument();
+                expect(input).toHaveAttribute('placeholder', I18n.getText('common.labels.lblSearch'));
+            });
         });
 
         await step('Submits form with valid field value.', async () => {

@@ -194,7 +194,7 @@ export const Test = {
             const passwordField = form.getField('password-field');
             passwordField.setValue('P455w0rd!!');
             passwordField.confirmField.setValue('P455w0rd!!');
-            submitButton.click();
+            requestAnimationFrame(() => submitButton.click());
             await waitFor(() => {
                 expect(canvas.getByText('Form submitted successfully!')).toBeTruthy();
             });

@@ -3,6 +3,7 @@ import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
 class WeekField extends TextField {
+    _validations = [...super.getValidations(), 'week'];
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             pickerLabel: I18n.getText('modules.form.fields.week.lblShowPicker'),
@@ -32,6 +33,14 @@ class WeekField extends TextField {
         );
         button.addEventListener('click', () => this.input?.showPicker());
         return button;
+    }
+
+    validateWeek(value) {
+        const isValid = !value?.length || value.match(/^\d{4}-W\d{2}$/);
+        if (!isValid) {
+            this.setError(I18n.getText('modules.form.fields.week.errWeek'));
+        }
+        return isValid;
     }
 }
 

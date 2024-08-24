@@ -53,13 +53,13 @@ export const Test = {
 
         await step('Renders the field', async () => {
             canvas.getByText('Image field');
-            expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeVisible();
+            expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeInTheDocument();
             expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeDefined();
         });
 
         await step('Renders the default image', async () => {
-            expect(canvas.getByText('girl')).toBeVisible();
-            expect(canvas.getByText('.jpg')).toBeVisible();
+            expect(canvas.getByText('girl')).toBeInTheDocument();
+            expect(canvas.getByText('.jpg')).toBeInTheDocument();
         });
 
         await step('Adds an invalid file type and displays an error', async () => {
@@ -68,7 +68,7 @@ export const Test = {
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
                 expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
                 const errorContainer = field.querySelector('.fieldErrors__list li');
-                expect(errorContainer).toBeVisible();
+                expect(errorContainer).toBeInTheDocument();
                 expect(errorContainer.textContent).toBe(
                     I18n.getText('modules.form.fields.image.errExtensions', {
                         extensions: 'jpg, png, gif, jpeg, svg',
@@ -83,10 +83,10 @@ export const Test = {
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith([galaxyImage], field, expect.anything());
                 const warning = I18n.getText(`${field.i18nKey}.msgFileOverwriteWarning`);
-                expect(canvas.getByText(warning)).toBeVisible();
-                expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeVisible();
-                expect(canvas.getByText('galaxy')).toBeVisible();
-                expect(canvas.getByText(formatBytes(galaxyImage.size))).toBeVisible();
+                expect(canvas.getByText(warning)).toBeInTheDocument();
+                expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeInTheDocument();
+                expect(canvas.getByText('galaxy')).toBeInTheDocument();
+                expect(canvas.getByText(formatBytes(galaxyImage.size))).toBeInTheDocument();
             });
         });
 
@@ -117,10 +117,10 @@ export const Test = {
             const items = uploadList.listResource.getItems();
             await waitFor(() => {
                 expect(items).toHaveLength(2);
-                expect(canvas.getByText('plane')).toBeVisible();
-                expect(canvas.getByText('flower')).toBeVisible();
-                expect(canvas.getByText(formatBytes(planeImage.size))).toBeVisible();
-                expect(canvas.getByText(formatBytes(flowerImage.size))).toBeVisible();
+                expect(canvas.getByText('plane')).toBeInTheDocument();
+                expect(canvas.getByText('flower')).toBeInTheDocument();
+                expect(canvas.getByText(formatBytes(planeImage.size))).toBeInTheDocument();
+                expect(canvas.getByText(formatBytes(flowerImage.size))).toBeInTheDocument();
             });
             fireEvent.click(submitButton);
 

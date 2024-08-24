@@ -57,7 +57,8 @@ class FileField extends Field {
             file,
             icon: 'upload',
             lblRemoveFile: this.i18n.lblRemoveUpload,
-            onDelete: this._config.onDeleteUpload
+            onDelete: this._config.onDeleteUpload,
+            key: file.name + file.size
         });
     }
 
@@ -85,7 +86,7 @@ class FileField extends Field {
     }
 
     hasUploadWarning() {
-        return !this.allowMultiple() && this.input?.uploads.length > 0 && this.fileList?.itemsNode?.children.length > 0;
+        return !this.allowMultiple() && this.input?.uploads?.length > 0 && this.fileList?.itemsNode?.children.length > 0;
     }
 
     getI18nKey() {
@@ -274,7 +275,9 @@ class FileField extends Field {
 
     onSubmitSuccess() {
         this.reconcileListItems();
-        this.handleUploadWarning();
+        requestAnimationFrame(() => {
+            this.handleUploadWarning();
+        });
     }
 
     reconcileListItems() {
@@ -283,7 +286,9 @@ class FileField extends Field {
             delete item.lblRemoveFile;
             return item;
         });
-        this.clearUploads();
+        requestAnimationFrame(() => {
+            this.clearUploads();
+        });
         if (this.allowMultiple()) {
             this.fileList.listResource.addItems(uploadItems);
         } else {

@@ -1,6 +1,6 @@
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
+import { waitFor, expect, fireEvent } from '@storybook/test';
 
 const html = String.raw;
 
@@ -48,7 +48,7 @@ export const Test = {
         });
 
         await step('Submits the form without selecting an option and receives required error', async () => {
-            userEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
@@ -58,11 +58,11 @@ export const Test = {
 
         await step('Selects the first option and submits the form', async () => {
             await fireEvent.change(input, { target: { value: 'volvo' } });
-            fireEvent.click(canvas.getByText('Volvo'));
+            canvas.getByText('Volvo').click();
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith('volvo', field, expect.anything());
             });
-            await userEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'select-field': 'volvo' });
             });
