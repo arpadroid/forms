@@ -187,7 +187,7 @@ class FileItem extends ListItem {
                 return promise.then(() => this.delete());
             }
             if (promise !== false) {
-                this.removeItem();
+                this.delete();
             }
             return promise;
         }
