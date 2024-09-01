@@ -68,9 +68,9 @@ const FieldStory = {
             maxLength: 0,
             minLength: 0,
             content: '',
-            onChange: action('onChange'),
-            onFocus: action('onFocus'),
-            onSubmit: action('onSubmit')
+            onChange: fn(() => action('onChange')),
+            onFocus: fn(() => action('onFocus')),
+            onSubmit: fn(() => action('onSubmit'))
         };
     },
     getArgTypes: (category = 'Field Props') => {

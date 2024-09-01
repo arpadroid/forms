@@ -46,9 +46,9 @@
         "@arpadroid/lists": "file:../lists",
         "@arpadroid/messages": "file:../messages",
         "@arpadroid/navigation": "file:../navigation",
+        "@arpadroid/resources": "file:../resources",
         "@arpadroid/tools": "file:../tools",
-        "@arpadroid/ui": "file:../ui",
-        "@arpadroid/resources": "file:../resources"
+        "@arpadroid/ui": "file:../ui"
     },
     "dependencies": {
         "@ungap/custom-elements": "^1.3.0"
