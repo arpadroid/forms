@@ -19,7 +19,7 @@ const { hasProperty, getProperty } = CustomElementTool;
  * @property {(values: Record<string, unknown>, form: FormComponent) => void} [onSubmit] - The submit event handler.
  * @property {number} [debounce=500] - The debounce time for the submit event.
  * @property {string} [template] - The form template.
- * @property {boolean} [hasSubmitButton=true] - Whether the form has a submit button.
+ * @property {boolean} [hasSubmit=true] - Whether the form has a submit button.
  * @property {string} [submitText] - The submit button text.
  */
 
@@ -57,7 +57,7 @@ class FormComponent extends HTMLFormElement {
     getDefaultConfig() {
         return {
             variant: 'default',
-            hasSubmitButton: true,
+            hasSubmit: true,
             initialValues: {},
             onSubmit: undefined,
             debounce: 1000,
@@ -296,7 +296,7 @@ class FormComponent extends HTMLFormElement {
     }
 
     hasSubmitButton() {
-        return hasProperty(this, 'has-submit-button');
+        return hasProperty(this, 'has-submit');
     }
 
     // #endregion
@@ -351,9 +351,7 @@ class FormComponent extends HTMLFormElement {
      * @returns {Promise<Response> | undefined}
      */
     _onSubmit(event) {
-        if (event) {
-            event.preventDefault();
-        }
+        event?.preventDefault();
         const time = new Date().getTime();
         const diff = time - this.submitTime;
         const debounce = this.getDebounce();
@@ -367,6 +365,10 @@ class FormComponent extends HTMLFormElement {
             this.scrollIntoView();
             this.focusFirstErroredInput();
         }
+    }
+
+    submitForm(event) {
+        this._onSubmit(event);
     }
 
     getDebounce() {
@@ -391,9 +393,7 @@ class FormComponent extends HTMLFormElement {
                 this.handlePromise(rv);
                 return rv;
             }
-            if (rv) {
-                this._onSubmitSuccess();
-            }
+            rv && this._onSubmitSuccess();
             this.stopLoading();
             return rv;
         }
@@ -415,36 +415,27 @@ class FormComponent extends HTMLFormElement {
     }
 
     _onSubmitSuccess() {
-        this.getFields().forEach(field => {
-            field.onSubmitSuccess();
-        });
+        this.getFields().forEach(field => field.onSubmitSuccess());
         const successMessage = this.getSuccessMessage();
-        if (successMessage) {
-            this?.messageResource.success(successMessage, { canClose: true });
-        }
+        successMessage && this.messageResource?.success(successMessage, { canClose: true });
     }
 
     startLoading() {
         if (!this.preloader) {
             this.preloader = renderNode(html`<circular-preloader></circular-preloader>`);
         }
-        this.bodyNode.append(this.preloader);
+        this.bodyNode?.append(this.preloader);
     }
 
     stopLoading() {
         this.preloader?.remove();
-        const { variant } = this._config;
-        if (variant !== 'mini') {
-            this.scrollIntoView();
-        }
+        this.getVariant() !== 'mini' && this.scrollIntoView();
     }
 
     focusFirstErroredInput() {
         const errorInputSelector = '.arpaField--hasError input, .arpaField--hasError textarea, .arpaField--hasError select';
         const firstInput = this.querySelector(errorInputSelector);
-        if (firstInput?.focus) {
-            firstInput.focus();
-        }
+        firstInput?.focus();
     }
 
     // #endregion

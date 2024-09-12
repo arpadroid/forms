@@ -5,6 +5,15 @@
     flex: 1 1 auto;
 }
 
+.arpaField[variant='small'] {
+    max-width: 132px;
+
+    .fieldInput {
+        text-align: center;
+        justify-content: center;
+    }
+}
+
 .arpaField p {
     margin: 4px 0px;
 }
@@ -32,8 +41,6 @@
     align-items: center;
 }
 
-
-
 .arpaField:has(> .arpaField__body .fieldInputMask__lhs:not(:empty)) .fieldInput {
     padding-left: var(--input-icon-padding);
 }
@@ -41,7 +48,6 @@
 .arpaField:has(> .arpaField__body .fieldInputMask__rhs:not(:empty)) .fieldInput {
     padding-right: var(--input-icon-padding);
 }
-
 
 /* Disabled */
 

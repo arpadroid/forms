@@ -123,6 +123,7 @@ class SelectCombo extends SelectField {
             this.inputCombo = new InputCombo(handler, this.optionsNode, {
                 containerSelector: this.getProperty('option-component'),
                 position: this.getProperty('options-position'),
+                closeOnClick: true,
                 onOpen: () => this.onOpenCombo(),
                 onClose: () => this.onCloseCombo()
             });
@@ -170,6 +171,7 @@ class SelectCombo extends SelectField {
      * Updates the value of the select combo field based on the selected option.
      */
     async updateValue() {
+        await this.promise;
         await this.onReady();
         const { renderValue } = this._config;
         /** @type {SelectOption} */
@@ -177,7 +179,8 @@ class SelectCombo extends SelectField {
         this.getOptions().forEach(option => option.removeAttribute('aria-selected'));
         this.selectedOption?.setAttribute('aria-selected', 'true');
         const configValue = typeof renderValue === 'function' && renderValue(this.selectedOption);
-        const label = configValue || this.selectedOption?.getProperty('label') || this.getPlaceholder();
+        const label =
+            configValue || this.selectedOption?.getProperty('label') || this.selectedOption?.textContent || this.getPlaceholder();
         this.updateButtonLabel(label);
         this.updateSearchInputLabel(label);
     }
@@ -221,7 +224,7 @@ class SelectCombo extends SelectField {
         const inputAttributes = attrString({ placeholder });
         return this.hasSearch()
             ? html`<input id="${this.getHtmlId()}" type="text" class="optionsField__searchInput fieldInput" ${inputAttributes} />`
-            : html`<button type="button" class="optionsField__input fieldInput">${this.getPlaceholder()}</button>`;
+            : html`<button id="${this.getHtmlId()}" type="button" class="optionsField__input fieldInput">${this.getPlaceholder()}</button>`;
     }
 
     renderOptions(options) {

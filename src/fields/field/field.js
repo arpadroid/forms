@@ -1,4 +1,4 @@
-import { attr, mergeObjects, ObserverTool, render } from '@arpadroid/tools';
+import { mergeObjects, ObserverTool, render } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n, I18nTool } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
@@ -131,7 +131,9 @@ class Field extends ArpaElement {
     _initializeInputNode(input = this.querySelector('input')) {
         this.input = input;
         if (this.input) {
-            attr(this.input, this._config.inputAttributes);
+            for (const [key, value] of Object.entries(this._config.inputAttributes)) {
+                !this.input.hasAttribute(key) && this.input.setAttribute(key, value);
+            }
         }
     }
 
@@ -624,7 +626,6 @@ class Field extends ArpaElement {
     enable() {
         this.getInput()?.removeAttribute('disabled');
     }
-
 
     // #endregion
 

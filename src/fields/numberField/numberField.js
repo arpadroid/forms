@@ -1,5 +1,5 @@
 /** @typedef {import('./numberFIeldInterface.js').NumberFieldInterface} NumberFieldInterface */
-import { attr, validateNumber } from '@arpadroid/tools';
+import { validateNumber } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 class NumberField extends Field {
@@ -15,9 +15,22 @@ class NumberField extends Field {
             ...super.getDefaultConfig(),
             icon: 'numbers',
             inputAttributes: {
-                type: 'number'
+                type: 'number',
+                min: this.getProperty('min'),
+                max: this.getProperty('max'),
+                step: this.getProperty('step')
             }
         };
+    }
+
+    setMin(value) {
+        this.setAttribute('min', value);
+        this.input?.setAttribute('min', value);
+    }
+
+    setMax(value) {
+        this.setAttribute('max', value);
+        this.input?.setAttribute('max', value);
     }
 
     getFieldType() {
@@ -40,18 +53,6 @@ class NumberField extends Field {
     getValue() {
         const value = parseFloat(super.getValue());
         return isNaN(value) ? undefined : value;
-    }
-
-    /**
-     * Initializes the input element of the number field.
-     */
-    _initializeInputNode() {
-        super._initializeInputNode();
-        attr(this.input, {
-            min: this.getProperty('min'),
-            max: this.getProperty('max'),
-            step: this.getProperty('step')
-        });
     }
 
     /**
