@@ -7,7 +7,7 @@ import { mergeObjects, copyObjectProps, slotMixin } from '@arpadroid/tools';
 import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool, handleSlots } from '@arpadroid/tools';
 import { I18n, I18nTool } from '@arpadroid/i18n';
 
-const { hasProperty, getProperty } = CustomElementTool;
+const { hasProperty, getProperty, hasSlot } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -34,6 +34,7 @@ class FormComponent extends HTMLFormElement {
 
     constructor(config) {
         super();
+        this._slots = [];
         slotMixin(this);
         ObserverTool.mixin(this);
         this.i18n = I18n.get('modules.form.formComponent');
@@ -152,6 +153,10 @@ class FormComponent extends HTMLFormElement {
         return Object.keys(initialValues).length > 0;
     }
 
+    hasTitle() {
+        return getProperty(this, 'title') || hasSlot(this, 'form-title');
+    }
+
     /**
      * Sets the initial values for the form.
      * @param {Record<string, unknown>} values
@@ -255,7 +260,7 @@ class FormComponent extends HTMLFormElement {
     renderFull() {
         return html`
             <div class="arpaForm__header" slot="header">
-                <form-title slot="title"></form-title>
+                ${this.renderTitle()}
                 <form-description slot="description"></form-description>
             </div>
             <arpa-messages slot="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
@@ -268,10 +273,14 @@ class FormComponent extends HTMLFormElement {
 
     renderMini() {
         return html`
-            <form-title slot="title"></form-title>
+            ${this.renderTitle()}
             <arpa-messages slot="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
             <div class="arpaForm__fields"></div>
         `;
+    }
+
+    renderTitle() {
+        return this.hasTitle() ? html`<form-title slot="form-title"></form-title>` : '';
     }
 
     renderFooter() {

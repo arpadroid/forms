@@ -5,7 +5,7 @@
 import { mergeObjects, CustomElementTool, handleSlots } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
-const { getProperty, hasProperty, removeIfEmpty } = CustomElementTool;
+const { getProperty, hasProperty } = CustomElementTool;
 const html = String.raw;
 class FieldLabel extends HTMLLabelElement {
     static defaultConfig = {
@@ -57,9 +57,7 @@ class FieldLabel extends HTMLLabelElement {
         handleSlots(() => this._onRenderComplete());
     }
 
-    _onRenderComplete() {
-        removeIfEmpty(this);
-    }
+    _onRenderComplete() {}
 
     getTemplateVars() {
         return {

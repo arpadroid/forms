@@ -118,6 +118,10 @@ class GroupField extends Field {
         };
     }
 
+    renderLabel() {
+        return this.getLabel();
+    }
+
     // #endregion
 
     /////////////////////////

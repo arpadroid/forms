@@ -1,7 +1,7 @@
 form-title {
     font-weight: normal;
     padding: 8px 0px 8px 4px;
-    margin: 0;
+    margin: 0 .5rem .5rem 0;
     font-size: var(--font-size-l);
     color: var(--text-color);
     display: flex;
@@ -20,4 +20,5 @@ form-title {
 
 .formTitle__content {
     padding-top: 2px;
+    margin: 0;
 }

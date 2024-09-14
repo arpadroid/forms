@@ -156,7 +156,7 @@ class Field extends ArpaElement {
 
     static template = html`
         <div class="arpaField__header">
-            <label is="field-label"></label>
+            {label}
             <field-errors></field-errors>
             <arpa-tooltip position="bottom-right">{tooltip}</arpa-tooltip>
         </div>
@@ -184,13 +184,17 @@ class Field extends ArpaElement {
             id: this.getHtmlId(),
             input: this.renderInput(),
             tooltip: this.getTooltip(),
-            label: this.getLabel(),
+            label: this.renderLabel(),
             icon: this.getIcon(),
             iconRight: this.getIconRight(),
             content: this._content,
             inputMask: this.hasInputMask() && html`<field-input-mask></field-input-mask>`,
             subHeader: this.renderSubHeader()
         };
+    }
+
+    renderLabel() {
+        return this.hasLabel() && html`<label is="field-label" slot="field-label">${this.getLabel()}</label>` || '';
     }
 
     renderInput() {
@@ -346,7 +350,11 @@ class Field extends ArpaElement {
     }
 
     hasInputMask() {
-        return this.hasAttribute('has-input-mask') || this._config.hasInputMask;
+        return this.getProperty('has-input-mask');
+    }
+
+    hasLabel() {
+        return this.getProperty('label') || this.hasSlot('label');
     }
 
     getOnChangeValue() {
