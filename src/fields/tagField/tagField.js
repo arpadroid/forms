@@ -79,7 +79,9 @@ class TagField extends SelectCombo {
 
     renderTagList() {
         return html`
-            <tag-list id="${this.getHtmlId()}--tagList" no-items-content="" variant="mini"> ${this.renderTags()} </tag-list>
+            <tag-list id="${this.getHtmlId()}--tagList" no-items-content="" variant="mini" has-resource>
+                ${this.renderTags()}
+            </tag-list>
         `;
     }
 

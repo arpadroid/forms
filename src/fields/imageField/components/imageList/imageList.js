@@ -6,6 +6,7 @@ class ImageList extends List {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'fileList',
+            hasResource: true,
             itemComponent: ImageItem
         });
     }
