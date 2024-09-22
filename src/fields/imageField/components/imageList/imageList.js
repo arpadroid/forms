@@ -1,13 +1,13 @@
 import { mergeObjects } from '@arpadroid/tools';
 import ImageItem from '../imageItem/imageItem.js';
-import { List } from '@arpadroid/lists';
+import FileList from '../../../fileField/components/fileList/fileList.js';
 
-class ImageList extends List {
+class ImageList extends FileList {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'fileList',
             hasResource: true,
-            itemComponent: ImageItem
+            itemComponent: ImageItem,
         });
     }
 }

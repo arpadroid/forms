@@ -38,7 +38,7 @@ delete Default.args.extensions;
 
 export const Test = {
     parameters: { ...FieldTest.parameters },
-    args: { ...Default.args },
+    args: { ...Default.args, id: 'image-field-test'},
     play: async ({ canvasElement, step }) => {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } =
             await FieldTest.playSetup(canvasElement);
@@ -93,7 +93,7 @@ export const Test = {
         await step('Submits the form and checks the file is uploaded.', async () => {
             fireEvent.click(submitButton);
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'image-field': galaxyImage });
+                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'image-field-test': galaxyImage });
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
                 expect(items).toHaveLength(1);
@@ -125,7 +125,7 @@ export const Test = {
             fireEvent.click(submitButton);
 
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'image-field': [planeImage, flowerImage] });
+                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'image-field-test': [planeImage, flowerImage] });
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
                 expect(items).toHaveLength(3);
