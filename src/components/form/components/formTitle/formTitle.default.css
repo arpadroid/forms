@@ -1,15 +1,13 @@
 form-title {
-    font-weight: normal;
-    padding: 8px 0px 8px 4px;
-    margin: 0 .5rem .5rem 0;
-    font-size: var(--font-size-l);
+    font-weight: 450;
+    font-size: 1.1rem;
+    padding: .4rem .25rem .2rem;
     color: var(--text-color);
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--grey-50);
     arpa-icon {
-        font-size: 16px;
-        margin-right: 8px;
+        font-size: 1rem;
+        margin-right: .5rem;
         color: var(--grey-600);
     }
 }

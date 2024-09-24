@@ -5,7 +5,7 @@
 .fieldInput {
     font-family: var(--primary-font);
     background-color: var(--grey-30);
-    border-radius: 16px;
+    border-radius: .5rem;
     border: 2px solid var(--border-color);
     box-shadow: none;
     color: var(--text-color);

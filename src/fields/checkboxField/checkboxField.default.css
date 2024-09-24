@@ -5,6 +5,10 @@ checkbox-field.arpaField {
     label {
         cursor: pointer;
         flex: 0;
+        border: none;
+        &:hover, &:focus {
+            border: none;
+        }
     }
 
     .arpaField__icon {

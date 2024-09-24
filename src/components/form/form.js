@@ -157,6 +157,10 @@ class FormComponent extends HTMLFormElement {
         return getProperty(this, 'title') || hasSlot(this, 'form-title');
     }
 
+    hasFooter() {
+        return this.hasSubmitButton() || hasSlot(this, 'footer') || hasSlot(this, 'controls');
+    }
+
     /**
      * Sets the initial values for the form.
      * @param {Record<string, unknown>} values
@@ -221,7 +225,6 @@ class FormComponent extends HTMLFormElement {
         if (!this.id) {
             throw new Error('Form must have an id.');
         }
-
         attr(this, { novalidate: true, 'aria-label': this.getTitle() });
         const { variant } = this._config;
         this.renderTemplate();
@@ -230,9 +233,7 @@ class FormComponent extends HTMLFormElement {
         this._initializeSubmit();
         this._initializeMessages();
         this.classList.add('arpaForm');
-        if (variant) {
-            this.classList.add(`arpaForm--${variant}`);
-        }
+        variant && this.classList.add(`arpaForm--${variant}`);
         handleSlots(() => this._onRenderComplete());
         this.titleNode = this.querySelector('form-title');
         this.headerNode = this.querySelector('.arpaForm__header');
@@ -267,7 +268,7 @@ class FormComponent extends HTMLFormElement {
             <div class="arpaForm__body">
                 <div class="arpaForm__fields"></div>
             </div>
-            <form-footer><form-controls>{submitButton}</form-controls></form-footer>
+            ${this.hasFooter() ? this.renderFooter() : ''}
         `;
     }
 
@@ -284,7 +285,9 @@ class FormComponent extends HTMLFormElement {
     }
 
     renderFooter() {
-        return html`<form-footer><form-controls>{submitButton}</form-controls></form-footer>`;
+        return html`<div class="arpaFrom__footer" slot="footer">
+            <div class="arpaForm__controls" slot="controls">{submitButton}</div>
+        </div>`;
     }
 
     getTemplateVariables() {

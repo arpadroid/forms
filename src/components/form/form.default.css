@@ -2,6 +2,7 @@
     container: arpa-form;
     container-type: inline-size;
     flex: 1 1 auto;
+    gap: .5rem;
 }
 
 .arpaForm__fields {
