@@ -1,4 +1,5 @@
 field-errors {
+    &:not(:has(.fieldErrors__list)),
     &:has(.fieldErrors__list:empty) {
         display: none;
     }
