@@ -1,20 +1,25 @@
 :root {
     --input-height: 54px;
+    --input-border-radius: 4rem;
+    --input-padding: 1.2rem;
 }
 
 .fieldInput {
-    font-family: var(--primary-font);
     background-color: var(--grey-30);
-    border-radius: .5rem;
+    border-radius: var(--input-border-radius);
     border: 2px solid var(--border-color);
     box-shadow: none;
     color: var(--text-color);
     flex: 1 1 auto;
+    font-family: var(--primary-font);
     font-size: 16px;
     height: var(--input-height);
-    padding: 14px 18px 12px;
+    min-height: var(--input-height);
+    padding-left: var(--input-padding);
+    padding-right: var(--input-padding);
     transition: color 0.4s ease-in-out, border-color 0.4s ease-in-out, background-color 0.4s ease-in-out;
     width: 100%;
+
     &:focus,
     &:hover {
         background-color: var(--primary-hilight);
@@ -35,5 +40,5 @@ button.fieldInput {
 }
 
 :root {
-    --input-icon-padding: 46px;
+    --input-icon-padding: 52px;
 }

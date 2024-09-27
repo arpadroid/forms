@@ -10,7 +10,7 @@ const html = String.raw;
  */
 class CheckboxField extends Field {
     static template = html`
-        <label is="field-label" class="fieldInput">
+        <label is="field-label" class="fieldInput checkboxField__label">
             <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
             <span class="fieldLabel__text" slot="checkbox-label"></span>
             <arpa-icon class="arpaField__iconRight">{iconRight}</arpa-icon>
@@ -28,6 +28,7 @@ class CheckboxField extends Field {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             template: CheckboxField.template,
+            className: 'checkboxField',
             inputAttributes: { type: 'checkbox' }
         });
     }
@@ -69,10 +70,7 @@ class CheckboxField extends Field {
         if (!this.isRequired()) {
             return true;
         }
-        if (!this.input?.checked) {
-            const message = this.i18n.errRequired;
-            this.setError(message);
-        }
+        !this.input?.checked && this.setError(this.i18n('errRequired'));
         return this.input?.checked;
     }
 }

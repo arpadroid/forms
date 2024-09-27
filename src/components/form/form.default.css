@@ -2,7 +2,15 @@
     container: arpa-form;
     container-type: inline-size;
     flex: 1 1 auto;
-    gap: .5rem;
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.arpaForm__header {
+    &:empty {
+        display: none;
+    }
 }
 
 .arpaForm__fields {
@@ -11,7 +19,7 @@
 }
 
 .arpaForm__fields:has(.arpaForm__column) {
-    gap: 24px;
+    gap: 1.5rem;
 }
 
 .arpaForm__body {
@@ -23,13 +31,33 @@
     width: 100%;
 }
 
+.arpaFrom__footer {
+    background-color: var(--overlay);
+    bottom: 0;
+    display: flex;
+    margin-left: -1rem;
+    padding: 1rem;
+    position: sticky;
+    width: calc(100% + 2rem);
+    z-index: 1;
+    .arpaForm__controls {
+        margin-left: auto;
+    }
+}
+
+.arpaForm__controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
 @container arpa-form (min-width: 1001px) {
     .arpaForm__fields {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
         > .groupField {
-            max-width: calc(50% - 16px);
+            max-width: calc(50% - 1rem);
             flex: 1 1 auto;
         }
     }
@@ -39,10 +67,19 @@
     }
 }
 
-
-.arpaForm[variant="compact"] {
+.arpaForm[variant='compact'] {
     .arpaForm__fields {
-        gap: 8px;
+        gap: 0.5rem;
         margin-top: 0;
+    }
+}
+
+@container arpa-form (max-width: 980px) {
+    .arpaForm__fields {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .arpaForm__column {
+        width: 100%;
     }
 }

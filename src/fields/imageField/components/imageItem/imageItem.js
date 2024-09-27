@@ -11,7 +11,10 @@ class ImageItem extends FileItem {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            icon: ''
+            icon: '',
+            hasIcon: false,
+            width: 100,
+            height: 100,
         });
     }
 

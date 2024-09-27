@@ -1,8 +1,11 @@
 file-field,
-image-field  {
+image-field {
+    max-width: 100%;
     .arpaField__inputWrapper {
         display: flex;
         flex-direction: column;
+        width: 100%;
+        gap: 1rem;
     }
 
     .fieldErrors .tooltip__content:has(.fieldErrors__list:not(:empty)) {
@@ -18,15 +21,13 @@ image-field  {
 .fileField__fileLists {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 1rem;
     width: 100%;
-    flex: 0;
 
-    .arpaList {
-        flex: 1 1 auto;
+    > .arpaList {
         display: flex;
         flex-direction: column;
-        min-width: 300px;
+        min-width: 0;
     }
 
     .arpaList__items {

@@ -4,9 +4,11 @@ radio-option {
     .fieldOption__handler {
         transition: var(--theme-transition);
         background-color: var(--grey-30);
-        padding: 8px 12px;
+        padding-left: var(--input-padding);
+        padding-right: var(--input-padding);
         gap: 11px;
-        border-radius: 10px;
+        border-radius: var(--input-border-radius);
+        border: none;
 
         .fieldOption__label {
             flex: 1 1 auto;
@@ -15,12 +17,14 @@ radio-option {
         &:has(input:checked),
         &:hover,
         &:focus {
+            border: none;
             background-color: var(--primary-hilight);
 
             .fieldOption__label {
                 text-decoration: underline;
                 text-underline-offset: 2px;
-                text-decoration-color: var(--grey-400);
+                text-decoration-color: var(--grey-600);
+                font-weight: 600;
             }
 
             arpa-icon {

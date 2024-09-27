@@ -4,7 +4,6 @@
     position: relative;
     cursor: pointer;
     align-items: center;
-    padding: 4px 0px 12px;
 }
 
 .fieldLabel__required {
@@ -19,8 +18,8 @@
 
 .fieldLabel__text {
     flex: 0 1 auto;
-    color: var(--grey-800);
-    font-weight: 600;
+    color: var(--grey-700);
+    font-weight: 550;
     font-size: 1rem;
 }
 

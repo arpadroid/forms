@@ -21,7 +21,7 @@ class RadioOption extends FieldOption {
      */
     getDefaultConfig() {
         return {
-            template: html`<label class="fieldOption__handler" for="{optionId}"> ${FieldOption.template} </label> `
+            template: html`<label class="fieldOption__handler fieldInput" for="{optionId}">${FieldOption.template}</label>`
         };
     }
 

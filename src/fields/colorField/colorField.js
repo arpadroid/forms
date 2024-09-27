@@ -16,9 +16,9 @@ class ColorField extends Field {
         return mergeObjects(super.getDefaultConfig(), {
             icon: 'color_lens',
             inputTemplate: html`
-                <input type="text" class="fieldInput colorField__textInput" />
+                <input id="{id}" type="text" class="fieldInput colorField__textInput" />
                 <div class="colorField__colorInputWrapper">
-                    <input id="{id}" class="colorField__colorInput" type="color" />
+                    <input class="colorField__colorInput" aria-labelledby="{id}-label" type="color" />
                 </div>
             `,
             inputAttributes: { type: 'color' }

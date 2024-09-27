@@ -1,3 +1,7 @@
+:root {
+    --field-icon-padding: 1.1rem;
+}
+
 field-input-mask {
     visibility: hidden;
     display: flex;
@@ -26,12 +30,14 @@ field-input-mask > * {
 
 .fieldInputMask__rhs,
 .fieldInputMask__lhs {
-    padding: 0px 12px;
+    padding: 0px var(--field-icon-padding);
     display: flex;
     align-items: center;
+    .iconButton {
+        --icon-button-width: 1.5rem;
+    }
 }
 
 .fieldInputMask__rhs {
     margin-left: auto;
-    padding-right: 12px;
 }

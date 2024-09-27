@@ -86,7 +86,7 @@
     .groupField__fields {
         display: flex;
         flex-direction: column;
-        gap: 32px 0px;
+        gap: 1.6rem;
     }
 }
 

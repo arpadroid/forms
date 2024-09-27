@@ -5,7 +5,7 @@
  */
 import { mergeObjects, copyObjectProps, slotMixin } from '@arpadroid/tools';
 import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool, handleSlots } from '@arpadroid/tools';
-import { I18n, I18nTool } from '@arpadroid/i18n';
+import { I18nTool } from '@arpadroid/i18n';
 
 const { hasProperty, getProperty, hasSlot } = CustomElementTool;
 
@@ -37,7 +37,6 @@ class FormComponent extends HTMLFormElement {
         this._slots = [];
         slotMixin(this);
         ObserverTool.mixin(this);
-        this.i18n = I18n.get('modules.form.formComponent');
         ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
         this.promise = this.getPromise();
@@ -49,6 +48,10 @@ class FormComponent extends HTMLFormElement {
             this.resolvePromise = resolve;
             this.rejectPromise = reject;
         });
+    }
+
+    i18n(key, replacements) {
+        return I18nTool.arpaElementI18n(this, key, replacements, 'modules.form.formComponent');
     }
 
     /**
@@ -63,8 +66,8 @@ class FormComponent extends HTMLFormElement {
             onSubmit: undefined,
             debounce: 1000,
             useTemplate: true,
-            successMessage: this.i18n.msgSuccess,
-            errorMessage: this.i18n.msgError
+            successMessage: this.i18n('msgSuccess'),
+            errorMessage: this.i18n('msgError')
         };
     }
 
@@ -161,6 +164,10 @@ class FormComponent extends HTMLFormElement {
         return this.hasSubmitButton() || hasSlot(this, 'footer') || hasSlot(this, 'controls');
     }
 
+    hasDescription() {
+        return getProperty(this, 'description') || hasSlot(this, 'description');
+    }
+
     /**
      * Sets the initial values for the form.
      * @param {Record<string, unknown>} values
@@ -216,6 +223,16 @@ class FormComponent extends HTMLFormElement {
     // #region RENDERING
     ////////////////////
 
+    getTemplateVariables() {
+        return {
+            submitLabel: this.getSubmitText(),
+            formId: this.id,
+            title: this.renderTitle(),
+            description: this.renderDescription(),
+            submitButton: this.renderSubmitButton()
+        };
+    }
+
     /**
      * Renders the form.
      * @returns {void}
@@ -260,16 +277,17 @@ class FormComponent extends HTMLFormElement {
 
     renderFull() {
         return html`
-            <div class="arpaForm__header" slot="header">
-                ${this.renderTitle()}
-                <form-description slot="description"></form-description>
-            </div>
+            <div class="arpaForm__header" slot="header">{title}{description}</div>
             <arpa-messages slot="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
             <div class="arpaForm__body">
                 <div class="arpaForm__fields"></div>
             </div>
             ${this.hasFooter() ? this.renderFooter() : ''}
         `;
+    }
+
+    renderDescription() {
+        return this.hasDescription() ? html`<div class="arpaForm__description" slot="description"></div>` : '';
     }
 
     renderMini() {
@@ -288,14 +306,6 @@ class FormComponent extends HTMLFormElement {
         return html`<div class="arpaFrom__footer" slot="footer">
             <div class="arpaForm__controls" slot="controls">{submitButton}</div>
         </div>`;
-    }
-
-    getTemplateVariables() {
-        return {
-            submitLabel: this.getSubmitText(),
-            formId: this.id,
-            submitButton: this.renderSubmitButton()
-        };
     }
 
     renderSubmitButton() {

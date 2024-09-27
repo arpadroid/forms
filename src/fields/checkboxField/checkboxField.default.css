@@ -1,4 +1,4 @@
-checkbox-field.arpaField {
+.checkboxField {
     margin-top: 10px;
     position: relative;
 
@@ -6,8 +6,21 @@ checkbox-field.arpaField {
         cursor: pointer;
         flex: 0;
         border: none;
-        &:hover, &:focus {
+        padding-top: 0;
+        padding-bottom: 0;
+
+        &:hover,
+        &:focus,
+        &:has(input:checked) {
             border: none;
+            background-color: var(--primary-hilight);
+
+            .fieldLabel__text {
+                font-weight: 600;
+                text-decoration: underline;
+                text-underline-offset: 2px;
+                text-decoration-color: var(--grey-600);
+            }
         }
     }
 
@@ -17,10 +30,8 @@ checkbox-field.arpaField {
 
     .fieldLabel__text {
         flex: 1 1 auto;
-    }
 
-    &:has(input:checked) .fieldInput {
-        background-color: var(--primary-hilight);
+        font-weight: normal;
     }
 }
 
@@ -57,17 +68,14 @@ checkbox-field.arpaField:has(.arpaField__iconRight) .fieldInput {
         position: absolute;
         visibility: visible;
         cursor: pointer;
+        font-weight: 300;
     }
 }
 
 .arpaCheckbox,
 .arpaField input[type='checkbox'] {
     &:checked:after {
-        font-variation-settings:
-            'FILL' 1,
-            'wght' 400,
-            'GRAD' 0,
-            'opsz' 24;
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         content: 'check_box';
         color: var(--color-primary);
     }

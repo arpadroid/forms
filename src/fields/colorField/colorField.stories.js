@@ -42,7 +42,7 @@ export const Test = {
             textInput.value = 'invalid';
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                canvas.getByText(field.i18n.errColor);
+                canvas.getByText(field.i18nText('errColor'));
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
             });
             expect(onErrorMock).toHaveBeenCalledOnce();

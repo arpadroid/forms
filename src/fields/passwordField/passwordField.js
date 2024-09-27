@@ -9,7 +9,7 @@ class PasswordField extends TextField {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            label: this.i18n?.lblPassword,
+            label: this._i18n?.lblPassword,
             icon: 'lock',
             confirm: false,
             required: true,
@@ -17,7 +17,7 @@ class PasswordField extends TextField {
             inputAttributes: { type: 'password' },
             confirmField: {},
             isConfirm: false,
-            lblShowPassword: this.i18n?.lblShowPassword
+            lblShowPassword: this._i18n?.lblShowPassword
         });
     }
 
@@ -32,7 +32,7 @@ class PasswordField extends TextField {
         if (mode === 'register') {
             config.inputAttributes.autocomplete = 'new-password';
             this.setAttribute('regex', Regex.password);
-            this.setAttribute('regex-message', this.i18n?.errRegex);
+            this.setAttribute('regex-message', this._i18n?.errRegex);
         } else if (mode === 'login') {
             config.inputAttributes.autocomplete = 'current-password';
             config.confirm = undefined;
@@ -137,7 +137,7 @@ class PasswordField extends TextField {
                 form: this.form,
                 id: this._id + '-confirm',
                 isConfirm: true,
-                label: this.i18n?.lblConfirmPassword,
+                label: this._i18n?.lblConfirmPassword,
                 required: true,
                 inputAttributes: { autocomplete: 'new-password' },
                 ...this._config.confirmField,
@@ -154,7 +154,7 @@ class PasswordField extends TextField {
     togglePasswordVisibility() {
         const isPassword = this.input.getAttribute('type') === 'password';
         this.input.setAttribute('type', isPassword ? 'text' : 'password');
-        this.visButton.setAttribute('label', isPassword ? this.i18n.lblHidePassword : this.i18n.lblShowPassword);
+        this.visButton.setAttribute('label', isPassword ? this._i18n.lblHidePassword : this._i18n.lblShowPassword);
         this.visButton.setAttribute('icon', isPassword ? 'visibility_off' : 'visibility');
     }
 
@@ -177,7 +177,7 @@ class PasswordField extends TextField {
             return true;
         }
         if (this.confirmField.getValue() !== this.getValue()) {
-            this.confirmField.setError(this.i18n.errPasswordMatch);
+            this.confirmField.setError(this.i18n('errPasswordMatch'));
             return false;
         }
         return true;

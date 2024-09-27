@@ -72,7 +72,7 @@ class Field extends ArpaElement {
      * Initializes internationalization for the field.
      */
     _initializeI18n() {
-        this.i18n = this._getI18n();
+        this._i18n = this._getI18n();
     }
 
     /**
@@ -81,9 +81,19 @@ class Field extends ArpaElement {
      */
     _getI18n() {
         const type = this.getFieldType();
+        this.i18nKey = `modules.form.fields.${type}`;
+        this.i18nFieldKey = 'modules.form.field';
         const typePayload = I18n.get(`modules.form.fields.${type}`);
         const fieldPayload = I18n.get('modules.form.field');
         return mergeObjects(fieldPayload, typePayload);
+    }
+
+    i18nText(key, replacements, base = this.i18nFieldKey) {
+        return super.i18nText(key, replacements) || super.i18nText(key, replacements, base);
+    }
+
+    i18n(key, replacements, base = this.i18nFieldKey) {
+        return super.i18n(key, replacements) || super.i18n(key, replacements, base);
     }
 
     /**
@@ -168,9 +178,7 @@ class Field extends ArpaElement {
             {afterInput}
         </div>
 
-        <div class="arpaField__footer">
-            <p is="field-footnote"></p>
-        </div>
+        <div class="arpaField__footer"><p is="field-footnote"></p></div>
     `;
 
     static inputTemplate = html`<input is="field-input" />`;
@@ -194,7 +202,7 @@ class Field extends ArpaElement {
     }
 
     renderLabel() {
-        return this.hasLabel() && html`<label is="field-label" slot="field-label">${this.getLabel()}</label>` || '';
+        return (this.hasLabel() && html`<label is="field-label" slot="field-label">${this.getLabel()}</label>`) || '';
     }
 
     renderInput() {
@@ -468,7 +476,7 @@ class Field extends ArpaElement {
      * @returns {Record<string, unknown>}
      */
     getI18n() {
-        return { ...this.i18n };
+        return { ...this._i18n };
     }
 
     /**

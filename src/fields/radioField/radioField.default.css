@@ -1,6 +1,6 @@
 radio-field,
 checkboxes-field {
-    .optionsField__options {
+    .optionsField__options.optionsField__options {
         display: flex;
         flex-wrap: wrap;
         align-items: center;

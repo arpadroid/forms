@@ -1,74 +1,63 @@
-.fileItem.fileItem {
-    padding: 12px 12px;
+.fileItem {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 1px 10px 0px;
-    border-radius: 8px;
+    border-radius: var(--input-border-radius);
+    padding: 0.5rem var(--input-padding);
+
+    .listItem__title {
+        display: flex;
+        flex-direction: row;
+        font-weight: 600;
+    }
+
+    .listItem__contentWrapper {
+        align-self: center;
+    }
+
+    .fileItem__metadata {
+        position: relative;
+        padding: 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-left: auto;
+    }
 }
 
-.fileItem:not(:only-child) {
-    margin-bottom: 8px;
-}
-
-.fileItem .listItem__image {
-    width: 50px;
-    height: 50px;
-    background-color: var(--color-background);
+.fileItem__titleContent {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+    position: relative;
+    min-width: 0;
 }
 
 .fileItem.fileItem .listItem__icon {
-    max-width: 26px;
-}
-.fileItem__deleteButton {
-    margin-left: auto;
-    margin-right: 4px;
+    --icon-size: 1.8rem;
     position: relative;
-    margin-left: 4px;
+    left: -4px;
+    font-size: var(--icon-size);
+    font-weight: 500;
 }
 
 .fileItem__deleteButton:hover {
     color: var(--color-red);
 }
 
-.fileItem__titleContent {
-    flex: 0 1 auto;
-    font-weight: bold;
-    font-family: var(--font-family-avant-garde-gothicbook);
-    color: var(--color--text-light) !important;
-    display: inline-flex;
-    overflow: hidden;
-}
-
 .fileItem__name {
-    flex: 1 1 auto;
-    min-width: 0;
-    position: relative;
-    flex-basis: 0px;
-    flex-grow: 1;
-}
-
-.fileItem__titleContent .listItem__titleText {
-    font-size: 14px;
+    max-width: 100%;
+    font-weight: 500;
 }
 
 .fileItem__extension {
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 900;
+    font-size: 1rem;
     color: var(--color-primary);
-    margin-left: 4px;
 }
 
-.fileItem .listItem__title {
-    align-items: baseline;
+.fileItem__size {
+    font-weight: bold;
+    font-size: 0.9rem;
 }
 
-.fileItem--markedForDeletion.fileItem--markedForDeletion {
-    border-radius: 4px;
-}
-
-.fileItem__metadata {
-    position: relative;
-    padding: 4px 0px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-left: auto;
-}
+/* .fileItem--markedForDeletion.fileItem--markedForDeletion {} */

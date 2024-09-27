@@ -3,7 +3,7 @@
  * @typedef {import('../../fileField.js').default} FileField
  */
 
-import { mergeObjects, processFile, render, formatBytes } from '@arpadroid/tools';
+import { mergeObjects, processFile, render, formatBytes, getFileType, getFileIcon } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
 import { ListItem } from '@arpadroid/lists';
 
@@ -32,7 +32,8 @@ class FileItem extends ListItem {
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            icon: 'text_snippet',
+            icon: undefined,
+            hasIcon: true,
             onDelete: true,
             onEdit: false,
             lblRemoveFile: I18n.getText('modules.form.fields.file.lblRemoveFile')
@@ -55,13 +56,29 @@ class FileItem extends ListItem {
     // #region LIFECYCLE
     /////////////////////
 
+    _preRender() {
+        const ext = this.payload?.extension;
+        this.fileType = getFileType(ext);
+        this.addTypeClass();
+        !this.getProperty('icon') && this.getProperty('has-icon') && (this._config.icon = getFileIcon(ext));
+    }
+
+    addTypeClass(fileType = this.fileType || 'file') {
+        this.classList.add(`fileItem--type--${fileType}`);
+    }
+
     async connectedCallback() {
         /** @type {FileField} */
         this.field = this.closest('.arpaField');
         this.fieldConfig = this.field?._config ?? {};
         await this._initializeFile();
+
         super.connectedCallback();
         this.classList.add('fileItem');
+    }
+
+    getFileType() {
+        return getFileType(this.payload.extension);
     }
 
     // #endregion
@@ -116,8 +133,8 @@ class FileItem extends ListItem {
             <div class="fileItem__titleContent">
                 <arpa-icon>{titleIcon}</arpa-icon>
                 <span class="fileItem__name">${title}</span>
-                <span class="fileItem__extension">.{extension}</span>
             </div>
+            <span class="fileItem__extension">.{extension}</span>
             {metaData}
         `;
     }
@@ -148,7 +165,7 @@ class FileItem extends ListItem {
             html`<button
                 is="icon-button"
                 variant="delete"
-                class="fileItem__deleteButton"
+                class="fileItem__deleteButton iconButton--small"
                 label="${this.getProperty('lbl-remove-file')}"
             ></button>`
         );

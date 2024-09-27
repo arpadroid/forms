@@ -3,6 +3,13 @@
     flex-direction: column;
     justify-content: center;
     flex: 1 1 auto;
+    gap: 1rem;
+}
+
+.arpaField__body {
+    gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .arpaField[variant='small'] {
@@ -26,7 +33,7 @@
 
 .arpaField.arpaField--hasError {
     .fieldInput {
-        border-color: var(--color-red);
+        border-color: var(--color-light-red);
         background-color: var(--color-error-light);
     }
     &:focus-within field-errors .tooltip__content {
@@ -47,6 +54,10 @@
 
 .arpaField:has(> .arpaField__body .fieldInputMask__rhs:not(:empty)) .fieldInput {
     padding-right: var(--input-icon-padding);
+}
+
+.arpaField__footer:empty {
+    display: none;
 }
 
 /* Disabled */

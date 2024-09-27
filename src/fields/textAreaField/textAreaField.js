@@ -16,7 +16,7 @@ class TextAreaField extends TextField {
         return {
             ...super.getDefaultConfig(),
             rows: 6,
-            inputTemplate: html`<textarea class="fieldInput"></textarea>`
+            inputTemplate: html`<textarea id="{id}" class="fieldInput"></textarea>`
         };
     }
 

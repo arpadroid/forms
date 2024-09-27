@@ -24,7 +24,6 @@ class FileField extends Field {
      * @returns {FileFieldInterface}
      */
     getDefaultConfig() {
-        this.i18nKey = this.getI18nKey();
         return mergeObjects(super.getDefaultConfig(), {
             className: 'fileField',
             inputTemplate: html`
@@ -35,8 +34,9 @@ class FileField extends Field {
             listComponent: 'file-list',
             uploadListComponent: 'file-list',
             fileComponent: 'file-item',
-            uploadListLabel: this.getUploadListLabel(),
-            fileListLabel: `i18n{${this.i18nKey}.lblUploadedFiles}`,
+            lblUploads: this.i18n('lblUploads', {}, 'common.labels'),
+            fileListLabel: this.i18n('lblUploadedFiles'),
+            lblAddFile: this.i18n('lblAddFile'),
             hasDropArea: false,
             hasInputMask: false,
             allowMultiple: false,
@@ -55,8 +55,7 @@ class FileField extends Field {
     addUpload(file) {
         return this.uploadList?.addItem({
             file,
-            icon: 'upload',
-            lblRemoveFile: this.i18n.lblRemoveUpload,
+            lblRemoveFile: this.i18nText('lblRemoveUpload'),
             onDelete: this._config.onDeleteUpload,
             key: file.name + file.size
         });
@@ -186,23 +185,26 @@ class FileField extends Field {
     renderFileSelect(inputId = this.getHtmlId()) {
         return this.hasDropArea()
             ? html`<drop-area input-id="${inputId}"></drop-area>`
-            : html`
-                  <button is="arpa-button" icon="upload_file" class="fileField__selectButton">${this.i18n.lblAddFile}</button>
-              `;
+            : html`<button is="arpa-button" icon="upload_file" class="fileField__selectButton">
+                  ${this.getProperty('lbl-add-file')}
+              </button>`;
     }
 
     renderUploadList(id = this.getHtmlId()) {
         const { uploadListComponent: list } = this._config;
-        const label = this.getProperty('upload-list-label');
         return html`
-            <${list} id="${id}-uploadList" class="fileField__uploadList" heading="${label}"></${list}>
+            <${list} id="${id}-uploadList" class="fileField__uploadList"> 
+                <slot name="title">${this.getProperty('lbl-uploads')}</slot>
+            </${list}>
         `;
     }
 
     renderFileList(id = this.getHtmlId()) {
-        const { fileListLabel: heading = '', listComponent: list } = this._config;
+        const { listComponent: list } = this._config;
         return html`
-            <${list} id="${id}-fileList" class="fileField__fileList" heading="${heading}"></${list}>
+            <${list} id="${id}-fileList" class="fileField__fileList">
+                <slot name="title">${this.getProperty('file-list-label')}</slot>
+            </${list}>
         `;
     }
 
