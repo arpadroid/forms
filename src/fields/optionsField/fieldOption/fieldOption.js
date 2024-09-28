@@ -67,7 +67,11 @@ class FieldOption extends ArpaElement {
         if (!field) {
             return;
         }
-        this.setAttribute('role', 'option');
+        if (this.tagName.toLowerCase() === 'option') {
+            this.removeAttribute('role');
+        } else {
+            this.setAttribute('role', 'option');
+        }
         this.setIsSelected();
         super.render();
         this.classList.add(this._config.className);

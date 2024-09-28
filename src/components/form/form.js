@@ -4,7 +4,7 @@
  * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
  */
 import { mergeObjects, copyObjectProps, zoneMixin } from '@arpadroid/tools';
-import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool, handleZones } from '@arpadroid/tools';
+import { ObserverTool, attr, renderNode, render, CustomElementTool, handleZones } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
 const { hasProperty, getProperty, hasZone } = CustomElementTool;
@@ -37,7 +37,6 @@ class FormComponent extends HTMLFormElement {
         this._zones = [];
         zoneMixin(this);
         ObserverTool.mixin(this);
-        ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
         this.promise = this.getPromise();
         this._childNodes = [...this.childNodes];

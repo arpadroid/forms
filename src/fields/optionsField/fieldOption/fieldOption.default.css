@@ -7,7 +7,7 @@
     --field-option-active-weight: 600;
     --field-option-color: var(--grey-600);
     --field-option-active-color: var(--color-primary);
-    --field-option-active-background: var(--color-lightest-blue);
+    --field-option-active-background: var(--blue-lightest);
 }
 
 .fieldOption {
