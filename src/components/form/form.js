@@ -3,11 +3,11 @@
  * @typedef {import('@arpadroid/ui/src/index').Messages} Messages
  * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
  */
-import { mergeObjects, copyObjectProps, slotMixin } from '@arpadroid/tools';
-import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool, handleSlots } from '@arpadroid/tools';
+import { mergeObjects, copyObjectProps, zoneMixin } from '@arpadroid/tools';
+import { ComponentTool, ObserverTool, attr, renderNode, render, CustomElementTool, handleZones } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
-const { hasProperty, getProperty, hasSlot } = CustomElementTool;
+const { hasProperty, getProperty, hasZone } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -34,8 +34,8 @@ class FormComponent extends HTMLFormElement {
 
     constructor(config) {
         super();
-        this._slots = [];
-        slotMixin(this);
+        this._zones = [];
+        zoneMixin(this);
         ObserverTool.mixin(this);
         ComponentTool.applyOnReady(this, 'arpa-form');
         this.setConfig(config);
@@ -157,15 +157,15 @@ class FormComponent extends HTMLFormElement {
     }
 
     hasTitle() {
-        return getProperty(this, 'title') || hasSlot(this, 'form-title');
+        return getProperty(this, 'title') || hasZone(this, 'form-title');
     }
 
     hasFooter() {
-        return this.hasSubmitButton() || hasSlot(this, 'footer') || hasSlot(this, 'controls');
+        return this.hasSubmitButton() || hasZone(this, 'footer') || hasZone(this, 'controls');
     }
 
     hasDescription() {
-        return getProperty(this, 'description') || hasSlot(this, 'description');
+        return getProperty(this, 'description') || hasZone(this, 'description');
     }
 
     /**
@@ -251,7 +251,7 @@ class FormComponent extends HTMLFormElement {
         this._initializeMessages();
         this.classList.add('arpaForm');
         variant && this.classList.add(`arpaForm--${variant}`);
-        handleSlots(() => this._onRenderComplete());
+        handleZones(() => this._onRenderComplete());
         this.titleNode = this.querySelector('form-title');
         this.headerNode = this.querySelector('.arpaForm__header');
     }
@@ -277,8 +277,8 @@ class FormComponent extends HTMLFormElement {
 
     renderFull() {
         return html`
-            <div class="arpaForm__header" slot="header">{title}{description}</div>
-            <arpa-messages slot="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
+            <div class="arpaForm__header" zone="header">{title}{description}</div>
+            <arpa-messages zone="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
             <div class="arpaForm__body">
                 <div class="arpaForm__fields"></div>
             </div>
@@ -287,24 +287,24 @@ class FormComponent extends HTMLFormElement {
     }
 
     renderDescription() {
-        return this.hasDescription() ? html`<div class="arpaForm__description" slot="description"></div>` : '';
+        return this.hasDescription() ? html`<div class="arpaForm__description" zone="description"></div>` : '';
     }
 
     renderMini() {
         return html`
             ${this.renderTitle()}
-            <arpa-messages slot="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
+            <arpa-messages zone="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
             <div class="arpaForm__fields"></div>
         `;
     }
 
     renderTitle() {
-        return this.hasTitle() ? html`<form-title slot="form-title"></form-title>` : '';
+        return this.hasTitle() ? html`<form-title zone="form-title"></form-title>` : '';
     }
 
     renderFooter() {
-        return html`<div class="arpaFrom__footer" slot="footer">
-            <div class="arpaForm__controls" slot="controls">{submitButton}</div>
+        return html`<div class="arpaFrom__footer" zone="footer">
+            <div class="arpaForm__controls" zone="controls">{submitButton}</div>
         </div>`;
     }
 

@@ -208,8 +208,8 @@ class OptionsField extends Field {
         }
     }
 
-    _onSlotPlaced(payload) {
-        payload?.slotContainer && payload.slotContainer === this.optionsNode && this.updateValue();
+    _onZonePlaced(payload) {
+        payload?.zoneContainer && payload.zoneContainer === this.optionsNode && this.updateValue();
     }
 
     updateValue() {

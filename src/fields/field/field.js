@@ -202,7 +202,7 @@ class Field extends ArpaElement {
     }
 
     renderLabel() {
-        return (this.hasLabel() && html`<label is="field-label" slot="field-label">${this.getLabel()}</label>`) || '';
+        return (this.hasLabel() && html`<label is="field-label" zone="field-label">${this.getLabel()}</label>`) || '';
     }
 
     renderInput() {
@@ -362,7 +362,7 @@ class Field extends ArpaElement {
     }
 
     hasLabel() {
-        return this.getProperty('label') || this.hasSlot('label');
+        return this.getProperty('label') || this.hasZone('label');
     }
 
     getOnChangeValue() {
