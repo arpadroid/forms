@@ -18,23 +18,19 @@ radio-option {
         &:hover,
         &:focus {
             border: none;
-            background-color: var(--primary-hilight);
+            background-color: var(--field-option-active-background);
 
             .fieldOption__label {
                 text-decoration: underline;
                 text-underline-offset: 2px;
-                text-decoration-color: var(--grey-600);
-                font-weight: 600;
+                text-decoration-thickness: 2px;
+                font-weight: var(--field-option-active-weight);
+                letter-spacing: -0.2px;
+                color: var(--field-option-active-color);
             }
 
             arpa-icon {
-                color: var(--color-primary);
-            }
-        }
-
-        &:has(input:checked) {
-            .fieldOption__label {
-                color: var(--grey-950);
+                color: var(--field-option-active-color);
             }
         }
     }

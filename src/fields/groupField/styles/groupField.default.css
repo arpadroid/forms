@@ -31,11 +31,11 @@
     > .groupField__summary {
         border-bottom: none;
         .groupField__summary__label {
-            color: var(--grey-800);
+            color: var(--color-primary);
             font-weight: 600;
             text-decoration: underline;
             text-underline-offset: 6px;
-            text-decoration-color: var(--grey-800);
+            text-decoration-color: var(--color-primary);
         }
         arpa-icon {
             color: var(--color-primary);

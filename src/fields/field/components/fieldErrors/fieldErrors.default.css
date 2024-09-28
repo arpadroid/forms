@@ -1,15 +1,21 @@
 field-errors {
+    margin-right: 0.8rem;
     &:not(:has(.fieldErrors__list)),
     &:has(.fieldErrors__list:empty) {
         display: none;
     }
     .tooltip__content {
-        background-color: var(--color-error-light);
-        border-color: var(--color-error);
+        background-color: var(--red-lightest);
+        border-color: var(--red-light);
+        color: var(--red-dark);
     }
-    arpa-icon {
-        color: var(--color-red);
+
+    arpa-icon.icon {
+        color: var(--red-medium);
         margin: 0;
+    }
+    &:focus-within .icon.icon {
+        color: var(--red-medium);
     }
 }
 

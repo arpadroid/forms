@@ -7,7 +7,7 @@
 }
 
 .fieldLabel__required {
-    color: var(--color-red);
+    color: var(--red);
     padding: 0px 6px;
     display: flex;
     position: relative;

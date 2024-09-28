@@ -84,7 +84,7 @@ const FileFieldStory = {
             minSize: 0,
             maxSize: 0,
             ...FieldDefault.defaultArgs,
-            id: 'file-field',
+            id: 'file-field-render',
             label: 'File field',
             required: true
         };
@@ -112,6 +112,7 @@ export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
+        id: 'file-field',
         minSize: 0.0001,
         maxSize: 0.0002
     },

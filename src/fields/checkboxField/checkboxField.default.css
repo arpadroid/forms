@@ -3,11 +3,11 @@
     position: relative;
 
     label {
+        border: none;
         cursor: pointer;
         flex: 0;
-        border: none;
-        padding-top: 0;
         padding-bottom: 0;
+        padding-top: 0;
 
         &:hover,
         &:focus,
@@ -15,11 +15,23 @@
             border: none;
             background-color: var(--primary-hilight);
 
+            .arpaField__icon {
+                color: var(--color-primary);
+            }
+
             .fieldLabel__text {
-                font-weight: 600;
-                text-decoration: underline;
+                color: var(--field-option-active-color);
+                font-weight: var(--field-option-active-weight);
+                letter-spacing: -0.2px;
+                text-decoration-color: var(--field-option-active-color);
+                text-decoration-thickness: 2px;
                 text-underline-offset: 2px;
-                text-decoration-color: var(--grey-600);
+            }
+        }
+
+        &:has(input:checked) {
+            .fieldLabel__text {
+                text-decoration: underline;
             }
         }
     }
@@ -31,7 +43,8 @@
     .fieldLabel__text {
         flex: 1 1 auto;
 
-        font-weight: normal;
+        font-weight: var(--field-option-weight);
+        font-size: var(--field-option-size);
     }
 }
 
@@ -62,7 +75,6 @@ checkbox-field.arpaField:has(.arpaField__iconRight) .fieldInput {
     &::after {
         font-family: 'Material Symbols Outlined';
         content: 'check_box_outline_blank';
-
         color: var(--grey-300);
         font-size: 24px;
         position: absolute;

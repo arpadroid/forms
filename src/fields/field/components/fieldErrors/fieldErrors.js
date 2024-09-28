@@ -22,7 +22,7 @@ class FieldErrors extends HTMLElement {
      */
     render() {
         const content = html`
-            <arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="bottom-right">
+            <arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="left">
                 <slot name="tooltip-content">
                     <ul class="fieldErrors__list"></ul>
                 </slot>

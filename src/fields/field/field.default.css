@@ -4,6 +4,17 @@
     justify-content: center;
     flex: 1 1 auto;
     gap: 1rem;
+
+    &:focus-within:not(.groupField) {
+        .arpaField__icon {
+            color: var(--color-primary);
+        }
+        &.arpaField--hasError {
+            .arpaField__icon {
+                color: var(--red-medium);
+            }    
+        }
+    }
 }
 
 .arpaField__body {
@@ -33,8 +44,8 @@
 
 .arpaField.arpaField--hasError {
     .fieldInput {
-        border-color: var(--color-light-red);
-        background-color: var(--color-error-light);
+        border-color: var(--red-light);
+        background-color: var(--red-lightest);
     }
     &:focus-within field-errors .tooltip__content {
         display: block;

@@ -41,7 +41,7 @@
 }
 
 .fileItem__deleteButton:hover {
-    color: var(--color-red);
+    color: var(--red);
 }
 
 .fileItem__name {

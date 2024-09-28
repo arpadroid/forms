@@ -9,8 +9,11 @@ select-combo {
     &:focus-within {
         .comboBox {
             display: block;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
     }
+}
+
+.selectCombo__options {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
 }
