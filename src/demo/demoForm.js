@@ -12,12 +12,12 @@ customElements.whenDefined('arpa-form').then(() => {
     // }, 2000);
 
     const radio = form.getField('radio');
-    radio?.listen('onChange', value => {
+    radio?.on('change', value => {
         console.log('radio on change', value);
     });
 
     const checks = form.getField('binaryCheckboxes');
-    checks?.listen('onChange', payload => {
+    checks?.on('change', payload => {
         console.log('checkboxes changed', payload);
     });
 
@@ -26,7 +26,7 @@ customElements.whenDefined('arpa-form').then(() => {
 
     const selectCombo = form.getField('selectCombo');
     selectCombo?.setOptions(IconOptions);
-    selectCombo?.listen('onChange', value => {
+    selectCombo?.on('change', value => {
         console.log('selectCombo on change', value);
     });
 
@@ -47,22 +47,22 @@ customElements.whenDefined('arpa-form').then(() => {
 
     const simpleText = form.getField('simpleText');
     simpleText?.setValue('Hello World');
-    simpleText?.listen('onChange', value => {
+    simpleText?.on('change', value => {
         console.log('simpleText on change', value);
     });
 
     const selectField = form.getField('selectField');
-    selectField?.listen('onChange', value => {
+    selectField?.on('change', value => {
         console.log('selectField on change', value);
     });
 
     const textarea = form.getField('textarea');
-    textarea?.listen('onChange', value => {
+    textarea?.on('change', value => {
         console.log('textarea on change', value);
     });
 
     const colorField = form.getField('color');
-    colorField?.listen('onChange', value => {
+    colorField?.on('change', value => {
         console.log('colorField on change', value);
     });
 

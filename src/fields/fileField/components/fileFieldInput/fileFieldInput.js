@@ -33,7 +33,7 @@ class FileFieldInput extends FieldInput {
     async _initializeDropArea() {
         this.dropArea = this.field?.querySelector('drop-area');
         await customElements.whenDefined('drop-area');
-        this.dropArea?.listen('onDrop', this._onInputChange);
+        this.dropArea?.on('drop', this._onInputChange);
     }
 
     _onInputChange(event, files = this.files) {
@@ -55,10 +55,10 @@ class FileFieldInput extends FieldInput {
             return isValid;
         });
         if (uploads.length) {
-            this.field?.signal('onFilesAdded', uploads, this);
+            this.field?.signal('filesAdded', uploads, this);
         }
         if (invalidUploads.length) {
-            this.field?.signal('onError', invalidUploads, this);
+            this.field?.signal('error', invalidUploads, this);
         }
         
         this.field.updateErrors();

@@ -310,7 +310,7 @@ class Field extends ArpaElement {
         }
         this.updateErrors();
         if (!isValid) {
-            this.signal('onError', this.getErrorMessages(), this);
+            this.signal('error', this.getErrorMessages(), this);
         }
         return isValid;
     }
@@ -656,13 +656,13 @@ class Field extends ArpaElement {
     _callOnChange(event) {
         requestAnimationFrame(() => {
             if (this.form.isConnected) {
-                this.signal('onChange', this.getOnChangeValue(), this, event);
+                this.signal('change', this.getOnChangeValue(), this, event);
             }
         });
     }
 
     _onFocus() {
-        this.signal('onFocus', this);
+        this.signal('focus', this);
     }
 
     onSubmitSuccess() {}

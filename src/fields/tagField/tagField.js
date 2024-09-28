@@ -185,7 +185,7 @@ class TagField extends SelectCombo {
 
     _onDeleteTag(tag) {
         this.removeValue(tag.getValue());
-        this.signal('onDeleteTag', tag);
+        this.signal('deleteTag', tag);
         return false;
     }
 

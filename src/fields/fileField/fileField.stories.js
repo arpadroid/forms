@@ -32,7 +32,7 @@ const FileFieldStory = {
                     });
 
                     const field = form.getField('${args.id}');
-                    field.listen('onFilesAdded', (files, field) => {
+                    field.on('filesAdded', (files, field) => {
                         console.log('onFilesAdded', { files, field });
                     });
                 });

@@ -92,7 +92,7 @@ class FieldOption extends ArpaElement {
 
     async _onInitialized() {
         await this.onReady();
-        this.field?.listen('onChange', () => this.setIsSelected());
+        this.field?.on('change', () => this.setIsSelected());
         super._onInitialized();
     }
 

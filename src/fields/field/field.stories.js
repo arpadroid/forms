@@ -221,9 +221,9 @@ export const Test = {
         const onChangeMock = fn();
         form.onSubmit(onSubmitMock);
         const onErrorMock = fn();
-        if (typeof field.listen === 'function') {
-            field.listen('onError', onErrorMock);
-            field.listen('onChange', onChangeMock);
+        if (typeof field.on === 'function') {
+            field.on('error', onErrorMock);
+            field.on('change', onChangeMock);
         }
         const input = typeof field?.getInput === 'function' && field?.getInput();
         await field.promise;
@@ -280,7 +280,7 @@ export const Test = {
         );
 
         await step('Calls onChange listener when change event is fired', async () => {
-            field.listen('onChange', args.onChange);
+            field.on('change', args.onChange);
             expect(args.onChange).not.toHaveBeenCalled();
             input.value = 'test value';
             const event = new Event('input', { bubbles: true, cancelable: true });
@@ -303,7 +303,7 @@ export const Test = {
          * OnFocus.
          */
         // await step('Calls onFocus listener when focus event is fired.', async () => {
-        //     field.listen('onFocus', args.onFocus);
+        //     field.on('focus', args.onFocus);
         //     input.focus();
         //     // await waitFor(() => expect(args.onFocus).toHaveBeenCalled());
         // });

@@ -32,7 +32,7 @@ test('should render a required field with all configured properties and submit t
     let hasFocused = false;
     const fieldLocator = await page.locator('arpa-field');
     fieldLocator.evaluate(field => {
-        field.listen('onFocus', event => {
+        field.on('focus', event => {
             hasFocused = true;
             console.log('onFocus', event);
         });

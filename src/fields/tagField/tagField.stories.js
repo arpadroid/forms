@@ -59,7 +59,7 @@ export const Test = {
         const { field, submitButton, canvas, onErrorMock, onChangeMock, input } = setup;
         field.setFetchOptions(queryPeople);
         const onDeleteTag = fn();
-        field.listen('onDeleteTag', onDeleteTag);
+        field.on('deleteTag', onDeleteTag);
         await step('Renders tags as per field value.', async () => {
             await waitFor(() => {
                 expect(canvas.getByText('Tag field')).toBeInTheDocument();
