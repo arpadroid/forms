@@ -1,15 +1,19 @@
 form-title {
     font-weight: 450;
     font-size: 1.1rem;
-    padding: .4rem .25rem .2rem;
+    padding: 0.4rem 0.25rem 0.2rem;
     color: var(--text-color);
     display: flex;
     align-items: center;
     arpa-icon {
         font-size: 1rem;
-        margin-right: .5rem;
+        margin-right: 0.5rem;
         color: var(--grey-600);
     }
+}
+
+form-title.formTitle:empty {
+    display: none;
 }
 
 .formTitleComponent__iconRight {

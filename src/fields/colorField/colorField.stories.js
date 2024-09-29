@@ -16,7 +16,7 @@ export const Default = {
     },
     args: {
         ...FieldStory.getArgs(),
-        id: 'color-field',
+        id: 'color-field-test',
         label: 'Color Field',
         required: true
     }
@@ -27,6 +27,7 @@ export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
+        id: 'color-field',
         required: true
     },
     play: async ({ canvasElement, step }) => {
@@ -40,7 +41,7 @@ export const Test = {
 
         await step('Sets invalid value and checks for error message', async () => {
             textInput.value = 'invalid';
-            await fireEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(field.i18nText('errColor'));
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
