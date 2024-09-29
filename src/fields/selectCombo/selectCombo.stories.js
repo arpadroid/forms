@@ -41,7 +41,7 @@ export const Default = {
     args: {
         hasSearch: false,
         ...FieldStory.getArgs(),
-        id: 'select-combo',
+        id: 'select-combo-test',
         label: 'Select combo',
         required: true
     }
@@ -53,7 +53,8 @@ export const Test = {
         ...Default.args,
         value: undefined,
         options: CountryOptions,
-        debounceSearch: 1
+        debounceSearch: 1,
+        id: 'select-combo'
     },
     play: async ({ canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);

@@ -32,7 +32,7 @@ export const Test = {
     },
     play: async ({ canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
-        const { submitButton, canvas, onErrorMock, form, onSubmitMock, field } = setup;
+        const {  canvas, onErrorMock, form, onSubmitMock, field } = setup;
         const textInput = field.textInput;
         await step('sets value red to text input and checks that color input has appropriate value', async () => {
             await userEvent.type(textInput, 'red');
@@ -41,7 +41,7 @@ export const Test = {
 
         await step('Sets invalid value and checks for error message', async () => {
             textInput.value = 'invalid';
-            await userEvent.click(submitButton);
+            await fireEvent.submit(form);
             await waitFor(() => {
                 canvas.getByText(field.i18nText('errColor'));
                 canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
