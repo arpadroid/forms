@@ -4,10 +4,10 @@
  * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
  */
 import { mergeObjects, copyObjectProps, zoneMixin } from '@arpadroid/tools';
-import { ObserverTool, attr, renderNode, render, CustomElementTool, handleZones } from '@arpadroid/tools';
+import { ObserverTool, attr, renderNode, render, CustomElementTool, handleZones, hasZone } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
-const { hasProperty, getProperty, hasZone } = CustomElementTool;
+const { hasProperty, getProperty } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -34,7 +34,6 @@ class FormComponent extends HTMLFormElement {
 
     constructor(config) {
         super();
-        this._zones = [];
         zoneMixin(this);
         ObserverTool.mixin(this);
         this.setConfig(config);
@@ -91,6 +90,13 @@ class FormComponent extends HTMLFormElement {
             this.render();
         }
     }
+
+    disconnectedCallback() {
+        this._onDestroy();
+    }
+
+    _onDestroy() {}
+
 
     attributeChangedCallback() {
         this.update();
@@ -250,9 +256,11 @@ class FormComponent extends HTMLFormElement {
         this._initializeMessages();
         this.classList.add('arpaForm');
         variant && this.classList.add(`arpaForm--${variant}`);
-        handleZones(() => this._onRenderComplete());
         this.titleNode = this.querySelector('form-title');
         this.headerNode = this.querySelector('.arpaForm__header');
+        this.errorsNode = this.querySelector('.arpaForm__errors');
+        handleZones(this._zones);
+        this._onRenderComplete();
     }
 
     _onRenderComplete() {

@@ -2,7 +2,7 @@
  * @typedef {import('../../field').default} Field
  */
 
-import { mergeObjects, CustomElementTool, handleZones } from '@arpadroid/tools';
+import { mergeObjects, CustomElementTool, handleZones, zoneMixin } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
 const { getProperty, hasProperty } = CustomElementTool;
@@ -17,6 +17,7 @@ class FieldLabel extends HTMLLabelElement {
 
     constructor(config = {}) {
         super();
+        zoneMixin(this);
         this._config = mergeObjects(FieldLabel.defaultConfig, config);
     }
 
@@ -54,8 +55,15 @@ class FieldLabel extends HTMLLabelElement {
         this.labelNode = this.querySelector('.fieldLabel__text');
         this.classList.add('fieldLabel');
         this.setAttribute('zone', 'label');
-        handleZones(() => this._onRenderComplete());
+        handleZones(this._zones);
+        this._onRenderComplete();
     }
+
+    disconnectedCallback() {
+        this._onDestroy();
+    }
+
+    _onDestroy() {}
 
     _onRenderComplete() {}
 
