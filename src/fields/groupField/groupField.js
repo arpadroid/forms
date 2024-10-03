@@ -1,4 +1,4 @@
-import { mergeObjects } from '@arpadroid/tools';
+import { mergeObjects, appendNodes } from '@arpadroid/tools';
 import Field from '../field/field.js';
 
 /**
@@ -131,8 +131,7 @@ class GroupField extends Field {
     _onConnected() {
         super._onConnected();
         this.fieldsNode = this.querySelector('.groupField__fields');
-        this.fieldsNode.append(...this._fields);
-
+        appendNodes(this.fieldsNode, this._fields);
         this.details = this.querySelector('details');
         if (this.isCollapsible()) {
             this?.details.addEventListener('toggle', event => {

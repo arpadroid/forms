@@ -1,4 +1,4 @@
-import { render } from '@arpadroid/tools';
+import { render, appendNodes } from '@arpadroid/tools';
 /**
  * @typedef {import('../../field').Field} Field
  */
@@ -72,9 +72,9 @@ class FieldInputMask extends HTMLElement {
         `;
 
         this.rhsNode = this.querySelector('.fieldInputMask__rhs');
-        this.rhsNode?.append(...this.getRhsNodes());
+        appendNodes(this.rhsNode, this.getRhsNodes());
         this.lhsNode = this.querySelector('.fieldInputMask__lhs');
-        this.lhsNode?.append(...this.getLhsNodes());
+        appendNodes(this.lhsNode, this.getLhsNodes());
         this.icon = this.querySelector('.arpaField__icon');
         this.iconRight = this.querySelector('.arpaField__iconRight');
     }

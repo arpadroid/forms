@@ -1,3 +1,4 @@
+import { appendNodes } from '@arpadroid/tools';
 const html = String.raw;
 /**
  * Represents a custom element for displaying field errors.
@@ -94,7 +95,7 @@ class FieldErrors extends HTMLElement {
         if (this.errorList) {
             this.errorList.innerHTML = '';
             const errors = this.renderErrors();
-            this.errorList.append(...errors);
+            appendNodes(this.errorList, errors);
         }
     }
 }

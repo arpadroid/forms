@@ -3,7 +3,7 @@
  * @typedef {import('@arpadroid/ui/src/index').Messages} Messages
  * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
  */
-import { mergeObjects, copyObjectProps, zoneMixin } from '@arpadroid/tools';
+import { mergeObjects, copyObjectProps, zoneMixin, appendNodes } from '@arpadroid/tools';
 import { ObserverTool, attr, renderNode, render, CustomElementTool, handleZones, hasZone } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
@@ -123,7 +123,7 @@ class FormComponent extends HTMLFormElement {
     _initializeFields() {
         this.formFields = this.querySelector('.arpaForm__fields');
         if (this.formFields) {
-            this.formFields.append(...this._childNodes);
+            appendNodes(this.formFields, this._childNodes);
         }
     }
 
