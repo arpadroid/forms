@@ -194,7 +194,7 @@ class FileField extends Field {
         const { uploadListComponent: list } = this._config;
         return html`
             <${list} id="${id}-uploadList" class="fileField__uploadList"> 
-                <arpa-zone name="title">${this.getProperty('lbl-uploads')}</arpa-zone>
+                <zone name="title">${this.getProperty('lbl-uploads')}</zone>
             </${list}>
         `;
     }
@@ -203,7 +203,7 @@ class FileField extends Field {
         const { listComponent: list } = this._config;
         return html`
             <${list} id="${id}-fileList" class="fileField__fileList">
-                <arpa-zone name="title">${this.getProperty('file-list-label')}</arpa-zone>
+                <zone name="title">${this.getProperty('file-list-label')}</zone>
             </${list}>
         `;
     }
