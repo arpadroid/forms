@@ -1,7 +1,5 @@
 .checkboxField {
-    margin-top: 10px;
     position: relative;
-
     label {
         border: none;
         cursor: pointer;
