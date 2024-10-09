@@ -208,7 +208,7 @@ class OptionsField extends Field {
         }
     }
 
-    _onZonePlaced(payload) {
+    _onPlaceZone(payload) {
         payload?.zoneContainer && payload.zoneContainer === this.optionsNode && this.updateValue();
     }
 

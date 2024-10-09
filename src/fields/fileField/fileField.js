@@ -232,10 +232,10 @@ class FileField extends Field {
 
     _initializeFileList() {
         this.fileList = this.querySelector('.fileField__fileList');
-        if (this.fileList) {
+        this.fileList?.onRenderReady(() => {
             const files = this.getFileNodes();
             this.fileList.addItemNodes(files);
-        }
+        });
     }
 
     handleUploadWarning() {

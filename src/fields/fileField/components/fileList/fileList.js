@@ -8,6 +8,7 @@ class FileList extends List {
                 className: 'fileList',
                 hasResource: true,
                 itemComponent: FileItem,
+                itemTag: 'file-item',
                 mapItemId: ({ file }) => mechanize(`${file.name}-${file.size}`)
             }),
             config
