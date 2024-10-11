@@ -4,18 +4,15 @@ const html = String.raw;
  * Represents a custom element for displaying field errors.
  */
 class FieldErrors extends HTMLElement {
-    static get observedAttributes() {
-        return ['errors'];
-    }
-
     async connectedCallback() {
         this.field = this.closest('.arpaField');
         this.classList.add('fieldErrors');
         this.render();
         this.tooltip = this.querySelector('.fieldErrors__tooltip');
         await this.tooltip.promise;
-        this.errorList = this.querySelector('.fieldErrors__list');
-        this.updateErrors();
+        requestAnimationFrame(() => {
+            this.errorList = this.querySelector('.fieldErrors__list');
+        });
     }
 
     /**
@@ -90,15 +87,21 @@ class FieldErrors extends HTMLElement {
     /**
      * Updates the displayed errors.
      */
-    updateErrors() {
-        this.errorList = this.querySelector('.fieldErrors__list');
-        if (this.errorList) {
-            this.errorList.innerHTML = '';
+    async updateErrors() {
+        requestAnimationFrame(() => {
             const errors = this.renderErrors();
-            appendNodes(this.errorList, errors);
-        }
+            this.errorList = this.querySelector('.fieldErrors__list');
+            if (this.errorList) {
+                this.errorList.innerHTML = '';
+                appendNodes(this.errorList, errors);
+            }
+        });
     }
 }
+
+/**
+ * @todo - Ideally field errors can be simplified by extending ArpaElement.
+ */
 
 customElements.define('field-errors', FieldErrors);
 

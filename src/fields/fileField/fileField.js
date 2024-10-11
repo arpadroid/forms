@@ -238,7 +238,8 @@ class FileField extends Field {
         });
     }
 
-    handleUploadWarning() {
+    async handleUploadWarning() {
+        await this.promise;
         const markedForDeletion = Array.from(this.fileList.querySelectorAll('.fileItem--markedForDeletion'));
         markedForDeletion.forEach(node => node.classList.remove('fileItem--markedForDeletion'));
         if (this.hasUploadWarning()) {

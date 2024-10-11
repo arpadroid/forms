@@ -191,6 +191,7 @@ export const Test = {
         });
 
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
+            await new Promise(resolve => setTimeout(resolve, 200));
             await fireEvent.change(input, { target: { files: [TextFileMock] } });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith([TextFileMock], field, expect.anything());

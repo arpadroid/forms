@@ -1,43 +1,45 @@
 import Field from '../../field.js';
 import { attr } from '@arpadroid/tools';
 class FieldInput extends HTMLInputElement {
-
     constructor() {
         super();
         this._onFocus = this._onFocus.bind(this);
         this._onInput = this._onInput.bind(this);
+        this.classList.add('fieldInput');
     }
 
     setValue(value) {
+        this.value = value;
         this.setAttribute('value', value);
-    }
-
-    attributeChangedCallback() {
-        //abstract
     }
 
     onReady() {
         return customElements.whenDefined('arpa-field');
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         this.update();
         if (!this.field) {
             /** @type {Field} */
             this.field = this.closest('.arpaField');
         }
-        if (this.field) {
-            this.id = this.field.getHtmlId();
+        await this.field?.promise;
+        /**
+         * @todo - When the field is not found, the field is not initialized.
+         * This is failing without this check in the form component tests.
+         * Ideally the field should be initialized in the form component tests.
+         */
+        if (typeof this.field?.getHtmlId === 'function') {
+            this.id = this.field?.getHtmlId();
             this.name = this.field.getId();
+            attr(this, {
+                disabled: this.field?.isDisabled(),
+                placeholder: this.field?.getPlaceholder()
+            });
+        } else {
+            console.error('Field not found for input', this);
         }
 
-        this.classList.add('fieldInput');
-        if (this.field?.isDisabled()) {
-            this.setAttribute('disabled', '');
-        }
-        attr(this, {
-            placeholder: this.field?.getPlaceholder()
-        });
         this.initializeListeners();
     }
 
@@ -55,7 +57,6 @@ class FieldInput extends HTMLInputElement {
     _onFocus() {
         this.field?._onFocus();
     }
-
 
     update() {}
 }
