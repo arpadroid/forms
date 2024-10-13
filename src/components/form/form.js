@@ -259,7 +259,7 @@ class FormComponent extends HTMLFormElement {
         this.titleNode = this.querySelector('form-title');
         this.headerNode = this.querySelector('.arpaForm__header');
         this.errorsNode = this.querySelector('.arpaForm__errors');
-        handleZones(this._zones);
+        handleZones();
         requestAnimationFrame(() => this._onRenderComplete());
     }
 

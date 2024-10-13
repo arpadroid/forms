@@ -55,7 +55,7 @@ class FieldLabel extends HTMLLabelElement {
         this.labelNode = this.querySelector('.fieldLabel__text');
         this.classList.add('fieldLabel');
         this.setAttribute('zone', 'label');
-        handleZones(this._zones);
+        handleZones();
         this._onRenderComplete();
     }
 
