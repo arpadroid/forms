@@ -19,14 +19,11 @@ class FieldErrors extends HTMLElement {
      * Renders the content.
      */
     render() {
-        const content = html`
-            <arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="left">
-                <zone name="tooltip-content">
-                    <ul class="fieldErrors__list"></ul>
-                </zone>
-            </arpa-tooltip>
-        `;
-        this.innerHTML = content;
+        this.innerHTML = html`<arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="left">
+            <zone name="tooltip-content">
+                <ul class="fieldErrors__list"></ul>
+            </zone>
+        </arpa-tooltip>`;
     }
 
     /**
@@ -34,12 +31,7 @@ class FieldErrors extends HTMLElement {
      * @returns {HTMLElement[]} An array of error message elements.
      */
     renderErrors() {
-        const errors = this.getErrors();
-        const errorNodes = [];
-        errors?.forEach(error => {
-            errorNodes.push(this.renderError(error));
-        });
-        return errorNodes;
+        return this.getErrors().map(error => this.renderError(error));
     }
 
     /**
