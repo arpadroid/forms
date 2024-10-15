@@ -34,7 +34,7 @@ class FileField extends Field {
             listComponent: 'file-list',
             uploadListComponent: 'file-list',
             fileComponent: 'file-item',
-            lblUploads: this.i18n('lblUploads', {}, 'common.labels'),
+            lblUploads: this.i18n('lblUploads', {}, {}, 'common.labels'),
             fileListLabel: this.i18n('lblUploadedFiles'),
             lblAddFile: this.i18n('lblAddFile'),
             hasDropArea: false,

@@ -48,8 +48,8 @@ class FormComponent extends HTMLFormElement {
         });
     }
 
-    i18n(key, replacements) {
-        return I18nTool.arpaElementI18n(this, key, replacements, 'modules.form.formComponent');
+    i18n(key, replacements, attributes) {
+        return I18nTool.arpaElementI18n(this, key, replacements, attributes, 'modules.form.formComponent');
     }
 
     /**
@@ -96,7 +96,6 @@ class FormComponent extends HTMLFormElement {
     }
 
     _onDestroy() {}
-
 
     attributeChangedCallback() {
         this.update();
