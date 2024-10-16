@@ -227,7 +227,7 @@ export const Test = {
         }
         const input = typeof field?.getInput === 'function' && field?.getInput();
         await field.promise;
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise(resolve => setTimeout(resolve, 100));
         return { canvas, field, form, submitButton, onSubmitMock, onErrorMock, onChangeMock, input };
     },
     play: async ({ canvasElement, step, args }) => {

@@ -15,21 +15,12 @@ class SelectCombo extends SelectField {
     // #region INITIALIZATION
     //////////////////////////
 
-    _bindMethods() {
-        super._bindMethods();
-        this.onLabelClick = this.onLabelClick.bind(this);
-        this.onSearch = this.onSearch.bind(this);
-        this.onOpenCombo = this.onOpenCombo.bind(this);
-        this.onCloseCombo = this.onCloseCombo.bind(this);
-        this.onSearchInputFocus = this.onSearchInputFocus.bind(this);
-        this.onSearchInputBlur = this.onSearchInputBlur.bind(this);
-    }
-
     /**
      * Returns the default configuration for the select combo field.
      * @returns {SelectComboInterface} The default configuration object.
      */
     getDefaultConfig() {
+        this.bind('onLabelClick', 'onSearch', 'onOpenCombo', 'onCloseCombo', 'onSearchInputFocus', 'onSearchInputBlur');
         return mergeObjects(super.getDefaultConfig(), {
             hasSearch: false,
             debounceSearch: 500,
@@ -224,7 +215,9 @@ class SelectCombo extends SelectField {
         const inputAttributes = attrString({ placeholder });
         return this.hasSearch()
             ? html`<input id="${this.getHtmlId()}" type="text" class="optionsField__searchInput fieldInput" ${inputAttributes} />`
-            : html`<button id="${this.getHtmlId()}" type="button" class="optionsField__input fieldInput">${this.getPlaceholder()}</button>`;
+            : html`<button id="${this.getHtmlId()}" type="button" class="optionsField__input fieldInput">
+                  ${this.getPlaceholder()}
+              </button>`;
     }
 
     renderOptions(options) {

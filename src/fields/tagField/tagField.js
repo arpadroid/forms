@@ -12,17 +12,12 @@ class TagField extends SelectCombo {
     // #region INITIALIZATION
     /////////////////////////
 
-    _bindMethods() {
-        super._bindMethods();
-        this._onDeleteTag = this._onDeleteTag.bind(this);
-        this._onSearchInputKeyDown = this._onSearchInputKeyDown.bind(this);
-    }
-
     /**
      * Returns default config for select field.
      * @returns {*}
      */
     getDefaultConfig() {
+        this.bind('_onDeleteTag', '_onSearchInputKeyDown');
         return mergeObjects(super.getDefaultConfig(), {
             hasSearch: true,
             classNames: ['selectComboField', 'tagField'],

@@ -3,16 +3,12 @@ import { attr } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 const html = String.raw;
 class TextAreaField extends TextField {
-
-    _bindMethods() {
-        super._bindMethods();
-        this._onInput = this._onInput.bind(this);
-    }
     /**
      * Returns the default configuration for the text area field.
      * @returns {TextAreaInterface} The default configuration.
      */
     getDefaultConfig() {
+        this.bind('_onInput');
         return {
             ...super.getDefaultConfig(),
             rows: 6,

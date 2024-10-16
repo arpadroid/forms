@@ -6,13 +6,8 @@ class ColorField extends Field {
     /** @type {string[]} _validations - The validation method signatures for the color field.*/
     _validations = [...super.getValidations(), 'color'];
 
-    _bindMethods() {
-        super._bindMethods();
-        this.updateColorInput = this.updateColorInput.bind(this);
-        this.onInput = this.onInput.bind(this);
-    }
-
     getDefaultConfig() {
+        this.bind('updateColorInput', 'onInput');
         return mergeObjects(super.getDefaultConfig(), {
             icon: 'color_lens',
             inputTemplate: html`

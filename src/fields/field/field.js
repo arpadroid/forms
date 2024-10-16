@@ -19,16 +19,13 @@ class Field extends ArpaElement {
     // #region INITIALIZATION
     //////////////////////////
 
-    _bindMethods() {
-        this._callOnChange = this._callOnChange.bind(this);
-    }
-
     /**
      * Initializes the field after constructor.
      * @throws {Error} If the field does not have an id.
      * @protected
      */
     async _initialize() {
+        this.bind('_callOnChange');
         ObserverTool.mixin(this);
         const id = this.getId();
         if (!id) {
@@ -92,8 +89,8 @@ class Field extends ArpaElement {
         return super.i18nText(key, replacements) || super.i18nText(key, replacements, base);
     }
 
-    i18n(key, replacements, base = this.i18nFieldKey) {
-        return super.i18n(key, replacements) || super.i18n(key, replacements, base);
+    i18n(key, replacements, attributes, base = this.i18nFieldKey) {
+        return super.i18n(key, replacements) || super.i18n(key, replacements, attributes, base);
     }
 
     /**

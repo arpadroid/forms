@@ -1,18 +1,16 @@
 import { appendNodes } from '@arpadroid/tools';
+import { ArpaElement } from '@arpadroid/ui';
 const html = String.raw;
 /**
  * Represents a custom element for displaying field errors.
  */
-class FieldErrors extends HTMLElement {
-    async connectedCallback() {
+class FieldErrors extends ArpaElement {
+    _initialize() {
         this.field = this.closest('.arpaField');
+    }
+
+    _onConnected() {
         this.classList.add('fieldErrors');
-        this.render();
-        this.tooltip = this.querySelector('.fieldErrors__tooltip');
-        await this.tooltip.promise;
-        requestAnimationFrame(() => {
-            this.errorList = this.querySelector('.fieldErrors__list');
-        });
     }
 
     /**
@@ -24,6 +22,11 @@ class FieldErrors extends HTMLElement {
                 <ul class="fieldErrors__list"></ul>
             </zone>
         </arpa-tooltip>`;
+    }
+
+    _initializeNodes() {
+        this.tooltip = this.querySelector('.fieldErrors__tooltip');
+        this.errorList = this.querySelector('.fieldErrors__list');
     }
 
     /**
