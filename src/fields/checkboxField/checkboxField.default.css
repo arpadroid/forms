@@ -1,7 +1,7 @@
 .checkboxField {
     position: relative;
+    max-height: var(--input-height);
     label {
-        border: none;
         cursor: pointer;
         flex: 0;
         padding-bottom: 0;
@@ -10,9 +10,7 @@
         &:hover,
         &:focus,
         &:has(input:checked) {
-            border: none;
             background-color: var(--primary-hilight);
-
             .arpaField__icon {
                 color: var(--color-primary);
             }
@@ -38,9 +36,10 @@
         margin-right: 12px;
     }
 
-    .fieldLabel__text {
+    .fieldLabel__text.fieldLabel__text {
         flex: 1 1 auto;
-
+        margin: 0;
+        padding-bottom: 0;
         font-weight: var(--field-option-weight);
         font-size: var(--field-option-size);
     }

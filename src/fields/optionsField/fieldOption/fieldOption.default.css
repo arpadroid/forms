@@ -1,6 +1,6 @@
 :root {
     --field-option-font: var(--primary-font);
-    --field-option-size: 0.9rem;
+    --field-option-size: 1rem;
     --field-option-height: var(--input-height);
     --field-option-gap: 0.75rem;
     --field-option-weight: 400;
