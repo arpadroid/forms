@@ -58,6 +58,7 @@ class SelectOption extends FieldOption {
     _onSelected(event) {
         this.field.setValue(this.getAttribute('value'));
         this.field._callOnChange(event);
+        this.field?.inputCombo?.close();
     }
 }
 
