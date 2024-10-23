@@ -1,4 +1,4 @@
-import { mechanize } from '@arpadroid/tools';
+import { mechanize, appendNodes } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 
 /**
@@ -11,12 +11,6 @@ const html = String.raw;
  * Represents a field option element.
  */
 class FieldOption extends ArpaElement {
-    /**
-     * The observed attributes for the field option element.
-     * @type {string[]}
-     */
-    static observedAttributes = ['icon', 'icon-left', 'label', 'sub-title', 'value'];
-
     /**
      * Returns the default configuration for the field option element.
      * @returns {FieldOptionInterface} The default configuration.
@@ -40,7 +34,6 @@ class FieldOption extends ArpaElement {
         <arpa-icon class="fieldOption__iconRight">{iconLeft}</arpa-icon>
         {input}
         <div class="fieldOption__content">
-            {content}
             <span class="fieldOption__label">{label}</span>
             {subTitle}
         </div>
@@ -64,9 +57,7 @@ class FieldOption extends ArpaElement {
         /** @type {Field} */
         const field = this.getField();
         field && (this.field = field);
-        if (!field) {
-            return;
-        }
+        if (!field) return;
         if (this.tagName.toLowerCase() === 'option') {
             this.removeAttribute('role');
         } else {
@@ -76,6 +67,15 @@ class FieldOption extends ArpaElement {
         super.render();
         this.classList.add(this._config.className);
         this._onConnected();
+    }
+
+    _initializeNodes() {
+        this.handlerNode = this.querySelector('.fieldOption__handler');
+        this.contentNode = this.querySelector('.fieldOption__content');
+        appendNodes(
+            this.contentNode,
+            this._childNodes?.filter(node => node?.tagName?.toLowerCase() !== 'arpa-dialog')
+        );
     }
 
     getField() {
