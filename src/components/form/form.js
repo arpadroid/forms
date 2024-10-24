@@ -7,7 +7,7 @@ import { mergeObjects, copyObjectProps, zoneMixin, appendNodes } from '@arpadroi
 import { ObserverTool, attr, renderNode, render, CustomElementTool, handleZones, hasZone } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
-const { hasProperty, getProperty } = CustomElementTool;
+const { hasProperty, getProperty, onDestroy } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -95,7 +95,9 @@ class FormComponent extends HTMLFormElement {
         this._onDestroy();
     }
 
-    _onDestroy() {}
+    _onDestroy() {
+        onDestroy(this);
+    }
 
     attributeChangedCallback() {
         this.update();
