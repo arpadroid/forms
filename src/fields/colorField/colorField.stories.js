@@ -44,7 +44,7 @@ export const Test = {
             await fireEvent.submit(form);
             await waitFor(() => {
                 canvas.getByText(field.i18nText('errColor'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
             });
             expect(onErrorMock).toHaveBeenCalledOnce();
         });
@@ -55,7 +55,7 @@ export const Test = {
             await fireEvent.submit(form);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'color-field': '#0000ff' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

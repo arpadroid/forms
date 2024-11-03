@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "email": {
+            "errRegex": "Please provide a valid email address",
+            "errEmailMatch": "The email addresses do not match",
+            "lblConfirmEmail": "Confirm Email"
+        }
+    }
+}

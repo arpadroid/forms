@@ -110,8 +110,8 @@ const FormStory = {
             id: 'demo-form',
             title: 'Demo Form',
             debounce: 1000,
-            successMessage: I18n.getText('modules.form.formComponent.msgSuccess'),
-            errorMessage: I18n.getText('modules.form.formComponent.msgError'),
+            successMessage: I18n.getText('forms.form.msgSuccess'),
+            errorMessage: I18n.getText('forms.form.msgError'),
             variant: undefined
         };
     },

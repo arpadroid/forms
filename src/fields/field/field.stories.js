@@ -245,8 +245,8 @@ export const Test = {
         await step('Submits form with empty required field and shows field and form error messages.', async () => {
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.field.errRequired'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onSubmitMock).not.toHaveBeenCalled();
                 expect(onErrorMock).toHaveBeenCalled();
             });
@@ -258,8 +258,8 @@ export const Test = {
                 input.value = 'a';
                 submitButton.click();
                 await waitFor(() => {
-                    canvas.getByText(I18n.getText('modules.form.field.errMinLength', { minLength: args.minLength }));
-                    canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                    canvas.getByText(I18n.getText('forms.field.errMinLength', { minLength: args.minLength }));
+                    canvas.getByText(I18n.getText('forms.form.msgError'));
                     expect(onSubmitMock).not.toHaveBeenCalled();
                     expect(onErrorMock).toHaveBeenCalled();
                 });
@@ -272,8 +272,8 @@ export const Test = {
                 input.value = '12345678901';
                 submitButton.click();
                 await waitFor(() => {
-                    canvas.getByText(I18n.getText('modules.form.field.errMaxLength', { maxLength: args.maxLength }));
-                    canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                    canvas.getByText(I18n.getText('forms.field.errMaxLength', { maxLength: args.maxLength }));
+                    canvas.getByText(I18n.getText('forms.form.msgError'));
                     expect(onSubmitMock).not.toHaveBeenCalled();
                     expect(onErrorMock).toHaveBeenCalled();
                 });
@@ -295,7 +295,7 @@ export const Test = {
         await step('Submits form with valid field value.', async () => {
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'test-field': 'test value' });
             });
         });

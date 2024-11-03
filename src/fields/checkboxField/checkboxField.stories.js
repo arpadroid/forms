@@ -45,8 +45,8 @@ export const Test = {
             await waitFor(() => {
                 expect(onSubmitMock).not.toHaveBeenCalled();
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
-                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.field.errRequired'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
             });
         });
 
@@ -63,7 +63,7 @@ export const Test = {
             submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'checkbox-field': true });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

@@ -70,7 +70,7 @@ export const Test = {
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeInTheDocument();
                 expect(errorContainer.textContent).toBe(
-                    I18n.getText('modules.form.fields.image.errExtensions', {
+                    I18n.getText('forms.fields.image.errExtensions', {
                         extensions: 'jpg, png, gif, jpeg, svg',
                         file: TextFileSmall.name
                     })
@@ -94,7 +94,7 @@ export const Test = {
             fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'image-field-test': galaxyImage });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
                 expect(items).toHaveLength(1);
             });
@@ -126,7 +126,7 @@ export const Test = {
 
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'image-field-test': [planeImage, flowerImage] });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
                 expect(items).toHaveLength(3);
             });

@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "url": {
+            "errUrl": "Please provide a valid URL."
+        }
+    }
+}

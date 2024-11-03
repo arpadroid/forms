@@ -39,8 +39,8 @@ export const Test = {
         await step('Submits empty required field and checks for error message', async () => {
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.field.errRequired'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
@@ -56,7 +56,7 @@ export const Test = {
             await fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'textarea-field': 'some text' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

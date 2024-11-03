@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "tel": {
+            "errRegex": "Please provide a valid phone number"
+        }
+    }
+}

@@ -43,7 +43,7 @@ export const Test = {
             await fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'search-field': 'some query' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

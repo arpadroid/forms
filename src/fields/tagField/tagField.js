@@ -21,7 +21,7 @@ class TagField extends SelectCombo {
         return mergeObjects(super.getDefaultConfig(), {
             hasSearch: true,
             classNames: ['selectComboField', 'tagField'],
-            placeholder: I18n.getText('modules.form.fields.tag.lblSearchTags'),
+            placeholder: I18n.getText('forms.fields.tag.lblSearchTags'),
             allowTextInput: false,
             optionComponent: 'tag-option',
             icon: 'label',

@@ -63,7 +63,7 @@ class DateField extends Field {
     }
 
     getI18nKey() {
-        return 'modules.form.fields.date';
+        return 'forms.fields.date';
     }
 
     setValue(value, update = true) {

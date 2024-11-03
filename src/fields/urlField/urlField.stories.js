@@ -32,8 +32,8 @@ export const Test = {
             input.value = 'some value';
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.fields.url.errUrl'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.fields.url.errUrl'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
             });
         });
@@ -43,7 +43,7 @@ export const Test = {
             submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'url-field': 'https://www.example.com' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

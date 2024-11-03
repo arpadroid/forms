@@ -72,11 +72,11 @@ export const Test = {
         await step('Submits form with invalid password and empty confirm value and receives expected message.', async () => {
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
                 expect(onSubmitMock).not.toHaveBeenCalled();
-                expect(canvas.getByText(I18n.getText('modules.form.fields.password.errRegex'))).toBeInTheDocument();
-                expect(canvas.getByText(I18n.getText('modules.form.field.errRequired'))).toBeInTheDocument();
+                expect(canvas.getByText(I18n.getText('forms.fields.password.errRegex'))).toBeInTheDocument();
+                expect(canvas.getByText(I18n.getText('forms.field.errRequired'))).toBeInTheDocument();
             });
         });
 
@@ -85,10 +85,10 @@ export const Test = {
             field.confirmField.input.value = 'P455w0rd?!!?';
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
                 expect(onSubmitMock).not.toHaveBeenCalled();
-                expect(canvas.getByText(I18n.getText('modules.form.fields.password.errPasswordMatch'))).toBeInTheDocument();
+                expect(canvas.getByText(I18n.getText('forms.fields.password.errPasswordMatch'))).toBeInTheDocument();
             });
         });
 
@@ -99,7 +99,7 @@ export const Test = {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
                     'password-field': 'P455w0rd??'
                 });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
 
@@ -117,7 +117,7 @@ export const Test = {
                     expect(onSubmitMock).toHaveBeenLastCalledWith({
                         'password-field': 'pass'
                     });
-                    canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                    canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 });
             }
         );

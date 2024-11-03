@@ -6,7 +6,7 @@ class WeekField extends TextField {
     _validations = [...super.getValidations(), 'week'];
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            pickerLabel: I18n.getText('modules.form.fields.week.lblShowPicker'),
+            pickerLabel: I18n.getText('forms.fields.week.lblShowPicker'),
             inputAttributes: { type: 'week' }
         });
     }
@@ -38,7 +38,7 @@ class WeekField extends TextField {
     validateWeek(value) {
         const isValid = !value?.length || value.match(/^\d{4}-W\d{2}$/);
         if (!isValid) {
-            this.setError(I18n.getText('modules.form.fields.week.errWeek'));
+            this.setError(I18n.getText('forms.fields.week.errWeek'));
         }
         return isValid;
     }

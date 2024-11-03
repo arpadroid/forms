@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "time": {
+            "errMin": "Please provide a time equal or after {min}",
+            "errMax": "Please provide a time equal or before {max}",
+            "lblShowPicker": "Show time picker"
+        }
+    }
+}

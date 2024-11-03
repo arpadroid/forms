@@ -79,13 +79,13 @@ export const Test = {
             submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '1 Oct 1983' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
             field.setValue(new Date('17 July 1984'));
             submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '17 Jul 1984' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
 
@@ -96,8 +96,8 @@ export const Test = {
                 field.setValue('31 Feb 1900');
                 submitButton.click();
                 await waitFor(() => {
-                    canvas.getByText(I18n.getText('modules.form.fields.date.errPastDisabled'));
-                    canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                    canvas.getByText(I18n.getText('forms.fields.date.errPastDisabled'));
+                    canvas.getByText(I18n.getText('forms.form.msgError'));
                     expect(onErrorMock).toHaveBeenCalled();
                 });
 
@@ -105,8 +105,8 @@ export const Test = {
                 field.setValue('1 Jan 3000');
                 submitButton.click();
                 await waitFor(() => {
-                    canvas.getByText(I18n.getText('modules.form.fields.date.errFutureDisabled'));
-                    canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                    canvas.getByText(I18n.getText('forms.fields.date.errFutureDisabled'));
+                    canvas.getByText(I18n.getText('forms.form.msgError'));
                     expect(onErrorMock).toHaveBeenCalled();
                 });
             }
@@ -120,16 +120,16 @@ export const Test = {
             field.setValue('1 Jan 1999');
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.fields.date.errMinDate', { date: '1 Jan 2000' }));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.fields.date.errMinDate', { date: '1 Jan 2000' }));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
 
             field.setValue('31 Dec 2021');
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.fields.date.errMaxDate', { date: '31 Dec 2020' }));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.fields.date.errMaxDate', { date: '31 Dec 2020' }));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
@@ -139,7 +139,7 @@ export const Test = {
             submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '30 Dec 2020' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

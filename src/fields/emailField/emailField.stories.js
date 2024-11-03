@@ -39,8 +39,8 @@ export const Test = {
 
         await step('Checks for error message.', async () => {
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.fields.email.errRegex'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.fields.email.errRegex'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
             });
         });
@@ -51,8 +51,8 @@ export const Test = {
                 input.value = 'some@value';
                 submitButton.click();
                 await waitFor(() => {
-                    canvas.getByText(I18n.getText('modules.form.fields.email.errRegex'));
-                    canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                    canvas.getByText(I18n.getText('forms.fields.email.errRegex'));
+                    canvas.getByText(I18n.getText('forms.form.msgError'));
                     expect(onErrorMock).toHaveBeenCalledTimes(2);
                 });
             }
@@ -63,7 +63,7 @@ export const Test = {
             submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'email-field': 'email@somewhere.com' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

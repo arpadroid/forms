@@ -151,7 +151,7 @@ export const Test = {
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeInTheDocument();
                 expect(errorContainer.textContent).toBe(
-                    I18n.getText('modules.form.fields.file.errExtensions', {
+                    I18n.getText('forms.fields.file.errExtensions', {
                         extensions: 'txt, docx, pdf',
                         file: 'test.jpg'
                     })
@@ -166,7 +166,7 @@ export const Test = {
                 expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeInTheDocument();
-                const errorText = I18n.getText('modules.form.fields.file.errMinSize', {
+                const errorText = I18n.getText('forms.fields.file.errMinSize', {
                     minSize: formatBytes('0.0001'),
                     size: formatBytes(TextFileSmall.size),
                     file: TextFileSmall.name
@@ -181,7 +181,7 @@ export const Test = {
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeInTheDocument();
                 expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
-                const errorText = I18n.getText('modules.form.fields.file.errMaxSize', {
+                const errorText = I18n.getText('forms.fields.file.errMaxSize', {
                     maxSize: formatBytes('0.0002'),
                     size: formatBytes(TextFileLarge.size),
                     file: 'large text file.txt'
@@ -219,7 +219,7 @@ export const Test = {
             await fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'file-field': TextFileMock });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
 
@@ -251,14 +251,14 @@ export const Test = {
             await fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'file-field': [TextFileMock2, TextFileMock3] });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
                 expect(items).toHaveLength(3);
             });
         });
 
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
-            const deleteButtons = canvas.getAllByRole('button', { name: I18n.getText('modules.form.fields.file.lblRemoveFile') });
+            const deleteButtons = canvas.getAllByRole('button', { name: I18n.getText('forms.fields.file.lblRemoveFile') });
             await userEvent.click(deleteButtons[0]);
             await waitFor(() => {
                 expect(onDelete).toHaveBeenLastCalledWith(deleteButtons[0].closest('file-item'));

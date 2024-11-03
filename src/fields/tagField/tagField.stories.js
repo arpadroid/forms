@@ -86,16 +86,16 @@ export const Test = {
                 expect(field.getValue()).toEqual([]);
             });
             await waitFor(() => {
-                expect(input).toHaveAttribute('placeholder', I18n.getText('modules.form.fields.tag.lblSearchTags'));
+                expect(input).toHaveAttribute('placeholder', I18n.getText('forms.fields.tag.lblSearchTags'));
             });
         });
 
         await step('Submits the form and receives required error.', async () => {
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
-                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
+                canvas.getByText(I18n.getText('forms.field.errRequired'));
             });
         });
 
@@ -118,7 +118,7 @@ export const Test = {
             });
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                expect(canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'))).toBeVisible();
+                expect(canvas.getByText(I18n.getText('forms.form.msgSuccess'))).toBeVisible();
                 /** @todo Fix flaky test. */
                 // expect(onSubmitMock).toHaveBeenCalledWith({ 'tag-field': ['NE-AU'] });
             });

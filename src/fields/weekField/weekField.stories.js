@@ -40,7 +40,7 @@ export const Test = {
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
                 expect(onSubmitMock).not.toHaveBeenCalled();
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
             });
         });
 
@@ -48,7 +48,7 @@ export const Test = {
             input.value = '2021-W02';
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
                     'week-field': '2021-W02'
                 });

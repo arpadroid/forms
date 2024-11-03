@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "number": {
+            "errNumber": "Please provide a valid number.",
+            "errMin": "Please provide a value greater than or equal to {min}",
+            "errMax": "Please provide a value less than or equal to {max}",
+            "errRange": "Please provide a value between {min} and {max}",
+            "errStep": "Please provide a multiple of {step}"
+        }
+    }
+}

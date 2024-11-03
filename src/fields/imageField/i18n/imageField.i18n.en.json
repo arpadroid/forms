@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "image": {
+            "lblAddFile": "Add Image",
+            "lblUploadedFiles": "Uploaded images",
+            "msgFileOverwriteWarning": "The original image will be overwritten. Please save your changes to upload the new image",
+            "errExtensions": "The image file {file} is invalid, allowed file types are: {extensions}"
+        }
+    }
+}

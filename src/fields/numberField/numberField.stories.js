@@ -59,8 +59,8 @@ export const Test = {
 
         await step('Checks for error message.', async () => {
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.field.errRequired'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
@@ -69,8 +69,8 @@ export const Test = {
             input.value = 'valid';
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.fields.number.errNumber'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.fields.number.errNumber'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
@@ -79,8 +79,8 @@ export const Test = {
             input.value = '5';
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.fields.number.errMin', { min: 10 }));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.fields.number.errMin', { min: 10 }));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
@@ -89,8 +89,8 @@ export const Test = {
             input.value = '25';
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.fields.number.errMax', { max: 20 }));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.fields.number.errMax', { max: 20 }));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
@@ -99,8 +99,8 @@ export const Test = {
             input.value = '13';
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.fields.number.errStep', { step: 2 }));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.fields.number.errStep', { step: 2 }));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
@@ -110,7 +110,7 @@ export const Test = {
             await fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'number-field': 20 });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

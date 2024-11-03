@@ -6,7 +6,7 @@ class EmailField extends TextField {
         return {
             ...super.getDefaultConfig(),
             regex: 'email',
-            regexMessage: I18n.getText('modules.form.fields.email.errRegex'),
+            regexMessage: I18n.getText('forms.fields.email.errRegex'),
             icon: 'email',
             inputAttributes: {
                 type: 'email',

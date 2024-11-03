@@ -7,12 +7,12 @@ class TimeField extends TextField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             inputAttributes: { type: 'time' },
-            pickerLabel: I18n.getText('modules.form.fields.time.lblShowPicker')
+            pickerLabel: I18n.getText('forms.fields.time.lblShowPicker')
         });
     }
 
     getI18nKey() {
-        return 'modules.form.fields.time';
+        return 'forms.fields.time';
     }
 
     getFieldType() {

@@ -78,10 +78,10 @@ class Field extends ArpaElement {
      */
     _getI18n() {
         const type = this.getFieldType();
-        this.i18nKey = `modules.form.fields.${type}`;
-        this.i18nFieldKey = 'modules.form.field';
-        const typePayload = I18n.get(`modules.form.fields.${type}`);
-        const fieldPayload = I18n.get('modules.form.field');
+        this.i18nKey = `forms.fields.${type}`;
+        this.i18nFieldKey = 'forms.field';
+        const typePayload = I18n.get(this.i18nKey);
+        const fieldPayload = I18n.get(this.i18nFieldKey);
         return mergeObjects(fieldPayload, typePayload);
     }
 

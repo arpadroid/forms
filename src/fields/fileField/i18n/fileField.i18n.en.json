@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "file": {
+            "errExtensions": "The file {file} is invalid, allowed file types are: {extensions}",
+            "errMaxSize": "The file size for {file} ({size}) exceeds the maximum upload size of {maxSize}",
+            "errMinSize": "The file size for {file} ({size}) needs to be at least {minSize}",
+            "lblAddFile": "Add file",
+            "lblRemoveUpload": "Remove upload",
+            "lblUploadedFiles": "Uploaded files",
+            "msgFileOverwriteWarning": "The original file will be overwritten if you save your changes, are you sure?",
+            "lblRemoveFile": "Remove file"
+        }
+    }
+}

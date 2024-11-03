@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "date": {
+            "errPastDisabled": "Past dates are not allowed.",
+            "errFutureDisabled": "Future dates are not allowed.",
+            "errMinDate": "Date must be after {date}",
+            "errMaxDate": "Date must be before {date}",
+            "txtShowPicker": "Show picker"
+        }
+    }
+}

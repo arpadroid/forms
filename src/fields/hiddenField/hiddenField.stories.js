@@ -29,7 +29,7 @@ export const Test = {
             await fireEvent.click(submitButton);    
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'hidden-field': 'hidden value' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

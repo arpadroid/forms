@@ -89,7 +89,7 @@ class FileField extends Field {
     }
 
     getI18nKey() {
-        return 'modules.form.fields.file';
+        return 'forms.fields.file';
     }
 
     getUploadListLabel() {

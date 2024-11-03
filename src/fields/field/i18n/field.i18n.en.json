@@ -1,0 +1,22 @@
+{
+    "field": {
+        "errRequired": "This field is required.",
+        "errEmail": "Please provide a valid email address.",
+        "errMin": "Please provide a value greater than or equal to {0}.",
+        "errMax": "Please provide a value less than or equal to {0}.",
+        "errMinLength": "Please provide at least {minLength} characters.",
+        "errMaxLength": "Please provide no more than {maxLength} characters.",
+        "errPattern": "Please provide a value matching the pattern {0}.",
+        "errUnique": "This value is already taken.",
+        "errUrl": "Please provide a valid URL.",
+        "errNumber": "Please provide a number.",
+        "errDigits": "Please provide only digits.",
+        "errEqualTo": "Please provide the same value again.",
+        "errSize": "Please provide a value between {minLength} and {maxLength} characters long.",
+        "errRange": "Please provide a value between {0} and {1}.",
+        "errStep": "Please provide a multiple of {0}.",
+        "errLength": "Please provide {length} characters.",
+        "errColor": "Please provide a valid color.",
+        "lblPleaseSelect": "Please select"
+    }
+}

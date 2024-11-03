@@ -7,7 +7,7 @@ class TelField extends TextField {
         return mergeObjects(super.getDefaultConfig(), {
             icon: 'phone',
             regex: 'telephone',
-            regexMessage: I18n.getText('modules.form.fields.tel.errRegex'),
+            regexMessage: I18n.getText('forms.fields.tel.errRegex'),
             inputAttributes: {
                 type: 'text'
             }

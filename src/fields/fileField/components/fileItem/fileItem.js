@@ -36,7 +36,7 @@ class FileItem extends ListItem {
             hasIcon: true,
             onDelete: true,
             onEdit: false,
-            lblRemoveFile: I18n.getText('modules.form.fields.file.lblRemoveFile')
+            lblRemoveFile: I18n.getText('forms.fields.file.lblRemoveFile')
         });
     }
 

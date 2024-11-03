@@ -42,7 +42,7 @@ class NumberField extends Field {
     }
 
     getI18nKey() {
-        return 'modules.form.fields.number';
+        return 'forms.fields.number';
     }
 
     /**
@@ -65,27 +65,27 @@ class NumberField extends Field {
             return true;
         }
         if (!validateNumber(value)) {
-            this.validator.setError(html`<i18n-text key="modules.form.fields.number.errNumber"></i18n-text>`);
+            this.validator.setError(html`<i18n-text key="forms.fields.number.errNumber"></i18n-text>`);
             return false;
         }
         const min = this.getProperty('min');
         if (min && value < min) {
             this.validator.setError(
-                html`<i18n-text key="modules.form.fields.number.errMin" replacements="min::${min}"></i18n-text>`
+                html`<i18n-text key="forms.fields.number.errMin" replacements="min::${min}"></i18n-text>`
             );
             return false;
         }
         const max = this.getProperty('max');
         if (max && value > max) {
             this.validator.setError(
-                html`<i18n-text key="modules.form.fields.number.errMax" replacements="max::${max}"></i18n-text>`
+                html`<i18n-text key="forms.fields.number.errMax" replacements="max::${max}"></i18n-text>`
             );
             return false;
         }
         const step = this.getProperty('step');
         if (step && value % step !== 0) {
             this.validator.setError(
-                html`<i18n-text key="modules.form.fields.number.errStep" replacements="step::${step}"></i18n-text>`
+                html`<i18n-text key="forms.fields.number.errStep" replacements="step::${step}"></i18n-text>`
             );
             return false;
         }

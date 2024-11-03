@@ -49,7 +49,7 @@ class FormComponent extends HTMLFormElement {
     }
 
     i18n(key, replacements, attributes) {
-        return I18nTool.arpaElementI18n(this, key, replacements, attributes, 'modules.form.formComponent');
+        return I18nTool.arpaElementI18n(this, key, replacements, attributes, 'forms.form');
     }
 
     /**

@@ -47,7 +47,7 @@ export const Test = {
     play: async ({ canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { input, submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-        const msgErrorKey = 'modules.form.formComponent.msgError';
+        const msgErrorKey = 'forms.form.msgError';
         await step('Renders the field with value "10:15".', () => {
             expect(canvas.getByText('Time Field')).toBeTruthy();
             expect(input.value).toBe('10:15');
@@ -68,7 +68,7 @@ export const Test = {
             fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).not.toHaveBeenCalled();
-                expect(canvas.getByText(I18n.getText('modules.form.fields.time.errMin', { min: '12:01' }))).toBeTruthy();
+                expect(canvas.getByText(I18n.getText('forms.fields.time.errMin', { min: '12:01' }))).toBeTruthy();
                 expect(canvas.getByText(I18n.getText(msgErrorKey))).toBeTruthy();
             });
         });
@@ -78,7 +78,7 @@ export const Test = {
             fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).not.toHaveBeenCalled();
-                expect(canvas.getByText(I18n.getText('modules.form.fields.time.errMax', { max: '20:00' }))).toBeTruthy();
+                expect(canvas.getByText(I18n.getText('forms.fields.time.errMax', { max: '20:00' }))).toBeTruthy();
                 expect(canvas.getByText(I18n.getText(msgErrorKey))).toBeTruthy();
             });
         });
@@ -88,7 +88,7 @@ export const Test = {
             fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'time-field': '20:00' });
-                expect(canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'))).toBeTruthy();
+                expect(canvas.getByText(I18n.getText('forms.form.msgSuccess'))).toBeTruthy();
             });
         });
     }

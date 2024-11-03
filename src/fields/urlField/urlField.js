@@ -18,7 +18,7 @@ class UrlField extends TextField {
     }
 
     getI18nKey() {
-        return 'modules.form.fields.url';
+        return 'forms.fields.url';
     }
 
     validateUrl(value) {

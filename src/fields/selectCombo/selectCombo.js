@@ -25,7 +25,7 @@ class SelectCombo extends SelectField {
             hasSearch: false,
             debounceSearch: 500,
             searchItemContentSelector: '.fieldOption__label, .fieldOption__subTitle',
-            placeholder: I18n.getText('modules.form.fields.selectCombo.lblNoSelection'),
+            placeholder: I18n.getText('forms.fields.selectCombo.lblNoSelection'),
             optionsPosition: 'bottom-left',
             inputTemplate: html`
                 {input}

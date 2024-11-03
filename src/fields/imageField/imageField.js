@@ -27,7 +27,7 @@ class ImageField extends FileField {
     }
 
     getI18nKey() {
-        return 'modules.form.fields.image';
+        return 'forms.fields.image';
     }
 
     _getI18n() {

@@ -72,8 +72,8 @@ export const Test = {
             submitButton.click();
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
-                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
+                canvas.getByText(I18n.getText('forms.field.errRequired'));
             });
         });
 
@@ -88,7 +88,7 @@ export const Test = {
             });
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 /** @todo Fix flaky test. */
                 // expect(onSubmitMock).toHaveBeenLastCalledWith({ 'select-combo': 'es' });
             });

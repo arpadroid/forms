@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "tag": {
+            "txtNoTagsSelected": "No tags selected",
+            "lblSearchTags": "Search tags"
+        }
+    }
+}

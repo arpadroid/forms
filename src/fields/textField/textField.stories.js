@@ -50,7 +50,7 @@ export const Test = {
         await step('Checks for error message.', async () => {
             await waitFor(() => {
                 canvas.getByText('Only lowercase letters and numbers are allowed.');
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
             });
         });
@@ -60,7 +60,7 @@ export const Test = {
             await fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'text-field': 'valid' });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
     }

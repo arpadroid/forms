@@ -85,8 +85,8 @@ export const Test = {
         await step('Submits form with invalid empty value and checks for error messages.', async () => {
             submitButton.click();
             await waitFor(() => {
-                canvas.getByText(I18n.getText('modules.form.field.errRequired'));
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgError'));
+                canvas.getByText(I18n.getText('forms.field.errRequired'));
+                canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
             });
         });
@@ -98,7 +98,7 @@ export const Test = {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
                     'checkboxes-field': ['option1', 'option2', 'option3']
                 });
-                canvas.getByText(I18n.getText('modules.form.formComponent.msgSuccess'));
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
 
