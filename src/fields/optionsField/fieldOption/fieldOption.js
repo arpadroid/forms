@@ -74,7 +74,7 @@ class FieldOption extends ArpaElement {
         this.contentNode = this.querySelector('.fieldOption__content');
         appendNodes(
             this.contentNode,
-            this._childNodes?.filter(node => node?.tagName?.toLowerCase() !== 'arpa-dialog')
+            this._childNodes?.filter(node => !node?.tagName?.toLowerCase().includes('dialog'))
         );
     }
 
