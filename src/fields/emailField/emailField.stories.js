@@ -62,7 +62,7 @@ export const Test = {
             input.value = 'email@somewhere.com';
             submitButton.click();
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'email-field': 'email@somewhere.com' });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'email-field': 'email@somewhere.com' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });

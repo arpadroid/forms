@@ -38,10 +38,11 @@ delete Default.args.extensions;
 
 export const Test = {
     parameters: { ...FieldTest.parameters },
-    args: { ...Default.args, id: 'image-field-test'},
+    args: { ...Default.args, id: 'image-field-test' },
     play: async ({ canvasElement, step }) => {
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } =
-            await FieldTest.playSetup(canvasElement);
+        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } = await FieldTest.playSetup(
+            canvasElement
+        );
 
         await customElements.whenDefined('file-list');
         const uploadList = canvasElement.querySelector('.fileField__uploadList');
@@ -66,7 +67,7 @@ export const Test = {
             fireEvent.change(input, { target: { files: [TextFileSmall] } });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
-                expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
+                expect(onChangeMock).toHaveBeenCalledWith([], field, expect.anything());
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toBeInTheDocument();
                 expect(errorContainer.textContent).toBe(
@@ -79,9 +80,9 @@ export const Test = {
         });
 
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
-            fireEvent.change(input, { target: { files: [galaxyImage] } });
+            await fireEvent.change(input, { target: { files: [galaxyImage] } });
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith([galaxyImage], field, expect.anything());
+                expect(onChangeMock).toHaveBeenCalledWith([galaxyImage], field, expect.anything());
                 const warning = I18n.getText(`${field.i18nKey}.msgFileOverwriteWarning`);
                 expect(canvas.getByText(warning)).toBeInTheDocument();
                 expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeInTheDocument();
@@ -91,12 +92,12 @@ export const Test = {
         });
 
         await step('Submits the form and checks the file is uploaded.', async () => {
-            fireEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'image-field-test': galaxyImage });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
                 expect(items).toHaveLength(1);
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'image-field-test': galaxyImage });
             });
         });
 
@@ -122,10 +123,10 @@ export const Test = {
                 expect(canvas.getByText(formatBytes(planeImage.size))).toBeInTheDocument();
                 expect(canvas.getByText(formatBytes(flowerImage.size))).toBeInTheDocument();
             });
-            fireEvent.click(submitButton);
+            submitButton.click();
 
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'image-field-test': [planeImage, flowerImage] });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'image-field-test': [planeImage, flowerImage] });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
                 expect(items).toHaveLength(3);

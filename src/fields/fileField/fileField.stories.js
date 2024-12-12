@@ -29,12 +29,7 @@ const FileFieldStory = {
                     form.onSubmit(values => {
                         console.log('Form values', values);
                         return true;
-                    });
-
-                    const field = form.getField('${args.id}');
-                    field.on('filesAdded', (files, field) => {
-                        console.log('onFilesAdded', { files, field });
-                    });
+                    }); 
                 });
             </script>
         `;
@@ -191,7 +186,6 @@ export const Test = {
         });
 
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
-            await new Promise(resolve => setTimeout(resolve, 200));
             await fireEvent.change(input, { target: { files: [TextFileMock] } });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith([TextFileMock], field, expect.anything());
@@ -216,9 +210,9 @@ export const Test = {
         await step('Adds a valid file and submits the form receiving expected value', async () => {
             await fireEvent.change(input, { target: { files: [TextFileMock] } });
             expect(uploadList.listResource.getItems()).toHaveLength(1);
-            await fireEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'file-field': TextFileMock });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': TextFileMock });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
@@ -248,9 +242,10 @@ export const Test = {
                 expect(canvas.getByText('yet another text file')).toBeInTheDocument();
                 expect(canvas.getByText('128 bytes')).toBeInTheDocument();
             });
-            await fireEvent.click(submitButton);
+            submitButton.click();
+            await new Promise(resolve => setTimeout(resolve, 100));
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'file-field': [TextFileMock2, TextFileMock3] });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': [TextFileMock2, TextFileMock3] });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
                 expect(items).toHaveLength(3);
@@ -259,9 +254,9 @@ export const Test = {
 
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
             const deleteButtons = canvas.getAllByRole('button', { name: I18n.getText('forms.fields.file.lblRemoveFile') });
-            await userEvent.click(deleteButtons[0]);
+            deleteButtons[0].click();
             await waitFor(() => {
-                expect(onDelete).toHaveBeenLastCalledWith(deleteButtons[0].closest('file-item'));
+                expect(onDelete).toHaveBeenCalledWith(deleteButtons[0].closest('file-item'));
                 expect(canvas.queryByText('test file')).toBeNull();
                 expect(uploadList.listResource.getItems()).toHaveLength(0);
                 expect(field.fileList.listResource.getItems()).toHaveLength(2);

@@ -7,6 +7,7 @@ class FileList extends List {
             super.getDefaultConfig({
                 className: 'fileList',
                 hasResource: true,
+                hasControls: false,
                 itemComponent: FileItem,
                 itemTag: 'file-item',
                 mapItemId: ({ file }) => mechanize(`${file.name}-${file.size}`)

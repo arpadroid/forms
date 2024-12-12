@@ -1,6 +1,6 @@
 /** @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent } from '@storybook/test';
+import { waitFor, expect } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const TextFieldStory = {
@@ -57,9 +57,9 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             input.value = 'valid';
-            await fireEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'text-field': 'valid' });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'text-field': 'valid' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });

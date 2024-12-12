@@ -142,11 +142,9 @@ class FileItem extends ListItem {
     renderMetadata(size = this.getReadableSize()) {
         return render(
             size,
-            html`
-                <div class="fileItem__metadata">
-                    <span class="fileItem__size tag">${size}</span>
-                </div>
-            `
+            html`<div class="fileItem__metadata">
+                <span class="fileItem__size tag">${size}</span>
+            </div>`
         );
     }
 

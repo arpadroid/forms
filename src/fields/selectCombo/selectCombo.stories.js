@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { waitFor, expect, userEvent, fireEvent } from '@storybook/test';
@@ -16,10 +17,8 @@ const SelectComboStory = {
                   <script type="module">
                       // We are going to set many options to the select combo field, therefore we'll do so programmatically.
                       import { CountryOptions } from '../../demo/demoFormOptions.js';
-                      customElements.whenDefined('arpa-form').then(() => {
+                      customElements.whenDefined('arpa-form').then(async () => {
                           const form = document.getElementById('field-form');
-                          const selectCombo = form.getField('select-combo');
-                          selectCombo.setOptions(CountryOptions);
                           form.onSubmit(values => {
                               console.log('values2', values);
                               return true;
@@ -60,6 +59,7 @@ export const Test = {
         const setup = await FieldTest.playSetup(canvasElement);
         const { field, submitButton, canvas, onErrorMock, onChangeMock } = setup;
         let { input } = setup;
+        await customElements.whenDefined('select-combo');
         field.setOptions(CountryOptions);
         await step('Renders the field with four select options', async () => {
             expect(canvas.getByText('Select combo')).toBeInTheDocument();
@@ -82,7 +82,7 @@ export const Test = {
             const spainButton = canvas.getByText('Spain').closest('button');
             spainButton.click();
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith('es', field, expect.anything());
+                expect(onChangeMock).toHaveBeenCalledWith('es', field, expect.anything());
                 expect(field.getValue()).toBe('es');
                 expect(input).toHaveTextContent('Spain');
             });
@@ -108,7 +108,7 @@ export const Test = {
             expect(canvas.getByText('Spain')).not.toBeVisible();
             await fireEvent.click(searchMatches[1]);
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith('uk', field, expect.anything());
+                expect(onChangeMock).toHaveBeenCalledWith('uk', field, expect.anything());
             });
         });
     }

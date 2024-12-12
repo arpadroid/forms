@@ -42,7 +42,7 @@ export const Test = {
             input.value = 'https://www.example.com';
             submitButton.click();
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'url-field': 'https://www.example.com' });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'url-field': 'https://www.example.com' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });

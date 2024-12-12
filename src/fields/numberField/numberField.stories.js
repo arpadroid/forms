@@ -107,7 +107,7 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             input.value = '20';
-            await fireEvent.click(submitButton);
+            submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'number-field': 20 });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

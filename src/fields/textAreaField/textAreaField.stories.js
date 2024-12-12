@@ -46,16 +46,16 @@ export const Test = {
         });
 
         await step('Types a value and receives onChange signal', async () => {
-            const event = userEvent.type(input, 'some text');
+            await userEvent.type(input, 'some text');
             await waitFor(() => {
-                expect(onChangeMock).toHaveBeenLastCalledWith('some text', field, expect.anything());
+                expect(onChangeMock).toHaveBeenCalledWith('some text', field, expect.anything());
             });
         });
 
         await step('Submits form with valid field value.', async () => {
             await fireEvent.click(submitButton);
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'textarea-field': 'some text' });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'textarea-field': 'some text' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });

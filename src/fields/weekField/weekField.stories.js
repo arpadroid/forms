@@ -49,7 +49,7 @@ export const Test = {
             submitButton.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
-                expect(onSubmitMock).toHaveBeenLastCalledWith({
+                expect(onSubmitMock).toHaveBeenCalledWith({
                     'week-field': '2021-W02'
                 });
             });

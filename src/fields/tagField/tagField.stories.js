@@ -112,7 +112,7 @@ export const Test = {
 
         await step('Selects tag and submits the form receiving expected values.', async () => {
             const button = canvas.getByText('Nelson Mandela');
-            await fireEvent.click(button);
+            button.click();
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenCalledWith(['NE-AU'], field, expect.anything());
             });

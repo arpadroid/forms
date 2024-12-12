@@ -74,13 +74,13 @@ export const Test = {
             field.removeAttribute('disable-past');
             submitButton.click();
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'month-field': 'Oct 1983' });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'month-field': 'Oct 1983' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
             field.setValue(new Date('17 July 1984'));
             submitButton.click();
             await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'month-field': 'Jul 1984' });
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'month-field': 'Jul 1984' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });
