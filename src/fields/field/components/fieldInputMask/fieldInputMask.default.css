@@ -34,7 +34,7 @@ field-input-mask > * {
     display: flex;
     align-items: center;
     .iconButton {
-        --icon-button-width: 1.5rem;
+        --icon-button-size: 1.5rem;
     }
 }
 
