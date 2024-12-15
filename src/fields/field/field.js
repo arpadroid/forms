@@ -481,7 +481,7 @@ class Field extends ArpaElement {
      * @returns {string}
      */
     getIcon() {
-        return this.getProperty('icon');
+        return this.getProperty('icon')?.trim();
     }
 
     /**

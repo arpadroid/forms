@@ -1,6 +1,6 @@
 import { render, appendNodes } from '@arpadroid/tools';
 /**
- * @typedef {import('../../field').Field} Field
+ * @typedef {import('../../field.js').default} Field
  */
 const html = String.raw;
 /**

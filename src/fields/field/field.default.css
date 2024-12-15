@@ -82,3 +82,9 @@
         }
     }
 }
+
+.arpaField[variant="compact"] {
+    gap: 0px;
+    --input-height: 2.375rem;
+    --input-border-radius: .25rem;
+}

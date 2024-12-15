@@ -307,7 +307,7 @@ class FormComponent extends HTMLFormElement {
     }
 
     renderTitle() {
-        return html`<form-title zone="form-title"></form-title>`;
+        return html`<form-title zone="form-title"></form-title>` ;
     }
 
     renderFooter() {

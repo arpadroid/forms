@@ -2,6 +2,7 @@
     --input-height: 54px;
     --input-border-radius: 4rem;
     --input-padding: 1.2rem;
+    --input-icon-padding: 52px;
 }
 
 .fieldInput {
@@ -37,8 +38,4 @@ button.fieldInput {
         position: relative;
         top: -1px;
     }
-}
-
-:root {
-    --input-icon-padding: 52px;
 }

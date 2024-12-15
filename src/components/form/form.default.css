@@ -97,12 +97,6 @@
     }
 }
 
-.arpaForm[variant='compact'] {
-    .arpaForm__fields {
-        gap: 0.5rem;
-        margin-top: 0;
-    }
-}
 
 @container arpa-form (max-width: 980px) {
     .arpaForm__fields {
@@ -118,6 +112,7 @@
  * Variants
  */
 
+/* Compact */
 .arpaForm[variant='compact'] {
     gap: 0.6rem;
     padding: 0.5rem;
@@ -125,6 +120,7 @@
         border-radius: 8px;
     }
     .arpaForm__fields {
+        margin-top: 0;
         gap: 0.4rem;
         .groupField__fields.groupField__fields {
             gap: 0;
@@ -147,4 +143,10 @@
             border-radius: 0.5rem;
         }
     }
+}
+
+/* Mini */
+.arpaForm[variant='mini'] {
+    gap: 0;
+    container-type: inherit;
 }
