@@ -7,7 +7,7 @@ import { mergeObjects, copyObjectProps, zoneMixin, appendNodes } from '@arpadroi
 import { ObserverTool, attr, renderNode, render, CustomElementTool, handleZones, hasZone } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
-const { hasProperty, getProperty, onDestroy } = CustomElementTool;
+const { hasProperty, getProperty, onDestroy, canRender } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -174,6 +174,10 @@ class FormComponent extends HTMLFormElement {
         return getProperty(this, 'description') || hasZone(this, 'description');
     }
 
+    hasHeader() {
+        return this.hasTitle() || this.hasDescription();
+    }
+
     /**
      * Sets the initial values for the form.
      * @param {Record<string, unknown>} values
@@ -248,6 +252,7 @@ class FormComponent extends HTMLFormElement {
         if (!this.id) {
             throw new Error('Form must have an id.');
         }
+        if (!canRender(this)) return;
         attr(this, { novalidate: true, 'aria-label': this.getTitle() });
         const { variant } = this._config;
         this.renderTemplate();
@@ -261,7 +266,7 @@ class FormComponent extends HTMLFormElement {
         this.headerNode = this.querySelector('.arpaForm__header');
         this.errorsNode = this.querySelector('.arpaForm__errors');
         handleZones();
-        requestAnimationFrame(() => this._onRenderComplete());
+        this._onRenderComplete();
     }
 
     _onRenderComplete() {
@@ -285,7 +290,7 @@ class FormComponent extends HTMLFormElement {
 
     renderFull() {
         return html`
-            <div class="arpaForm__header" zone="header">{title}{description}</div>
+            ${this.hasHeader() ? html`<div class="arpaForm__header" zone="header">{title}{description}</div>` : ''}
             <arpa-messages zone="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
             <div class="arpaForm__body">
                 <div class="arpaForm__fields"></div>
@@ -307,7 +312,7 @@ class FormComponent extends HTMLFormElement {
     }
 
     renderTitle() {
-        return html`<form-title zone="form-title"></form-title>` ;
+        return this.hasTitle() ? html`<form-title zone="form-title"></form-title>` : '';
     }
 
     renderFooter() {

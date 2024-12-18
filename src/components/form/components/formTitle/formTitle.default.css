@@ -12,7 +12,7 @@ form-title {
     }
 }
 
-form-title.formTitle:empty {
+.formTitle:empty {
     display: none;
 }
 

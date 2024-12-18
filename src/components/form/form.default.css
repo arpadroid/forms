@@ -13,6 +13,10 @@
     }
 }
 
+.arpaForm__messages:empty {
+    display: none;
+}
+
 /**
  * Header
  */
@@ -138,7 +142,7 @@
     }
 
     .arpaField.arpaField {
-        gap: 0;
+        gap: .5rem;
         .fieldInput {
             border-radius: 0.5rem;
         }
