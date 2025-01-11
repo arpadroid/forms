@@ -41,7 +41,6 @@
         "jsdoc-to-markdown": "^8.0.1"
     },
     "peerDependencies": {
-        "@arpadroid/application": "file:../application",
         "@arpadroid/i18n": "file:../i18n",
         "@arpadroid/lists": "file:../lists",
         "@arpadroid/messages": "file:../messages",
