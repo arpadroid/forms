@@ -1,5 +1,5 @@
 const config = {
-    deps: ['lists', 'messages'],
+    deps: ['messages'],
     style_patterns: 'fields/**/*'
 };
 

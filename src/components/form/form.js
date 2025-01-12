@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('@arpadroid/ui/src/index').Messages} Messages
- * @typedef {import('@arpadroid/application/src/index').MessageResource} MessageResource
+ * @typedef {import('@arpadroid/messages').Messages} Messages
+ * @typedef {import('@arpadroid/resources').MessageResource} MessageResource
  */
 import { mergeObjects, copyObjectProps, zoneMixin, appendNodes } from '@arpadroid/tools';
 import { ObserverTool, attr, renderNode, render, CustomElementTool, handleZones, hasZone } from '@arpadroid/tools';
