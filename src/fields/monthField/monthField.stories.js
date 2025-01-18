@@ -5,7 +5,7 @@ import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field
 import DateFieldStory from '../dateField/dateField.stories.js';
 
 const MonthFieldStory = {
-    title: 'Fields/Month',
+    title: 'Forms/Fields/Month',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'month-field')
 };

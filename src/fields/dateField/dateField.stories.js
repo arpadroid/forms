@@ -4,7 +4,7 @@ import { waitFor, expect } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 const category = 'Date Field Props';
 const DateFieldStory = {
-    title: 'Fields/Date',
+    title: 'Forms/Fields/Date',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'date-field'),
     getArgTypes: () => {

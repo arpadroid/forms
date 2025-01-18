@@ -7,7 +7,7 @@ import { waitFor, expect, fireEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const SearchFieldStory = {
-    title: 'Fields/Search',
+    title: 'Forms/Fields/Search',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'search-field')
 };

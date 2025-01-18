@@ -7,7 +7,7 @@ import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const TextAreaFieldStory = {
-    title: 'Fields/Textarea',
+    title: 'Forms/Fields/Textarea',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'textarea-field')
 };

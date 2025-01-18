@@ -5,7 +5,7 @@ import { waitFor, expect } from '@storybook/test';
 const html = String.raw;
 
 const RadioFieldStory = {
-    title: 'Fields/Radio',
+    title: 'Forms/Fields/Radio',
     tags: [],
     render: (args, story) =>
         FieldStory.render(args, story, 'radio-field', RadioFieldStory.renderFieldContent, FieldStory.renderScript),

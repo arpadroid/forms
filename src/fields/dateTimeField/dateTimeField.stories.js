@@ -4,7 +4,7 @@ import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field
 import { Default as DateDefault } from '../dateField/dateField.stories.js';
 
 const DateFieldStory = {
-    title: 'Fields/DateTime',
+    title: 'Forms/Fields/DateTime',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'date-time-field')
 };

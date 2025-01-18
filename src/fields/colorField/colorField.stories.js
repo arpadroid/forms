@@ -3,7 +3,7 @@ import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const ColorFieldStory = {
-    title: 'Fields/Color',
+    title: 'Forms/Fields/Color',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'color-field')
 };

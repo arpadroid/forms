@@ -3,7 +3,7 @@ import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field
 import { waitFor, expect, fireEvent } from '@storybook/test';
 
 const CheckboxFieldStory = {
-    title: 'Fields/Checkbox',
+    title: 'Forms/Fields/Checkbox',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'checkbox-field')
 };

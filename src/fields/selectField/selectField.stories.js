@@ -5,7 +5,7 @@ import { waitFor, expect, fireEvent } from '@storybook/test';
 const html = String.raw;
 
 const SelectFieldStory = {
-    title: 'Fields/Select',
+    title: 'Forms/Fields/Select',
     tags: [],
     render: (args, story) =>
         FieldStory.render(args, story, 'select-field', SelectFieldStory.renderFieldContent, SelectFieldStory.renderScript),

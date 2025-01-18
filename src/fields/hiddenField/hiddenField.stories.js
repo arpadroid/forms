@@ -14,7 +14,7 @@ export const Default = {
 };
 
 const TextFieldStory = {
-    title: 'Fields/Hidden',
+    title: 'Forms/Fields/Hidden',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'hidden-field')
 };

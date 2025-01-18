@@ -9,7 +9,7 @@ import { waitFor, within, expect, fn, getByText } from '@storybook/test';
 const html = String.raw;
 
 const FormStory = {
-    title: 'Components/Form',
+    title: 'Forms/Form',
     tags: [],
     render: (args, story, renderContent = FormStory.renderContent, renderScript = FormStory.renderScript) => {
         return html`

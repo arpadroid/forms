@@ -5,7 +5,7 @@ import { queryPeople } from '../../demo/demoFormOptions.js';
 
 const html = String.raw;
 const TagFieldStory = {
-    title: 'Fields/Tag',
+    title: 'Forms/Fields/Tag',
     tags: [],
     render: (args, story) =>
         FieldStory.render(args, story, 'tag-field', FieldStory.renderFieldContent, TagFieldStory.renderScript),

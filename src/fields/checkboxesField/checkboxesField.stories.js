@@ -4,7 +4,7 @@ import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
 
 const CheckboxesFieldStory = {
-    title: 'Fields/Checkboxes',
+    title: 'Forms/Fields/Checkboxes',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'checkboxes-field', CheckboxesFieldStory.renderFieldContent),
     renderFieldContent: () => html`

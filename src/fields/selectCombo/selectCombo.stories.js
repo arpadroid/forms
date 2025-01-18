@@ -6,7 +6,7 @@ import { CountryOptions } from '../../demo/demoFormOptions.js';
 
 const html = String.raw;
 const SelectComboStory = {
-    title: 'Fields/SelectCombo',
+    title: 'Forms/Fields/SelectCombo',
     tags: [],
     render: (args, story) =>
         FieldStory.render(args, story, 'select-combo', FieldStory.renderFieldContent, SelectComboStory.renderScript),

@@ -10,7 +10,7 @@ import { TextFileLarge, TextFileMock, TextFileMock2, TextFileMock3, TextFileSmal
 const html = String.raw;
 
 const FileFieldStory = {
-    title: 'Fields/File',
+    title: 'Forms/Fields/File',
     tags: [],
     render: (args, story) =>
         FieldStory.render(args, story, 'file-field', FileFieldStory.renderFieldContent, FileFieldStory.renderScript),

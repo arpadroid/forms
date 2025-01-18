@@ -12,7 +12,7 @@ import Field from './field.js';
 const html = String.raw;
 
 const FieldStory = {
-    title: 'Components/Field',
+    title: 'Forms/Field',
     tags: [],
     render: (
         args,

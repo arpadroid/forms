@@ -8,7 +8,7 @@ import { waitFor, expect } from '@storybook/test';
 const html = String.raw;
 const category = 'Group Field Props';
 const GroupFieldStory = {
-    title: 'Fields/Group',
+    title: 'Forms/Fields/Group',
     tags: [],
     render: (args, story) =>
         FieldStory.render(args, story, 'group-field', GroupFieldStory.renderFieldContent, GroupFieldStory.renderScript),

@@ -7,7 +7,7 @@ import { waitFor, expect } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const RangeFieldStory = {
-    title: 'Fields/Range',
+    title: 'Forms/Fields/Range',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'range-field')
 };

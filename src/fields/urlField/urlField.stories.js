@@ -3,7 +3,7 @@ import { waitFor, expect } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const UrlFieldStory = {
-    title: 'Fields/Url',
+    title: 'Forms/Fields/Url',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'url-field')
 };

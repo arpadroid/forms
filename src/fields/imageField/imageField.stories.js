@@ -14,7 +14,7 @@ const html = String.raw;
 const assetsURL = 'http://www.local/arpadroid/forms/assets';
 
 const ImageFieldStory = {
-    title: 'Fields/Image',
+    title: 'Forms/Fields/Image',
     tags: [],
     render: (args, story) =>
         FieldStory.render(args, story, 'image-field', ImageFieldStory.renderFieldContent, FileFieldStory.renderScript),

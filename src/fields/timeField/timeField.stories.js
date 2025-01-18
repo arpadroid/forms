@@ -4,7 +4,7 @@ import { waitFor, expect, fireEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const TimeFieldStory = {
-    title: 'Fields/Time',
+    title: 'Forms/Fields/Time',
     tags: [],
     render: (args, story) => FieldStory.render(args, story, 'time-field')
 };

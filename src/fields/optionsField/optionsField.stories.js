@@ -6,7 +6,7 @@ import { waitFor, expect, fn } from '@storybook/test';
 const html = String.raw;
 
 const OptionsFieldStory = {
-    title: 'Fields/Options',
+    title: 'Forms/Fields/Options',
     tags: [],
     render: (args, story) =>
         FieldStory.render(args, story, 'options-field', OptionsFieldStory.renderFieldContent, OptionsFieldStory.renderScript),
