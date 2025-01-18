@@ -47,6 +47,8 @@
         "@arpadroid/lists": "file:../lists",
         "@arpadroid/messages": "file:../messages",
         "@arpadroid/navigation": "file:../navigation",
-        "@arpadroid/resources": "file:../resources"
+        "@arpadroid/resources": "file:../resources",
+        "@arpadroid/context": "file:../context",
+        "@arpadroid/services": "file:../services"
     }
 }

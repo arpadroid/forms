@@ -24,11 +24,6 @@ class FieldInput extends HTMLInputElement {
             this.field = this.closest('.arpaField');
         }
         await this.field?.promise;
-        /**
-         * @todo - When the field is not found, the field is not initialized.
-         * This is failing without this check in the form component tests.
-         * Ideally the field should be initialized in the form component tests.
-         */
         if (typeof this.field?.getHtmlId === 'function') {
             this.id = this.field?.getHtmlId();
             this.name = this.field.getId();
@@ -39,7 +34,6 @@ class FieldInput extends HTMLInputElement {
         } else {
             console.error('Field not found for input', this);
         }
-
         this.initializeListeners();
     }
 

@@ -94,10 +94,6 @@ class FieldErrors extends ArpaElement {
     }
 }
 
-/**
- * @todo - Ideally field errors can be simplified by extending ArpaElement.
- */
-
 customElements.define('field-errors', FieldErrors);
 
 export default FieldErrors;
