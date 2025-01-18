@@ -37,6 +37,12 @@ export const Default = {
         debounceSearch: { control: 'number', table: { category: 'Select Combo Props' } },
         ...FieldStory.getArgTypes('Field Props')
     },
+    play: async ({ canvasElement }) => {
+        const setup = await FieldTest.playSetup(canvasElement);
+        const { field } = setup;
+        await customElements.whenDefined('select-combo');
+        field.setOptions(CountryOptions);
+    },
     args: {
         hasSearch: false,
         ...FieldStory.getArgs(),

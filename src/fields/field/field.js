@@ -633,10 +633,12 @@ class Field extends ArpaElement {
     }
 
     disable() {
-        this.getInput()?.setAttribute('disabled', '');
+        this.setAttribute('disabled', 'disabled');
+        this.getInput()?.setAttribute('disabled', 'disabled');
     }
 
     enable() {
+        this.removeAttribute('disabled');
         this.getInput()?.removeAttribute('disabled');
     }
 

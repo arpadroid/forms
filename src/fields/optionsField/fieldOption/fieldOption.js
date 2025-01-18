@@ -1,4 +1,4 @@
-import { mechanize, appendNodes } from '@arpadroid/tools';
+import { mechanize, appendNodes, isIOsSafari } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 
 /**
@@ -72,10 +72,8 @@ class FieldOption extends ArpaElement {
     _initializeNodes() {
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = this.querySelector('.fieldOption__content');
-        appendNodes(
-            this.contentNode,
-            this._childNodes?.filter(node => !node?.tagName?.toLowerCase().includes('dialog'))
-        );
+        const childNodes = isIOsSafari() ? this._childNodes : this._childNodes?.filter(node => !node?.tagName?.toLowerCase().includes('dialog'));
+        appendNodes(this.contentNode, childNodes);
     }
 
     getField() {

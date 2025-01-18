@@ -35,6 +35,12 @@ class SelectCombo extends SelectField {
         });
     }
 
+    setValue(value) {
+        super.setValue(value);
+        this.updateValue();
+        return this;
+    }
+
     // #endregion
 
     ////////////////////
@@ -52,9 +58,8 @@ class SelectCombo extends SelectField {
      * @param {string} newValue
      */
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'value' && oldValue !== newValue) {
-            this.updateValue();
-        } else if (name === 'has-search') {
+        if (oldValue === newValue) return;
+        if (name === 'has-search') {
             this.reRender();
         }
     }
@@ -109,15 +114,19 @@ class SelectCombo extends SelectField {
      */
     _initializeInputCombo() {
         const handler = this.getInput();
-        if (handler && !this.inputCombo) {
-            this.optionsNode = this.querySelector('.selectCombo__options');
-            this.inputCombo = new InputCombo(handler, this.optionsNode, {
-                containerSelector: this.getProperty('option-component'),
-                position: this.getProperty('options-position'),
-                closeOnClick: true,
-                onOpen: () => this.onOpenCombo(),
-                onClose: () => this.onCloseCombo()
-            });
+        if (handler) {
+            if (!this.inputCombo?.input.isConnected) {
+                this.optionsNode = this.querySelector('.selectCombo__options');
+                this.inputCombo = new InputCombo(handler, this.optionsNode, {
+                    containerSelector: this.getProperty('option-component'),
+                    position: this.getProperty('options-position'),
+                    closeOnClick: true,
+                    onOpen: () => this.onOpenCombo(),
+                    onClose: () => this.onCloseCombo()
+                });
+            } else {
+                this.optionsNode = this.inputCombo?.combo;
+            }
         }
     }
 
