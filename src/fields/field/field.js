@@ -1,4 +1,4 @@
-import { mergeObjects, ObserverTool, render } from '@arpadroid/tools';
+import { mergeObjects, observerMixin, render } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n, I18nTool } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
@@ -26,7 +26,7 @@ class Field extends ArpaElement {
      */
     async _initialize() {
         this.bind('_callOnChange');
-        ObserverTool.mixin(this);
+        observerMixin(this);
         const id = this.getId();
         if (!id) {
             throw new Error('Field must have an id', this);

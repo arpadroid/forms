@@ -2,10 +2,8 @@
  * @typedef {import('../../field').default} Field
  */
 
-import { mergeObjects, CustomElementTool, handleZones, zoneMixin } from '@arpadroid/tools';
+import { mergeObjects, handleZones, zoneMixin, getProperty, hasProperty } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
-
-const { getProperty, hasProperty } = CustomElementTool;
 const html = String.raw;
 class FieldLabel extends HTMLLabelElement {
     static defaultConfig = {

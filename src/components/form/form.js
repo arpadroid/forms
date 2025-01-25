@@ -4,10 +4,9 @@
  * @typedef {import('@arpadroid/resources').MessageResource} MessageResource
  */
 import { mergeObjects, copyObjectProps, zoneMixin, appendNodes } from '@arpadroid/tools';
-import { ObserverTool, attr, renderNode, render, CustomElementTool, handleZones, hasZone } from '@arpadroid/tools';
+import { observerMixin, attr, renderNode, render, handleZones } from '@arpadroid/tools';
+import { onDestroy, getProperty, hasProperty, hasZone, canRender } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
-
-const { hasProperty, getProperty, onDestroy, canRender } = CustomElementTool;
 
 /**
  * The form configuration.
@@ -35,7 +34,7 @@ class FormComponent extends HTMLFormElement {
     constructor(config) {
         super();
         zoneMixin(this);
-        ObserverTool.mixin(this);
+        observerMixin(this);
         this.setConfig(config);
         this.promise = this.getPromise();
         this._childNodes = [...this.childNodes];
