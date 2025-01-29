@@ -1,4 +1,4 @@
-import { mergeObjects, Regex, renderNode } from '@arpadroid/tools';
+import { mergeObjects, RegexTool, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 
 const html = String.raw;
@@ -31,7 +31,7 @@ class PasswordField extends TextField {
         const mode = this.getAttribute('mode') ?? config.mode;
         if (mode === 'register') {
             config.inputAttributes.autocomplete = 'new-password';
-            this.setAttribute('regex', Regex.password);
+            this.setAttribute('regex', RegexTool.password);
             this.setAttribute('regex-message', this._i18n?.errRegex);
         } else if (mode === 'login') {
             config.inputAttributes.autocomplete = 'current-password';

@@ -1,11 +1,10 @@
 import Field from '../field/field.js';
-import { Regex } from '@arpadroid/tools';
+import { RegexTool } from '@arpadroid/tools';
 
 class TextField extends Field {
     /**
      * Array of validations for the text field.
      * @type {string[]}
-     * @protected
      */
     _validations = [...super.getValidations(), 'regex'];
 
@@ -33,8 +32,8 @@ class TextField extends Field {
      */
     setRegexValidation(regex = this.getProperty('regex'), message = this.getProperty('regex-message')) {
         if (typeof regex === 'string') {
-            if (Regex[regex]) {
-                regex = Regex[regex];
+            if (RegexTool[regex]) {
+                regex = RegexTool[regex];
             } else {
                 // eslint-disable-next-line security/detect-non-literal-regexp
                 regex = new RegExp(regex);
