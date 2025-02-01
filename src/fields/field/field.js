@@ -9,15 +9,12 @@ import { ArpaElement } from '@arpadroid/ui';
  */
 const html = String.raw;
 class Field extends ArpaElement {
-    //////////////////////
-    // #region PROPERTIES
-    /////////////////////
+    
     _validations = ['required', 'minLength', 'maxLength', 'size'];
-    // #endregion
 
-    //////////////////////////
-    // #region INITIALIZATION
-    //////////////////////////
+    ////////////////////////////////
+    // #region Initialization
+    ////////////////////////////////
 
     /**
      * Initializes the field after constructor.
@@ -380,9 +377,10 @@ class Field extends ArpaElement {
 
     /**
      * Returns the output value for the field.
+     * @param {Record<string, unknown> | undefined} _values
      * @returns {unknown}
      */
-    getOutputValue() {
+    getOutputValue(_values) {
         return this.getValue();
     }
 

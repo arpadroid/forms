@@ -1,7 +1,10 @@
+/**
+ * @typedef {import('../components/form/form.js').default} Form
+ */
 import { CountryOptions, IconOptions } from './demoFormOptions.js';
 
 customElements.whenDefined('arpa-form').then(() => {
-    const form = document.getElementById('demoForm');
+    const form = /** @type {Form} */ (document.getElementById('demoForm'));
 
     // const messages = form.querySelector('arpa-messages');
     // const message = messages.resource.error('This is a dynamically added error message.', {

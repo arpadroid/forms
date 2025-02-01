@@ -1,36 +1,35 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /**
+ * @typedef {import('./form.types').FormConfigType} FormConfigType
+ * @typedef {import('./form.types').FormTemplatePropsType} FormTemplatePropsType
+ * @typedef {import('./form.types').FormSubmitType} FormSubmitType
+ * @typedef {import('./form.types').FormSubmitResponseType} FormSubmitResponseType
+ * @typedef {import('../../fields/field/field').default} FieldComponent
  * @typedef {import('@arpadroid/messages').Messages} Messages
  * @typedef {import('@arpadroid/resources').MessageResource} MessageResource
  */
-import { mergeObjects, copyObjectProps, zoneMixin, appendNodes } from '@arpadroid/tools';
+import { mergeObjects, copyObjectProps, zoneMixin, appendNodes, processTemplate } from '@arpadroid/tools';
 import { observerMixin, attr, renderNode, render, handleZones } from '@arpadroid/tools';
 import { onDestroy, getProperty, hasProperty, hasZone, canRender } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 
-/**
- * The form configuration.
- * @typedef {object} FormConfigInterface
- * @property {string} id - The form id.
- * @property {Record<string,unknown>} initialValues - The initial values for the form.
- * @property {string} [variant=default] - The form variant.
- * @property {string} [submitButtonText=Submit] - The text for the submit button.
- * @property {(values: Record<string, unknown>, form: FormComponent) => void} [onSubmit] - The submit event handler.
- * @property {number} [debounce=500] - The debounce time for the submit event.
- * @property {string} [template] - The form template.
- * @property {boolean} [hasSubmit=true] - Whether the form has a submit button.
- * @property {string} [submitText] - The submit button text.
- */
-
 const html = String.raw;
 
 class FormComponent extends HTMLFormElement {
+    /** @type {Record<string, FieldComponent>} */
     fields = {};
+    /** @type {FormConfigType} */
+    // @ts-ignore
+    _config = this._config;
 
-    /////////////////////////
-    // #region INITIALIZATION
-    /////////////////////////
+    //////////////////////////////////
+    // #region Initialization & Config
+    //////////////////////////////////
 
+    /**
+     * Creates a new form component.
+     * @param {FormConfigType} config - The form configuration.
+     */
     constructor(config) {
         super();
         zoneMixin(this);
@@ -40,6 +39,10 @@ class FormComponent extends HTMLFormElement {
         this._childNodes = [...this.childNodes];
     }
 
+    /**
+     * Returns a promise that resolves when the form is rendered.
+     * @returns {Promise<boolean>} - The promise that resolves when the form is rendered.
+     */
     getPromise() {
         return new Promise((resolve, reject) => {
             this.resolvePromise = resolve;
@@ -47,13 +50,20 @@ class FormComponent extends HTMLFormElement {
         });
     }
 
-    i18n(key, replacements, attributes) {
+    /**
+     * Returns an i18n text node given a key and optional replacements and node attributes.
+     * @param {string} key - The key to translate.
+     * @param {Record<string, string>} replacements - The replacements for the key.
+     * @param {Record<string, string>} attributes - The attributes for the i18n text.
+     * @returns {string} - The translated text.
+     */
+    i18n(key, replacements = {}, attributes = {}) {
         return I18nTool.arpaElementI18n(this, key, replacements, attributes, 'forms.form');
     }
 
     /**
      * Returns the form configuration.
-     * @returns {FormConfigInterface} The form configuration.
+     * @returns {FormConfigType} The form configuration.
      */
     getDefaultConfig() {
         return {
@@ -62,7 +72,6 @@ class FormComponent extends HTMLFormElement {
             initialValues: {},
             onSubmit: undefined,
             debounce: 1000,
-            useTemplate: true,
             successMessage: this.i18n('msgSuccess'),
             errorMessage: this.i18n('msgError')
         };
@@ -70,19 +79,18 @@ class FormComponent extends HTMLFormElement {
 
     /**
      * Sets the form configuration.
-     * @param {FormConfigInterface} config - The form configuration.
+     * @param {FormConfigType} config - The form configuration.
      */
     setConfig(config) {
+        /** @type {FormConfigType} */
         this._config = mergeObjects(this.getDefaultConfig(), config);
     }
 
-    // #endregion
+    // #endregion Initialization & Config
 
-    ////////////////////
-    // #region LIFECYCLE
-    ////////////////////
-
-    static get observedAttributes() {}
+    ////////////////////////////////
+    // #region Lifecycle
+    ////////////////////////////////
 
     connectedCallback() {
         if (!this._hasRendered) {
@@ -127,15 +135,19 @@ class FormComponent extends HTMLFormElement {
         }
     }
 
-    // #endregion
-
-    /////////////////////
-    // #region ACCESSORS
-    /////////////////////
-
-    canUseTemplate() {
-        return this.getAttribute('useTemplate') !== 'false' && this._config.useTemplate;
+    _onRenderComplete() {
+        this._hasRendered = true;
+        this._onComplete();
+        this.resolvePromise?.(true);
     }
+
+    _onComplete() {}
+
+    // #endregion Lifecycle
+
+    /////////////////////////////////
+    // #region Get
+    /////////////////////////////////
 
     getSubmitText() {
         return getProperty(this, 'submit-text') || html`<i18n-text key="common.labels.lblSubmit" />`;
@@ -145,16 +157,45 @@ class FormComponent extends HTMLFormElement {
         return Object.values(this.fields);
     }
 
+    /**
+     * Returns a field by its id.
+     * @param {string} fieldId
+     * @returns {FieldComponent | undefined}
+     */
     getField(fieldId) {
-        return this.fields[fieldId];
+        return this.fields?.[fieldId];
     }
 
-    reset() {
-        if (!this.hasInitialValues()) {
-            // this.render();
-        }
-        this.messageResource.deleteMessages();
+    /**
+     * Returns the form fiel values.
+     * @returns {Record<string, unknown>}
+     */
+    getValues() {
+        /** @type {Record<string, unknown>} */
+        this._values = {};
+        this.getFields().forEach(field => {
+            const value = field.getOutputValue(this._values);
+            if (typeof value !== 'undefined') {
+                const fieldId = field.getId();
+                this._values && fieldId && (this._values[fieldId] = value);
+            }
+        });
+        return this._values;
     }
+
+    getTitle() {
+        return this.getAttribute('title') || this._config?.title;
+    }
+
+    getVariant() {
+        return this.getAttribute('variant') || this._config.variant;
+    }
+
+    // #endregion Get
+
+    /////////////////////////////////
+    // #region Has
+    /////////////////////////////////
 
     hasInitialValues() {
         const { initialValues = {} } = this._config;
@@ -177,6 +218,12 @@ class FormComponent extends HTMLFormElement {
         return this.hasTitle() || this.hasDescription();
     }
 
+    // #endregion Has
+
+    /////////////////////////////////
+    // #region Set
+    /////////////////////////////////
+
     /**
      * Sets the initial values for the form.
      * @param {Record<string, unknown>} values
@@ -190,48 +237,35 @@ class FormComponent extends HTMLFormElement {
      * @param {Record<string, unknown>} values
      */
     setValues(values = {}) {
-        if (values) {
-            for (const [fieldId, value] of Object.entries(values)) {
-                if (this.fields[fieldId]) {
-                    this.fields[fieldId].setValue(value);
-                }
-            }
+        if (!values) return;
+        for (const [fieldId, value] of Object.entries(values)) {
+            this.fields[fieldId]?.setValue(value);
         }
-    }
-
-    getValues() {
-        this._values = {};
-        this.getFields().forEach(field => {
-            const value = field.getOutputValue(this._values);
-            if (typeof value !== 'undefined') {
-                this._values[field.getId()] = value;
-            }
-        });
-        return this._values;
     }
 
     /**
      * Registers a field to the form.
-     * @param {*} field
+     * @param {FieldComponent} field
      */
     registerField(field) {
         this.fields[field.getId()] = field;
     }
 
-    getTitle() {
-        return this.getAttribute('title') || this._config.title;
+    reset() {
+        // !this.hasInitialValues() && this.render();
+        this.messageResource?.deleteMessages();
     }
 
-    getVariant() {
-        return this.getAttribute('variant') || this._config.variant;
-    }
+    // #endregion Set
 
-    // #endregion
+    /////////////////////////////////
+    // #region Rendering
+    /////////////////////////////////
 
-    ////////////////////
-    // #region RENDERING
-    ////////////////////
-
+    /**
+     * Returns the template variables for the form.
+     * @returns {FormTemplatePropsType}
+     */
     getTemplateVariables() {
         return {
             submitLabel: this.getSubmitText(),
@@ -248,9 +282,7 @@ class FormComponent extends HTMLFormElement {
      * @throws {Error} If the form has no id.
      */
     render() {
-        if (!this.id) {
-            throw new Error('Form must have an id.');
-        }
+        if (!this.id) throw new Error('Form must have an id.');
         if (!canRender(this)) return;
         attr(this, { novalidate: true, 'aria-label': this.getTitle() });
         const { variant } = this._config;
@@ -268,23 +300,14 @@ class FormComponent extends HTMLFormElement {
         this._onRenderComplete();
     }
 
-    _onRenderComplete() {
-        this._hasRendered = true;
-        this._onComplete();
-        this.resolvePromise?.();
-    }
-
-    _onComplete() {}
-
     /**
      * Renders the form template.
      */
     renderTemplate() {
         const variant = this.getVariant();
         const template = variant === 'mini' ? this.renderMini() : this.renderFull();
-        if (template && this.canUseTemplate()) {
-            this.innerHTML = I18nTool.processTemplate(template, this.getTemplateVariables());
-        }
+        const content = processTemplate(template, this.getTemplateVariables());
+        this.innerHTML = content;
     }
 
     renderFull() {
@@ -333,11 +356,11 @@ class FormComponent extends HTMLFormElement {
         return hasProperty(this, 'has-submit');
     }
 
-    // #endregion
+    // #endregion Rendering
 
-    //////////////////////
-    // #region VALIDATION
-    //////////////////////
+    /////////////////////////////////
+    // #region Validation
+    /////////////////////////////////
 
     /**
      * Validates the form.
@@ -350,31 +373,43 @@ class FormComponent extends HTMLFormElement {
         if (this._isValid) {
             this.classList.remove('formComponent--invalid');
         } else {
-            this.messageResource.deleteMessages();
-            this.messageResource.error(this.getErrorMessage(), {
-                canClose: true
-            });
+            this.messageResource?.deleteMessages();
+            const msg = this.getErrorMessage();
+            msg &&
+                this.messageResource?.error(msg, {
+                    canClose: true
+                });
             this.classList.add('formComponent--invalid');
         }
         return this._isValid;
     }
 
     getErrorMessage() {
-        return this.getAttribute('error-message') || this._config.errorMessage;
+        return this.getAttribute('error-message') || this._config?.errorMessage;
     }
 
     getSuccessMessage() {
-        return this.getAttribute('success-message') || this._config.successMessage;
+        return this.getAttribute('success-message') || this._config?.successMessage;
     }
 
-    /**
-     * SUBMISSION.
-     */
+    // #endregion Validation
 
+    /////////////////////////////////
+    // #region Submit
+    /////////////////////////////////
+
+    /**
+     * Sets the onSubmit callback.
+     * @param {FormSubmitType} callback
+     */
     onSubmit(callback) {
         this._config.onSubmit = callback;
     }
 
+    /**
+     * Returns the onSubmit callback.
+     * @returns {FormSubmitType | undefined}
+     */
     getOnSubmit() {
         return this._config.onSubmit;
     }
@@ -382,12 +417,12 @@ class FormComponent extends HTMLFormElement {
     /**
      * Debounces submit, validates form and if valid calls the onSubmit callback.
      * @param {Event} event
-     * @returns {Promise<Response> | undefined}
+     * @returns {Promise<FormSubmitResponseType> | undefined | boolean}
      */
     _onSubmit(event) {
         event?.preventDefault();
         const time = new Date().getTime();
-        const diff = time - this.submitTime;
+        const diff = time - (this.submitTime || 0);
         const debounce = this.getDebounce();
         if (debounce && this.submitTime && diff < debounce) {
             return;
@@ -401,20 +436,24 @@ class FormComponent extends HTMLFormElement {
         }
     }
 
+    /**
+     * Submits the form.
+     * @param {Event} event
+     */
     submitForm(event) {
         this._onSubmit(event);
     }
 
     getDebounce() {
         if (this.hasAttribute('debounce')) {
-            return parseFloat(this.getAttribute('debounce'));
+            return Number(this.getAttribute('debounce'));
         }
         return Number(this._config.debounce);
     }
 
     /**
      * Calls the onSubmit callback.
-     * @returns {Promise<Response> | undefined}
+     * @returns {Promise<FormSubmitResponseType> | undefined | boolean}
      */
     _callOnSubmit() {
         this?.messageResource?.deleteMessages();
@@ -423,7 +462,7 @@ class FormComponent extends HTMLFormElement {
             const payload = this._values;
             this.startLoading();
             const rv = onSubmit(payload);
-            if (typeof rv?.finally === 'function') {
+            if (rv instanceof Promise && typeof rv?.finally === 'function') {
                 this.handlePromise(rv);
                 return rv;
             }
@@ -433,19 +472,29 @@ class FormComponent extends HTMLFormElement {
         }
     }
 
+    /**
+     * Handles the promise returned by the onSubmit callback.
+     * @param {Promise<FormSubmitResponseType>} promise - The promise returned by the onSubmit callback.
+     * @returns {Promise<FormSubmitResponseType>}
+     */
     handlePromise(promise) {
-        return promise
-            .then(response => {
-                this._onSubmitSuccess();
-                if (response?.formValues) {
-                    this.setInitialValues(response.formValues);
-                    this.setValues(response.formValues);
-                } else if (!this.hasInitialValues()) {
-                    this.reset();
-                }
-                return Promise.resolve(response);
-            })
-            .finally(() => this.stopLoading());
+        return promise.then(this._onPromiseResolved).finally(() => this.stopLoading());
+    }
+
+    /**
+     * Handles a resolved promise.
+     * @param {FormSubmitResponseType} response
+     * @returns {Promise<FormSubmitResponseType>}
+     */
+    _onPromiseResolved(response) {
+        this._onSubmitSuccess();
+        if (response?.formValues) {
+            this.setInitialValues(response.formValues);
+            this.setValues(response.formValues);
+        } else if (!this.hasInitialValues()) {
+            this.reset();
+        }
+        return Promise.resolve(response);
     }
 
     _onSubmitSuccess() {
@@ -458,21 +507,21 @@ class FormComponent extends HTMLFormElement {
         if (!this.preloader) {
             this.preloader = renderNode(html`<circular-preloader></circular-preloader>`);
         }
-        this.bodyNode?.append(this.preloader);
+        this.preloader && this.bodyNode?.append(this.preloader);
     }
 
     stopLoading() {
-        this.preloader?.remove();
+        this.preloader instanceof HTMLElement && this.preloader?.remove();
         this.getVariant() !== 'mini' && this.scrollIntoView();
     }
 
     focusFirstErroredInput() {
         const errorInputSelector = '.arpaField--hasError input, .arpaField--hasError textarea, .arpaField--hasError select';
         const firstInput = this.querySelector(errorInputSelector);
-        firstInput?.focus();
+        firstInput instanceof HTMLElement && firstInput?.focus();
     }
 
-    // #endregion
+    // #endregion Submit
 }
 
 customElements.define('arpa-form', FormComponent, { extends: 'form' });
