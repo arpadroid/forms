@@ -1,24 +1,26 @@
-/** @typedef {import('./imageItemInterface').ImageItemInterface} ImageItemInterface */
+/** @typedef {import('./imageItem.types').ImageItemConfigType} ImageItemConfigType */
 
 import FileItem from '../../../fileField/components/fileItem/fileItem.js';
 import { mergeObjects } from '@arpadroid/tools';
 // import GalleryDialog from '../../../../../../gallery/components/galleryDialog/galleryDialog.js';
 
 class ImageItem extends FileItem {
+    /** @type {ImageItemConfigType} */ // @ts-ignore
+    _config = this._config;
     /**
      * Returns the default config for the file item.
-     * @returns {ImageItemInterface}
+     * @returns {ImageItemConfigType}
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             icon: '',
             hasIcon: false,
             width: 100,
-            height: 100,
+            height: 100
         });
     }
 
-    _onConnected() {
+    async _onConnected() {
         super._onConnected();
         this.classList.add('imageItem');
     }

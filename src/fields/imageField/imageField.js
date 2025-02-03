@@ -1,4 +1,4 @@
-/** @typedef {import('./imageFieldInterface.js').ImageFieldInterface} ImageFieldInterface */
+/** @typedef {import('./imageField.types').ImageFieldConfigType} ImageFieldConfigType */
 import { I18n } from '@arpadroid/i18n';
 import { mergeObjects } from '@arpadroid/tools';
 import FileField from '../fileField/fileField.js';
@@ -6,7 +6,7 @@ import FileField from '../fileField/fileField.js';
 class ImageField extends FileField {
     /**
      * Returns default config for image field.
-     * @returns {ImageFieldInterface}
+     * @returns {ImageFieldConfigType}
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {

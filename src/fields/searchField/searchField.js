@@ -1,19 +1,31 @@
+/**
+ * @typedef {import('./searchField.types').SearchFieldConfigType} SearchFieldConfigType
+ */
 import { I18n } from '@arpadroid/i18n';
 import Field from '../field/field.js';
 import { mergeObjects, prepend, render, renderNode } from '@arpadroid/tools';
 
 const html = String.raw;
 class SearchField extends Field {
+    /** @type {SearchFieldConfigType} */ // @ts-ignore
+    _config = this._config;
     preventOnSubmit = false;
+
+    /**
+     * Returns the default configuration for the search field.
+     * @returns {SearchFieldConfigType}
+     */
     getDefaultConfig() {
         this._callOnSubmit = this._callOnSubmit.bind(this);
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {SearchFieldConfigType} */
+        const conf = {
             classNames: ['searchField', 'fieldComponent'],
             icon: 'search',
             variant: 'default',
             placeholder: I18n.getText('common.labels.lblSearch'),
             inputAttributes: { type: 'search' }
-        });
+        };
+        return mergeObjects(super.getDefaultConfig(), conf);
     }
 
     getFieldType() {
@@ -24,7 +36,7 @@ class SearchField extends Field {
         return 'search-field';
     }
 
-    _initialize() {
+    async _initialize() {
         const { variant } = this._config;
         super._initialize();
         if (variant === 'mini') {
@@ -53,7 +65,7 @@ class SearchField extends Field {
         if (this.miniButton) {
             this.miniButton.removeEventListener('click', this._callOnSubmit);
             this.miniButton.addEventListener('click', this._callOnSubmit);
-            prepend(this.bodyNode, this.miniButton);
+            this.bodyNode instanceof HTMLElement && prepend(this.bodyNode, this.miniButton);
         }
     }
 
@@ -64,10 +76,14 @@ class SearchField extends Field {
         );
     }
 
+    /**
+     * Calls the configured onSubmit function.
+     * @param {Event} event - The event object.
+     */
     _callOnSubmit(event) {
         const { onSubmit } = this._config;
         if (typeof onSubmit === 'function') {
-            onSubmit(this.getValue(), event);
+            onSubmit(String(this.getValue() || ''), event);
         }
     }
 }

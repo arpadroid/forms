@@ -1,8 +1,12 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /**
  * @typedef {import('./selectOption/selectOption.js').default} SelectOption
- * @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface
- * @typedef {import('./selectComboInterface.js').SelectComboInterface} SelectComboInterface
+ * @typedef {import('../optionsField/optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType
+ * @typedef {import('../optionsField/optionsField.types').OptionsNodeType} OptionsNodeType
+ * @typedef {import('../optionsField//fieldOption/fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
+ * @typedef {import('./selectCombo.types').SelectComboConfigType} SelectComboConfigType
+ * @typedef {import('@arpadroid/tools').SearchToolCallbackType} SearchToolCallbackType
+ * @typedef {import('@arpadroid/ui').InputComboNodeType} InputComboNodeType
  */
 import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString } from '@arpadroid/tools';
 import SelectField from '../selectField/selectField.js';
@@ -11,17 +15,22 @@ import { InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
 class SelectCombo extends SelectField {
+    /** @type {HTMLInputElement | null} */ // @ts-ignore
+    input = this.input;
+    /** @type {SelectComboConfigType} */ // @ts-ignore
+    _config = this._config;
     //////////////////////////
     // #region INITIALIZATION
     //////////////////////////
 
     /**
      * Returns the default configuration for the select combo field.
-     * @returns {SelectComboInterface} The default configuration object.
+     * @returns {SelectComboConfigType} The default configuration object.
      */
     getDefaultConfig() {
         this.bind('onLabelClick', 'onSearch', 'onOpenCombo', 'onCloseCombo', 'onSearchInputFocus', 'onSearchInputBlur');
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {SelectComboConfigType} */
+        const config = {
             hasSearch: false,
             debounceSearch: 500,
             searchItemContentSelector: '.fieldOption__label, .fieldOption__subTitle',
@@ -32,9 +41,15 @@ class SelectCombo extends SelectField {
                 <div class="selectCombo__options optionsField__options comboBox">{options}</div>
             `,
             optionComponent: 'select-option'
-        });
+        };
+        return /** @type {SelectComboConfigType} */ (mergeObjects(super.getDefaultConfig(), config));
     }
 
+    /**
+     * Sets the value of the select combo field.
+     * @param {string} value - The value to set on the select combo field.
+     * @returns {this} The instance of the select combo field.
+     */
     setValue(value) {
         super.setValue(value);
         this.updateValue();
@@ -73,6 +88,7 @@ class SelectCombo extends SelectField {
         super._initializeNodes();
         this._initializeButtonInput();
         this._initializeSearchInput();
+        /** @type {OptionsNodeType} */
         this.optionsNode = this.querySelector('.selectCombo__options');
         this._initializeInputCombo();
         if (this.label) {
@@ -86,6 +102,7 @@ class SelectCombo extends SelectField {
     }
 
     _initializeSearchInput() {
+        /** @type {HTMLInputElement | null} */
         this.searchInput = this.querySelector('input.optionsField__searchInput');
         if (this.searchInput) {
             this.searchInput.removeEventListener('focus', this.onSearchInputFocus);
@@ -117,13 +134,14 @@ class SelectCombo extends SelectField {
         if (handler) {
             if (!this.inputCombo?.input.isConnected) {
                 this.optionsNode = this.querySelector('.selectCombo__options');
-                this.inputCombo = new InputCombo(handler, this.optionsNode, {
-                    containerSelector: this.getProperty('option-component'),
-                    position: this.getProperty('options-position'),
-                    closeOnClick: true,
-                    onOpen: () => this.onOpenCombo(),
-                    onClose: () => this.onCloseCombo()
-                });
+                this.optionsNode &&
+                    (this.inputCombo = new InputCombo(handler, this.optionsNode, {
+                        containerSelector: this.getProperty('option-component'),
+                        position: this.getProperty('options-position'),
+                        closeOnClick: true,
+                        onOpen: () => this.onOpenCombo(),
+                        onClose: () => this.onCloseCombo()
+                    }));
             } else {
                 this.optionsNode = this.inputCombo?.combo;
             }
@@ -144,6 +162,10 @@ class SelectCombo extends SelectField {
         return 'select-combo';
     }
 
+    /**
+     * Returns the input element for the select combo field.
+     * @returns {HTMLInputElement | null} The input element for the select combo field.
+     */
     getInput() {
         return this.hasSearch() ? this.querySelector('.optionsField__searchInput') : this.querySelector('.optionsField__input');
     }
@@ -158,6 +180,11 @@ class SelectCombo extends SelectField {
         return Boolean(hasSearch || (fetchOptions && !this.getOptionCount()));
     }
 
+    /**
+     * Sets the options for the select combo field.
+     * @param {FieldOptionConfigType[]} options - The options to set on the select combo field.
+     * @returns {this} The instance of the select combo field.
+     */
     setOptions(options) {
         super.setOptions(options);
         if (options.length && !this._initializedOptions) {
@@ -185,6 +212,10 @@ class SelectCombo extends SelectField {
         this.updateSearchInputLabel(label);
     }
 
+    /**
+     * Updates the label of the button input of the select combo field.
+     * @param {string | HTMLElement} label - The label to set on the button input.
+     */
     updateButtonLabel(label) {
         if (this.buttonInput) {
             this.buttonInput.innerHTML = '';
@@ -196,9 +227,13 @@ class SelectCombo extends SelectField {
         }
     }
 
+    /**
+     * Updates the value of the search input label.
+     * @param {string | HTMLElement} label - The label to set on the search input.
+     */
     updateSearchInputLabel(label) {
-        if (this.searchInput) {
-            this.searchInput.value = label?.textContent || label;
+        if (this.searchInput instanceof HTMLInputElement) {
+            this.searchInput.value = typeof label === 'string' ? label : label?.textContent || '';
         }
     }
 
@@ -209,8 +244,8 @@ class SelectCombo extends SelectField {
     /////////////////////
 
     /**
-     * Renders the input element of the select combo field.
-     * @returns {string} The rendered input element.
+     * Returns the template variables for the select combo field.
+     * @returns {Record<string, unknown>} The template variables for the select combo field.
      */
     getInputTemplateVars() {
         return {
@@ -229,6 +264,10 @@ class SelectCombo extends SelectField {
               </button>`;
     }
 
+    /**
+     * Renders the options for the select combo field.
+     * @param {FieldOptionConfigType[]} options - The options to render.
+     */
     renderOptions(options) {
         super.renderOptions(options);
         requestAnimationFrame(() => this.inputCombo?.place());
@@ -241,15 +280,16 @@ class SelectCombo extends SelectField {
     /////////////////
 
     onLabelClick() {
-        return this.getInput()?.focus();
+        const input = this.getInput();
+        return input instanceof HTMLElement && input.focus();
     }
 
     onSearchInputFocus() {
-        this.searchInput.select();
+        this.searchInput?.select();
     }
 
     onSearchInputBlur() {
-        this.searchInput.value = this.getSelectedOption()?.getProperty('label') || '';
+        this.searchInput && (this.searchInput.value = this.getSelectedOption()?.getProperty('label') || '');
     }
 
     onOpenCombo() {
@@ -272,7 +312,12 @@ class SelectCombo extends SelectField {
         }
     }
 
-    async onSearch({ query, event }) {
+    /**
+     * Handles the search event for the select combo field.
+     * @type {SearchToolCallbackType}
+     */
+    async onSearch(payload) {
+        const { query, event } = payload;
         if (event) {
             this.query = query;
         }

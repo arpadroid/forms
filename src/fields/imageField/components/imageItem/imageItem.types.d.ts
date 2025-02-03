@@ -1,6 +1,6 @@
 import { FileItemInterface } from '../../../fileField/components/fileItem/fileItemInterface';
 
-export interface ImageItemInterface extends FileItemInterface {
+export type ImageItemConfigType = FileItemInterface & {
     fileSize?: number;
     size?: string;
     extension?: string;

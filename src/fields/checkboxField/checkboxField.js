@@ -1,5 +1,5 @@
 /**
- * @typedef {import('../field/fieldInterface.js').FieldInterface} FieldInterface
+ * @typedef {import('./checkboxField.types').CheckboxFieldConfigType} CheckboxFieldConfigType
  */
 import { mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
@@ -9,6 +9,11 @@ const html = String.raw;
  * @module CheckboxField
  */
 class CheckboxField extends Field {
+    /** @type {HTMLInputElement} */// @ts-ignore
+    input = this.input;
+    /** @type {CheckboxFieldConfigType} */// @ts-ignore
+    _config = this._config;
+
     static template = html`
         <label is="field-label" class="fieldInput checkboxField__label">
             <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
@@ -23,7 +28,7 @@ class CheckboxField extends Field {
 
     /**
      * Returns the default configuration for the checkbox field.
-     * @returns {FieldInterface}
+     * @returns {CheckboxFieldConfigType}
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -59,7 +64,7 @@ class CheckboxField extends Field {
      * @returns {boolean}
      */
     getValue() {
-        return this?.input?.checked ?? super.getValue();
+        return Boolean(this?.input?.checked ?? super.getValue());
     }
 
     /**
@@ -71,7 +76,7 @@ class CheckboxField extends Field {
             return true;
         }
         !this.input?.checked && this.setError(this.i18n('errRequired'));
-        return this.input?.checked;
+        return Boolean(this.input?.checked);
     }
 }
 

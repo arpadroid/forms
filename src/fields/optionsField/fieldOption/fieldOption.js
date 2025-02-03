@@ -3,7 +3,7 @@ import { ArpaElement } from '@arpadroid/ui';
 
 /**
  * @typedef {import('../../field/field.js').default} Field
- * @typedef {import('./fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
+ * @typedef {import('./fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
  */
 const html = String.raw;
 
@@ -11,9 +11,12 @@ const html = String.raw;
  * Represents a field option element.
  */
 class FieldOption extends ArpaElement {
+    /** @type {FieldOptionConfigType} */ //@ts-ignore
+    _config = this._config;
+
     /**
      * Returns the default configuration for the field option element.
-     * @returns {FieldOptionInterface} The default configuration.
+     * @returns {FieldOptionConfigType}
      */
     getDefaultConfig() {
         return {
@@ -22,6 +25,10 @@ class FieldOption extends ArpaElement {
         };
     }
 
+    /**
+     * Returns the field option element's ready promise.
+     * @returns {Promise<any>} The ready promise.
+     */
     onReady() {
         return customElements.whenDefined('arpa-field');
     }
@@ -46,7 +53,7 @@ class FieldOption extends ArpaElement {
      */
     getOptionId() {
         const valueString = mechanize(this.getProperty('value'));
-        return `field-option-${this.field.getHtmlId()}-${valueString}`;
+        return `field-option-${this.field?.getHtmlId()}-${valueString}`;
     }
 
     /**
@@ -65,18 +72,22 @@ class FieldOption extends ArpaElement {
         }
         this.setIsSelected();
         super.render();
-        this.classList.add(this._config.className);
+        this._config.className && this.classList.add(this._config.className);
         this._onConnected();
     }
 
     _initializeNodes() {
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = this.querySelector('.fieldOption__content');
-        const childNodes = isIOsSafari() ? this._childNodes : this._childNodes?.filter(node => !node?.tagName?.toLowerCase().includes('dialog'));
-        appendNodes(this.contentNode, childNodes);
+        const childNodes = isIOsSafari()
+            ? this._childNodes // @ts-ignore
+            : this._childNodes?.filter(node => !node?.tagName?.toLowerCase().includes('dialog'));
+
+        this.contentNode && appendNodes(this.contentNode, childNodes);
     }
 
     getField() {
+        // @ts-ignore
         return this.field || this.closest('.arpaField') || this.closest('.optionsField__options')?.field;
     }
 
@@ -96,7 +107,6 @@ class FieldOption extends ArpaElement {
 
     /**
      * Handles the connected event for the field option element.
-     * @protected
      */
     _onConnected() {}
 

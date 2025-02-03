@@ -1,6 +1,9 @@
+/**
+ * @typedef {import('../../field').default} Field
+ */
 class FieldFootnote extends HTMLParagraphElement {
     connectedCallback() {
-        this.field = this.closest('.arpaField');
+        this.field = /** @type {Field} */ (this.closest('.arpaField'));
         this.render();
     }
 
@@ -15,7 +18,6 @@ class FieldFootnote extends HTMLParagraphElement {
     }
 
     getFootnote() {
-        this.field = this.closest('.arpaField');
         return this.field?.getProperty('footnote');
     }
 }

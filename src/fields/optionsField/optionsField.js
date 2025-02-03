@@ -1,25 +1,29 @@
 /**
- * @typedef {import('./fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
- * @typedef {import('./optionsFieldInterface').OptionsFieldInterface} OptionsFieldInterface
+ * @typedef {import('./fieldOption/fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
+ * @typedef {import('./optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType
+ * @typedef {import('./fieldOption/fieldOption.js').default} FieldOption
+ * @typedef {import('./optionsField.types').OptionsNodeType} OptionsNodeType
  */
-import { attr, mergeObjects, renderNode } from '@arpadroid/tools';
-import { I18nTool } from '@arpadroid/i18n';
+import { attr, mergeObjects, processTemplate, renderNode } from '@arpadroid/tools';
 import Field from '../field/field.js';
+
 const html = String.raw;
 
 class OptionsField extends Field {
     //////////////////////////
     // #region CONFIGURATION
     /////////////////////////
-
-    /** @type {Record<string, FieldOptionInterface>} */
+    /** @type {OptionsFieldConfigType} */
+    // @ts-ignore
+    _config = this._config;
+    /** @type {Record<string, FieldOptionConfigType>} */
     _optionsByValue = {};
-    /** @type {FieldOptionInterface} */
-    options = [];
+    /** @type {FieldOptionConfigType[]} */
+    _options = [];
 
     /**
      * Returns the default configuration for the options field.
-     * @returns {OptionsFieldInterface} The default configuration.
+     * @returns {OptionsFieldConfigType} The default configuration.
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -44,32 +48,15 @@ class OptionsField extends Field {
 
     // #endregion
 
-    /////////////////////
-    // #region ACCESSORS
-    /////////////////////
-
-    /**
-     * Sets the options for the options field.
-     * @param {FieldOptionInterface[]} _options - The options to set.
-     * @param {boolean} [update] - Whether to update the options.
-     * @returns {OptionsField} The options field instance.
-     */
-    setOptions(_options = [], update = true) {
-        this._optionsByValue = {};
-        this._options = this.normalizeOptions(_options);
-        this._config.options = this._options;
-        if (update) {
-            this.renderOptions(this._options);
-        }
-        return this;
-    }
-
+    /////////////////////////////
+    // #region Get
+    ////////////////////////////
     /**
      * Returns the options of the options field.
-     * @returns {FieldOptionInterface[]}
+     * @returns {FieldOption[] | HTMLElement[]}
      */
     getOptions() {
-        return Array.from(this.optionsNode?.children ?? []);
+        return /** @type {FieldOption[]} */ (Array.from(this.optionsNode?.children ?? []));
     }
 
     /**
@@ -82,21 +69,23 @@ class OptionsField extends Field {
 
     /**
      * Returns the selected option of the options field.
-     * @returns {HTMLElement}
+     * @returns {FieldOption | undefined}
      */
     getSelectedOption() {
-        return this.getOption(this.getValue()) || this.getDefaultOption();
+        return /** @type {FieldOption} */ (this.getOption(this.getValue()) || this.getDefaultOption());
     }
 
     /**
      * Returns the option with the specified value.
      * @param {unknown} value
-     * @returns {HTMLElement | undefined}
+     * @returns {FieldOption | undefined}
      */
     getOption(value) {
-        return [...(this.optionsNode?.children ?? [])].find(option => {
-            return option?.getAttribute('value') === value;
-        });
+        return /** @type {FieldOption} */ (
+            [...(this.optionsNode?.children ?? [])].find(option => {
+                return option?.getAttribute('value') === value;
+            })
+        );
     }
 
     getDefaultOption() {
@@ -107,15 +96,47 @@ class OptionsField extends Field {
         );
     }
 
+    // #endregion Get
+
+    ////////////////////////
+    // #region Set
+    ///////////////////////
+
+    /**
+     * Sets the options for the options field.
+     * @param {FieldOptionConfigType[]} _options - The options to set.
+     * @param {boolean} [update] - Whether to update the options.
+     * @returns {this} The options field instance.
+     */
+    setOptions(_options = [], update = true) {
+        this._optionsByValue = {};
+        this._options = this.normalizeOptions(_options);
+        this._config.options = this._options;
+        if (update) {
+            this.renderOptions(this._options);
+        }
+        return this;
+    }
+
+    /**
+     * Sets the fetch options for the options field.
+     * @param {OptionsFieldConfigType['fetchOptions']} fetchOptions - The fetch options function.
+     */
     async setFetchOptions(fetchOptions) {
         this._config.fetchOptions = fetchOptions;
         this.initializeOptions();
     }
 
+    // #endregion Set
+
+    ////////////////////////
+    // #region Options
+    ///////////////////////
+
     /**
      * Fetches the options for the options field.
      * @param {string} query - The query to fetch the options.
-     * @returns {Promise} A promise that resolves with the fetched options.
+     * @returns {Promise<any>} A promise that resolves with the fetched options.
      */
     fetchOptions(query = '') {
         this.fetchQuery = query;
@@ -134,8 +155,8 @@ class OptionsField extends Field {
 
     /**
      * Normalizes the options of the options field.
-     * @param {unknown[]} _options - The options to normalize.
-     * @returns {FieldOptionInterface[]} The normalized options.
+     * @param {string[] | string | FieldOptionConfigType[]} _options - The options to normalize.
+     * @returns {FieldOptionConfigType[]} The normalized options.
      */
     normalizeOptions(_options) {
         let options = _options;
@@ -150,15 +171,16 @@ class OptionsField extends Field {
         }
         return options.map(option => {
             const opt = this.preprocessOption(option);
-            this._optionsByValue[opt.value] = opt;
+            const val = String(opt.value);
+            this._optionsByValue[val] = opt;
             return opt;
         });
     }
 
     /**
      * Pre-processes an option.
-     * @param {unknown} option - The option to preprocess.
-     * @returns {FieldOptionInterface} The preprocessed option.
+     * @param {FieldOptionConfigType | string | any} option - The option to preprocess.
+     * @returns {FieldOptionConfigType} The preprocessed option.
      */
     preprocessOption(option) {
         const rv = option;
@@ -172,15 +194,14 @@ class OptionsField extends Field {
         return rv;
     }
 
-    // #endregion
+    // #endregion Options
 
-    //////////////////////
-    // #region LIFECYCLE
-    //////////////////////
+    ////////////////////////////////
+    // #region Lifecycle
+    ///////////////////////////////
 
     /**
      * Initializes the value of the options field.
-     * @protected
      */
     async _initializeValue() {
         this.selectedOption = this.getSelectedOption();
@@ -193,6 +214,7 @@ class OptionsField extends Field {
 
     _initializeNodes() {
         super._initializeNodes();
+        /** @type {OptionsNodeType | null} */
         this.optionsNode = this.querySelector('.optionsField__options');
     }
 
@@ -208,6 +230,10 @@ class OptionsField extends Field {
         }
     }
 
+    /**
+     * Called when a zone is placed.
+     * @param {Record<string, any>} payload - The payload of the event.
+     */
     _onPlaceZone(payload) {
         payload?.zoneContainer && payload.zoneContainer === this.optionsNode && this.updateValue();
     }
@@ -218,17 +244,17 @@ class OptionsField extends Field {
 
     /**
      * Handles the fetched options for the options field.
-     * @param {FieldOptionInterface[]} opt
+     * @param {FieldOptionConfigType[]} opt
      */
     onOptionsFetched(opt) {
         this.setOptions(opt);
     }
 
-    // #endregion
+    // #endregion Lifecycle
 
-    /////////////////////
-    // #region RENDERING
-    /////////////////////
+    ///////////////////////////
+    // #region Render
+    //////////////////////////
 
     /**
      * Returns the template variables for the input element.
@@ -247,9 +273,9 @@ class OptionsField extends Field {
 
     /**
      * Renders the options for the options field.
-     * @param {FieldOptionInterface[]} options - The options to render.
+     * @param {FieldOptionConfigType[]} options - The options to render.
      */
-    renderOptions(options) {
+    renderOptions(options = this._options) {
         if (this.isLoadingOptions) {
             this.renderOptionsPreloader();
         } else {
@@ -258,12 +284,16 @@ class OptionsField extends Field {
         }
     }
 
+    /**
+     * Renders the options for the options field.
+     * @param {FieldOptionConfigType[]} options
+     */
     async _renderOptions(options) {
         await this.onReady();
         if (!this.optionsNode) {
             return;
         }
-        this.optionsNode.field = this;
+        /** @type {HTMLElement & {field: Field}} */ (this.optionsNode).field = this;
         this.optionsNode.innerHTML = '';
         if (!this.optionsNode.isConnected || this.optionsNode.parentNode === document.body) {
             this.appendChild(this.optionsNode);
@@ -271,15 +301,23 @@ class OptionsField extends Field {
         options?.forEach(option => this._renderOption(option));
     }
 
+    /**
+     * Renders an option for the options field.
+     * @param {FieldOptionConfigType} option - The option to render.
+     * @returns {FieldOption} The rendered option.
+     */
     _renderOption(option) {
-        const { optionTemplate } = this._config;
+        const { optionTemplate = '' } = this._config;
         const optionComponent = this.getProperty('option-component');
-        const template = I18nTool.processTemplate(optionTemplate, { optionComponent });
+        const template = processTemplate(optionTemplate, { optionComponent });
+        /** @type {FieldOption} */
         const optionNode = renderNode(template);
-        attr(optionNode, option);
-        this.optionsNode.appendChild(optionNode);
-        if (typeof optionNode?.setConfig === 'function') {
-            optionNode.setConfig(option);
+        if (optionNode instanceof HTMLElement) {
+            attr(optionNode, option);
+            this.optionsNode?.appendChild(optionNode);
+            if (typeof optionNode?.setConfig === 'function') {
+                optionNode.setConfig(option);
+            }
         }
 
         return optionNode;
@@ -289,10 +327,10 @@ class OptionsField extends Field {
         if (!this.optionsPreloader) {
             this.optionsPreloader = renderNode(html`<circular-preloader></circular-preloader>`);
         }
-        this.optionsNode.append(this.optionsPreloader);
+        this.optionsPreloader && this.optionsNode?.append(this.optionsPreloader);
     }
 
-    // #endregion
+    // #endregion Render
 }
 
 customElements.define(OptionsField.prototype.getTagName(), OptionsField);

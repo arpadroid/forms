@@ -1,16 +1,19 @@
 /**
- * @typedef {import("./interface/fieldInterface.js").FieldInterface} FieldInterface
  * @typedef {import("../../fileField.js").default} FileField
+ * @typedef {import("@arpadroid/ui").DropArea} DropArea
  */
 import FieldInput from '../../../field/components/fieldInput/fieldInput.js';
-import FileField from '../../fileField.js';
+
 class FileFieldInput extends FieldInput {
+    /** @type {File[]} */
     uploads = [];
+    /** @type {File[]} */
     invalidUploads = [];
-    /** @type {FileField} */
+    /** @type {FileField | undefined} */ // @ts-ignore
     field;
-    constructor(config) {
-        super(config);
+
+    constructor() {
+        super();
         this._onInputChange = this._onInputChange.bind(this);
     }
 
@@ -18,7 +21,7 @@ class FileFieldInput extends FieldInput {
         return this.uploads;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         super.connectedCallback();
         this.style.display = 'none';
         this.allowMultiple = this.field?.allowMultiple();
@@ -31,21 +34,27 @@ class FileFieldInput extends FieldInput {
     }
 
     async _initializeDropArea() {
-        this.dropArea = this.field?.querySelector('drop-area');
+        this.dropArea = /** @type {DropArea} */ (this.field?.querySelector('drop-area'));
         await customElements.whenDefined('drop-area');
         this.dropArea?.on('drop', this._onInputChange);
     }
 
-    _onInputChange(event, files = this.files) {
-        files = Array.from(files);
+    /**
+     * Handles the change event for the input element.
+     * @param {Event} event - The event object.
+     * @param {FileList | null} _files - The files to process.
+     */
+    _onInputChange(event, _files = this.files) {
+        const files = Array.from(_files || []);
         if (!files?.length) {
             return;
         }
-        const multiple = this.field.allowMultiple();
+        const multiple = this.field?.allowMultiple();
+        /** @type {File[]} */
         const invalidUploads = [];
         if (!multiple && !invalidUploads.length) {
             this.uploads = [];
-            this.field.clearUploads();
+            this.field?.clearUploads();
         }
         const uploads = files.filter(file => {
             const isValid = this.addUpload(file);
@@ -60,17 +69,22 @@ class FileFieldInput extends FieldInput {
         if (invalidUploads.length) {
             this.field?.signal('error', invalidUploads, this);
         }
-        
-        this.field.updateErrors();
+
+        this.field?.updateErrors();
     }
 
+    /**
+     * Adds a file to the uploads array.
+     * @param {File} file - The file to add.
+     * @returns {boolean} True if the file was added, false otherwise.
+     */
     addUpload(file) {
-        const isValid = this.field.validator.validateFile(file);
+        const isValid = this.field?.validator?.validateFile(file);
         if (isValid) {
             this.uploads.push(file);
             this.field?.addUpload(file);
         }
-        return isValid;
+        return Boolean(isValid);
     }
 }
 

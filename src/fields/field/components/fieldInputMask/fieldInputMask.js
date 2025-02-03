@@ -7,9 +7,16 @@ const html = String.raw;
  * Represents a custom HTML element for an field input mask.
  */
 class FieldInputMask extends HTMLElement {
+    /** @type {Record<string, HTMLElement>} */
     rhs = {};
+    /** @type {Record<string, HTMLElement>} */
     lhs = {};
 
+    /**
+     * Adds a node to the right-hand side of the field input mask.
+     * @param {string} id - The id of the node.
+     * @param {HTMLElement} node - The node to add.
+     */
     addRhs(id, node) {
         if (typeof id === 'string' && node instanceof HTMLElement) {
             this.rhs[id] = node;
@@ -23,10 +30,11 @@ class FieldInputMask extends HTMLElement {
         return Object.values(this.rhs);
     }
 
-    getLhsNodes() {
-        return Object.values(this.lhs);
-    }
-
+    /**
+     * Adds a node to the left-hand side of the field input mask.
+     * @param {string} id - The id of the node.
+     * @param {HTMLElement} node - The node to add.
+     */
     addLhs(id, node) {
         if (typeof id === 'string' && node instanceof HTMLElement) {
             this.lhs[id] = node;
@@ -36,10 +44,14 @@ class FieldInputMask extends HTMLElement {
         }
     }
 
+    getLhsNodes() {
+        return Object.values(this.lhs);
+    }
+
     async connectedCallback() {
         // await this.onReady();
         /** @type {Field} */
-        this.field = this.closest('.arpaField');
+        this.field = /** @type {Field} */ (this.closest('.arpaField'));
         this.render();
         this.update();
     }
@@ -49,11 +61,14 @@ class FieldInputMask extends HTMLElement {
     }
 
     update() {
-        if (this.icon) {
-            this.icon.innerHTML = this.field?.getIcon();
+        const icon = this.field?.getIcon();
+        if (typeof icon === 'string' && this.icon instanceof HTMLElement) {
+            this.icon.innerHTML = icon;
         }
-        if (this.iconRight) {
-            this.iconRight.innerHTML = this.field?.getIconRight();
+
+        const iconRight = this.field?.getIconRight();
+        if (typeof iconRight === 'string' && this.iconRight instanceof HTMLElement) {
+            this.iconRight.innerHTML = iconRight;
         }
     }
 
@@ -72,9 +87,9 @@ class FieldInputMask extends HTMLElement {
         `;
 
         this.rhsNode = this.querySelector('.fieldInputMask__rhs');
-        appendNodes(this.rhsNode, this.getRhsNodes());
+        this.rhsNode && appendNodes(this.rhsNode, this.getRhsNodes());
         this.lhsNode = this.querySelector('.fieldInputMask__lhs');
-        appendNodes(this.lhsNode, this.getLhsNodes());
+        this.lhsNode && appendNodes(this.lhsNode, this.getLhsNodes());
         this.icon = this.querySelector('.arpaField__icon');
         this.iconRight = this.querySelector('.arpaField__iconRight');
     }

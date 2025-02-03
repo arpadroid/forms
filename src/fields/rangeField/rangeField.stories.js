@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
+ * @typedef {import('./fieldInterface.js').FieldConfigType} FieldConfigType
  */
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from '@storybook/test';

@@ -1,14 +1,28 @@
+/**
+ * @typedef {import('./timeField.types').TimeFieldConfigType} TimeFieldConfigType
+ */
 import { mergeObjects, attr, timeStringToSeconds, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
 class TimeField extends TextField {
+    /** @type {HTMLInputElement} */ // @ts-ignore
+    input = this.input;
+    /** @type {TimeFieldConfigType} */ // @ts-ignore
+    _config = this._config;
     _validations = [...super.getValidations(), 'min', 'max'];
+
+    /**
+     * Returns the default configuration for the time field.
+     * @returns {TimeFieldConfigType} The default configuration object.
+     */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {TimeFieldConfigType} */
+        const config = {
             inputAttributes: { type: 'time' },
             pickerLabel: I18n.getText('forms.fields.time.lblShowPicker')
-        });
+        };
+        return mergeObjects(super.getDefaultConfig(), config);
     }
 
     getI18nKey() {
@@ -27,7 +41,7 @@ class TimeField extends TextField {
         super._initializeNodes();
         super._onInitialized();
         this.timeButton = this.renderTimeButton();
-        this.inputMask.addRhs('timeButton', this.timeButton);
+        this.inputMask?.addRhs('timeButton', this.timeButton);
     }
 
     async _onConnected() {
@@ -35,7 +49,7 @@ class TimeField extends TextField {
         super._onConnected();
         const min = this.getProperty('min');
         const max = this.getProperty('max');
-        attr(this.input, { min, max });
+        this.input && attr(this.input, { min, max });
     }
 
     renderTimeButton() {
@@ -53,13 +67,18 @@ class TimeField extends TextField {
         return button;
     }
 
+    /**
+     * Validates the minimum time value.
+     * @param {string} value - The time value to validate.
+     * @returns {boolean} True if the value is valid, false otherwise.
+     */
     validateMin(value) {
         const min = this.getProperty('min');
         if (value && min) {
             const minSeconds = timeStringToSeconds(min);
             const seconds = timeStringToSeconds(value);
             if (seconds < minSeconds) {
-                this.validator.setError(
+                this.validator?.setError(
                     html`<i18n-text key="${this.getI18nKey()}.errMin" replacements="min::${min}"></i18n-text>`
                 );
                 return false;
@@ -68,13 +87,18 @@ class TimeField extends TextField {
         return true;
     }
 
+    /**
+     * Validates the maximum time value.
+     * @param {string} value - The time value to validate.
+     * @returns {boolean} True if the value is valid, false otherwise.
+     */
     validateMax(value) {
         const max = this.getProperty('max');
         if (value && max) {
             const maxSeconds = timeStringToSeconds(max);
             const seconds = timeStringToSeconds(value);
             if (seconds > maxSeconds) {
-                this.validator.setError(
+                this.validator?.setError(
                     html`<i18n-text key="${this.getI18nKey()}.errMax" replacements="max::${max}"></i18n-text>`
                 );
                 return false;

@@ -1,37 +1,46 @@
-/** @typedef {import('./dateFieldInterface.js').DateFieldInterface} DateFieldInterface */
+/** @typedef {import('./dateField.types').DateFieldConfigType} DateFieldConfigType */
 import { attr, formatDate, isAfter, isBefore, renderNode, mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
 class DateField extends Field {
+    //////////////////////////////////
+    // #region Initialization
+    /////////////////////////////////
+
     /** @type {string[]} _validations - The validation method signatures for the date field.*/
     _validations = [...super.getValidations(), 'date'];
     i18nKey = this.getI18nKey();
-    //////////////////////////
-    // #region INITIALIZATION
-    //////////////////////////
+    /** @type {DateFieldConfigType} */ // @ts-ignore
+    _config = this._config;
+    /** @type {HTMLInputElement} */ // @ts-ignore
+    input = this.input;
+
     /**
      * Returns the default configuration for the date field.
-     * @returns {DateFieldInterface} The default configuration.
+     * @returns {DateFieldConfigType} The default configuration.
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {DateFieldConfigType} */
+        const config = {
             format: 'YYYY-MM-DD',
             inputFormat: 'YYYY-MM-DD',
             outputFormat: undefined,
             disableFuture: false,
             disablePast: false,
             inputAttributes: { type: 'date' }
-        });
+        };
+        return mergeObjects(super.getDefaultConfig(), config);
     }
-    // #endregion
-    //////////////////////
+
+    // #endregion Initialization
+
+    ////////////////////////////
     // #region LIFECYCLE
-    /////////////////////
+    ///////////////////////////
     /**
      * Event handler for when the date field is connected to the DOM.
      * Renders the calendar button.
-     * @protected
      */
     async _onConnected() {
         await this.onReady();
@@ -47,13 +56,15 @@ class DateField extends Field {
         }
         if (!this.calendarButton) {
             this.calendarButton = this.renderCalendarButton();
-            this.inputMask.addRhs('calendarButton', this.calendarButton);
+            this.inputMask?.addRhs('calendarButton', this.calendarButton);
         }
     }
     // #endregion
-    //////////////////////
-    // #region ACCESSORS
-    /////////////////////
+
+    //////////////////////////////
+    // #region Accessors
+    /////////////////////////////
+
     getFieldType() {
         return 'date';
     }
@@ -66,18 +77,23 @@ class DateField extends Field {
         return 'forms.fields.date';
     }
 
-    setValue(value, update = true) {
-        const val = formatDate(value, this._config.inputFormat);
+    /**
+     * Sets the value of the date field.
+     * @param {string | Date} value
+     * @param {boolean} [update]
+     * @param {string} [format]
+     * @returns {Field} The formatted value.
+     */
+    setValue(value, update = true, format = this._config?.inputFormat || this._config.format) {
+        const val = formatDate(value, format);
         return super.setValue(val, update);
     }
 
     getOutputValue() {
         const value = this.getValue();
-        if (!value) {
-            return value;
-        }
+        if (!value) return value;
         const format = this.getProperty('output-format') ?? this.getFormat();
-        return formatDate(value, format);
+        return formatDate(String(value), format);
     }
 
     /**
@@ -85,7 +101,7 @@ class DateField extends Field {
      * @returns {boolean} True if future dates are disabled, false otherwise.
      */
     isFutureDisabled() {
-        return this.hasAttribute('disable-future') || this._config.disableFuture;
+        return Boolean(this.hasAttribute('disable-future') || this._config.disableFuture);
     }
 
     /**
@@ -93,7 +109,7 @@ class DateField extends Field {
      * @returns {boolean} True if past dates are disabled, false otherwise.
      */
     isPastDisabled() {
-        return this.hasAttribute('disable-past') || this._config.disablePast;
+        return Boolean(this.hasAttribute('disable-past') || this._config.disablePast);
     }
 
     /**
@@ -109,15 +125,18 @@ class DateField extends Field {
      */
     showPicker() {
         try {
-            this.input.showPicker();
+            this.input?.showPicker();
         } catch (error) {
             // do nothing
         }
     }
-    // #endregion
+
+    // #endregion Accessors
+
     //////////////////////
-    // #region RENDER
+    // #region Render
     /////////////////////
+
     /**
      * Renders the calendar button for the date field.
      * @returns {HTMLButtonElement}
@@ -133,37 +152,40 @@ class DateField extends Field {
         button.addEventListener('click', () => this.showPicker());
         return button;
     }
-    // #endregion
-    //////////////////////
-    // #region VALIDATION
-    /////////////////////
+
+    // #endregion Render
+
+    ////////////////////////////
+    // #region Validation
+    //////////////////////////
+
     /**
      * Validates the date entered in the date field.
      * @returns {boolean} True if the date is valid, false otherwise.
      */
     validateDate() {
-        const value = this.input.value;
+        const value = this.input?.value;
         if (this.isPastDisabled() && isBefore(value, new Date())) {
-            this.validator.setError(html`<i18n-text key="${this.i18nKey}.errPastDisabled"></i18n-text>`);
+            this.validator?.setError(html`<i18n-text key="${this.i18nKey}.errPastDisabled"></i18n-text>`);
             return false;
         }
 
         if (this.isFutureDisabled() && isAfter(value, new Date())) {
-            this.validator.setError(html`<i18n-text key="${this.i18nKey}.errFutureDisabled"></i18n-text>`);
+            this.validator?.setError(html`<i18n-text key="${this.i18nKey}.errFutureDisabled"></i18n-text>`);
             return false;
         }
         const min = this.getProperty('min');
         const max = this.getProperty('max');
         if (min && isBefore(value, min)) {
             const minDate = formatDate(min, this.getFormat());
-            this.validator.setError(
+            this.validator?.setError(
                 html`<i18n-text key="${this.i18nKey}.errMinDate" replacements="date::${minDate}"></i18n-text>`
             );
             return false;
         }
         if (max && isBefore(max, value)) {
             const maxDate = formatDate(max, this.getFormat());
-            this.validator.setError(
+            this.validator?.setError(
                 html`<i18n-text key="${this.i18nKey}.errMaxDate" replacements="date::${maxDate}"></i18n-text>`
             );
             return false;
@@ -171,7 +193,8 @@ class DateField extends Field {
 
         return true;
     }
-    // #endregion
+
+    // #endregion Validation
 }
 
 customElements.define(DateField.prototype.getTagName(), DateField);

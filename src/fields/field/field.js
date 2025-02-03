@@ -1,41 +1,51 @@
-import { mergeObjects, observerMixin, render } from '@arpadroid/tools';
-import FieldValidator from '../../utils/fieldValidator.js';
-import { I18n, I18nTool } from '@arpadroid/i18n';
-import { ArpaElement } from '@arpadroid/ui';
 /**
  * @typedef {import('../../components/form/form').default} FormComponent
- * @typedef {import('./fieldInterface').FieldInterface} FieldInterface
+ * @typedef {import('../../fields/field/components/fieldInput/fieldInput.js').default} FieldInput
+ * @typedef {import('../../fields/field/components/fieldInputMask/fieldInputMask.js').default} fieldInputMask
+ * @typedef {import('./field.types').FieldConfigType} FieldConfigType
  * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
+ * @typedef {import('./components/fieldInput/fieldInput.types.js').FieldInputType} FieldInputType
  */
+import { dummyListener, dummySignal, mergeObjects, observerMixin, processTemplate, render } from '@arpadroid/tools';
+import FieldValidator from '../../utils/fieldValidator.js';
+import { I18n } from '@arpadroid/i18n';
+import { ArpaElement } from '@arpadroid/ui';
 const html = String.raw;
 class Field extends ArpaElement {
-    
     _validations = ['required', 'minLength', 'maxLength', 'size'];
+    /** @type {FieldConfigType} */ // @ts-ignore
+    _config = this._config;
 
     ////////////////////////////////
     // #region Initialization
     ////////////////////////////////
 
     /**
+     * Creates a new instance of ArpaElement.
+     * @param {FieldConfigType} config - The configuration object for the element.
+     */
+    constructor(config) {
+        super(config);
+        this.bind('_callOnChange');
+        this.on = dummyListener;
+        this.signal = dummySignal;
+        observerMixin(this);
+    }
+
+    /**
      * Initializes the field after constructor.
      * @throws {Error} If the field does not have an id.
-     * @protected
      */
     async _initialize() {
-        this.bind('_callOnChange');
-        observerMixin(this);
         const id = this.getId();
-        if (!id) {
-            throw new Error('Field must have an id', this);
-        }
+        if (!id) throw new Error('Field must have an id');
         await this.onReady();
         this._onReady();
     }
 
     /**
      * Returns default config.
-     * @returns {FieldInterface}
-     * @protected
+     * @returns {FieldConfigType}
      */
     getDefaultConfig() {
         return {
@@ -45,20 +55,16 @@ class Field extends ArpaElement {
             hasInputMask: true,
             inputAttributes: {
                 type: 'text'
-            },
-            tagName: 'div',
-            validation: {},
-            context: {}
+            }
         };
     }
 
     /**
      * Sets the configuration for the field.
-     * @param {FieldInterface} config
-     * @protected
+     * @param {FieldConfigType} config
      */
     setConfig(config) {
-        this._initializeI18n(config);
+        this._initializeI18n();
         super.setConfig(config);
     }
 
@@ -82,10 +88,25 @@ class Field extends ArpaElement {
         return mergeObjects(fieldPayload, typePayload);
     }
 
+    /**
+     * Returns the i18n text for the specified key.
+     * @param {string} key
+     * @param {Record<string, string>} [replacements]
+     * @param {string} [base]
+     * @returns {string}
+     */
     i18nText(key, replacements, base = this.i18nFieldKey) {
         return super.i18nText(key, replacements) || super.i18nText(key, replacements, base);
     }
 
+    /**
+     * Returns a i18n component for the specified key.
+     * @param {string} key - The key for the i18n component.
+     * @param {Record<string, string>} [replacements]
+     * @param {Record<string, string>} [attributes]
+     * @param {string} [base] - The base key for the i18n component.
+     * @returns {string} The i18n component.
+     */
     i18n(key, replacements, attributes, base = this.i18nFieldKey) {
         return super.i18n(key, replacements) || super.i18n(key, replacements, attributes, base);
     }
@@ -94,11 +115,12 @@ class Field extends ArpaElement {
      * Initializes the properties for the field.
      * @returns {boolean}
      */
-    async initializeProperties() {
+    initializeProperties() {
         /** @type {FormComponent} */
         if (this.id) {
             this._id = this.id;
             this.removeAttribute('id');
+            // @ts-ignore
             delete this.id;
         }
         this.form = this.getForm();
@@ -116,7 +138,6 @@ class Field extends ArpaElement {
     /**
      * Initializes the value for the field.
      * @param {unknown} value
-     * @protected
      */
     _initializeValue(value = this.getProperty('value')) {
         if (typeof value === 'undefined') {
@@ -129,14 +150,14 @@ class Field extends ArpaElement {
 
     /**
      * Initializes the input element for the field.
-     * @param {HTMLInputElement} input
-     * @protected
+     * @param {FieldInputType} input
      */
     _initializeInputNode(input = this.querySelector('input')) {
+        /** @type {FieldInputType} */
         this.input = input;
         if (this.input) {
-            for (const [key, value] of Object.entries(this._config.inputAttributes)) {
-                !this.input.hasAttribute(key) && this.input.setAttribute(key, value);
+            for (const [key, value] of Object.entries(this._config?.inputAttributes || {})) {
+                !this.input.hasAttribute(key) && this.input.setAttribute(key, String(value));
             }
         }
     }
@@ -145,7 +166,8 @@ class Field extends ArpaElement {
         /** @type {FormComponent} */
         this.form = this.getForm();
         this._initializeInputNode();
-        this.inputMask = this.querySelector('field-input-mask');
+        /** @type {fieldInputMask} */
+        this.inputMask = /** @type {fieldInputMask} */ (this.querySelector('field-input-mask'));
         this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
         this.label = this.querySelector('label[is="field-label"]');
         this.headerNode = this.querySelector('.arpaField__header');
@@ -154,9 +176,9 @@ class Field extends ArpaElement {
 
     // #endregion
 
-    /////////////////////
-    // #region RENDERING
-    ////////////////////
+    //////////////////////////
+    // #region Rendering
+    //////////////////////////
 
     static template = html`
         <div class="arpaField__header">
@@ -204,7 +226,7 @@ class Field extends ArpaElement {
         if (this.isReadOnly()) {
             return html`<div class="arpaField__readOnly fieldInput">${this.getValue()}</div>`;
         }
-        return I18nTool.processTemplate(inputTemplate, this.getInputTemplateVars());
+        return inputTemplate ? processTemplate(inputTemplate, this.getInputTemplateVars()) : '';
     }
 
     renderSubHeader() {
@@ -214,7 +236,7 @@ class Field extends ArpaElement {
 
     /**
      * Renders the input template variables for the field.
-     * @returns {string} The rendered input template.
+     * @returns {Record<string, unknown>} The rendered input template.
      */
     getInputTemplateVars() {
         return {
@@ -223,23 +245,31 @@ class Field extends ArpaElement {
         };
     }
 
+    /**
+     * Adds a node to the right-hand side of the input.
+     * @param {HTMLElement} node
+     */
     async addInputRHS(node) {
         await this.onReady();
         if (node instanceof HTMLElement) {
-            this.inputWrapper.appendChild(node);
+            this.inputWrapper?.appendChild(node);
         }
     }
 
     // #endregion
 
-    /////////////////////
-    // #region LIFECYCLE
-    ////////////////////
+    /////////////////////////////
+    // #region Lifecycle
+    ////////////////////////////
 
     static get observedAttributes() {
         return ['value'];
     }
 
+    /**
+     * Called when the component is ready.
+     * @returns {Promise<any>}
+     */
     onReady() {
         return customElements.whenDefined('arpa-form');
     }
@@ -262,18 +292,17 @@ class Field extends ArpaElement {
 
     /**
      * Called after the component has rendered.
-     * @protected
      */
     _onConnected() {
         this._initializeNodes();
         this._initializeValue();
     }
 
-    // #endregion
+    // #endregion Lifecycle
 
-    //////////////////////
-    // #region VALIDATION
-    /////////////////////
+    /////////////////////////////
+    // #region Validation
+    ////////////////////////////
 
     /**
      * Initializes the validation for the field.
@@ -304,7 +333,7 @@ class Field extends ArpaElement {
         }
         this.updateErrors();
         if (!isValid) {
-            this.signal('error', this.getErrorMessages(), this);
+            this.signal && this.signal('error', this.getErrorMessages(), this);
         }
         return isValid;
     }
@@ -329,13 +358,13 @@ class Field extends ArpaElement {
      * @param {string} text
      */
     setError(text) {
-        this.validator.setError(text);
+        this.validator?.setError(text);
         this.updateErrors();
     }
 
     /**
      * Returns the field errors component.
-     * @returns {FieldErrors}
+     * @returns {FieldErrors | null}
      */
     getErrorsComponent() {
         return this.querySelector('field-errors');
@@ -343,20 +372,17 @@ class Field extends ArpaElement {
 
     // #endregion
 
-    /////////////////////
-    // #region ACCESSORS
-    ////////////////////
+    ///////////////////////////
+    // #region Get
+    //////////////////////////
 
+    /**
+     * Returns the form for the field.
+     * @returns {FormComponent | undefined}
+     */
     getForm() {
-        return this.closest('form') || this._config.form;
-    }
-
-    hasInputMask() {
-        return this.getProperty('has-input-mask');
-    }
-
-    hasLabel() {
-        return this.getProperty('label') || this.hasZone('label');
+        // @ts-ignore
+        return this._config.form || this.closest('form');
     }
 
     getOnChangeValue() {
@@ -365,19 +391,23 @@ class Field extends ArpaElement {
 
     /**
      * Returns the ID for the field.
-     * @returns {string}
+     * @returns {string | undefined}
      */
     getId() {
         return this._id || this.id || this.getProperty('id');
     }
 
+    /**
+     * Returns the input component.
+     * @returns {FieldInputType | undefined}
+     */
     getInput() {
         return this.input;
     }
 
     /**
      * Returns the output value for the field.
-     * @param {Record<string, unknown> | undefined} _values
+     * @param {Record<string, unknown> | undefined} [_values]
      * @returns {unknown}
      */
     getOutputValue(_values) {
@@ -405,29 +435,8 @@ class Field extends ArpaElement {
     }
 
     /**
-     * Sets the value for the field.
-     * @param {unknown} value
-     * @param {boolean} update
-     * @returns {Field}
-     */
-    setValue(value, update = true) {
-        this.value = value;
-        if (this.input) {
-            if (typeof this.input.setValue === 'function') {
-                this.input.setValue(value);
-            } else {
-                this.input.value = value;
-            }
-        }
-        if (update && this.isConnected) {
-            this.setAttribute('value', value);
-        }
-        return this;
-    }
-
-    /**
      * Returns the custom validator for the field.
-     * @returns {(value: unknown) => boolean}
+     * @returns {FieldConfigType['validation']}
      */
     getCustomValidator() {
         return this._config?.validation;
@@ -484,7 +493,7 @@ class Field extends ArpaElement {
 
     /**
      * Returns the right icon for the field.
-     * @returns {string}
+     * @returns {string | undefined}
      */
     getIconRight() {
         return this.getProperty('icon-right');
@@ -548,11 +557,32 @@ class Field extends ArpaElement {
 
     /**
      * Returns the size for the field.
-     * @returns {string[]}
+     * @returns {number[]}
      */
     getSize() {
-        return this.getProperty('size') ?? [];
+        const size = this.getArrayProperty('size') || [];
+        return Array.isArray(size) ? size.map((/** @type {string | number} */ size) => Number(size)) : [];
     }
+
+    // #endregion Get
+
+    ///////////////////////////
+    // #region Has
+    //////////////////////////
+
+    hasInputMask() {
+        return this.getProperty('has-input-mask');
+    }
+
+    hasLabel() {
+        return this.getProperty('label') || this.hasZone('label');
+    }
+
+    // #endregion Has
+
+    ///////////////////////////
+    // #region Is
+    //////////////////////////
 
     isReadOnly() {
         return this.hasAttribute('read-only') || this._config.readOnly;
@@ -563,7 +593,43 @@ class Field extends ArpaElement {
      * @returns {boolean}
      */
     isRequired() {
-        return this.hasAttribute('required') || this._config.required;
+        return Boolean(this.hasAttribute('required') || this._config.required);
+    }
+
+    isDisabled() {
+        const hasAttr = this.hasAttribute('disabled');
+        const attrValue = this.getAttribute('disabled');
+        return Boolean((hasAttr && attrValue !== 'false') || (!hasAttr && this._config.disabled));
+    }
+
+    // #endregion Is
+
+    ///////////////////////////
+    // #region Set
+    //////////////////////////
+
+    /**
+     * Sets the value for the field.
+     * @param {any} value
+     * @param {boolean} update
+     * @returns {this}
+     */
+    setValue(value, update = true) {
+        this.value = value;
+
+        if (this?.input) {
+            // @ts-ignore
+            if (typeof this.input?.setValue === 'function') {
+                // @ts-ignore
+                this.input.setValue(value);
+            } else {
+                this.input.value = value;
+            }
+        }
+        if (update && this.isConnected) {
+            this.setAttribute('value', value);
+        }
+        return this;
     }
 
     /**
@@ -571,7 +637,7 @@ class Field extends ArpaElement {
      * @param {number} maxLength
      */
     setMaxLength(maxLength) {
-        this.setAttribute('maxLength', maxLength);
+        this.setAttribute('maxLength', maxLength.toString());
     }
 
     /**
@@ -579,7 +645,7 @@ class Field extends ArpaElement {
      * @param {number} minLength
      */
     setMinLength(minLength) {
-        this.setAttribute('minLength', minLength);
+        this.setAttribute('minLength', minLength.toString());
     }
 
     /**
@@ -588,7 +654,7 @@ class Field extends ArpaElement {
      * @param {string} message
      */
     setRegex(regex, message) {
-        this.setAttribute('regex', regex);
+        this.setAttribute('regex', regex?.toString());
         if (message) {
             this.setRegexMessage(message);
         }
@@ -624,12 +690,6 @@ class Field extends ArpaElement {
         this.setAttribute('size', size);
     }
 
-    isDisabled() {
-        const hasAttr = this.hasAttribute('disabled');
-        const attrValue = this.getAttribute('disabled');
-        return Boolean((hasAttr && attrValue !== 'false') || (!hasAttr && this._config.disabled));
-    }
-
     disable() {
         this.setAttribute('disabled', 'disabled');
         this.getInput()?.setAttribute('disabled', 'disabled');
@@ -640,19 +700,19 @@ class Field extends ArpaElement {
         this.getInput()?.removeAttribute('disabled');
     }
 
-    // #endregion
+    // #endregion Set
 
-    //////////////////
+    ///////////////////////////
     // #region Events
-    /////////////////
+    //////////////////////////
 
     /**
      * Sends an onChange signal when the field's value changes.
-     * @param {Event} event
+     * @param {Event} [event]
      */
     _callOnChange(event) {
         requestAnimationFrame(() => {
-            if (this.form.isConnected) {
+            if (this.form?.isConnected) {
                 this.signal('change', this.getOnChangeValue(), this, event);
             }
         });

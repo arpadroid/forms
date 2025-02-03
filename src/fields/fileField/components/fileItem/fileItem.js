@@ -1,5 +1,5 @@
 /**
- * @typedef {import('./fileItemInterface').FileItemInterface} FileItemInterface
+ * @typedef {import('./fileItem.types').FileItemConfigType} FileItemConfigType
  * @typedef {import('../../fileField.js').default} FileField
  */
 
@@ -15,7 +15,7 @@ class FileItem extends ListItem {
 
     /**
      * Creates a new file item.
-     * @param {FileItemInterface} config - The configuration object.
+     * @param {FileItemConfigType} config - The configuration object.
      * @param {Record<string, unknown>} payload - The file object.
      * @param {Record<string, string>} map
      * @returns {void}
@@ -28,7 +28,7 @@ class FileItem extends ListItem {
 
     /**
      * Returns the default config for the file item.
-     * @returns {FileItemInterface}
+     * @returns {FileItemConfigType}
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {

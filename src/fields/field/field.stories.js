@@ -1,5 +1,5 @@
 /**
- * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
+ * @typedef {import('./field.types').FieldConfigType} FieldConfigType
  * @typedef {import('./field.js').default} Field
  */
 /* eslint-disable sonarjs/no-duplicate-string */
@@ -170,7 +170,7 @@ const FieldStory = {
 
 export const Default = {
     name: 'Render',
-    /** @type {FieldInterface} */
+    /** @type {FieldConfigType} */
 
     parameters: {
         // actions: { disable: true },

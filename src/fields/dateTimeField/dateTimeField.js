@@ -1,18 +1,20 @@
-/** @typedef {import('./dateFieldInterface.js').DateFieldInterface} DateFieldInterface */
+/** @typedef {import('../dateField/dateField.types').DateFieldConfigType} DateFieldConfigType */
 import DateField from '../dateField/dateField.js';
 import { mergeObjects } from '@arpadroid/tools';
 class DateTimeField extends DateField {
     /**
      * Returns the default configuration for the DateTimeField.
-     * @returns {Date} The default configuration object.
+     * @returns {DateFieldConfigType} The default configuration object.
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {DateFieldConfigType} */
+        const config = {
             inputAttributes: { type: 'datetime-local' },
             inputFormat: 'YYYY-MM-DD HH:mm:ss',
             format: 'D MMM YYYY HH:MM',
             outputFormat: 'D MMM YYYY HH:MM'
-        });
+        };
+        return mergeObjects(super.getDefaultConfig(), config);
     }
 
     getFieldType() {
@@ -25,7 +27,7 @@ class DateTimeField extends DateField {
 
     /**
      * Renders the calendar button for the DateTimeField.
-     * @returns {HTMLElement} The rendered calendar button element.
+     * @returns {HTMLButtonElement} The rendered calendar button element.
      */
     renderCalendarButton() {
         const button = super.renderCalendarButton();

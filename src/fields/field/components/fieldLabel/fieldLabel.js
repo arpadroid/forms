@@ -1,9 +1,8 @@
 /**
  * @typedef {import('../../field').default} Field
  */
+import { mergeObjects, handleZones, zoneMixin, getProperty, hasProperty, processTemplate } from '@arpadroid/tools';
 
-import { mergeObjects, handleZones, zoneMixin, getProperty, hasProperty } from '@arpadroid/tools';
-import { I18nTool } from '@arpadroid/i18n';
 const html = String.raw;
 class FieldLabel extends HTMLLabelElement {
     static defaultConfig = {
@@ -36,17 +35,14 @@ class FieldLabel extends HTMLLabelElement {
 
         if (textNode) {
             const label = this.getLabel();
-            if (label) {
-                textNode.innerHTML = label;
-            }
+            typeof label === 'string' && (textNode.innerHTML = label);
             return;
         }
-        this.innerHTML = I18nTool.processTemplate(this._config.template, this.getTemplateVars());
+        this.innerHTML = processTemplate(this._config.template, this.getTemplateVars());
     }
 
     connectedCallback() {
-        /** @type {Field} */
-        this.field = this.closest('.arpaField');
+        this.field = /** @type {Field} */ (this.closest('.arpaField'));
         this.id = this.field?.getLabelId();
         this.field && this.setAttribute('for', this.field?.getHtmlId());
         this.render();

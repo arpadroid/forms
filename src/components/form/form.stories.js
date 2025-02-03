@@ -1,5 +1,5 @@
 /**
- * @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface
+ * @typedef {import('./fieldInterface.js').FieldConfigType} FieldConfigType
  * @typedef {import('./field.js').default} Field
  */
 import { I18n } from '@arpadroid/i18n';
@@ -132,7 +132,7 @@ const FormStory = {
 
 export const Default = {
     name: 'Render',
-    /** @type {FieldInterface} */
+    /** @type {FieldConfigType} */
 
     parameters: {
         options: {

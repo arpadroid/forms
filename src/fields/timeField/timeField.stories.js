@@ -1,4 +1,4 @@
-/** @typedef {import('./fieldInterface.js').FieldInterface} FieldInterface */
+/** @typedef {import('./fieldInterface.js').FieldConfigType} FieldConfigType */
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect, fireEvent } from '@storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';

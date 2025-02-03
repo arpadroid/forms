@@ -1,17 +1,20 @@
-import RadioOption from '../../radioField/radioOption/radioOption.js';
-
 /**
- * @typedef {import('../../optionsField/fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
+ * @typedef {import('../../optionsField/fieldOption/fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
+ * @typedef {import('../../checkboxesField/checkboxesField.js').default} RadioField
  */
+
+import RadioOption from '../../radioField/radioOption/radioOption.js';
+import CheckboxesField from '../checkboxesField.js';
 
 /**
  * Represents a checkbox option.
  */
 class CheckboxOption extends RadioOption {
+    /** @type {CheckboxesField} */ // @ts-ignore
+    field = this.field;
     /**
      * Renders the input element for the checkbox option.
-     * @returns {HTMLInputElement} The rendered input element.
-     * @protected
+     * @returns {string} The rendered input element.
      */
     renderInput() {
         const name = this.field.getId() + '[]';
@@ -29,18 +32,21 @@ class CheckboxOption extends RadioOption {
      * Handles the change event of the checkbox option.
      * @param {Event} event - The onChange event.
      * @param {boolean} [callOnChange] - Indicates whether to call the onChange callback.
-     * @protected
      */
     _onChange(event, callOnChange = true) {
-        const checked = event.target.checked;
-        let value = event.target.value;
-        if (value == Number(value)) {
+        console.log('_onChange');
+        const input = /** @type {HTMLInputElement} */ (event?.target);
+        const checked = input?.checked;
+        /** @type {string | number | boolean} */
+        let value = input?.value;
+        
+        if (!isNaN(Number(value))) {
             value = Number(value);
         }
         if (checked) {
-            this.field.addValue(value);
+            this.field?.addValue(value);
         } else {
-            this.field.removeValue(value);
+            this.field?.removeValue(value);
         }
         super._onChange(event, callOnChange);
     }

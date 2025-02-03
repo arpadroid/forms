@@ -1,11 +1,11 @@
-/** @typedef {import('./rangeFieldInterface.d.ts').RangeFieldInterface} RangeFieldInterface */
+/** @typedef {import('./rangeField.types').RangeFieldConfigType} RangeFieldConfigType */
 import { mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 class RangeField extends Field {
     /**
      * Returns default config.
-     * @returns {RangeFieldInterface}
+     * @returns {RangeFieldConfigType}
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -14,6 +14,10 @@ class RangeField extends Field {
         });
     }
 
+    /**
+     * Returns the input template variables.
+     * @returns {Record<string, unknown>}
+     */
     getInputTemplateVars() {
         return {
             ...super.getInputTemplateVars(),
@@ -33,7 +37,8 @@ class RangeField extends Field {
     }
 
     getValue() {
-        return parseFloat(super.getValue());
+        const val = /** @type {string} */ (super.getValue());
+        return parseFloat(val);
     }
 }
 

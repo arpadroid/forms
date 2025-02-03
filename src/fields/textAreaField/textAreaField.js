@@ -1,11 +1,13 @@
-/** @typedef {import('./textAreaInterface.js').TextAreaInterface} TextAreaInterface */
+/** @typedef {import('./textArea.types').TextAreaConfigType} TextAreaConfigType */
 import { attr } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 const html = String.raw;
 class TextAreaField extends TextField {
+    /** @type {HTMLTextAreaElement} */ // @ts-ignore
+    input = this.input;
     /**
      * Returns the default configuration for the text area field.
-     * @returns {TextAreaInterface} The default configuration.
+     * @returns {TextAreaConfigType} The default configuration.
      */
     getDefaultConfig() {
         this.bind('_onInput');
@@ -24,20 +26,26 @@ class TextAreaField extends TextField {
         return 'textarea-field';
     }
 
-    _initialize() {
+    async _initialize() {
         this.value = this.innerHTML || this.getProperty('value');
         super._initialize();
     }
 
     _initializeInputNode() {
         super._initializeInputNode(this.querySelector('textarea'));
-        attr(this.input, {
-            rows: this.getProperty('rows')
-        });
-        this.input.removeEventListener('input', this._onInput);
-        this.input.addEventListener('input', this._onInput);
+        if (this.input) {
+            attr(this.input, {
+                rows: this.getProperty('rows')
+            });
+            this.input?.removeEventListener('input', this._onInput);
+            this.input?.addEventListener('input', this._onInput);
+        }
     }
 
+    /**
+     * Handles the input event.
+     * @param {Event} event
+     */
     _onInput(event) {
         this._callOnChange(event);
     }

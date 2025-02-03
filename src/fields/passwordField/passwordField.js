@@ -1,15 +1,21 @@
+/**
+ * @typedef {import('./passwordField.types').PasswordFieldConfigType} PasswordFieldConfigType
+ */
 import { mergeObjects, RegexTool, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 
 const html = String.raw;
 class PasswordField extends TextField {
+    /** @type {PasswordFieldConfigType} */ // @ts-ignore
+    _config = this._config;
     /**
      * Returns the default configuration for the PasswordField.
-     * @returns {import('./passwordFieldInterface.js').PasswordFieldInterface} The default configuration object.
+     * @returns {PasswordFieldConfigType} The default configuration object.
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
-            label: this._i18n?.lblPassword,
+        /** @type {PasswordFieldConfigType} */
+        const conf = {
+            // label: this._i18n?.lblPassword,
             icon: 'lock',
             confirm: false,
             required: true,
@@ -17,8 +23,9 @@ class PasswordField extends TextField {
             inputAttributes: { type: 'password' },
             confirmField: {},
             isConfirm: false,
-            lblShowPassword: this._i18n?.lblShowPassword
-        });
+            lblShowPassword: this.i18nText('lblShowPassword')
+        };
+        return mergeObjects(super.getDefaultConfig(), conf);
     }
 
     setConfig(_config = {}) {
@@ -26,13 +33,13 @@ class PasswordField extends TextField {
         this._initializeConfig();
     }
 
-    _initializeConfig() {
-        const config = this._config;
+    _initializeConfig(config = this._config ?? {}) {
         const mode = this.getAttribute('mode') ?? config.mode;
+        if (!config.inputAttributes) config.inputAttributes = {};
         if (mode === 'register') {
             config.inputAttributes.autocomplete = 'new-password';
-            this.setAttribute('regex', RegexTool.password);
-            this.setAttribute('regex-message', this._i18n?.errRegex);
+            this.setAttribute('regex', RegexTool.password.toString());
+            this.setAttribute('regex-message', this.i18nText('errRegex'));
         } else if (mode === 'login') {
             config.inputAttributes.autocomplete = 'current-password';
             config.confirm = undefined;
@@ -62,7 +69,7 @@ class PasswordField extends TextField {
      */
     hasConfirm() {
         const { isConfirm } = this._config;
-        return (!isConfirm && this.getMode() !== 'login' && this.hasProperty('confirm')) ?? true;
+        return Boolean(!isConfirm && this.getMode() !== 'login' && this.hasProperty('confirm')) ?? true;
     }
 
     /**
@@ -90,7 +97,6 @@ class PasswordField extends TextField {
 
     /**
      * Initializes the confirm field if the PasswordField has a confirm field.
-     * @protected
      */
     async _onConnected() {
         await this.onReady();
@@ -98,7 +104,7 @@ class PasswordField extends TextField {
         this._initializeConfirmField();
         if (!this.visButton) {
             this.visButton = this.renderVisibilityButton();
-            this.inputMask.addRhs('visibilityButton', this.visButton);
+            this.inputMask?.addRhs('visibilityButton', this.visButton);
         }
     }
 
@@ -106,6 +112,10 @@ class PasswordField extends TextField {
         return ['confirm', 'mode'];
     }
 
+    /**
+     * Event handler for when the PasswordField attributes are changed.
+     * @param {string} name - The name of the attribute that was changed.
+     */
     attributeChangedCallback(name) {
         if (this._config?.isConfirm) {
             return;
@@ -119,7 +129,6 @@ class PasswordField extends TextField {
 
     /**
      * Initializes the confirm field for password confirmation.
-     * @protected
      */
     _initializeConfirmField() {
         if (this._config.isConfirm) {
@@ -137,7 +146,7 @@ class PasswordField extends TextField {
                 form: this.form,
                 id: this._id + '-confirm',
                 isConfirm: true,
-                label: this._i18n?.lblConfirmPassword,
+                label: this.i18nText('lblConfirmPassword'),
                 required: true,
                 inputAttributes: { autocomplete: 'new-password' },
                 ...this._config.confirmField,
@@ -152,10 +161,10 @@ class PasswordField extends TextField {
      * Toggles the visibility of the password.
      */
     togglePasswordVisibility() {
-        const isPassword = this.input.getAttribute('type') === 'password';
-        this.input.setAttribute('type', isPassword ? 'text' : 'password');
-        this.visButton.setAttribute('label', isPassword ? this._i18n.lblHidePassword : this._i18n.lblShowPassword);
-        this.visButton.setAttribute('icon', isPassword ? 'visibility_off' : 'visibility');
+        const isPassword = this.input?.getAttribute('type') === 'password';
+        this.input?.setAttribute('type', isPassword ? 'text' : 'password');
+        this.visButton?.setAttribute('label', isPassword ? this.i18nText('lblHidePassword') : this.i18nText('lblShowPassword'));
+        this.visButton?.setAttribute('icon', isPassword ? 'visibility_off' : 'visibility');
     }
 
     // #endregion Lifecycle

@@ -248,7 +248,8 @@ class FormComponent extends HTMLFormElement {
      * @param {FieldComponent} field
      */
     registerField(field) {
-        this.fields[field.getId()] = field;
+        const id = field.getId();
+        id && (this.fields[id] = field);
     }
 
     reset() {

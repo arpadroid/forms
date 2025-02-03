@@ -2,18 +2,20 @@ import { mergeObjects, appendNodes } from '@arpadroid/tools';
 import Field from '../field/field.js';
 
 /**
- * @typedef {import('./groupFieldInterface').GroupFieldInterface} GroupFieldInterface
+ * @typedef {import('./groupField.types').GroupFieldConfigType} GroupFieldConfigType
  */
 
 const html = String.raw;
 class GroupField extends Field {
+    /** @type {GroupFieldConfigType} */  // @ts-ignore
+    _config = this._config;
     /////////////////////////
     // #region INITIALIZATION
     /////////////////////////
 
     /**
      * Creates a new GroupField instance.
-     * @param {GroupFieldInterface} config - The configuration object for the GroupField.
+     * @param {GroupFieldConfigType} config - The configuration object for the GroupField.
      */
     constructor(config) {
         super(config);
@@ -26,17 +28,19 @@ class GroupField extends Field {
 
     /**
      * Returns the default configuration for the GroupField.
-     * @returns {GroupFieldInterface} The default configuration object.
+     * @returns {GroupFieldConfigType} The default configuration object.
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
-            isOpen: undefined,
+        /** @type {GroupFieldConfigType} */
+        const conf = {
+            open: undefined,
             rememberToggle: undefined,
             isCollapsible: undefined,
             openIcon: 'keyboard_arrow_down',
             closedIcon: 'keyboard_arrow_right',
             template: GroupField.template
-        });
+        };
+        return mergeObjects(super.getDefaultConfig(), conf);
     }
 
     // #endregion
@@ -53,6 +57,10 @@ class GroupField extends Field {
         return this.fieldsNode?.children;
     }
 
+    /**
+     * Returns the icon to display on the right side of the group field.
+     * @returns {string | undefined} The icon to display.
+     */
     getIconRight() {
         const { openIcon, closedIcon } = this._config;
         return this.details && this.details.open ? openIcon : closedIcon || super.getIconRight();
@@ -87,7 +95,7 @@ class GroupField extends Field {
     }
 
     isOpen() {
-        return this.details.open;
+        return this.details?.open;
     }
 
     // #endregion
@@ -131,13 +139,14 @@ class GroupField extends Field {
     _onConnected() {
         super._onConnected();
         this.fieldsNode = this.querySelector('.groupField__fields');
-        appendNodes(this.fieldsNode, this._fields);
+        this.fieldsNode && appendNodes(this.fieldsNode, this._fields);
         this.details = this.querySelector('details');
         if (this.isCollapsible()) {
-            this?.details.addEventListener('toggle', event => {
-                const isOpen = event.target.open;
+            this.details?.addEventListener('toggle', event => {
+                const target = /** @type {HTMLDetailsElement | undefined} */ (event?.target);
+                const isOpen = Boolean(target?.open);
                 if (this.getRememberToggle()) {
-                    localStorage.setItem(this.getHtmlId() + '-toggleState', isOpen);
+                    localStorage.setItem(this.getHtmlId() + '-toggleState', isOpen.toString());
                 }
                 this.update();
             });

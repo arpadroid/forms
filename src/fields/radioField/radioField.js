@@ -1,11 +1,11 @@
-/** @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface */
+/** @typedef {import('../optionsField/optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType */
 import { mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
 
 class RadioField extends OptionsField {
     /**
      * Returns the default configuration for the radio field.
-     * @returns {OptionsFieldInterface} The default configuration.
+     * @returns {OptionsFieldConfigType} The default configuration.
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -24,10 +24,12 @@ class RadioField extends OptionsField {
 
     /**
      * Returns the value of the selected radio option.
-     * @returns {string|null} The value of the selected radio option, or null if no option is selected.
+     * @returns {string|null|unknown} The value of the selected radio option, or null if no option is selected.
      */
     getValue() {
-        return this.optionsNode?.querySelector('input[type="radio"]:checked')?.value || super.getValue();
+        /** @type {HTMLInputElement | null | undefined} */
+        const input = /** @type {HTMLInputElement} */ this.optionsNode?.querySelector('input[type="radio"]:checked');
+        return input?.value || super.getValue();
     }
 }
 

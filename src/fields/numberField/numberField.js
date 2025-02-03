@@ -1,4 +1,4 @@
-/** @typedef {import('./numberFIeldInterface.js').NumberFieldInterface} NumberFieldInterface */
+/** @typedef {import('./numberFIeld.types').NumberFieldConfigType} NumberFieldConfigType */
 import { validateNumber } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
@@ -8,7 +8,7 @@ class NumberField extends Field {
 
     /**
      * Returns the default configuration for the number field.
-     * @returns {NumberFieldInterface} The default configuration object.
+     * @returns {NumberFieldConfigType} The default configuration object.
      */
     getDefaultConfig() {
         return {
@@ -23,14 +23,22 @@ class NumberField extends Field {
         };
     }
 
+    /**
+     * Sets the minimum value for the number field.
+     * @param {number} value - The minimum value.
+     */
     setMin(value) {
-        this.setAttribute('min', value);
-        this.input?.setAttribute('min', value);
+        this.setAttribute('min', value.toString());
+        this.input?.setAttribute('min', value.toString());
     }
 
+    /**
+     * Sets the maximum value for the number field.
+     * @param {number} value - The maximum value.
+     */
     setMax(value) {
-        this.setAttribute('max', value);
-        this.input?.setAttribute('max', value);
+        this.setAttribute('max', value.toString());
+        this.input?.setAttribute('max', value.toString());
     }
 
     getFieldType() {
@@ -48,10 +56,10 @@ class NumberField extends Field {
     /**
      * Returns the parsed numeric value of the field's input value.
      * @returns {number | undefined}
-     * @protected
      */
     getValue() {
-        const value = parseFloat(super.getValue());
+        const val = /** @type {string} */ (super.getValue());
+        const value = parseFloat(val);
         return isNaN(value) ? undefined : value;
     }
 
@@ -65,26 +73,22 @@ class NumberField extends Field {
             return true;
         }
         if (!validateNumber(value)) {
-            this.validator.setError(html`<i18n-text key="forms.fields.number.errNumber"></i18n-text>`);
+            this.validator?.setError(html`<i18n-text key="forms.fields.number.errNumber"></i18n-text>`);
             return false;
         }
         const min = this.getProperty('min');
-        if (min && value < min) {
-            this.validator.setError(
-                html`<i18n-text key="forms.fields.number.errMin" replacements="min::${min}"></i18n-text>`
-            );
+        if (value && min && value < min) {
+            this.validator?.setError(html`<i18n-text key="forms.fields.number.errMin" replacements="min::${min}"></i18n-text>`);
             return false;
         }
         const max = this.getProperty('max');
-        if (max && value > max) {
-            this.validator.setError(
-                html`<i18n-text key="forms.fields.number.errMax" replacements="max::${max}"></i18n-text>`
-            );
+        if (value && max && value > max) {
+            this.validator?.setError(html`<i18n-text key="forms.fields.number.errMax" replacements="max::${max}"></i18n-text>`);
             return false;
         }
         const step = this.getProperty('step');
-        if (step && value % step !== 0) {
-            this.validator.setError(
+        if (value && step && value % step !== 0) {
+            this.validator?.setError(
                 html`<i18n-text key="forms.fields.number.errStep" replacements="step::${step}"></i18n-text>`
             );
             return false;

@@ -1,10 +1,22 @@
 /**
- * @typedef {import('./checkboxesFieldInterface').CheckboxesFieldInterface} CheckboxesFieldInterface
+ * @typedef {import('./checkboxesField.types').CheckboxesFieldConfigType} CheckboxesFieldConfigType
  */
 import { mergeObjects } from '@arpadroid/tools';
 import ArrayField from '../arrayField/arrayField.js';
 
 class CheckboxesField extends ArrayField {
+    /** @type {CheckboxesFieldConfigType} */
+    // @ts-ignore
+    _config = this._config;
+
+    /////////////////////////////////////
+    // #region Initialization
+    /////////////////////////////////////
+
+    /**
+     * Creates an instance of the checkboxes field.
+     * @param {CheckboxesFieldConfigType} config - The configuration for the checkboxes field.
+     */
     constructor(config) {
         super(config);
         this.onLabelClick = this.onLabelClick.bind(this);
@@ -12,7 +24,7 @@ class CheckboxesField extends ArrayField {
 
     /**
      * Get the default configuration for the checkboxes field.
-     * @returns {CheckboxesFieldInterface} The default configuration.
+     * @returns {CheckboxesFieldConfigType} The default configuration.
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -21,6 +33,12 @@ class CheckboxesField extends ArrayField {
             inputAttributes: { type: 'checkbox' }
         });
     }
+
+    // #endregion Initialization
+
+    /////////////////////////////////////
+    // #region Get
+    /////////////////////////////////////
 
     getFieldType() {
         return 'checkboxes';
@@ -31,39 +49,64 @@ class CheckboxesField extends ArrayField {
     }
 
     /**
-     * Event handler for when the checkboxes field is connected to the DOM.
-     */
-    _onConnected() {
-        super._onConnected();
-        this._handleLabelToggle();
-    }
-
-    _handleLabelToggle() {
-        if (this.hasLabelToggle()) {
-            this.label?.removeEventListener('click', this.onLabelClick);
-            this.label?.addEventListener('click', this.onLabelClick);
-        }
-    }
-
-    onLabelClick() {
-        this.toggleAll();
-    }
-
-    /**
-     * Check if the checkboxes field has label toggle.
-     * @returns {boolean} True if the checkboxes field has label toggle, false otherwise.
-     */
-    hasLabelToggle() {
-        return this.hasAttribute('label-toggle') || Boolean(this._config?.hasLabelToggle);
-    }
-
-    /**
      * Get all the input elements within the checkboxes field.
-     * @returns {Array} An array of input elements.
+     * @returns {HTMLInputElement[]} An array of input elements.
      */
     getInputs() {
-        return [...this.optionsNode.querySelectorAll(`input[name="${this.getId()}[]"]`)];
+        return /** @type {HTMLInputElement[]} */ ([
+            ...(this.optionsNode?.querySelectorAll(`input[name="${this.getId()}[]"]`) ?? [])
+        ]);
     }
+
+    /**
+     * Returns the output value when the form is submitted.
+     * @param {Record<string, unknown>} values - An object to store the output values.
+     * @returns {Record<string, unknown> | unknown[] | undefined | unknown} The output value for this field.
+     */
+    getOutputValue(values = {}) {
+        const { mergeOutput = false } = (this._config = {});
+        if (!this.isBinary() && !mergeOutput) {
+            return super.getOutputValue(values);
+        }
+        const val = this.getValue();
+        /** @type {Record<string, boolean>} */
+        const value = {};
+        this.getOptions().forEach(option => {
+            const optionValue = String(option.getAttribute('value'));
+            value[optionValue] = val?.includes(optionValue) ?? false;
+        });
+        // for (const [optionValue, option] of Object.entries(this._optionsByValue)) {
+        //     value[optionValue] = val?.includes(option.value) ?? false;
+        // }
+        if (mergeOutput) {
+            for (const [key, checked] of Object.entries(value)) {
+                values[key] = checked;
+            }
+            return;
+        }
+        return value;
+    }
+
+    // #endregion Get
+
+    /////////////////////////////////////
+    // #region Is
+    /////////////////////////////////////
+
+    /**
+     * Check if the checkboxes field is binary.
+     * If the field is binary, it means the value returned to the form submit function will consist of a key-value pair object,
+     * which specifies whether each option is checked or not through a boolean.
+     * @returns {boolean} True if the checkboxes field is binary, false otherwise.
+     */
+    isBinary() {
+        return this.hasAttribute('binary') ?? this._config?.binary;
+    }
+    // #endregion Is
+
+    /////////////////////////////////////
+    // #region Set
+    /////////////////////////////////////
 
     /**
      * Uncheck all the checkboxes within the checkboxes field.
@@ -77,7 +120,7 @@ class CheckboxesField extends ArrayField {
 
     /**
      * Check all the checkboxes within the checkboxes field, except for the specified exceptions.
-     * @param {Array} exceptions - An array of values to exclude from being checked.
+     * @param {unknown[]} exceptions - An array of values to exclude from being checked.
      * @returns {CheckboxesField} The checkboxes field instance.
      */
     checkAll(exceptions = []) {
@@ -86,42 +129,45 @@ class CheckboxesField extends ArrayField {
         return this;
     }
 
-    /**
-     * Check if the checkboxes field is binary.
-     * If the field is binary, it means the value returned to the form submit function will consist of a key-value pair object,
-     * which specifies whether each option is checked or not through a boolean.
-     * @returns {boolean} True if the checkboxes field is binary, false otherwise.
-     */
-    isBinary() {
-        return this.hasAttribute('binary') ?? this._config?.binary;
-    }
+    // #endregion Set
+
+    /////////////////////////////////////
+    // #region Lifecycle
+    /////////////////////////////////////
 
     /**
-     * Returns the output value when the form is submitted.
-     * @param {Record<string, unknown>} values - An object to store the output values.
-     * @returns {Record<string, unknown> | unknown[] | undefined} The output value for this field.
+     * Event handler for when the checkboxes field is connected to the DOM.
      */
-    getOutputValue(values = {}) {
-        const { mergeOutput } = this._config;
-        if (!this.isBinary() && !mergeOutput) {
-            return super.getOutputValue();
+    _onConnected() {
+        super._onConnected();
+        this._handleLabelToggle();
+    }
+
+    // #endregion Lifecycle
+
+    /////////////////////////////////////
+    // #region Event Handlers
+    /////////////////////////////////////
+
+    _handleLabelToggle() {
+        if (this.hasLabelToggle()) {
+            this.label?.removeEventListener('click', this.onLabelClick);
+            this.label?.addEventListener('click', this.onLabelClick);
         }
-        const val = this.getValue();
-        const value = {};
-        this.getOptions().forEach(option => {
-            const optionValue = option.getAttribute('value');
-            value[optionValue] = val?.includes(optionValue) ?? false;
-        });
-        // for (const [optionValue, option] of Object.entries(this._optionsByValue)) {
-        //     value[optionValue] = val?.includes(option.value) ?? false;
-        // }
-        if (mergeOutput) {
-            for (const [key, checked] of Object.entries(value)) {
-                values[key] = checked;
-            }
-            return;
-        }
-        return value;
+    }
+
+    onLabelClick() {
+        this.toggleAll();
+    }
+
+    // #endregion Event Handlers
+
+    /**
+     * Check if the checkboxes field has label toggle.
+     * @returns {boolean} True if the checkboxes field has label toggle, false otherwise.
+     */
+    hasLabelToggle() {
+        return this.hasAttribute('label-toggle') || Boolean(this._config?.hasLabelToggle);
     }
 }
 

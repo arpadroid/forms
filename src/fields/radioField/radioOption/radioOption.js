@@ -1,15 +1,24 @@
-import { I18nTool } from '@arpadroid/i18n';
-import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
-const html = String.raw;
-
 /**
- * @typedef {import('../../optionsField/fieldOption/fieldOptionInterface.js').FieldOptionInterface} FieldOptionInterface
+ * @typedef {import('../../optionsField/fieldOption/fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
+ * @typedef {import('../../radioField/radioField.js').default} RadioField
  */
+import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
+import { processTemplate } from '@arpadroid/tools';
+
+const html = String.raw;
 
 /**
  * Represents a radio option for a radio field.
  */
 class RadioOption extends FieldOption {
+    /** @type {FieldOptionConfigType} */ // @ts-ignore
+    _config = this._config;
+    /** @type {RadioField} */ // @ts-ignore
+    field = this.field;
+    /**
+     * Creates a new radio option.
+     * @param {FieldOptionConfigType} config - The configuration of the radio option.
+     */
     constructor(config) {
         super(config);
         this._onChange = this._onChange.bind(this);
@@ -17,7 +26,7 @@ class RadioOption extends FieldOption {
 
     /**
      * Returns the default configuration for the radio option.
-     * @returns {FieldOptionInterface} The default configuration.
+     * @returns {FieldOptionConfigType} The default configuration.
      */
     getDefaultConfig() {
         return {
@@ -36,7 +45,7 @@ class RadioOption extends FieldOption {
     renderInput(type = 'radio', name = this.field?.getId(), optionId = this.getOptionId(), value = this.getProperty('value')) {
         const checked = this.field?.getValue() === value ? 'checked' : '';
         const template = html`<input type="${type}" id="{optionId}" name="{name}" value="{value}" {checked} />`;
-        return I18nTool.processTemplate(template, { name, optionId, value, checked });
+        return processTemplate(template, { name, optionId, value, checked });
     }
 
     /**
@@ -46,8 +55,10 @@ class RadioOption extends FieldOption {
      */
     _onChange(event, callOnChange = true) {
         const { onChange } = this._config;
-        const value = event.target.value;
-        const checked = event.target.checked;
+        /** @type {HTMLInputElement | null} */
+        const input = /** @type {HTMLInputElement} */ (event?.target);
+        const value = input?.value;
+        const checked = input?.checked;
         if (typeof onChange === 'function' && callOnChange) {
             onChange(checked, {
                 value,
@@ -56,9 +67,7 @@ class RadioOption extends FieldOption {
                 field: this.field
             });
         }
-        if (callOnChange) {
-            this.field._callOnChange(event);
-        }
+        callOnChange && this.field?._callOnChange(event);
     }
 
     async _onConnected() {

@@ -1,6 +1,7 @@
 /**
- * @typedef {import('./fileFieldInterface').FileFieldInterface} FileFieldInterface
- * @typedef {import('./components/fileItem/fileItemInterface.js').FileItemInterface} FileItemInterface
+ * @typedef {import('./fileField.types').FileFieldConfigType} FileFieldConfigType
+ * @typedef {import('./components/fileItem/fileItem.types').FileItemConfigType} FileItemConfigType
+ * @typedef {import('./components/fileItem/fileItem.js').default} FileItem
  */
 
 import { I18n } from '@arpadroid/i18n';
@@ -13,6 +14,10 @@ class FileField extends Field {
     // #region INITIALIZATION
     /////////////////////////
 
+    /**
+     * Creates an instance of FileField.
+     * @param {FileFieldConfigType} config
+     */
     constructor(config) {
         super(config);
         this._onFileSelectClick = this._onFileSelectClick.bind(this);
@@ -21,10 +26,11 @@ class FileField extends Field {
 
     /**
      * Returns default config.
-     * @returns {FileFieldInterface}
+     * @returns {FileFieldConfigType}
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {FileFieldConfigType} */
+        const conf = {
             className: 'fileField',
             inputTemplate: html`
                 <input is="file-field-input" />
@@ -44,7 +50,8 @@ class FileField extends Field {
             inputAttributes: {
                 type: 'file'
             }
-        });
+        };
+        return mergeObjects(super.getDefaultConfig(), conf);
     }
     // #endregion
 
@@ -52,6 +59,11 @@ class FileField extends Field {
     // #region ACCESSORS
     /////////////////////
 
+    /**
+     * Adds an upload to the upload list.
+     * @param {File} file - The file to upload.
+     * @returns {FileItem}
+     */
     addUpload(file) {
         return this.uploadList?.addItem({
             file,
@@ -223,8 +235,8 @@ class FileField extends Field {
         this.fileList = this.querySelector('.fileField__fileList');
         this.dropArea = this.querySelector('drop-area');
         this.input = this.getInput();
-        this.input.removeEventListener('change', this._onChange);
-        this.input.addEventListener('change', this._onChange);
+        this.input?.removeEventListener('change', this._onChange);
+        this.input?.addEventListener('change', this._onChange);
         this.fileSelectBtn = this.querySelector('.fileField__selectButton');
         this.fileSelectBtn?.addEventListener('click', this._onFileSelectClick);
         this.handleUploadWarning();
@@ -234,18 +246,18 @@ class FileField extends Field {
         this.fileList = this.querySelector('.fileField__fileList');
         this.fileList?.onRenderReady(() => {
             const files = this.getFileNodes();
-            this.fileList.addItemNodes(files);
+            this.fileList?.addItemNodes(files);
         });
     }
 
     async handleUploadWarning() {
         await this.promise;
-        const markedForDeletion = Array.from(this.fileList.querySelectorAll('.fileItem--markedForDeletion'));
+        const markedForDeletion = Array.from(this.fileList?.querySelectorAll('.fileItem--markedForDeletion') || []);
         markedForDeletion.forEach(node => node.classList.remove('fileItem--markedForDeletion'));
         if (this.hasUploadWarning()) {
             this.uploadWarning = this.uploadWarning ?? renderNode(this.renderUploadWarning());
-            this.headerNode.after(this.uploadWarning);
-            const fileNode = this.fileList.querySelector('.fileItem');
+            this.headerNode?.after(this.uploadWarning);
+            const fileNode = this.fileList?.querySelector('.fileItem');
             if (fileNode) {
                 fileNode.classList.add('fileItem--markedForDeletion');
             }
@@ -271,7 +283,7 @@ class FileField extends Field {
     /////////////////
 
     _onChange(event) {
-        this.validator._errors = [];
+        this.validator && (this.validator._errors = []);
         this._callOnChange(event);
         this.handleUploadWarning();
     }
@@ -284,7 +296,7 @@ class FileField extends Field {
     }
 
     reconcileListItems() {
-        const uploadItems = this.uploadList.getItems().map(item => {
+        const uploadItems = this.uploadList?.getItems().map(item => {
             delete item.icon;
             delete item.lblRemoveFile;
             return item;
@@ -293,9 +305,9 @@ class FileField extends Field {
             this.clearUploads();
         });
         if (this.allowMultiple()) {
-            this.fileList.listResource.addItems(uploadItems);
+            this.fileList?.listResource.addItems(uploadItems);
         } else {
-            this.fileList.listResource.setItems(uploadItems);
+            this.fileList?.listResource.setItems(uploadItems);
         }
     }
 

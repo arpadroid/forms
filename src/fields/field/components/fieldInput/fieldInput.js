@@ -8,6 +8,10 @@ class FieldInput extends HTMLInputElement {
         this.classList.add('fieldInput');
     }
 
+    /**
+     * Sets the value of the input element.
+     * @param {string} value
+     */
     setValue(value) {
         this.value = value;
         this.setAttribute('value', value);
@@ -20,13 +24,13 @@ class FieldInput extends HTMLInputElement {
     async connectedCallback() {
         this.update();
         if (!this.field) {
-            /** @type {Field} */
-            this.field = this.closest('.arpaField');
+            this.field = /** @type {Field} */ (this.closest('.arpaField'));
         }
         await this.field?.promise;
         if (typeof this.field?.getHtmlId === 'function') {
             this.id = this.field?.getHtmlId();
-            this.name = this.field.getId();
+            const id = this.field?.getId();
+            id && (this.name = id);
             attr(this, {
                 disabled: this.field?.isDisabled(),
                 placeholder: this.field?.getPlaceholder()
@@ -44,8 +48,12 @@ class FieldInput extends HTMLInputElement {
         this.addEventListener('input', this._onInput);
     }
 
+    /**
+     * Handles the input event for the input element.
+     * @param {Event} event
+     */
     _onInput(event) {
-        this.field._callOnChange(event);
+        this.field?._callOnChange(event);
     }
 
     _onFocus() {

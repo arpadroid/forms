@@ -21,6 +21,11 @@ class UrlField extends TextField {
         return 'forms.fields.url';
     }
 
+    /**
+     * Validates the URL value.
+     * @param {string} value - The value to validate.
+     * @returns {boolean} True if the value is a valid URL.
+     */
     validateUrl(value) {
         let isValid = true;
         if (value) {

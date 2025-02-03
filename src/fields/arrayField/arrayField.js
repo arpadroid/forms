@@ -1,19 +1,36 @@
+/**
+ * @typedef {import('../optionsField/optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType
+ */
 import { mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
-
-/**
- * @typedef {import('../optionsField/optionsFieldInterface').OptionsFieldInterface} OptionsFieldInterface
- */
 
 /**
  * Represents an array field that allows selecting multiple options.
  */
 class ArrayField extends OptionsField {
+    /** @type {unknown[]} */
     value = [];
+
+    ////////////////////////////
+    // #region Initialization
+    ////////////////////////////
+    async _initializeValue() {
+        const attrValue = this.getAttribute('value');
+        if (attrValue) {
+            this.setValue(attrValue.split(',').map(value => value.trim()));
+        } else {
+            super._initializeValue();
+        }
+    }
+    // #endregion
+
+    ////////////////////////////
+    // #region Get
+    ////////////////////////////
 
     /**
      * Returns the default configuration for the array field.
-     * @returns {OptionsFieldInterface} The default configuration.
+     * @returns {OptionsFieldConfigType} The default configuration.
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -25,35 +42,56 @@ class ArrayField extends OptionsField {
         return 'array';
     }
 
-    _initializeValue() {
-        const attrValue = this.getAttribute('value');
-        if (attrValue) {
-            this.setValue(attrValue.split(',').map(value => value.trim()));
-        } else {
-            super._initializeValue();
-        }
-    }
-
     /**
      * Gets the current value of the array field.
-     * @returns {*} The current value.
+     * @returns {unknown[]} The current value.
      */
     getValue() {
-        return this.getCheckedInputs()?.value ?? this.value;
+        return this.getCheckedInputs()?.map(input => input.value) ?? this.value;
     }
 
     /**
      * Gets the checked inputs of the array field.
+     * @returns {HTMLInputElement[]}
      */
     getCheckedInputs() {
+        return Array.from(this.querySelectorAll('input:checked'));
+    }
+
+    /**
+     * Checks if the array field has a specific value.
+     * @param {unknown} value - The value to check.
+     * @returns {boolean} True if the value is present, false otherwise.
+     */
+    hasValue(value) {
+        return this.value.includes(value);
+    }
+
+    // #endregion
+
+    ////////////////////////////
+    // #region Set
+    ////////////////////////////
+
+    /**
+     * Sets the checked inputs of the array field.
+     * @param {unknown} _value - The value to set.
+     */
+    setChecked(_value) {
         // abstract method
     }
 
     /**
-     * Sets the checked inputs of the array field.
+     * Sets the value of the array field.
+     * @param {unknown[]} value - The value to set.
+     * @returns {ArrayField} The updated array field.
      */
-    setChecked() {
-        // abstract method
+    setValue(value) {
+        this.value = value;
+        if (this._hasRendered) {
+            this.setChecked(value);
+        }
+        return this;
     }
 
     /**
@@ -89,7 +127,7 @@ class ArrayField extends OptionsField {
 
     /**
      * Adds multiple values to the array field.
-     * @param {Array} values - The values to add.
+     * @param {unknown[]} values - The values to add.
      * @returns {ArrayField} The updated array field.
      */
     addValues(values) {
@@ -102,7 +140,7 @@ class ArrayField extends OptionsField {
 
     /**
      * Removes multiple values from the array field.
-     * @param {Array} values - The values to remove.
+     * @param {unknown[]} values - The values to remove.
      * @returns {ArrayField} The updated array field.
      */
     removeValues(values) {
@@ -156,27 +194,7 @@ class ArrayField extends OptionsField {
         return this;
     }
 
-    /**
-     * Sets the value of the array field.
-     * @param {unknown} value - The value to set.
-     * @returns {ArrayField} The updated array field.
-     */
-    setValue(value) {
-        this.value = value;
-        if (this._hasRendered) {
-            this.setChecked(value);
-        }
-        return this;
-    }
-
-    /**
-     * Checks if the array field has a specific value.
-     * @param {unknown} value - The value to check.
-     * @returns {boolean} True if the value is present, false otherwise.
-     */
-    hasValue(value) {
-        return this.value.includes(value);
-    }
+    // #endregion
 }
 
 customElements.define('array-field', ArrayField);

@@ -1,12 +1,16 @@
-/** @typedef {import('../optionsField/optionsFieldInterface.js').OptionsFieldInterface} OptionsFieldInterface */
+/** @typedef {import('./selectField.types').SelectFieldConfigType} SelectFieldConfigType */
 import { mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
 const html = String.raw;
 
 class SelectField extends OptionsField {
+    /** @type {HTMLSelectElement} */ // @ts-ignore
+    input = this.input;
+    /** @type {SelectFieldConfigType} */ // @ts-ignore
+    _config = this._config;
     /**
      * Returns the default configuration for the select field.
-     * @returns {OptionsFieldInterface} The default configuration object.
+     * @returns {SelectFieldConfigType} The default configuration object.
      */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
@@ -29,7 +33,7 @@ class SelectField extends OptionsField {
         input?.addEventListener('change', this._callOnChange);
     }
 
-    _initializeValue() {
+    async _initializeValue() {
         const value = this.getProperty('value');
         if (value && this.input) {
             this.input.value = value;
