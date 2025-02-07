@@ -2,7 +2,6 @@
     "name": "@arpadroid/forms",
     "version": "1.0.0",
     "description": "A web components library for building forms",
-    "main": "./dist/arpadroid-forms.js",
     "exports": "./dist/arpadroid-forms.js",
     "type": "module",
     "scripts": {

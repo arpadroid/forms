@@ -1,4 +1,4 @@
-// import type { ListItemInterface } from '@arpadroid/lists/src/types.d.ts';
+// import type { ListItemConfigType } from '@arpadroid/lists/src/types.d.ts';
 
 export type FileItemConfigType = {
     fileSize?: number;
