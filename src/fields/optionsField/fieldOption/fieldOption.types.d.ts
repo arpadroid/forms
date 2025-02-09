@@ -1,6 +1,6 @@
-import { ArpaElementConfigType } from '@arpadroid/ui/dist/@types/components/arpaElement/arpaElement.types';
-import FieldOption from './fieldOption';
-import OptionsField from '../optionsField';
+import { ArpaElementConfigType } from '@arpadroid/ui';
+import FieldOption from './fieldOption.js';
+import OptionsField from '../optionsField.js';
 
 export type FieldOptionOnChangePayloadType = {
     value: string;

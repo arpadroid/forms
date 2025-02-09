@@ -1,7 +1,7 @@
-import { ArpaElementConfigType } from '@arpadroid/ui/dist/@types/components/arpaElement/arpaElement.types';
-import type FieldValidator from '../../utils/fieldValidator';
-import type Field from './field';
-import { FormComponent } from './field';
+import { ArpaElementConfigType } from '@arpadroid/ui';
+import type FieldValidator from '../../utils/fieldValidator.js';
+import type Field from './field.js';
+import { FormComponent } from './field.js';
 
 export type FieldOnChangeType = (value: unknown, field: Field, event: Event) => unknown;
 
