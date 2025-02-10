@@ -5,8 +5,7 @@ import { mergeObjects } from '@arpadroid/tools';
 import ArrayField from '../arrayField/arrayField.js';
 
 class CheckboxesField extends ArrayField {
-    /** @type {CheckboxesFieldConfigType} */
-    // @ts-ignore
+    /** @type {CheckboxesFieldConfigType} */ // @ts-ignore
     _config = this._config;
 
     /////////////////////////////////////
@@ -64,7 +63,7 @@ class CheckboxesField extends ArrayField {
      * @returns {Record<string, unknown> | unknown[] | undefined | unknown} The output value for this field.
      */
     getOutputValue(values = {}) {
-        const { mergeOutput = false } = (this._config = {});
+        const mergeOutput = this.hasProperty('merge-output');
         if (!this.isBinary() && !mergeOutput) {
             return super.getOutputValue(values);
         }

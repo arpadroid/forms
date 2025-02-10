@@ -84,7 +84,7 @@ class ArrayField extends OptionsField {
     /**
      * Sets the value of the array field.
      * @param {unknown[]} value - The value to set.
-     * @returns {ArrayField} The updated array field.
+     * @returns {this} The updated array field.
      */
     setValue(value) {
         this.value = value;

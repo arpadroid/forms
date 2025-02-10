@@ -18,8 +18,7 @@ const html = String.raw;
 class FormComponent extends HTMLFormElement {
     /** @type {Record<string, FieldComponent>} */
     fields = {};
-    /** @type {FormConfigType} */
-    // @ts-ignore
+    /** @type {FormConfigType} */ // @ts-ignore
     _config = this._config;
 
     //////////////////////////////////
@@ -117,7 +116,7 @@ class FormComponent extends HTMLFormElement {
 
     async _initializeMessages() {
         await customElements.whenDefined('arpa-messages');
-        /** @type {Messages} */
+        /** @type {Messages | null} */
         this.messages = this.querySelector('arpa-messages');
         /** @type {MessageResource} */
         this.messageResource = this.messages?.resource;

@@ -1,9 +1,9 @@
-import ObjectTool from '../../../../../utils/objectTool.js';
+import { mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 
 class ResetField extends Field {
     getDefaultConfig() {
-        return ObjectTool.merge(super.getDefaultConfig(), {
+        return mergeObjects(super.getDefaultConfig(), {
             inputAttributes: {
                 type: 'reset'
             }

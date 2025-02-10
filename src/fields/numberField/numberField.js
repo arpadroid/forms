@@ -1,4 +1,4 @@
-/** @typedef {import('./numberFIeld.types').NumberFieldConfigType} NumberFieldConfigType */
+/** @typedef {import('./numberField.types').NumberFieldConfigType} NumberFieldConfigType */
 import { validateNumber } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;

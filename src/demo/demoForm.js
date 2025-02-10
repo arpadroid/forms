@@ -1,5 +1,6 @@
 /**
  * @typedef {import('../components/form/form.js').default} Form
+ * @typedef {import('../fields/selectCombo/selectCombo.js').default} SelectCombo
  */
 import { CountryOptions, IconOptions } from './demoFormOptions.js';
 
@@ -24,16 +25,16 @@ customElements.whenDefined('arpa-form').then(() => {
         console.log('checkboxes changed', payload);
     });
 
-    const selectComboSearch = form.getField('select-combo-search');
+    const selectComboSearch = /** @type {SelectCombo} */ (form.getField('select-combo-search'));
     selectComboSearch?.setOptions(CountryOptions);
 
-    const selectCombo = form.getField('selectCombo');
+    const selectCombo = /** @type {SelectCombo} */ (form.getField('selectCombo'));
     selectCombo?.setOptions(IconOptions);
     selectCombo?.on('change', value => {
         console.log('selectCombo on change', value);
     });
 
-    const selectFetch = form.getField('select-combo-fetch');
+    const selectFetch = /** @type {SelectCombo} */ (form.getField('select-combo-fetch'));
     selectFetch?.setFetchOptions(async query => {
         return await import('./demoFormOptions.js').then(async ({ People }) => {
             // await new Promise(resolve => setTimeout(resolve, 1600));

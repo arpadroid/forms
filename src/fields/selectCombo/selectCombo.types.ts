@@ -8,7 +8,7 @@ export type SelectComboConfigType = SelectFieldConfigType & {
     // hasPager?: boolean;
     // onPageChange?: (page: number, event: Event) => void;
     hasSearch?: boolean;
-    searchItemContentSelector: '.fieldOption__label, .fieldOption__subTitle';
+    searchItemContentSelector?: '.fieldOption__label, .fieldOption__subTitle';
     debounceSearch?: number;
     renderOption?: (option: FieldOptionConfigType) => HTMLElement | string;
     renderValue?: (option?: FieldOption) => HTMLElement | string;

@@ -1,5 +1,5 @@
 /**
- * @typedef {import("../fields/optionsField/fieldOption/fieldOptionInterface").FieldOptionInterface} FieldOptionInterface
+ * @typedef {import("../fields/optionsField/fieldOption/fieldOption.types").FieldOptionConfigType} FieldOptionConfigType
  */
 export const IconOptions = [
     { value: 'grocery', label: 'Grocery', icon: 'grocery' },
@@ -185,7 +185,7 @@ export const People = [
 /**
  * Queries people based on the query string.
  * @param {string} query - The query string.
- * @returns {FieldOptionInterface[]} The queried people.
+ * @returns {Promise<FieldOptionConfigType[]>} The queried people.
  */
 export async function queryPeople(query) {
     if (!query) {

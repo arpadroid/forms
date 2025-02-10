@@ -2,6 +2,8 @@
  * @typedef {import('./fileField.types').FileFieldConfigType} FileFieldConfigType
  * @typedef {import('./components/fileItem/fileItem.types').FileItemConfigType} FileItemConfigType
  * @typedef {import('./components/fileItem/fileItem.js').default} FileItem
+ * @typedef {import('./components/fileList/fileList.js').default} FileList
+ * @typedef {import('./components/fileFieldInput/fileFieldInput.js').default} FileFieldInput
  */
 
 import { I18n } from '@arpadroid/i18n';
@@ -10,6 +12,10 @@ import { mergeObjects, renderNode } from '@arpadroid/tools';
 
 const html = String.raw;
 class FileField extends Field {
+    /** @type {FileFieldInput | null} */ // @ts-ignore
+    input = this.input;
+    /** @type {FileFieldConfigType} */ // @ts-ignore
+    _config = this._config;
     /////////////////////////
     // #region INITIALIZATION
     /////////////////////////
@@ -62,7 +68,7 @@ class FileField extends Field {
     /**
      * Adds an upload to the upload list.
      * @param {File} file - The file to upload.
-     * @returns {FileItem}
+     * @returns {FileItem | undefined}
      */
     addUpload(file) {
         return this.uploadList?.addItem({
@@ -73,22 +79,34 @@ class FileField extends Field {
         });
     }
 
+    /**
+     * Adds multiple uploads to the upload list.
+     * @param {File[]} files - The files to upload.
+     */
     addUploads(files) {
-        this.uploadList?.addItems(files.map(file => ({ file })));
+        /** @type {FileItemConfigType[]} */
+        const items = files.map(file => ({ file }));
+        this.uploadList?.addItems(items);
     }
 
     clearUploads() {
-        this.uploadList.removeItems();
-        this.input.uploads = [];
+        this.uploadList?.removeItems();
+        this.input && (this.input.uploads = []);
     }
 
     getFieldType() {
         return 'file';
     }
 
+    /**
+     * Returns the file nodes.
+     * @returns {FileItem[] | undefined}
+     */
     getFileNodes() {
         const { fileComponent } = this._config;
-        return this._childNodes.filter(node => node?.tagName?.toLowerCase() === fileComponent);
+        return /** @type {FileItem[]} */ (
+            this._childNodes?.filter(node => node instanceof HTMLElement && node?.tagName?.toLowerCase() === fileComponent) || []
+        );
     }
 
     hasDropArea() {
@@ -97,7 +115,11 @@ class FileField extends Field {
     }
 
     hasUploadWarning() {
-        return !this.allowMultiple() && this.input?.uploads?.length > 0 && this.fileList?.itemsNode?.children.length > 0;
+        return Boolean(
+            !this.allowMultiple() &&
+                Number(this.input?.uploads?.length) > 0 &&
+                Number(this.fileList?.itemsNode?.children.length) > 0
+        );
     }
 
     getI18nKey() {
@@ -110,8 +132,8 @@ class FileField extends Field {
 
     /**
      * Sets the value of the field.
-     * @param {FileItemInterface[]} value
-     * @returns {FileField}
+     * @param {File[]} value
+     * @returns {this}
      */
     setValue(value) {
         this.addUploads(value);
@@ -128,6 +150,11 @@ class FileField extends Field {
         return (hasAttr && attr !== 'false') || (!hasAttr && this._config.allowMultiple);
     }
 
+    /**
+     * Sets the extensions allowed for the file field.
+     * @param {string[]} extensions - The allowed extensions.
+     * @returns {this}
+     */
     setExtensions(extensions = []) {
         this.setAttribute('extensions', extensions.join(','));
         return this;
@@ -141,8 +168,13 @@ class FileField extends Field {
         return this._config.extensions;
     }
 
+    /**
+     * Sets the maximum size allowed for the file field.
+     * @param {number} maxSize - The maximum size allowed in megabytes.
+     * @returns {this}
+     */
     setMaxSize(maxSize) {
-        this.setAttribute('max-size', maxSize);
+        this.setAttribute('max-size', maxSize?.toString());
         return this;
     }
 
@@ -150,8 +182,13 @@ class FileField extends Field {
         return parseFloat(this.getProperty('max-size'));
     }
 
+    /**
+     * Sets the minimum size allowed for the file field.
+     * @param {number} minSize - The minimum size allowed in megabytes.
+     * @returns {this}
+     */
     setMinSize(minSize) {
-        this.setAttribute('min-size', minSize);
+        this.setAttribute('min-size', minSize?.toString());
         return this;
     }
 
@@ -173,7 +210,7 @@ class FileField extends Field {
 
     /**
      * Returns input component.
-     * @returns {*}
+     * @returns {FileFieldInput | null}
      */
     getInput() {
         return this.querySelector('input[type="file"]');
@@ -231,9 +268,12 @@ class FileField extends Field {
         await this.onReady();
         this.classList.add(!this.allowMultiple() ? 'fileField--single' : 'fileField--multiple');
         this._initializeFileList();
+        /** @type {FileList | null} */
         this.uploadList = this.querySelector('.fileField__uploadList');
+        /** @type {FileList | null} */
         this.fileList = this.querySelector('.fileField__fileList');
         this.dropArea = this.querySelector('drop-area');
+        /** @type {FileFieldInput} */
         this.input = this.getInput();
         this.input?.removeEventListener('change', this._onChange);
         this.input?.addEventListener('change', this._onChange);
@@ -243,10 +283,11 @@ class FileField extends Field {
     }
 
     _initializeFileList() {
+        /** @type {FileList | null} */
         this.fileList = this.querySelector('.fileField__fileList');
         this.fileList?.onRenderReady(() => {
             const files = this.getFileNodes();
-            this.fileList?.addItemNodes(files);
+            files?.length && this.fileList?.addItemNodes(files);
         });
     }
 
@@ -282,6 +323,10 @@ class FileField extends Field {
     // #region EVENTS
     /////////////////
 
+    /**
+     * Event handler for when the value of the input changes.
+     * @param {Event} event
+     */
     _onChange(event) {
         this.validator && (this.validator._errors = []);
         this._callOnChange(event);
@@ -305,9 +350,9 @@ class FileField extends Field {
             this.clearUploads();
         });
         if (this.allowMultiple()) {
-            this.fileList?.listResource.addItems(uploadItems);
+            uploadItems?.length && this.fileList?.listResource?.addItems(uploadItems);
         } else {
-            this.fileList?.listResource.setItems(uploadItems);
+            uploadItems?.length && this.fileList?.listResource?.setItems(uploadItems);
         }
     }
 

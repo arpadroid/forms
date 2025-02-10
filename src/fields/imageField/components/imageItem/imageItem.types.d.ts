@@ -1,6 +1,6 @@
-import { FileItemInterface } from '../../../fileField/components/fileItem/fileItemInterface';
+import { FileItemConfigType } from '../../../fileField/components/fileItem/fileItem.types';
 
-export type ImageItemConfigType = FileItemInterface & {
+export type ImageItemConfigType = FileItemConfigType & {
     fileSize?: number;
     size?: string;
     extension?: string;
@@ -11,4 +11,5 @@ export type ImageItemConfigType = FileItemInterface & {
     status?: string;
     width?: number;
     height?: number;
+    highResImage?: string;
 }

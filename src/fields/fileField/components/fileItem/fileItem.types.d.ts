@@ -1,33 +1,43 @@
-// import type { ListItemConfigType } from '@arpadroid/lists/src/types.d.ts';
+import { ListItemConfigType } from '@arpadroid/lists';
+import type FileItem from './fileItem.js';
 
-export type FileItemConfigType = {
-    fileSize?: number;
-    size?: string;
-    extension?: string;
-    type?: string;
-    url?: string;
-    name?: string;
-    file?: File;
-    progress?: number;
-    status?: string;
-    error?: string;
-    isUploading?: boolean;
+export type FileItemConfigType = ListItemConfigType & {
+    // defaultImage?: string;
+    // dialogContext?: DialogContext;
     // list item props
-    id?: string;
-    link?: string;
+    // nav?: IconMenuInterface;
     action?: () => void;
-    title?: string;
-    titleLink?: string;
-    titleIcon?: string;
-    subTitle?: string;
+    error?: string;
+    extension?: string;
+    file?: File;
+    fileSize?: number;
+    hasSelection?: boolean;
     icon?: string;
+    id?: string;
     image?: string;
     imageAlt?: string;
-    hasSelection?: boolean;
-    rhsContent?: string;
-    // dialogContext?: DialogContext;
-    // defaultImage?: string;
-    // nav?: IconMenuInterface;
-    onImageLoaded?: (event: Event, image: HTMLElement) => void;
+    isUploading?: boolean;
+    link?: string;
+    lblRemoveFile?: string;
+    name?: string;
+    onDelete?: (fileItem: FileItem) => Promise<unknown>;
+    onEdit?: (fileItem: FileItem) => void;
     onImageError?: (event: Event, image: HTMLElement) => void;
-}
+    onImageLoaded?: (event: Event, image: HTMLElement) => void;
+    progress?: number;
+    rhsContent?: string;
+    size?: string;
+    status?: string;
+    subTitle?: string;
+    title?: string;
+    titleIcon?: string;
+    titleLink?: string;
+    type?: string;
+    url?: string;
+    key?: string;
+};
+
+
+export type FileItemPayloadType = Record<string, unknown> & {
+    extension?: string;
+};

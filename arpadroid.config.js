@@ -1,7 +1,7 @@
 const config = {
     deps: ['messages'],
     style_patterns: 'fields/**/*',
-    buildTypes: false
+    buildTypes: true
 };
 
 export default config;

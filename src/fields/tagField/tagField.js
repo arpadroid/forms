@@ -1,3 +1,11 @@
+/**
+ * @typedef {import('./tagField.types').TagFieldConfigType} TagFieldConfigType
+ * @typedef {import('@arpadroid/lists').TagList} TagList
+ * @typedef {import('./components/tagOption/tagOption.js').TagOptionConfigType} TagOptionConfigType
+ * @typedef {import('@arpadroid/lists').TagItem} TagItem
+ * @typedef {import('@arpadroid/lists').TagItemConfigType} TagItemConfigType
+ */
+
 import { mergeObjects, isObject } from '@arpadroid/tools';
 import SelectCombo from '../selectCombo/selectCombo.js';
 import Field from '../field/field.js';
@@ -6,6 +14,9 @@ import { I18n } from '@arpadroid/i18n';
 
 const html = String.raw;
 class TagField extends SelectCombo {
+    /** @type {TagFieldConfigType} */ // @ts-ignore
+    _config = this._config;
+    /** @type {string[]} */
     value = [];
 
     /////////////////////////
@@ -14,11 +25,12 @@ class TagField extends SelectCombo {
 
     /**
      * Returns default config for select field.
-     * @returns {*}
+     * @returns {TagFieldConfigType}
      */
     getDefaultConfig() {
         this.bind('_onDeleteTag', '_onSearchInputKeyDown');
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {TagFieldConfigType} */
+        const conf = {
             hasSearch: true,
             classNames: ['selectComboField', 'tagField'],
             placeholder: I18n.getText('forms.fields.tag.lblSearchTags'),
@@ -29,7 +41,8 @@ class TagField extends SelectCombo {
                 onDelete: this._onDeleteTag
                 // icon: 'label'
             }
-        });
+        };
+        return /** @type {TagFieldConfigType} */ (mergeObjects(super.getDefaultConfig(), conf));
     }
 
     getTemplateVars() {
@@ -45,7 +58,7 @@ class TagField extends SelectCombo {
     /////////////////////
 
     async _initializeValue() {
-        await this.load;
+        // await this.load;
         if (this._hasInitializedValue) {
             return;
         }
@@ -55,6 +68,7 @@ class TagField extends SelectCombo {
 
     async _initializeNodes() {
         super._initializeNodes();
+        /** @type {TagList | null} */
         this.tagList = this.querySelector('tag-list');
     }
 
@@ -98,31 +112,56 @@ class TagField extends SelectCombo {
         return 'tag-field';
     }
 
+    /**
+     * Sets the value of the field.
+     * @param {unknown} value - The value to set.
+     * @returns {this} The field instance.
+     */
     setValue(value) {
         const tags = this.setTags(value);
-        return Field.prototype.setValue.call(
-            this,
-            tags.map(tag => tag.value)
+        return /** @type {this} */ (
+            Field.prototype.setValue.call(
+                this,
+                tags?.map(tag => tag.value)
+            )
         );
     }
 
+    /**
+     * Sets the tags.
+     * @param {unknown[] | unknown} tags
+     * @returns {TagOptionConfigType[] | undefined}
+     */
     setTags(tags) {
+        /** @type {TagOptionConfigType[]} */
         const _tags = this.parseTags(tags);
-        this.tagList.setItems(_tags);
+        // @ts-ignore
+        this.tagList?.setItems(_tags);
         return _tags;
     }
 
+    /**
+     * Parses the tags.
+     * @param {unknown[] | unknown} tags - The tags to parse.
+     * @returns {TagOptionConfigType[]} The parsed tags.
+     */
     parseTags(tags) {
         if (!Array.isArray(tags)) {
             tags = typeof tags === 'undefined' ? [] : [tags];
         }
-        return tags.map(tag => this.parseTag(tag));
+        return (Array.isArray(tags) && tags.map(tag => this.parseTag(tag))) || [];
     }
 
+    /**
+     * Parses a tag.
+     * @param {Record<string, unknown>} tag - The tag to parse.
+     * @returns {TagOptionConfigType} The parsed tag.
+     */
     parseTag(tag) {
         const { tagDefaults } = this._config;
         if (typeof tag === 'string') {
-            const parts = tag.split('::');
+            // @ts-ignore
+            const parts = tag?.split('::');
             Object.assign(tag, {});
             return {
                 ...tagDefaults,
@@ -136,11 +175,17 @@ class TagField extends SelectCombo {
         return tag;
     }
 
+    /**
+     * Adds a value to the tag list.
+     * @param {TagItemConfigType} item - The item to add.
+     * @returns {this} The updated tag field.
+     */
     addValue(item) {
         const { tagDefaults } = this._config;
         const value = this.getValue();
         if (!value.includes(item.value)) {
-            this?.tagList.addItem({
+            // @ts-ignore
+            this?.tagList?.addItem({
                 ...tagDefaults,
                 text: item.label,
                 value: item.value
@@ -149,18 +194,25 @@ class TagField extends SelectCombo {
         return this;
     }
 
+    /**
+     * Removes a tag from the tag list given uts value.
+     * @param {string} value
+     * @returns {this}
+     */
     removeValue(value) {
-        const item = this.tagList.listResource.items.find(item => item.value === value);
-        this.tagList.removeItem(item);
+        const item = this.tagList?.listResource?.items?.find(item => item.value === value);
+        // @ts-ignore
+        item && this.tagList?.removeItem(item);
         const hiddenOption = this.optionsNode?.querySelector(`[value="${value}"]`);
-        if (hiddenOption) {
+        if (hiddenOption instanceof HTMLElement) {
             hiddenOption.style.display = '';
         }
         return this;
     }
 
     getValue() {
-        const items = Array.from(this.tagList?.getChildren() || []);
+        /** @type {TagItem[]} */
+        const items = /** @type {TagItem[]} */ (Array.from(this.tagList?.getChildren() || []));
         return items?.map(item => item.getValue()) ?? this.value;
     }
 
@@ -178,23 +230,36 @@ class TagField extends SelectCombo {
     // #region EVENTS
     /////////////////
 
+    /**
+     * Handles the delete tag event.
+     * @param {TagItem} tag - The tag to delete.
+     * @returns {boolean} False.
+     */
     _onDeleteTag(tag) {
         this.removeValue(tag.getValue());
         this.signal('deleteTag', tag);
         return false;
     }
 
+    /**
+     * Handles the options when fetched.
+     * @param {TagOptionConfigType[]} options - The options to handle.
+     */
     onOptionsFetched(options) {
         const opt = options.filter(option => {
-            return !this.tagList.listResource.items.find(item => item.value === option.value);
+            return !this.tagList?.listResource?.items?.find(item => item.value === option.value);
         });
         super.onOptionsFetched(opt);
     }
 
+    /**
+     * Handles the search input keydown event.
+     * @param {KeyboardEvent} event - The event object.
+     */
     _onSearchInputKeyDown(event) {
-        if (this.allowTextInput && event.key === 'Enter') {
+        if (this.allowTextInput() && event.key === 'Enter') {
             event.preventDefault();
-            this.addValue({ label: this.searchInput.value, value: this.searchInput.value });
+            this.addValue({ label: this.searchInput?.value, value: this.searchInput?.value });
             // this.searchInput.value = '';
         }
     }

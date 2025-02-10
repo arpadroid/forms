@@ -1,6 +1,19 @@
+/**
+ * @typedef {import('../../tagField.js').default} TagField
+ * @typedef {import('./tagOption.types.js').TagOptionConfigType} TagOptionConfigType
+ */
 import SelectOption from '../../../selectCombo/selectOption/selectOption.js';
 
 class TagOption extends SelectOption {
+    /** @type {TagOptionConfigType} */ // @ts-ignore
+    _config = this._config;
+    /** @type {TagField} */ // @ts-ignore
+    field = this.field;
+
+    /**
+     * Handles the selected event.
+     * @param {Event} event - The event object.
+     */
     _onSelected(event) {
         event.stopImmediatePropagation();
         const button = this.querySelector('button');
@@ -20,8 +33,10 @@ class TagOption extends SelectOption {
     }
 
     focusNext() {
-        const node = (this.nextSibling ?? this.previousSibling)?.querySelector('button') ?? this.parentNode;
-        node?.focus();
+        /** @type {HTMLElement | null} */
+        const sibling = /** @type {HTMLElement | null} */ (this.nextSibling ?? this.previousSibling);
+        const node = sibling?.querySelector('button') ?? this.parentNode;
+        node instanceof HTMLElement && node?.focus();
     }
 }
 

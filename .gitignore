@@ -11,3 +11,4 @@ junit.xml
 /blob-report/
 /playwright/.cache/
 /src/i18n/
+.tmp/

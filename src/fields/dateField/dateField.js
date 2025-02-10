@@ -25,7 +25,6 @@ class DateField extends Field {
         const config = {
             format: 'YYYY-MM-DD',
             inputFormat: 'YYYY-MM-DD',
-            outputFormat: undefined,
             disableFuture: false,
             disablePast: false,
             inputAttributes: { type: 'date' }
@@ -82,7 +81,7 @@ class DateField extends Field {
      * @param {string | Date} value
      * @param {boolean} [update]
      * @param {string} [format]
-     * @returns {Field} The formatted value.
+     * @returns {this} The formatted value.
      */
     setValue(value, update = true, format = this._config?.inputFormat || this._config.format) {
         const val = formatDate(value, format);

@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "A web components library for building forms",
     "exports": "./dist/arpadroid-forms.js",
+    "types": "./dist/@types/types.compiled.d.ts",
     "type": "module",
     "scripts": {
         "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=forms --minify",

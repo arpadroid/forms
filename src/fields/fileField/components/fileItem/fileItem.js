@@ -1,6 +1,8 @@
 /**
  * @typedef {import('./fileItem.types').FileItemConfigType} FileItemConfigType
  * @typedef {import('../../fileField.js').default} FileField
+ * @typedef {import('../../fileField.types').FileFieldConfigType} FileFieldConfigType
+ * @typedef {import('./fileItem.types').FileItemPayloadType} FileItemPayloadType
  */
 
 import { mergeObjects, processFile, render, formatBytes, getFileType, getFileIcon } from '@arpadroid/tools';
@@ -9,6 +11,8 @@ import { ListItem } from '@arpadroid/lists';
 
 const html = String.raw;
 class FileItem extends ListItem {
+    /** @type {FileItemConfigType} */ // @ts-ignore
+    _config = this._config;
     //////////////////////////
     // #region INITIALIZATION
     //////////////////////////
@@ -18,7 +22,6 @@ class FileItem extends ListItem {
      * @param {FileItemConfigType} config - The configuration object.
      * @param {Record<string, unknown>} payload - The file object.
      * @param {Record<string, string>} map
-     * @returns {void}
      */
     constructor(config, payload, map) {
         super(config, payload, map);
@@ -43,9 +46,12 @@ class FileItem extends ListItem {
     _initializeFile() {
         const src = this.getProperty('src');
         if (typeof src === 'string') {
-            this.payload = processFile({ name: src.split('/').pop() });
+            const fileName = String(src?.split('/').pop() || '');
+            /** @type {FileItemPayloadType} */
+            this.payload = processFile({ name: fileName });
         }
         if (this._config.file instanceof File) {
+            /** @type {FileItemPayloadType} */
             this.payload = processFile(this._config.file);
         }
     }
@@ -58,9 +64,9 @@ class FileItem extends ListItem {
 
     _preRender() {
         const ext = this.payload?.extension;
-        this.fileType = getFileType(ext);
+        typeof ext === 'string' && (this.fileType = getFileType(ext));
         this.addTypeClass();
-        !this.getProperty('icon') && this.getProperty('has-icon') && (this._config.icon = getFileIcon(ext));
+        !this.getProperty('icon') && this.getProperty('has-icon') && (this._config.icon = getFileIcon(String(ext)));
     }
 
     addTypeClass(fileType = this.fileType || 'file') {
@@ -68,8 +74,9 @@ class FileItem extends ListItem {
     }
 
     async connectedCallback() {
-        /** @type {FileField} */
+        /** @type {FileField | null} */
         this.field = this.closest('.arpaField');
+        /** @type {FileFieldConfigType} */
         this.fieldConfig = this.field?._config ?? {};
         await this._initializeFile();
 
@@ -78,7 +85,8 @@ class FileItem extends ListItem {
     }
 
     getFileType() {
-        return getFileType(this.payload.extension);
+        const ext = String(this.payload?.extension || '');
+        return getFileType(ext);
     }
 
     // #endregion
@@ -92,7 +100,7 @@ class FileItem extends ListItem {
     }
 
     hasEditButton() {
-        return Boolean(this.fieldConfig.onEdit || this._config.onEdit);
+        return Boolean(this.fieldConfig?.onEdit || this._config.onEdit);
     }
 
     getSize() {
@@ -157,7 +165,7 @@ class FileItem extends ListItem {
         return render(this.hasEditButton(), html`<button is="icon-button" icon="edit" class="fileItem__editButton"></button>`);
     }
 
-    renderDeleteButton(fieldOnDelete = this.fieldConfig.onDelete, onDelete = this._config.onDelete) {
+    renderDeleteButton(fieldOnDelete = this.fieldConfig?.onDelete, onDelete = this._config?.onDelete) {
         return render(
             Boolean(fieldOnDelete || onDelete),
             html`<button
@@ -171,7 +179,7 @@ class FileItem extends ListItem {
 
     // #endregion
 
-    _initializeNodes() {
+    async _initializeNodes() {
         super._initializeNodes();
         this._initializeDeleteButton();
         this._initializeEditButton();
@@ -186,18 +194,20 @@ class FileItem extends ListItem {
         this.deleteButtonNode = this.querySelector('.fileItem__deleteButton');
         this.deleteButtonNode?.addEventListener('click', this.onDelete);
     }
-    //////////////////
+
+    //////////////////////////////
     // #region EVENTS
-    /////////////////
+    /////////////////////////////
 
     onDelete() {
-        const fieldOnDelete = this.fieldConfig.onDelete;
+        const fieldOnDelete = this.fieldConfig?.onDelete;
         const onDelete = this._config.onDelete;
         if (typeof onDelete === 'function') {
             onDelete(this);
         }
         if (typeof fieldOnDelete === 'function') {
-            const promise = fieldOnDelete(this);
+            /** @type {Promise<unknown> | undefined} */
+            const promise = /** @type {Promise<unknown> | undefined} */ (fieldOnDelete(this));
             if (promise instanceof Promise) {
                 return promise.then(() => this.delete());
             }
@@ -210,11 +220,11 @@ class FileItem extends ListItem {
     }
 
     onEdit() {
-        const onEdit = this._config.onEdit;
+        const onEdit = this._config?.onEdit;
         if (typeof onEdit === 'function') {
             onEdit(this);
         }
-        const fieldOnEdit = this.fieldConfig.onEdit;
+        const fieldOnEdit = this.fieldConfig?.onEdit;
         if (typeof fieldOnEdit === 'function') {
             fieldOnEdit(this);
         }

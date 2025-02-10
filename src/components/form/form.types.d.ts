@@ -4,7 +4,10 @@ export type FormSubmitResponseType = {
     formValues?: Record<string, unknown>;
 };
 
-export type FormSubmitType = (values?: Record<string, unknown>, form?: FormComponent) => Promise<FormSubmitResponseType> | boolean;
+export type FormSubmitType<T = Record<string, unknown>> = (
+    values?: T,
+    form?: FormComponent
+) => Promise<FormSubmitResponseType> | boolean;
 
 export type FormConfigType = {
     id?: string;
