@@ -49,3 +49,7 @@ export { SelectComboConfigType } from './fields/selectCombo/selectCombo.types';
 export { TagFieldConfigType } from './fields/tagField/tagField.types';
 
 export { WeekFieldConfigType } from './fields/weekField/weekField.types';
+
+export { TimeFieldConfigType } from './fields/timeField/timeField.types';
+
+export { TextAreaConfigType } from './fields/textAreaField/textArea.types';
