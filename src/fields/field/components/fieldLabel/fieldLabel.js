@@ -7,7 +7,7 @@ const html = String.raw;
 class FieldLabel extends HTMLLabelElement {
     static defaultConfig = {
         required: false,
-        template: html`<span class="fieldLabel__text">{label}</span>{required}`,
+        template: html`<span class="fieldLabel__text" zone="label">{label}</span>{required}`,
         requiredTemplate: html`<span class="fieldLabel__required">*</span>`,
         label: undefined
     };
@@ -48,7 +48,6 @@ class FieldLabel extends HTMLLabelElement {
         this.render();
         this.labelNode = this.querySelector('.fieldLabel__text');
         this.classList.add('fieldLabel');
-        this.setAttribute('zone', 'label');
         handleZones();
         this._onRenderComplete();
     }

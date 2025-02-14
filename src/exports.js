@@ -12,8 +12,6 @@ export { default as Field } from './fields/field/field.js';
 export { default as FieldErrors } from './fields/field/components/fieldErrors/fieldErrors.js';
 export { default as FieldInput } from './fields/field/components/fieldInput/fieldInput.js';
 export { default as FieldLabel } from './fields/field/components/fieldLabel/fieldLabel.js';
-export { default as FieldDescription } from './fields/field/components/fieldDescription/fieldDescription.js';
-export { default as FieldFootnote } from './fields/field/components/fieldFootnote/fieldFootnote.js';
 export { default as FieldInputMask } from './fields/field/components/fieldInputMask/fieldInputMask.js';
 
 /**

@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     flex: 1 1 auto;
-    gap: 1rem;
+    gap: .8rem;
 
     &:focus-within:not(.groupField) {
         .arpaField__icon {
@@ -12,7 +12,7 @@
         &.arpaField--hasError {
             .arpaField__icon {
                 color: var(--red-medium);
-            }    
+            }
         }
     }
 }
@@ -42,6 +42,13 @@
     gap: 8px;
 }
 
+.arpaField__description {
+    padding: 4px 0px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    margin: 0px 0px 8px;
+}
+
 .arpaField.arpaField--hasError {
     .fieldInput {
         border-color: var(--red-light);
@@ -57,6 +64,7 @@
     flex: 1 1 auto;
     position: relative;
     align-items: center;
+    gap: 8px;
 }
 
 .arpaField:has(> .arpaField__body .fieldInputMask__lhs:not(:empty)) .fieldInput {
@@ -71,6 +79,15 @@
     display: none;
 }
 
+.arpaField__footnote.arpaField__footnote {
+    font-size: 14px;
+    position: relative;
+    padding: 0px 0px 0px 0px;
+    line-height: 18px;
+    margin: 0;
+}
+
+
 /* Disabled */
 
 .arpaField:has(.fieldInput:disabled) {
@@ -83,8 +100,8 @@
     }
 }
 
-.arpaField[variant="compact"] {
+.arpaField[variant='compact'] {
     gap: 0px;
     --input-height: 2.375rem;
-    --input-border-radius: .25rem;
+    --input-border-radius: 0.25rem;
 }

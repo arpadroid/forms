@@ -119,7 +119,7 @@
 /* Compact */
 .arpaForm[variant='compact'] {
     gap: 0.6rem;
-    padding: .6rem;
+    padding: .7rem;
     .message.message {
         border-radius: 8px;
     }

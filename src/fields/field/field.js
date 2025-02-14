@@ -5,6 +5,7 @@
  * @typedef {import('./field.types').FieldConfigType} FieldConfigType
  * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
  * @typedef {import('./components/fieldInput/fieldInput.types.js').FieldInputType} FieldInputType
+ * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  */
 import { dummyListener, dummySignal, mergeObjects, observerMixin, processTemplate, render } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
@@ -69,49 +70,6 @@ class Field extends ArpaElement {
     }
 
     /**
-     * Initializes internationalization for the field.
-     */
-    _initializeI18n() {
-        this._i18n = this._getI18n();
-    }
-
-    /**
-     * Prepares the i18n object for the field.
-     * @returns {Record<string, unknown>} The i18n object.
-     */
-    _getI18n() {
-        const type = this.getFieldType();
-        this.i18nKey = `forms.fields.${type}`;
-        this.i18nFieldKey = 'forms.field';
-        const typePayload = I18n.get(this.i18nKey);
-        const fieldPayload = I18n.get(this.i18nFieldKey);
-        return mergeObjects(fieldPayload, typePayload);
-    }
-
-    /**
-     * Returns the i18n text for the specified key.
-     * @param {string} key
-     * @param {Record<string, string>} [replacements]
-     * @param {string} [base]
-     * @returns {string}
-     */
-    i18nText(key, replacements, base = this.i18nFieldKey) {
-        return super.i18nText(key, replacements) || super.i18nText(key, replacements, base);
-    }
-
-    /**
-     * Returns a i18n component for the specified key.
-     * @param {string} key - The key for the i18n component.
-     * @param {Record<string, string>} [replacements]
-     * @param {Record<string, string>} [attributes]
-     * @param {string} [base] - The base key for the i18n component.
-     * @returns {string} The i18n component.
-     */
-    i18n(key, replacements, attributes, base = this.i18nFieldKey) {
-        return super.i18n(key, replacements) || super.i18n(key, replacements, attributes, base);
-    }
-
-    /**
      * Initializes the properties for the field.
      * @returns {boolean}
      */
@@ -172,6 +130,57 @@ class Field extends ArpaElement {
         this.label = this.querySelector('label[is="field-label"]');
         this.headerNode = this.querySelector('.arpaField__header');
         this.bodyNode = this.querySelector('.arpaField__body');
+        /** @type {Tooltip | null} */
+        this.tooltip = this.querySelector('.arpaField__tooltip');
+    }
+
+    // #endregion Initialization
+
+    /////////////////////////////
+    // #region i18n
+    ////////////////////////////
+
+    /**
+     * Initializes internationalization for the field.
+     */
+    _initializeI18n() {
+        this._i18n = this._getI18n();
+    }
+
+    /**
+     * Prepares the i18n object for the field.
+     * @returns {Record<string, unknown>} The i18n object.
+     */
+    _getI18n() {
+        const type = this.getFieldType();
+        this.i18nKey = `forms.fields.${type}`;
+        this.i18nFieldKey = 'forms.field';
+        const typePayload = I18n.get(this.i18nKey);
+        const fieldPayload = I18n.get(this.i18nFieldKey);
+        return mergeObjects(fieldPayload, typePayload);
+    }
+
+    /**
+     * Returns the i18n text for the specified key.
+     * @param {string} key
+     * @param {Record<string, string>} [replacements]
+     * @param {string} [base]
+     * @returns {string}
+     */
+    i18nText(key, replacements, base = this.i18nFieldKey) {
+        return super.i18nText(key, replacements) || super.i18nText(key, replacements, base);
+    }
+
+    /**
+     * Returns a i18n component for the specified key.
+     * @param {string} key - The key for the i18n component.
+     * @param {Record<string, string>} [replacements]
+     * @param {Record<string, string>} [attributes]
+     * @param {string} [base] - The base key for the i18n component.
+     * @returns {string} The i18n component.
+     */
+    i18n(key, replacements, attributes, base = this.i18nFieldKey) {
+        return super.i18n(key, replacements) || super.i18n(key, replacements, attributes, base);
     }
 
     // #endregion
@@ -181,20 +190,15 @@ class Field extends ArpaElement {
     //////////////////////////
 
     static template = html`
-        <div class="arpaField__header">
-            {label}
-            <field-errors></field-errors>
-            <arpa-tooltip position="bottom-right">{tooltip}</arpa-tooltip>
-        </div>
+        <div class="arpaField__header">{label}{errors}{tooltip}</div>
         {subHeader}
         <div class="arpaField__body">
-            <p is="field-description"></p>
-            {beforeInput}
-            <div class="arpaField__inputWrapper">{input} {inputMask}</div>
+            {description} {beforeInput}
+            <div class="arpaField__inputWrapper">{input}{inputRhs}{inputMask}</div>
             {afterInput}
         </div>
 
-        <div class="arpaField__footer"><p is="field-footnote"></p></div>
+        <div class="arpaField__footer">{footnote}</div>
     `;
 
     static inputTemplate = html`<input is="field-input" />`;
@@ -207,18 +211,70 @@ class Field extends ArpaElement {
         return {
             id: this.getHtmlId(),
             input: this.renderInput(),
-            tooltip: this.getTooltip(),
+            tooltip: this.renderTooltip(),
             label: this.renderLabel(),
             icon: this.getIcon(),
             iconRight: this.getIconRight(),
             content: this._content,
             inputMask: this.hasInputMask() && html`<field-input-mask></field-input-mask>`,
-            subHeader: this.renderSubHeader()
+            subHeader: this.renderSubHeader(),
+            description: this.renderDescription(),
+            footnote: this.renderFootnote(),
+            inputRhs: this.renderInputRhs(),
+            errors: this.renderErrors()
         };
     }
 
+    renderTooltip() {
+        return this.hasContent('tooltip')
+            ? html`<arpa-tooltip class="arpaField__tooltip" icon="info" position="bottom-right">
+                  <zone name="tooltip-content">${this.getTooltip() || ''}</zone>
+              </arpa-tooltip>`
+            : '';
+    }
+
+    /**
+     * Manual allocation of zones.
+     * @param {import('@arpadroid/tools').ZoneToolPlaceZoneType} payload
+     * @returns {boolean | undefined}
+     */
+    _onLostZone({ zoneName, zone }) {
+        if (zoneName === 'tooltip') {
+            zone?.childNodes?.length && this.tooltip?.contentNode?.append(...(zone?.childNodes || []));
+            return true;
+        }
+    }
+
+    renderErrors() {
+        return html`<field-errors></field-errors>`;
+    }
+
+    renderInputRhs() {
+        return (
+            (this.hasContent('input-rhs') &&
+                html`<div class="arpaField__inputRhs" zone="input-rhs">${this.getProperty('input-rhs') || ''}</div>`) ||
+            ''
+        );
+    }
+
+    renderDescription() {
+        return (
+            (this.hasContent('description') &&
+                html`<p class="arpaField__description" zone="description">${this.getProperty('description') || ''}</p>`) ||
+            ''
+        );
+    }
+
+    renderFootnote() {
+        return (
+            (this.hasContent('footnote') &&
+                html`<p class="arpaField__footnote" zone="footnote">${this.getProperty('footnote') || ''}</p>`) ||
+            ''
+        );
+    }
+
     renderLabel() {
-        return (this.hasLabel() && html`<label is="field-label" zone="field-label">${this.getLabel()}</label>`) || '';
+        return (this.hasContent('label') && html`<label is="field-label">${this.getLabel()}</label>`) || '';
     }
 
     renderInput() {
@@ -572,10 +628,6 @@ class Field extends ArpaElement {
 
     hasInputMask() {
         return this.getProperty('has-input-mask');
-    }
-
-    hasLabel() {
-        return this.getProperty('label') || this.hasZone('label');
     }
 
     // #endregion Has

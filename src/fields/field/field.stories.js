@@ -311,4 +311,44 @@ export const Test = {
     }
 };
 
+export const TestZones = {
+    name: 'Slots',
+    args: {
+        id: 'zoned-field',
+        content: 'Test content',
+        label: undefined
+    },
+    render: args => {
+        return html`
+            <form is="arpa-form" id="field-form">
+                <arpa-field required id="zone-field">
+                    <zone name="label">Field label</zone>
+                    <zone name="description">Test description</zone>
+                    <zone name="footnote">This is a footnote</zone>
+                    <zone name="tooltip">test tooltip</zone>
+                    <zone name="input-rhs">
+                        <button is="icon-button" icon="more_horiz">
+                            <zone name="tooltip-content">More options</zone>
+                        </button>
+                    </zone>
+                    ${args.content}
+                </arpa-field>
+            </form>
+        `;
+    },
+    play: async ({ canvasElement, step }) => {
+        const canvas = within(canvasElement);
+        await customElements.whenDefined('arpa-field');
+        await step('Renders the zone content.', async () => {
+            await waitFor(() => {
+                expect(canvas.getByText('More options')).toBeInTheDocument();
+            });
+            expect(canvas.getByText('Field label')).toBeInTheDocument();
+            expect(canvas.getByText('Test description')).toBeInTheDocument();
+            expect(canvas.getByText('This is a footnote')).toBeInTheDocument();
+            expect(canvas.getByText('test tooltip')).toBeInTheDocument();
+        });
+    }
+};
+
 export default FieldStory;
