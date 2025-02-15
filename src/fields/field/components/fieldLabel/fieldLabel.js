@@ -32,10 +32,9 @@ class FieldLabel extends HTMLLabelElement {
 
     render() {
         const textNode = this.querySelector('.fieldLabel__text');
-
         if (textNode) {
             const label = this.getLabel();
-            typeof label === 'string' && (textNode.innerHTML = label);
+            typeof label === 'string' && label.length && (textNode.innerHTML = label);
             return;
         }
         this.innerHTML = processTemplate(this._config.template, this.getTemplateVars());

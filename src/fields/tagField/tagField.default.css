@@ -1,0 +1,8 @@
+.tagField {
+    .tagItem {
+        flex: 1 1 40%;
+    }
+    .tag__text {
+        text-align: left;
+    }
+}
