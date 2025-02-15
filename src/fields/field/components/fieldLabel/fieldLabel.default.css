@@ -19,7 +19,7 @@
 .fieldLabel__text {
     flex: 0 1 auto;
     color: var(--grey-700);
-    font-weight: 550;
+    font-weight: 600;
     font-size: 1rem;
 }
 

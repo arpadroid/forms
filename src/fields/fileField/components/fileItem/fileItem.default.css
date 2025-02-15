@@ -24,12 +24,14 @@
 }
 
 .fileItem__titleContent {
+    flex: 0 1 auto;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     max-width: 100%;
     position: relative;
     min-width: 0;
+    overflow: hidden;
 }
 
 .fileItem.fileItem .listItem__icon {
@@ -47,6 +49,7 @@
 .fileItem__name {
     max-width: 100%;
     font-weight: 500;
+    font-size: 1rem;
 }
 
 .fileItem__extension {

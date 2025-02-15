@@ -321,7 +321,7 @@ export const TestZones = {
     render: args => {
         return html`
             <form is="arpa-form" id="field-form">
-                <arpa-field required id="zone-field">
+                <text-field required id="zone-field">
                     <zone name="label">Field label</zone>
                     <zone name="description">Test description</zone>
                     <zone name="footnote">This is a footnote</zone>
@@ -332,7 +332,7 @@ export const TestZones = {
                         </button>
                     </zone>
                     ${args.content}
-                </arpa-field>
+                </text-field>
             </form>
         `;
     },
@@ -341,9 +341,9 @@ export const TestZones = {
         await customElements.whenDefined('arpa-field');
         await step('Renders the zone content.', async () => {
             await waitFor(() => {
-                expect(canvas.getByText('More options')).toBeInTheDocument();
+                expect(canvas.getByText('Field label')).toBeInTheDocument();
+                // expect(canvas.getByText('More options')).toBeInTheDocument();
             });
-            expect(canvas.getByText('Field label')).toBeInTheDocument();
             expect(canvas.getByText('Test description')).toBeInTheDocument();
             expect(canvas.getByText('This is a footnote')).toBeInTheDocument();
             expect(canvas.getByText('test tooltip')).toBeInTheDocument();

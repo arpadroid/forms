@@ -6,8 +6,9 @@
  * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
  * @typedef {import('./components/fieldInput/fieldInput.types.js').FieldInputType} FieldInputType
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
+ * @typedef {import('./components/fieldLabel/fieldLabel.js').default} FieldLabel
  */
-import { dummyListener, dummySignal, mergeObjects, observerMixin, processTemplate, render } from '@arpadroid/tools';
+import { dummyListener, dummySignal, mergeObjects, observerMixin, processTemplate } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
@@ -77,8 +78,7 @@ class Field extends ArpaElement {
         /** @type {FormComponent} */
         if (this.id) {
             this._id = this.id;
-            this.removeAttribute('id');
-            // @ts-ignore
+            this.removeAttribute('id'); // @ts-ignore
             delete this.id;
         }
         this.form = this.getForm();
@@ -124,9 +124,10 @@ class Field extends ArpaElement {
         /** @type {FormComponent} */
         this.form = this.getForm();
         this._initializeInputNode();
-        /** @type {fieldInputMask} */
-        this.inputMask = /** @type {fieldInputMask} */ (this.querySelector('field-input-mask'));
+        /** @type {fieldInputMask | null} */
+        this.inputMask = this.querySelector('field-input-mask');
         this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
+        /** @type {FieldLabel | null} */
         this.label = this.querySelector('label[is="field-label"]');
         this.headerNode = this.querySelector('.arpaField__header');
         this.bodyNode = this.querySelector('.arpaField__body');
@@ -197,7 +198,6 @@ class Field extends ArpaElement {
             <div class="arpaField__inputWrapper">{input}{inputRhs}{inputMask}</div>
             {afterInput}
         </div>
-
         <div class="arpaField__footer">{footnote}</div>
     `;
 
@@ -250,31 +250,19 @@ class Field extends ArpaElement {
     }
 
     renderInputRhs() {
-        return (
-            (this.hasContent('input-rhs') &&
-                html`<div class="arpaField__inputRhs" zone="input-rhs">${this.getProperty('input-rhs') || ''}</div>`) ||
-            ''
-        );
+        return this.renderChild('input-rhs');
     }
 
     renderDescription() {
-        return (
-            (this.hasContent('description') &&
-                html`<p class="arpaField__description" zone="description">${this.getProperty('description') || ''}</p>`) ||
-            ''
-        );
+        return this.renderChild('description', { tag: 'p' });
     }
 
     renderFootnote() {
-        return (
-            (this.hasContent('footnote') &&
-                html`<p class="arpaField__footnote" zone="footnote">${this.getProperty('footnote') || ''}</p>`) ||
-            ''
-        );
+        return this.renderChild('footnote', { tag: 'p' });
     }
 
     renderLabel() {
-        return (this.hasContent('label') && html`<label is="field-label">${this.getLabel()}</label>`) || '';
+        return this.renderChild('label', { tag: 'label', hasZone: false, attr: { is: 'field-label' } });
     }
 
     renderInput() {
@@ -286,8 +274,7 @@ class Field extends ArpaElement {
     }
 
     renderSubHeader() {
-        const subHeader = this.getProperty('sub-header');
-        return render(subHeader, html`<div class="arpaField__subHeader">${subHeader}</div>`);
+        return this.renderChild('sub-header');
     }
 
     /**
@@ -307,9 +294,7 @@ class Field extends ArpaElement {
      */
     async addInputRHS(node) {
         await this.onReady();
-        if (node instanceof HTMLElement) {
-            this.inputWrapper?.appendChild(node);
-        }
+        node instanceof HTMLElement && this.inputWrapper?.appendChild(node);
     }
 
     // #endregion
@@ -384,13 +369,9 @@ class Field extends ArpaElement {
         } else {
             this.classList.add('arpaField--hasError');
         }
-        if (update) {
-            this._isValid = isValid;
-        }
+        update && (this._isValid = isValid);
         this.updateErrors();
-        if (!isValid) {
-            this.signal && this.signal('error', this.getErrorMessages(), this);
-        }
+        !isValid && this.signal('error', this.getErrorMessages(), this);
         return isValid;
     }
 
@@ -437,8 +418,7 @@ class Field extends ArpaElement {
      * @returns {FormComponent | undefined}
      */
     getForm() {
-        // @ts-ignore
-        return this._config.form || this.closest('form');
+        return /** @type {FormComponent | undefined} */ (this._config.form || this.closest('form'));
     }
 
     getOnChangeValue() {
@@ -524,9 +504,7 @@ class Field extends ArpaElement {
      */
     getHtmlId() {
         let id = '';
-        if (this.form) {
-            id = this.form.id + '-';
-        }
+        this.form && (id = this.form.id + '-');
         id += this.getId();
         return id;
     }
@@ -668,15 +646,12 @@ class Field extends ArpaElement {
      */
     setValue(value, update = true) {
         this.value = value;
-
-        if (this?.input) {
-            // @ts-ignore
-            if (typeof this.input?.setValue === 'function') {
-                // @ts-ignore
-                this.input.setValue(value);
-            } else {
-                this.input.value = value;
-            }
+        if (this.input instanceof HTMLTextAreaElement) {
+            this.input.innerHTML = value;
+        } else if (this.input && 'setValue' in this.input && typeof this.input?.setValue === 'function') {
+            this.input.setValue(value);
+        } else if (this.input) {
+            this.input.value = value;
         }
         if (update && this.isConnected) {
             this.setAttribute('value', value);
@@ -707,9 +682,7 @@ class Field extends ArpaElement {
      */
     setRegex(regex, message) {
         this.setAttribute('regex', regex?.toString());
-        if (message) {
-            this.setRegexMessage(message);
-        }
+        message && this.setRegexMessage(message);
     }
 
     /**

@@ -18,6 +18,9 @@ image-field {
     flex-wrap: wrap;
     gap: 1rem;
     width: 100%;
+    > * {
+        flex: 1 1 50%;
+    }
 }
 
 .fileField__fileList:has(.arpaList__items:empty),

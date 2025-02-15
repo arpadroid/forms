@@ -1,13 +1,12 @@
 field-errors {
+    --tooltip-border-color: var(--red-light);
+    --tooltip-bg-color: var(--red-lightest);
+    --tooltip-text-color: var(--red-dark);
+
     margin-right: 0.8rem;
     &:not(:has(.fieldErrors__list)),
     &:has(.fieldErrors__list:empty) {
         display: none;
-    }
-    .tooltip__content {
-        background-color: var(--red-lightest);
-        border-color: var(--red-light);
-        color: var(--red-dark);
     }
 
     arpa-icon.icon {
