@@ -328,7 +328,6 @@ class FormComponent extends HTMLFormElement {
     renderMini() {
         return html`
             ${this.renderTitle()}
-            <arpa-messages zone="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>
             <div class="arpaForm__fields"></div>
         `;
     }
