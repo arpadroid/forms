@@ -1,5 +1,5 @@
 import { Button } from '@arpadroid/ui';
-
+import { defineCustomElement } from '@arpadroid/tools';
 class SubmitButton extends Button {
     // static get observedAttributes() {
     //     return ['text'];
@@ -11,6 +11,6 @@ class SubmitButton extends Button {
     // }
 }
 
-customElements.define('submit-button', SubmitButton, { extends: 'button' });
+defineCustomElement('submit-button', SubmitButton, { extends: 'button' });
 
 export default SubmitButton;

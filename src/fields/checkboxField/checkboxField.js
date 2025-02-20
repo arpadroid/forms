@@ -1,7 +1,7 @@
 /**
  * @typedef {import('./checkboxField.types').CheckboxFieldConfigType} CheckboxFieldConfigType
  */
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 
@@ -9,9 +9,9 @@ const html = String.raw;
  * @module CheckboxField
  */
 class CheckboxField extends Field {
-    /** @type {HTMLInputElement} */// @ts-ignore
+    /** @type {HTMLInputElement} */ // @ts-ignore
     input = this.input;
-    /** @type {CheckboxFieldConfigType} */// @ts-ignore
+    /** @type {CheckboxFieldConfigType} */ // @ts-ignore
     _config = this._config;
 
     static template = html`
@@ -80,6 +80,6 @@ class CheckboxField extends Field {
     }
 }
 
-customElements.define(CheckboxField.prototype.getTagName(), CheckboxField);
+defineCustomElement(CheckboxField.prototype.getTagName(), CheckboxField);
 
 export default CheckboxField;

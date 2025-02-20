@@ -8,7 +8,7 @@
 
 import { I18n } from '@arpadroid/i18n';
 import Field from '../field/field.js';
-import { mergeObjects, renderNode } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
 
 const html = String.raw;
 class FileField extends Field {
@@ -363,6 +363,6 @@ class FileField extends Field {
     // #endregion
 }
 
-customElements.define('file-field', FileField);
+defineCustomElement('file-field', FileField);
 
 export default FileField;

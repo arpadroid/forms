@@ -1,4 +1,4 @@
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 
@@ -23,6 +23,6 @@ class TelField extends TextField {
     }
 }
 
-customElements.define(TelField.prototype.getTagName(), TelField);
+defineCustomElement(TelField.prototype.getTagName(), TelField);
 
 export default TelField;

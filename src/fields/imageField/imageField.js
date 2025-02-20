@@ -1,6 +1,6 @@
 /** @typedef {import('./imageField.types').ImageFieldConfigType} ImageFieldConfigType */
 import { I18n } from '@arpadroid/i18n';
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import FileField from '../fileField/fileField.js';
 
 class ImageField extends FileField {
@@ -37,6 +37,6 @@ class ImageField extends FileField {
     }
 }
 
-customElements.define(ImageField.prototype.getTagName(), ImageField);
+defineCustomElement(ImageField.prototype.getTagName(), ImageField);
 
 export default ImageField;

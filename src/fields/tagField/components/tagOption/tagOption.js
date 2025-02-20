@@ -2,6 +2,7 @@
  * @typedef {import('../../tagField.js').default} TagField
  * @typedef {import('./tagOption.types.js').TagOptionConfigType} TagOptionConfigType
  */
+import { defineCustomElement } from '@arpadroid/tools';
 import SelectOption from '../../../selectCombo/selectOption/selectOption.js';
 
 class TagOption extends SelectOption {
@@ -40,6 +41,6 @@ class TagOption extends SelectOption {
     }
 }
 
-customElements.define('tag-option', TagOption);
+defineCustomElement('tag-option', TagOption);
 
 export default TagOption;

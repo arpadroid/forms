@@ -1,4 +1,4 @@
-import { mergeObjects, stringToHex, validateColor } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects, stringToHex, validateColor } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 
@@ -74,6 +74,6 @@ class ColorField extends Field {
     }
 }
 
-customElements.define(ColorField.prototype.getTagName(), ColorField);
+defineCustomElement(ColorField.prototype.getTagName(), ColorField);
 
 export default ColorField;

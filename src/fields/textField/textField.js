@@ -1,5 +1,5 @@
 import Field from '../field/field.js';
-import { RegexTool } from '@arpadroid/tools';
+import { defineCustomElement, RegexTool } from '@arpadroid/tools';
 
 class TextField extends Field {
     /**
@@ -49,6 +49,6 @@ class TextField extends Field {
     }
 }
 
-customElements.define(TextField.prototype.getTagName(), TextField);
+defineCustomElement(TextField.prototype.getTagName(), TextField);
 
 export default TextField;

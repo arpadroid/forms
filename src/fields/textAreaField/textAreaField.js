@@ -1,5 +1,5 @@
 /** @typedef {import('./textArea.types').TextAreaConfigType} TextAreaConfigType */
-import { attr } from '@arpadroid/tools';
+import { attr, defineCustomElement } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 const html = String.raw;
 class TextAreaField extends TextField {
@@ -51,6 +51,6 @@ class TextAreaField extends TextField {
     }
 }
 
-customElements.define(TextAreaField.prototype.getTagName(), TextAreaField);
+defineCustomElement(TextAreaField.prototype.getTagName(), TextAreaField);
 
 export default TextAreaField;

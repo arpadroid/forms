@@ -1,5 +1,5 @@
 /** @typedef {import('./numberField.types').NumberFieldConfigType} NumberFieldConfigType */
-import { validateNumber } from '@arpadroid/tools';
+import { defineCustomElement, validateNumber } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 class NumberField extends Field {
@@ -97,6 +97,6 @@ class NumberField extends Field {
     }
 }
 
-customElements.define(NumberField.prototype.getTagName(), NumberField);
+defineCustomElement(NumberField.prototype.getTagName(), NumberField);
 
 export default NumberField;

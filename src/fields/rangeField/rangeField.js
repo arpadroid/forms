@@ -1,5 +1,5 @@
 /** @typedef {import('./rangeField.types').RangeFieldConfigType} RangeFieldConfigType */
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 class RangeField extends Field {
@@ -42,6 +42,6 @@ class RangeField extends Field {
     }
 }
 
-customElements.define(RangeField.prototype.getTagName(), RangeField);
+defineCustomElement(RangeField.prototype.getTagName(), RangeField);
 
 export default RangeField;

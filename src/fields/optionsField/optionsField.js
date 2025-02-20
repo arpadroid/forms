@@ -4,7 +4,7 @@
  * @typedef {import('./fieldOption/fieldOption.js').default} FieldOption
  * @typedef {import('./optionsField.types').OptionsNodeType} OptionsNodeType
  */
-import { attr, mergeObjects, processTemplate, renderNode } from '@arpadroid/tools';
+import { attr, defineCustomElement, mergeObjects, processTemplate, renderNode } from '@arpadroid/tools';
 import Field from '../field/field.js';
 
 const html = String.raw;
@@ -333,6 +333,6 @@ class OptionsField extends Field {
     // #endregion Render
 }
 
-customElements.define(OptionsField.prototype.getTagName(), OptionsField);
+defineCustomElement(OptionsField.prototype.getTagName(), OptionsField);
 
 export default OptionsField;

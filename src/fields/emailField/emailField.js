@@ -1,5 +1,6 @@
 import { I18n } from '@arpadroid/i18n';
 import TextField from '../textField/textField.js';
+import { defineCustomElement } from '@arpadroid/tools';
 
 class EmailField extends TextField {
     getDefaultConfig() {
@@ -24,6 +25,6 @@ class EmailField extends TextField {
     }
 }
 
-customElements.define(EmailField.prototype.getTagName(), EmailField);
+defineCustomElement(EmailField.prototype.getTagName(), EmailField);
 
 export default EmailField;

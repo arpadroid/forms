@@ -2,7 +2,7 @@
  * @typedef {import('@arpadroid/tools').FilePayloadType} FilePayloadType
  * @typedef {import('../fileItem/fileItem.types').FileItemConfigType} FileItemConfigType
  */
-import { mergeObjects, mechanize } from '@arpadroid/tools';
+import { mergeObjects, mechanize, defineCustomElement } from '@arpadroid/tools';
 import FileItem from '../fileItem/fileItem.js';
 import { List } from '@arpadroid/lists';
 class FileList extends List {
@@ -32,6 +32,6 @@ class FileList extends List {
     }
 }
 
-customElements.define('file-list', FileList);
+defineCustomElement('file-list', FileList);
 
 export default FileList;

@@ -1,5 +1,5 @@
 /** @typedef {import('./selectField.types').SelectFieldConfigType} SelectFieldConfigType */
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
 const html = String.raw;
 
@@ -45,6 +45,6 @@ class SelectField extends OptionsField {
     }
 }
 
-customElements.define('select-field', SelectField);
+defineCustomElement('select-field', SelectField);
 
 export default SelectField;

@@ -29,7 +29,7 @@ const FileFieldStory = {
                     form.onSubmit(values => {
                         console.log('Form values', values);
                         return true;
-                    }); 
+                    });
                 });
             </script>
         `;

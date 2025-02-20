@@ -1,4 +1,5 @@
 import { ArpaElement } from '@arpadroid/ui';
+import { defineCustomElement } from '@arpadroid/tools';
 const html = String.raw;
 class FormTitle extends ArpaElement {
     render() {
@@ -11,6 +12,6 @@ class FormTitle extends ArpaElement {
     }
 }
 
-customElements.define('form-title', FormTitle);
+defineCustomElement('form-title', FormTitle);
 
 export default FormTitle;

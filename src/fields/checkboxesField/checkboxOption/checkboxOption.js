@@ -3,6 +3,7 @@
  * @typedef {import('../../checkboxesField/checkboxesField.js').default} RadioField
  */
 
+import { defineCustomElement } from '@arpadroid/tools';
 import RadioOption from '../../radioField/radioOption/radioOption.js';
 import CheckboxesField from '../checkboxesField.js';
 
@@ -52,6 +53,6 @@ class CheckboxOption extends RadioOption {
     }
 }
 
-customElements.define('checkbox-option', CheckboxOption);
+defineCustomElement('checkbox-option', CheckboxOption);
 
 export default CheckboxOption;

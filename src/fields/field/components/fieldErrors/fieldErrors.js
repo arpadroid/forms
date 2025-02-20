@@ -1,4 +1,4 @@
-import { appendNodes } from '@arpadroid/tools';
+import { appendNodes, defineCustomElement } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 const html = String.raw;
 /**
@@ -94,6 +94,6 @@ class FieldErrors extends ArpaElement {
     }
 }
 
-customElements.define('field-errors', FieldErrors);
+defineCustomElement('field-errors', FieldErrors);
 
 export default FieldErrors;

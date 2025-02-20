@@ -1,4 +1,4 @@
-import { mechanize, appendNodes, isIOsSafari } from '@arpadroid/tools';
+import { mechanize, appendNodes, isIOsSafari, defineCustomElement } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 
 /**
@@ -137,6 +137,6 @@ class FieldOption extends ArpaElement {
     }
 }
 
-customElements.define('field-option', FieldOption);
+defineCustomElement('field-option', FieldOption);
 
 export default FieldOption;

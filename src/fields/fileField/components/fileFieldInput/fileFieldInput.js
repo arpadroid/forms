@@ -2,6 +2,7 @@
  * @typedef {import("../../fileField.js").default} FileField
  * @typedef {import("@arpadroid/ui").DropArea} DropArea
  */
+import { defineCustomElement } from '@arpadroid/tools';
 import FieldInput from '../../../field/components/fieldInput/fieldInput.js';
 
 class FileFieldInput extends FieldInput {
@@ -88,6 +89,6 @@ class FileFieldInput extends FieldInput {
     }
 }
 
-customElements.define('file-field-input', FileFieldInput, { extends: 'input' });
+defineCustomElement('file-field-input', FileFieldInput, { extends: 'input' });
 
 export default FileFieldInput;

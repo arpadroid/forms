@@ -1,5 +1,5 @@
 /** @typedef {import('./dateField.types').DateFieldConfigType} DateFieldConfigType */
-import { attr, formatDate, isAfter, isBefore, renderNode, mergeObjects } from '@arpadroid/tools';
+import { attr, formatDate, isAfter, isBefore, renderNode, mergeObjects, defineCustomElement } from '@arpadroid/tools';
 import Field from '../field/field.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
@@ -196,6 +196,6 @@ class DateField extends Field {
     // #endregion Validation
 }
 
-customElements.define(DateField.prototype.getTagName(), DateField);
+defineCustomElement(DateField.prototype.getTagName(), DateField);
 
 export default DateField;

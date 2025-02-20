@@ -1,7 +1,7 @@
 /**
  * @typedef {import('./weekField.types').WeekFieldConfigType} WeekFieldConfigType
  */
-import { mergeObjects, renderNode } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
@@ -57,6 +57,6 @@ class WeekField extends TextField {
     }
 }
 
-customElements.define(WeekField.prototype.getTagName(), WeekField);
+defineCustomElement(WeekField.prototype.getTagName(), WeekField);
 
 export default WeekField;

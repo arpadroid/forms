@@ -3,7 +3,7 @@
  * @typedef {import('../../radioField/radioField.js').default} RadioField
  */
 import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
-import { processTemplate } from '@arpadroid/tools';
+import { defineCustomElement, processTemplate } from '@arpadroid/tools';
 
 const html = String.raw;
 
@@ -81,6 +81,6 @@ class RadioOption extends FieldOption {
     }
 }
 
-customElements.define('radio-option', RadioOption);
+defineCustomElement('radio-option', RadioOption);
 
 export default RadioOption;

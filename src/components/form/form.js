@@ -8,7 +8,7 @@
  * @typedef {import('@arpadroid/messages').Messages} Messages
  * @typedef {import('@arpadroid/resources').MessageResource} MessageResource
  */
-import { mergeObjects, copyObjectProps, zoneMixin, appendNodes, processTemplate } from '@arpadroid/tools';
+import { mergeObjects, copyObjectProps, zoneMixin, appendNodes, processTemplate, defineCustomElement } from '@arpadroid/tools';
 import { observerMixin, attr, renderNode, render, handleZones } from '@arpadroid/tools';
 import { onDestroy, getProperty, hasProperty, hasZone, canRender } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
@@ -523,6 +523,6 @@ class FormComponent extends HTMLFormElement {
     // #endregion Submit
 }
 
-customElements.define('arpa-form', FormComponent, { extends: 'form' });
+defineCustomElement('arpa-form', FormComponent, { extends: 'form' });
 
 export default FormComponent;

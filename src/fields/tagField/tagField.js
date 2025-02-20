@@ -6,7 +6,7 @@
  * @typedef {import('@arpadroid/lists').TagItemConfigType} TagItemConfigType
  */
 
-import { mergeObjects, isObject } from '@arpadroid/tools';
+import { mergeObjects, isObject, defineCustomElement } from '@arpadroid/tools';
 import SelectCombo from '../selectCombo/selectCombo.js';
 import Field from '../field/field.js';
 import ArrayField from '../arrayField/arrayField.js';
@@ -267,6 +267,6 @@ class TagField extends SelectCombo {
     // #endregion
 }
 
-customElements.define(TagField.prototype.getTagName(), TagField);
+defineCustomElement(TagField.prototype.getTagName(), TagField);
 
 export default TagField;

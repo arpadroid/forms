@@ -74,7 +74,7 @@ export const Test = {
         await step('Deletes the existing tags and checks empty content is rendered.', async () => {
             const tag = canvasElement.querySelector('tag-item[value="IS-N"]');
             const tag2 = canvasElement.querySelector('tag-item[value="AB-E"]');
-            const deleteButtons = canvas.getAllByRole('button', { name: 'Delete' });
+            const deleteButtons = canvas.getAllByRole('button', { name: 'Delete tag' });
             await fireEvent.click(deleteButtons[0]);
             await waitFor(() => {
                 expect(onDeleteTag).toHaveBeenLastCalledWith(tag, undefined, undefined);

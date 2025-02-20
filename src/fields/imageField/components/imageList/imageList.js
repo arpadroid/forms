@@ -1,4 +1,4 @@
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import ImageItem from '../imageItem/imageItem.js';
 import FileList from '../../../fileField/components/fileList/fileList.js';
 
@@ -7,11 +7,11 @@ class ImageList extends FileList {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'fileList',
             hasResource: true,
-            itemComponent: ImageItem,
+            itemComponent: ImageItem
         });
     }
 }
 
-customElements.define('image-list', ImageList);
+defineCustomElement('image-list', ImageList);
 
 export default ImageList;

@@ -1,4 +1,4 @@
-import { render, appendNodes } from '@arpadroid/tools';
+import { render, appendNodes, defineCustomElement } from '@arpadroid/tools';
 /**
  * @typedef {import('../../field.js').default} Field
  */
@@ -110,6 +110,6 @@ class FieldInputMask extends HTMLElement {
     }
 }
 
-customElements.define('field-input-mask', FieldInputMask);
+defineCustomElement('field-input-mask', FieldInputMask);
 
 export default FieldInputMask;

@@ -1,4 +1,4 @@
-import { mergeObjects, appendNodes } from '@arpadroid/tools';
+import { mergeObjects, appendNodes, defineCustomElement } from '@arpadroid/tools';
 import Field from '../field/field.js';
 
 /**
@@ -7,7 +7,7 @@ import Field from '../field/field.js';
 
 const html = String.raw;
 class GroupField extends Field {
-    /** @type {GroupFieldConfigType} */  // @ts-ignore
+    /** @type {GroupFieldConfigType} */ // @ts-ignore
     _config = this._config;
     /////////////////////////
     // #region INITIALIZATION
@@ -170,6 +170,6 @@ class GroupField extends Field {
     // #endregion
 }
 
-customElements.define(GroupField.prototype.getTagName(), GroupField);
+defineCustomElement(GroupField.prototype.getTagName(), GroupField);
 
 export default GroupField;

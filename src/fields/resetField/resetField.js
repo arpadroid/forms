@@ -1,4 +1,4 @@
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 
 class ResetField extends Field {
@@ -23,6 +23,6 @@ class ResetField extends Field {
     }
 }
 
-customElements.define('reset-field', ResetField);
+defineCustomElement(ResetField.prototype.getTagName(), ResetField);
 
 export default ResetField;

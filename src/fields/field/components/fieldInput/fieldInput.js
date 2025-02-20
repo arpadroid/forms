@@ -1,5 +1,5 @@
 import Field from '../../field.js';
-import { attr } from '@arpadroid/tools';
+import { attr, defineCustomElement } from '@arpadroid/tools';
 class FieldInput extends HTMLInputElement {
     constructor() {
         super();
@@ -63,6 +63,6 @@ class FieldInput extends HTMLInputElement {
     update() {}
 }
 
-customElements.define('field-input', FieldInput, { extends: 'input' });
+defineCustomElement('field-input', FieldInput, { extends: 'input' });
 
 export default FieldInput;

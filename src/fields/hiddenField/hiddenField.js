@@ -1,5 +1,5 @@
 import Field from '../field/field.js';
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 
 const html = String.raw;
 class HiddenField extends Field {
@@ -31,6 +31,6 @@ class HiddenField extends Field {
     }
 }
 
-customElements.define(HiddenField.prototype.getTagName(), HiddenField);
+defineCustomElement(HiddenField.prototype.getTagName(), HiddenField);
 
 export default HiddenField;

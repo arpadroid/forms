@@ -3,7 +3,7 @@
  */
 import { I18n } from '@arpadroid/i18n';
 import Field from '../field/field.js';
-import { mergeObjects, prepend, render, renderNode } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects, prepend, render, renderNode } from '@arpadroid/tools';
 
 const html = String.raw;
 class SearchField extends Field {
@@ -88,6 +88,6 @@ class SearchField extends Field {
     }
 }
 
-customElements.define('search-field', SearchField);
+defineCustomElement('search-field', SearchField);
 
 export default SearchField;

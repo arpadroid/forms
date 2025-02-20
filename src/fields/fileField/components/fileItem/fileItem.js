@@ -5,7 +5,7 @@
  * @typedef {import('./fileItem.types').FileItemPayloadType} FileItemPayloadType
  */
 
-import { mergeObjects, processFile, render, formatBytes, getFileType, getFileIcon } from '@arpadroid/tools';
+import { mergeObjects, processFile, render, formatBytes, getFileType, getFileIcon, defineCustomElement } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
 import { ListItem } from '@arpadroid/lists';
 
@@ -233,6 +233,6 @@ class FileItem extends ListItem {
     // #endregion
 }
 
-customElements.define('file-item', FileItem);
+defineCustomElement('file-item', FileItem);
 
 export default FileItem;

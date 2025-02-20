@@ -1,6 +1,6 @@
 /** @typedef {import('../dateField/dateField.types').DateFieldConfigType} DateFieldConfigType */
 import DateField from '../dateField/dateField.js';
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 class DateTimeField extends DateField {
     /**
      * Returns the default configuration for the DateTimeField.
@@ -36,6 +36,6 @@ class DateTimeField extends DateField {
     }
 }
 
-customElements.define(DateTimeField.prototype.getTagName(), DateTimeField);
+defineCustomElement(DateTimeField.prototype.getTagName(), DateTimeField);
 
 export default DateTimeField;

@@ -1,4 +1,4 @@
-import { mergeObjects, removeLastSlash } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects, removeLastSlash } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 const html = String.raw;
 class UrlField extends TextField {
@@ -43,6 +43,6 @@ class UrlField extends TextField {
     }
 }
 
-customElements.define(UrlField.prototype.getTagName(), UrlField);
+defineCustomElement(UrlField.prototype.getTagName(), UrlField);
 
 export default UrlField;

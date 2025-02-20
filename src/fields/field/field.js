@@ -8,7 +8,7 @@
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  * @typedef {import('./components/fieldLabel/fieldLabel.js').default} FieldLabel
  */
-import { dummyListener, dummySignal, mergeObjects, observerMixin, processTemplate } from '@arpadroid/tools';
+import { defineCustomElement, dummyListener, dummySignal, mergeObjects, observerMixin, processTemplate } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
@@ -752,5 +752,6 @@ class Field extends ArpaElement {
     // #endregion
 }
 
-customElements.define(Field.prototype.getTagName(), Field);
+defineCustomElement(Field.prototype.getTagName(), Field);
+
 export default Field;

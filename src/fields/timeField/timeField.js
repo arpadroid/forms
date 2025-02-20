@@ -1,7 +1,7 @@
 /**
  * @typedef {import('./timeField.types').TimeFieldConfigType} TimeFieldConfigType
  */
-import { mergeObjects, attr, timeStringToSeconds, renderNode } from '@arpadroid/tools';
+import { mergeObjects, attr, timeStringToSeconds, renderNode, defineCustomElement } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
@@ -108,6 +108,6 @@ class TimeField extends TextField {
     }
 }
 
-customElements.define(TimeField.prototype.getTagName(), TimeField);
+defineCustomElement(TimeField.prototype.getTagName(), TimeField);
 
 export default TimeField;

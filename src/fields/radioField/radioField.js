@@ -1,5 +1,5 @@
 /** @typedef {import('../optionsField/optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType */
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
 
 class RadioField extends OptionsField {
@@ -33,6 +33,6 @@ class RadioField extends OptionsField {
     }
 }
 
-customElements.define(RadioField.prototype.getTagName(), RadioField);
+defineCustomElement(RadioField.prototype.getTagName(), RadioField);
 
 export default RadioField;

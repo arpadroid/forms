@@ -1,4 +1,4 @@
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
 const html = String.raw;
 /**
@@ -64,6 +64,6 @@ class SelectOption extends FieldOption {
     }
 }
 
-customElements.define('select-option', SelectOption);
+defineCustomElement('select-option', SelectOption);
 
 export default SelectOption;

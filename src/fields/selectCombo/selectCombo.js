@@ -8,7 +8,7 @@
  * @typedef {import('@arpadroid/tools').SearchToolCallbackType} SearchToolCallbackType
  * @typedef {import('@arpadroid/ui').InputComboNodeType} InputComboNodeType
  */
-import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString } from '@arpadroid/tools';
+import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString, defineCustomElement } from '@arpadroid/tools';
 import SelectField from '../selectField/selectField.js';
 import { I18n } from '@arpadroid/i18n';
 import { InputCombo } from '@arpadroid/ui';
@@ -338,6 +338,6 @@ class SelectCombo extends SelectField {
     // #endregion
 }
 
-customElements.define('select-combo', SelectCombo);
+defineCustomElement('select-combo', SelectCombo);
 
 export default SelectCombo;

@@ -1,7 +1,7 @@
 /**
  * @typedef {import('../optionsField/optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType
  */
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
 
 /**
@@ -197,6 +197,6 @@ class ArrayField extends OptionsField {
     // #endregion
 }
 
-customElements.define('array-field', ArrayField);
+defineCustomElement('array-field', ArrayField);
 
 export default ArrayField;

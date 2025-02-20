@@ -1,7 +1,7 @@
 /** @typedef {import('./imageItem.types').ImageItemConfigType} ImageItemConfigType */
 
 import FileItem from '../../../fileField/components/fileItem/fileItem.js';
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 // import GalleryDialog from '../../../../../../gallery/components/galleryDialog/galleryDialog.js';
 
 class ImageItem extends FileItem {
@@ -44,6 +44,6 @@ class ImageItem extends FileItem {
     // }
 }
 
-customElements.define('image-item', ImageItem);
+defineCustomElement('image-item', ImageItem);
 
 export default ImageItem;

@@ -1,7 +1,7 @@
 /**
  * @typedef {import('./checkboxesField.types').CheckboxesFieldConfigType} CheckboxesFieldConfigType
  */
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import ArrayField from '../arrayField/arrayField.js';
 
 class CheckboxesField extends ArrayField {
@@ -170,6 +170,6 @@ class CheckboxesField extends ArrayField {
     }
 }
 
-customElements.define(CheckboxesField.prototype.getTagName(), CheckboxesField);
+defineCustomElement(CheckboxesField.prototype.getTagName(), CheckboxesField);
 
 export default CheckboxesField;

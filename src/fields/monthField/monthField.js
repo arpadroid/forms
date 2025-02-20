@@ -1,4 +1,4 @@
-import { mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import DateField from '../dateField/dateField.js';
 
 class MonthField extends DateField {
@@ -19,6 +19,6 @@ class MonthField extends DateField {
     }
 }
 
-customElements.define(MonthField.prototype.getTagName(), MonthField);
+defineCustomElement(MonthField.prototype.getTagName(), MonthField);
 
 export default MonthField;

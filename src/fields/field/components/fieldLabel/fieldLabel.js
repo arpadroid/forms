@@ -1,7 +1,15 @@
 /**
  * @typedef {import('../../field').default} Field
  */
-import { mergeObjects, handleZones, zoneMixin, getProperty, hasProperty, processTemplate } from '@arpadroid/tools';
+import {
+    mergeObjects,
+    handleZones,
+    zoneMixin,
+    getProperty,
+    hasProperty,
+    processTemplate,
+    defineCustomElement
+} from '@arpadroid/tools';
 
 const html = String.raw;
 class FieldLabel extends HTMLLabelElement {
@@ -67,6 +75,6 @@ class FieldLabel extends HTMLLabelElement {
     }
 }
 
-customElements.define('field-label', FieldLabel, { extends: 'label' });
+defineCustomElement('field-label', FieldLabel, { extends: 'label' });
 
 export default FieldLabel;

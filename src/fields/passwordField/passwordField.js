@@ -1,7 +1,7 @@
 /**
  * @typedef {import('./passwordField.types').PasswordFieldConfigType} PasswordFieldConfigType
  */
-import { mergeObjects, RegexTool, renderNode } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects, RegexTool, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 
 const html = String.raw;
@@ -195,6 +195,6 @@ class PasswordField extends TextField {
     // #endregion Validation
 }
 
-customElements.define(PasswordField.prototype.getTagName(), PasswordField);
+defineCustomElement(PasswordField.prototype.getTagName(), PasswordField);
 
 export default PasswordField;
