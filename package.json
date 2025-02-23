@@ -41,14 +41,14 @@
         "jsdoc-to-markdown": "^8.0.1"
     },
     "peerDependencies": {
-        "@arpadroid/tools": "file:../tools",
+        "@arpadroid/context": "file:../context",
         "@arpadroid/i18n": "file:../i18n",
-        "@arpadroid/ui": "file:../ui",
         "@arpadroid/lists": "file:../lists",
         "@arpadroid/messages": "file:../messages",
         "@arpadroid/navigation": "file:../navigation",
         "@arpadroid/resources": "file:../resources",
-        "@arpadroid/context": "file:../context",
-        "@arpadroid/services": "file:../services"
+        "@arpadroid/services": "file:../services",
+        "@arpadroid/tools": "file:../tools",
+        "@arpadroid/ui": "file:../ui"
     }
 }
