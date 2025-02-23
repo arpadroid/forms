@@ -1,1 +1,1 @@
-import '@arpadroid/arpadroid/.storybook/manager.jsx';
+import '@arpadroid/module/.storybook/manager.jsx';

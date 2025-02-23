@@ -1,5 +1,5 @@
-import { bootstrapDecorator } from '@arpadroid/arpadroid/src/storybook/decorators.js';
-import config from '@arpadroid/arpadroid/src/storybook/preview.ui.js';
+import { bootstrapDecorator } from '@arpadroid/module/src/storybook/decorators.js';
+import config from '@arpadroid/module/src/storybook/preview.ui.js';
 import { setService } from '@arpadroid/context';
 import { Router } from '@arpadroid/services';
 

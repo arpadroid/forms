@@ -337,13 +337,13 @@ export const Zones = {
     },
     play: async ({ canvasElement, step }) => {
         const canvas = within(canvasElement);
-        await customElements.whenDefined('arpa-field');
-        await customElements.whenDefined('field-label');
+        await new Promise(resolve => setTimeout(resolve, 500));
         await step('Renders the zone content.', async () => {
             await waitFor(() => {
-                expect(canvas.getByText('Test description')).toBeInTheDocument();
+                expect(canvas.getByText('This is a footnote')).toBeInTheDocument();
             });
-            expect(canvas.getByText('This is a footnote')).toBeInTheDocument();
+            expect(canvas.getByText('Test description')).toBeInTheDocument();
+
             expect(canvas.getByText('test tooltip')).toBeInTheDocument();
             /**
              * @todo Investigate why test is failing in CI.

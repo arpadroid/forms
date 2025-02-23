@@ -1,5 +1,5 @@
 {
-    "extends": "./node_modules/@arpadroid/arpadroid/src/tsconfig/esnext/tsconfig.json",
+    "extends": "./node_modules/@arpadroid/module/src/tsconfig/esnext/tsconfig.json",
     "compilerOptions": {
         // "tsBuildInfoFile": ".tsbuildinfo"
         "rootDir": "./src",

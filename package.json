@@ -6,10 +6,10 @@
     "types": "./dist/@types/types.compiled.d.ts",
     "type": "module",
     "scripts": {
-        "build": "node ./node_modules/@arpadroid/arpadroid/scripts/build-project.mjs --project=forms --minify",
+        "build": "node ./node_modules/@arpadroid/module/scripts/build-project.mjs --project=forms --minify",
         "prepublish": "npm run build",
         "storybook": "npm run build -- --storybook=6005 --watch",
-        "test": "node ./node_modules/@arpadroid/arpadroid/scripts/test-project.mjs --project=forms --storybook --jest --port=6005"
+        "test": "node ./node_modules/@arpadroid/module/scripts/test-project.mjs --project=forms --storybook --jest --port=6005"
     },
     "repository": {
         "type": "git",
@@ -30,7 +30,7 @@
     },
     "homepage": "https://github.com/arpadroid/forms#readme",
     "devDependencies": {
-        "@arpadroid/arpadroid": "file:../arpadroid",
+        "@arpadroid/module": "file:../module",
         "@arpadroid/stylesheet-bundler": "file:../stylesheet-bundler",
         "@babel/core": "^7.24",
         "@babel/plugin-proposal-optional-chaining-assign": "^7.23.7",
