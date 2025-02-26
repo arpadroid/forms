@@ -1,5 +1,6 @@
 /**
  * @typedef {import('./passwordField.types').PasswordFieldConfigType} PasswordFieldConfigType
+ * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
 import { defineCustomElement, mergeObjects, RegexTool, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
@@ -74,7 +75,7 @@ class PasswordField extends TextField {
 
     /**
      * Renders the visibility button for toggling password visibility.
-     * @returns {HTMLButtonElement}
+     * @returns {IconButton}
      */
     renderVisibilityButton() {
         const { lblShowPassword } = this._config;
@@ -163,8 +164,8 @@ class PasswordField extends TextField {
     togglePasswordVisibility() {
         const isPassword = this.input?.getAttribute('type') === 'password';
         this.input?.setAttribute('type', isPassword ? 'text' : 'password');
-        this.visButton?.setAttribute('label', isPassword ? this.i18nText('lblHidePassword') : this.i18nText('lblShowPassword'));
-        this.visButton?.setAttribute('icon', isPassword ? 'visibility_off' : 'visibility');
+        this.visButton?.setLabel(isPassword ? this.i18nText('lblHidePassword') : this.i18nText('lblShowPassword'));
+        this.visButton?.setIcon(isPassword ? 'visibility_off' : 'visibility');
     }
 
     // #endregion Lifecycle

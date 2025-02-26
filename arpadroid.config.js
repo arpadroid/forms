@@ -1,7 +1,11 @@
 const config = {
     deps: ['messages'],
     style_patterns: 'fields/**/*',
-    buildTypes: true
+    buildTypes: true,
+    logo: `            ┓    • ┓  ┏        
+   ┏┓┏┓┏┓┏┓┏┫┏┓┏┓┓┏┫  ╋┏┓┏┓┏┳┓┏
+   ┗┻┛ ┣┛┗┻┗┻┛ ┗┛┗┗┻  ┛┗┛┛ ┛┗┗┛
+-------┛---------------------------`
 };
 
 export default config;

@@ -62,9 +62,13 @@ export const Test = {
                 name: 'Show password'
             });
             input.value = 'password';
+            expect(canvas.getAllByText('Show password')).toHaveLength(2);
             expect(input.type).toBe('password');
             await fireEvent.click(buttons[0]);
             expect(input.type).toBe('text');
+            await waitFor(() => {
+                expect(canvas.getByText('Hide password')).toBeInTheDocument();
+            });
             await fireEvent.click(buttons[0]);
             expect(input.type).toBe('password');
         });
