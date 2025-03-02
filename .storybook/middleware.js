@@ -1,1 +1,1 @@
-module.exports = require('@arpadroid/module/.storybook/middleware.js');
+module.exports = require('@arpadroid/module/storybook/middleware');

@@ -1,4 +1,2 @@
-import config from '@arpadroid/module/src/storybook/main.ui.js';
-export default {
-    ...config
-};
+import config from '@arpadroid/module/storybook/main';
+export default { ...config };

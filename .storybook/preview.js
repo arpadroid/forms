@@ -1,5 +1,5 @@
-import { bootstrapDecorator } from '@arpadroid/module/src/storybook/decorators.js';
-import config from '@arpadroid/module/src/storybook/preview.ui.js';
+import config from '@arpadroid/module/storybook/preview';
+import { bootstrapDecorator } from '@arpadroid/module/storybook/decorators';
 import { setService } from '@arpadroid/context';
 import { Router } from '@arpadroid/services';
 
@@ -10,7 +10,7 @@ export default {
         options: {
             ...config.parameters.options,
             storySort: {
-                order: ['Forms', ['Form', 'Field', 'Fields']],
+                order: ['Forms', ['Form', 'Field', 'Fields']]
             }
         }
     },

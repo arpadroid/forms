@@ -30,8 +30,6 @@
     },
     "homepage": "https://github.com/arpadroid/forms#readme",
     "devDependencies": {
-        "@arpadroid/module": "file:../module",
-        "@arpadroid/stylesheet-bundler": "file:../stylesheet-bundler",
         "@babel/core": "^7.24",
         "@babel/plugin-proposal-optional-chaining-assign": "^7.23.7",
         "@babel/plugin-syntax-import-assertions": "^7.23.3",
@@ -41,6 +39,8 @@
         "jsdoc-to-markdown": "^8.0.1"
     },
     "peerDependencies": {
+        "@arpadroid/module": "file:../module",
+        "@arpadroid/stylesheet-bundler": "file:../stylesheet-bundler",
         "@arpadroid/context": "file:../context",
         "@arpadroid/i18n": "file:../i18n",
         "@arpadroid/lists": "file:../lists",

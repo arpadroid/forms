@@ -1,12 +1,13 @@
 {
     "extends": "./node_modules/@arpadroid/module/src/tsconfig/esnext/tsconfig.json",
     "compilerOptions": {
-        // "tsBuildInfoFile": ".tsbuildinfo"
         "rootDir": "./src",
         "outDir": "./.tmp/.types",
         "skipLibCheck": true,
         "paths": {
-            "@arpadroid/lists": ["../lists/.tmp/.types/types.compiled.d.ts"]
+            "@arpadroid/lists": ["../lists/.tmp/.types/types.compiled.d.ts"],
+            "@arpadroid/navigation": ["../navigation/.tmp/.types/types.compiled.d.ts"],
+            "@arpadroid/messages": ["../messages/.tmp/.types/types.compiled.d.ts"]
         }
     },
     "include": ["src/**/*"],
