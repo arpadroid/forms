@@ -14,6 +14,9 @@ const html = String.raw;
 const FieldStory = {
     title: 'Forms/Field',
     tags: [],
+    parameters: {
+        layout: 'padded'
+    },
     render: (
         args,
         story,
@@ -177,6 +180,7 @@ export const Default = {
         interactions: { disable: true },
         a11y: { disable: true },
         'storybook/interactions/panel': { disable: true },
+        layout: 'padded',
         options: {
             selectedPanel: 'storybook/controls/panel'
         }
@@ -198,7 +202,8 @@ export const Test = {
     parameters: {
         controls: { disable: true },
         usage: { disable: true },
-        options: { selectedPanel: 'storybook/interactions/panel' }
+        options: { selectedPanel: 'storybook/interactions/panel' },
+        layout: 'padded'
     },
     args: {
         ...Default.args,

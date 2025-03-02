@@ -6,9 +6,6 @@ import FileFieldStory from '../fileField/fileField.stories.js';
 import { waitFor, expect, fireEvent } from '@storybook/test';
 import { TextFileSmall } from '../../test/mocks/fileMock.js';
 import { createImageFileFromURL } from '../../test/mocks/imageMock.js';
-import galaxySrc from '/assets/galaxy.jpg';
-import flowerSrc from '/assets/flower.jpg';
-import planeSrc from '/assets/plane.jpg';
 
 const html = String.raw;
 const assetsURL = 'http://www.local/arpadroid/forms/assets';
@@ -48,9 +45,9 @@ export const Test = {
         const uploadList = canvasElement.querySelector('.fileField__uploadList');
         const i18nKey = field.i18nKey;
 
-        const galaxyImage = await createImageFileFromURL(galaxySrc, 'galaxy.jpg');
-        const flowerImage = await createImageFileFromURL(flowerSrc, 'flower.jpg');
-        const planeImage = await createImageFileFromURL(planeSrc, 'plane.jpg');
+        const galaxyImage = await createImageFileFromURL('/assets/galaxy.jpg', 'galaxy.jpg');
+        const flowerImage = await createImageFileFromURL('/assets/flower.jpg', 'flower.jpg');
+        const planeImage = await createImageFileFromURL('/assets/plane.jpg', 'plane.jpg');
 
         await step('Renders the field', async () => {
             canvas.getByText('Image field');

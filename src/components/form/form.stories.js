@@ -10,6 +10,9 @@ const html = String.raw;
 
 const FormStory = {
     title: 'Forms/Form',
+    parameters: {
+        layout: 'padded'
+    },
     tags: [],
     render: (args, story, renderContent = FormStory.renderContent, renderScript = FormStory.renderScript) => {
         return html`
