@@ -86,7 +86,7 @@ class FieldValidator {
      */
     runValidationMethods(value) {
         let isValid = true;
-        for (const _method of this.getMethods()) {
+        for (const _method of this.getMethods()) { // @ts-ignore
             const method = this.getMethod(_method);
             if (typeof method === 'function') {
                 const isFieldValid = method(value);
@@ -103,7 +103,7 @@ class FieldValidator {
 
     /**
      * Gets the validation method.
-     * @param {string | ((value: unknown) => boolean)} param - The validation method parameter.
+     * @param {keyof FieldValidator & string  | ((value: unknown) => boolean)} param - The validation method parameter.
      * @returns {undefined | ((value: unknown) => boolean)} - The validation method.
      */
     getMethod(param) {
@@ -111,8 +111,8 @@ class FieldValidator {
             return param;
         }
         if (typeof param === 'string') {
-            // @ts-ignore
-            const fieldMethod = this.field[`validate${ucFirst(param)}`]; // @ts-ignore
+            const methodName = /** @type {keyof Field} */ (`validate${ucFirst(param)}`);
+            const fieldMethod = this.field[methodName];
             const method = /** @type {(value: unknown) => boolean} */ (this[param]);
             if (typeof fieldMethod === 'function') {
                 return fieldMethod.bind(this.field);
@@ -185,7 +185,6 @@ class FieldValidator {
      * @returns {boolean} - True if the value size is equal to the specified size, false otherwise.
      */
     size(value = /** @type {string|number} */ (this.field.getValue()), size = this.field.getSize()) {
-        
         console.log('value', value);
         const valid = validateSize(value, size);
         if (!valid) {

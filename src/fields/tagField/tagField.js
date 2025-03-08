@@ -130,12 +130,11 @@ class TagField extends SelectCombo {
     /**
      * Sets the tags.
      * @param {unknown[] | unknown} tags
-     * @returns {TagOptionConfigType[] | undefined}
+     * @returns {TagItemConfigType[] | undefined}
      */
     setTags(tags) {
-        /** @type {TagOptionConfigType[]} */
-        const _tags = this.parseTags(tags);
-        // @ts-ignore
+        /** @type {TagItemConfigType[]} */
+        const _tags = /** @type {TagItemConfigType[]} */ (this.parseTags(tags));
         this.tagList?.setItems(_tags);
         return _tags;
     }

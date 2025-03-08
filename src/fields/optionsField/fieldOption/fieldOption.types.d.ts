@@ -25,5 +25,5 @@ export type FieldOptionConfigType = ArpaElementConfigType & {
     className?: string;
     content?: string;
     onChange?: FieldOptionOnChangeType;
-    action?: (...args) => void;
+    action?: (...args: any[]) => void;
 };

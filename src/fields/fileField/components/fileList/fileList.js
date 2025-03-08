@@ -8,7 +8,7 @@ import { List } from '@arpadroid/lists';
 class FileList extends List {
     /** @type {() => FileItemConfigType[]} */
     getItems = this.getItems;
-    /** @type {(payload: FileItemConfigType) => FileItem | undefined} */ // @ts-ignore
+    /** @type {(payload: FileItemConfigType) => FileItem} */
     addItem = this.addItem;
     /** @type {(items: FileItem[]) => any} */
     addItemNodes = this.addItemNodes;
