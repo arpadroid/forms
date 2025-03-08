@@ -14,7 +14,7 @@ import { I18n } from '@arpadroid/i18n';
 
 const html = String.raw;
 class TagField extends SelectCombo {
-    /** @type {TagFieldConfigType} */ // @ts-ignore
+    /** @type {TagFieldConfigType} */
     _config = this._config;
     /** @type {string[]} */
     value = [];
@@ -160,8 +160,7 @@ class TagField extends SelectCombo {
     parseTag(tag) {
         const { tagDefaults } = this._config;
         if (typeof tag === 'string') {
-            // @ts-ignore
-            const parts = tag?.split('::');
+            const parts = /** @type {string}*/ (tag)?.split('::');
             Object.assign(tag, {});
             return {
                 ...tagDefaults,
@@ -184,11 +183,11 @@ class TagField extends SelectCombo {
         const { tagDefaults } = this._config;
         const value = this.getValue();
         if (!value.includes(item.value)) {
-            // @ts-ignore
             this?.tagList?.addItem({
                 ...tagDefaults,
                 text: item.label,
-                value: item.value
+                value: item.value,
+                template: undefined
             });
         }
         return this;
@@ -201,7 +200,6 @@ class TagField extends SelectCombo {
      */
     removeValue(value) {
         const item = this.tagList?.listResource?.items?.find(item => item.value === value);
-        // @ts-ignore
         item && this.tagList?.removeItem(item);
         const hiddenOption = this.optionsNode?.querySelector(`[value="${value}"]`);
         if (hiddenOption instanceof HTMLElement) {

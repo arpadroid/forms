@@ -7,7 +7,7 @@ import { defineCustomElement, mergeObjects, prepend, render, renderNode } from '
 
 const html = String.raw;
 class SearchField extends Field {
-    /** @type {SearchFieldConfigType} */ // @ts-ignore
+    /** @type {SearchFieldConfigType} */ 
     _config = this._config;
     preventOnSubmit = false;
 

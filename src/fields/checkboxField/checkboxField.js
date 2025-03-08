@@ -9,9 +9,9 @@ const html = String.raw;
  * @module CheckboxField
  */
 class CheckboxField extends Field {
-    /** @type {HTMLInputElement} */ // @ts-ignore
+    /** @type {HTMLInputElement} */
     input = this.input;
-    /** @type {CheckboxFieldConfigType} */ // @ts-ignore
+    /** @type {CheckboxFieldConfigType} */
     _config = this._config;
 
     static template = html`

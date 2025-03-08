@@ -7,7 +7,7 @@ import Field from '../field/field.js';
 
 const html = String.raw;
 class GroupField extends Field {
-    /** @type {GroupFieldConfigType} */ // @ts-ignore
+    /** @type {GroupFieldConfigType} */
     _config = this._config;
     /////////////////////////
     // #region INITIALIZATION

@@ -5,7 +5,7 @@ import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 // import GalleryDialog from '../../../../../../gallery/components/galleryDialog/galleryDialog.js';
 
 class ImageItem extends FileItem {
-    /** @type {ImageItemConfigType} */ // @ts-ignore
+    /** @type {ImageItemConfigType} */
     _config = this._config;
     /**
      * Returns the default config for the file item.

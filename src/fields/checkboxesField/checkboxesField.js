@@ -5,7 +5,7 @@ import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import ArrayField from '../arrayField/arrayField.js';
 
 class CheckboxesField extends ArrayField {
-    /** @type {CheckboxesFieldConfigType} */ // @ts-ignore
+    /** @type {CheckboxesFieldConfigType} */
     _config = this._config;
 
     /////////////////////////////////////

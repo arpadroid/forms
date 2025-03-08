@@ -3,7 +3,7 @@ import Field from '../field/field.js';
 const html = String.raw;
 
 class ColorField extends Field {
-    /** @type {HTMLInputElement | null} */ // @ts-ignore
+    /** @type {HTMLInputElement | null} */
     input = this.input;
     /** @type {string[]} _validations - The validation method signatures for the color field.*/
     _validations = [...super.getValidations(), 'color'];

@@ -3,7 +3,7 @@ import { attr, defineCustomElement } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 const html = String.raw;
 class TextAreaField extends TextField {
-    /** @type {HTMLTextAreaElement} */ // @ts-ignore
+    /** @type {HTMLTextAreaElement} */
     input = this.input;
     /**
      * Returns the default configuration for the text area field.

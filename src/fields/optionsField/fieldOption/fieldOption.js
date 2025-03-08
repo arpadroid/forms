@@ -1,17 +1,18 @@
-import { mechanize, appendNodes, isIOsSafari, defineCustomElement } from '@arpadroid/tools';
-import { ArpaElement } from '@arpadroid/ui';
-
 /**
  * @typedef {import('../../field/field.js').default} Field
  * @typedef {import('./fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
+ * @typedef {import('@arpadroid/tools').ElementType} ElementType
  */
+import { mechanize, appendNodes, isIOsSafari, defineCustomElement } from '@arpadroid/tools';
+import { ArpaElement } from '@arpadroid/ui';
+import { FieldInput } from '../../../exports.js';
 const html = String.raw;
 
 /**
  * Represents a field option element.
  */
 class FieldOption extends ArpaElement {
-    /** @type {FieldOptionConfigType} */ //@ts-ignore
+    /** @type {FieldOptionConfigType} */
     _config = this._config;
 
     /**
@@ -61,7 +62,6 @@ class FieldOption extends ArpaElement {
      */
     async render() {
         await this.onReady();
-        /** @type {Field} */
         const field = this.getField();
         field && (this.field = field);
         if (!field) return;
@@ -80,15 +80,27 @@ class FieldOption extends ArpaElement {
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = this.querySelector('.fieldOption__content');
         const childNodes = isIOsSafari()
-            ? this._childNodes // @ts-ignore
-            : this._childNodes?.filter(node => !node?.tagName?.toLowerCase().includes('dialog'));
+            ? this._childNodes
+            : this._childNodes?.filter((/** @type {ElementType}*/ node) => !node?.tagName?.toLowerCase().includes('dialog'));
 
         this.contentNode && appendNodes(this.contentNode, childNodes);
     }
 
+    /**
+     * Returns the field for the field option element.
+     * @returns {Field | null}
+     */
     getField() {
-        // @ts-ignore
-        return this.field || this.closest('.arpaField') || this.closest('.optionsField__options')?.field;
+        const optionsNode = /** @type {FieldInput} */ (this.closest('.optionsField__options'));
+        return this.field || /** @type {Field} */ (this.closest('.arpaField')) || optionsNode?.field;
+    }
+
+    /**
+     * Returns the action for the field option element.
+     * @returns {FieldOptionConfigType['action']}
+     */
+    getAction() {
+        return this._config.action;
     }
 
     isSelected() {

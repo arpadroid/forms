@@ -10,7 +10,7 @@ const html = String.raw;
  * Represents a select option element.
  */
 class SelectOption extends FieldOption {
-    /** @type {SelectCombo} */ // @ts-ignore
+    /** @type {SelectCombo} */
     field = this.field;
     /**
      * Creates a new SelectOption instance.

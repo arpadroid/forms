@@ -11,9 +11,9 @@ const html = String.raw;
  * Represents a radio option for a radio field.
  */
 class RadioOption extends FieldOption {
-    /** @type {FieldOptionConfigType} */ // @ts-ignore
+    /** @type {FieldOptionConfigType} */
     _config = this._config;
-    /** @type {RadioField} */ // @ts-ignore
+    /** @type {RadioField} */
     field = this.field;
     /**
      * Creates a new radio option.

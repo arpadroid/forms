@@ -11,7 +11,7 @@ import CheckboxesField from '../checkboxesField.js';
  * Represents a checkbox option.
  */
 class CheckboxOption extends RadioOption {
-    /** @type {CheckboxesField} */ // @ts-ignore
+    /** @type {CheckboxesField} */
     field = this.field;
     /**
      * Renders the input element for the checkbox option.
@@ -40,7 +40,7 @@ class CheckboxOption extends RadioOption {
         const checked = input?.checked;
         /** @type {string | number | boolean} */
         let value = input?.value;
-        
+
         if (!isNaN(Number(value))) {
             value = Number(value);
         }

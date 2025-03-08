@@ -6,11 +6,11 @@ import { mergeObjects, mechanize, defineCustomElement } from '@arpadroid/tools';
 import FileItem from '../fileItem/fileItem.js';
 import { List } from '@arpadroid/lists';
 class FileList extends List {
-    /** @type {() => FileItemConfigType[]} */ // @ts-ignore
+    /** @type {() => FileItemConfigType[]} */
     getItems = this.getItems;
     /** @type {(payload: FileItemConfigType) => FileItem | undefined} */ // @ts-ignore
     addItem = this.addItem;
-    /** @type {(items: FileItem[]) => any} */ // @ts-ignore
+    /** @type {(items: FileItem[]) => any} */
     addItemNodes = this.addItemNodes;
 
     getDefaultConfig(config = {}) {
@@ -22,8 +22,7 @@ class FileList extends List {
                 itemComponent: FileItem,
                 itemTag: 'file-item',
                 mapItemId: payload => {
-                    const { file } = payload;
-                    // @ts-ignore
+                    const file = /** @type {File} */ (payload.file);
                     return mechanize(`${file.name}-${file.size}`);
                 }
             }),

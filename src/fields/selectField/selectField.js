@@ -4,9 +4,9 @@ import OptionsField from '../optionsField/optionsField.js';
 const html = String.raw;
 
 class SelectField extends OptionsField {
-    /** @type {HTMLSelectElement} */ // @ts-ignore
+    /** @type {HTMLSelectElement} */
     input = this.input;
-    /** @type {SelectFieldConfigType} */ // @ts-ignore
+    /** @type {SelectFieldConfigType} */
     _config = this._config;
     /**
      * Returns the default configuration for the select field.

@@ -6,9 +6,9 @@ import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
 class TimeField extends TextField {
-    /** @type {HTMLInputElement} */ // @ts-ignore
+    /** @type {HTMLInputElement} */
     input = this.input;
-    /** @type {TimeFieldConfigType} */ // @ts-ignore
+    /** @type {TimeFieldConfigType} */
     _config = this._config;
     _validations = [...super.getValidations(), 'min', 'max'];
 

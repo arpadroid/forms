@@ -6,9 +6,9 @@ import { defineCustomElement } from '@arpadroid/tools';
 import SelectOption from '../../../selectCombo/selectOption/selectOption.js';
 
 class TagOption extends SelectOption {
-    /** @type {TagOptionConfigType} */ // @ts-ignore
+    /** @type {TagOptionConfigType} */
     _config = this._config;
-    /** @type {TagField} */ // @ts-ignore
+    /** @type {TagField} */
     field = this.field;
 
     /**

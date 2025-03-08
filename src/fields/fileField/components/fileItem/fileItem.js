@@ -11,7 +11,7 @@ import { ListItem } from '@arpadroid/lists';
 
 const html = String.raw;
 class FileItem extends ListItem {
-    /** @type {FileItemConfigType} */ // @ts-ignore
+    /** @type {FileItemConfigType} */
     _config = this._config;
     //////////////////////////
     // #region INITIALIZATION

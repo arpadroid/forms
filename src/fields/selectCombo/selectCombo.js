@@ -15,9 +15,7 @@ import { InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
 class SelectCombo extends SelectField {
-    /** @type {HTMLInputElement | null} */ // @ts-ignore
-    input = this.input;
-    /** @type {SelectComboConfigType} */ // @ts-ignore
+    /** @type {SelectComboConfigType} */
     _config = this._config;
     //////////////////////////
     // #region INITIALIZATION

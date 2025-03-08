@@ -11,9 +11,9 @@ class DateField extends Field {
     /** @type {string[]} _validations - The validation method signatures for the date field.*/
     _validations = [...super.getValidations(), 'date'];
     i18nKey = this.getI18nKey();
-    /** @type {DateFieldConfigType} */ // @ts-ignore
+    /** @type {DateFieldConfigType} */
     _config = this._config;
-    /** @type {HTMLInputElement} */ // @ts-ignore
+    /** @type {HTMLInputElement} */
     input = this.input;
 
     /**
@@ -126,7 +126,7 @@ class DateField extends Field {
         try {
             this.input?.showPicker();
         } catch (error) {
-            // do nothing
+            console.error(error);
         }
     }
 

@@ -10,7 +10,7 @@ class FileFieldInput extends FieldInput {
     uploads = [];
     /** @type {File[]} */
     invalidUploads = [];
-    /** @type {FileField | undefined} */ // @ts-ignore
+    /** @type {FileField | undefined} */
     field;
 
     constructor() {

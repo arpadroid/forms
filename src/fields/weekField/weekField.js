@@ -6,9 +6,9 @@ import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
 class WeekField extends TextField {
-    /** @type {HTMLInputElement} */ // @ts-ignore
+    /** @type {HTMLInputElement} */
     input = this.input;
-    /** @type {WeekFieldConfigType} */ // @ts-ignore
+    /** @type {WeekFieldConfigType} */
     _config = this._config;
 
     _validations = [...super.getValidations(), 'week'];

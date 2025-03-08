@@ -14,7 +14,6 @@ class OptionsField extends Field {
     // #region CONFIGURATION
     /////////////////////////
     /** @type {OptionsFieldConfigType} */
-    // @ts-ignore
     _config = this._config;
     /** @type {Record<string, FieldOptionConfigType>} */
     _optionsByValue = {};

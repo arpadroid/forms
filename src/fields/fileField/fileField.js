@@ -12,9 +12,9 @@ import { defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools'
 
 const html = String.raw;
 class FileField extends Field {
-    /** @type {FileFieldInput | null} */ // @ts-ignore
+    /** @type {FileFieldInput | null} */
     input = this.input;
-    /** @type {FileFieldConfigType} */ // @ts-ignore
+    /** @type {FileFieldConfigType} */
     _config = this._config;
     /////////////////////////
     // #region INITIALIZATION

@@ -7,7 +7,7 @@ import TextField from '../textField/textField.js';
 
 const html = String.raw;
 class PasswordField extends TextField {
-    /** @type {PasswordFieldConfigType} */ // @ts-ignore
+    /** @type {PasswordFieldConfigType} */
     _config = this._config;
     /**
      * Returns the default configuration for the PasswordField.

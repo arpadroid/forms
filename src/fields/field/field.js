@@ -15,7 +15,7 @@ import { ArpaElement } from '@arpadroid/ui';
 const html = String.raw;
 class Field extends ArpaElement {
     _validations = ['required', 'minLength', 'maxLength', 'size'];
-    /** @type {FieldConfigType} */ // @ts-ignore
+    /** @type {FieldConfigType} */
     _config = this._config;
 
     ////////////////////////////////
@@ -78,8 +78,8 @@ class Field extends ArpaElement {
         /** @type {FormComponent} */
         if (this.id) {
             this._id = this.id;
-            this.removeAttribute('id'); // @ts-ignore
-            delete this.id;
+            this.removeAttribute('id');
+            this.id = '';
         }
         this.form = this.getForm();
         if (this.form) {

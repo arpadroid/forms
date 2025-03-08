@@ -18,8 +18,6 @@ const html = String.raw;
 class FormComponent extends HTMLFormElement {
     /** @type {Record<string, FieldComponent>} */
     fields = {};
-    /** @type {FormConfigType} */ // @ts-ignore
-    _config = this._config;
 
     //////////////////////////////////
     // #region Initialization & Config
@@ -187,7 +185,7 @@ class FormComponent extends HTMLFormElement {
     }
 
     getVariant() {
-        return this.getAttribute('variant') || this._config.variant;
+        return this.getAttribute('variant') || this._config?.variant;
     }
 
     // #endregion Get
@@ -197,7 +195,7 @@ class FormComponent extends HTMLFormElement {
     /////////////////////////////////
 
     hasInitialValues() {
-        const { initialValues = {} } = this._config;
+        const { initialValues = {} } = this._config || {};
         return Object.keys(initialValues).length > 0;
     }
 
@@ -228,7 +226,7 @@ class FormComponent extends HTMLFormElement {
      * @param {Record<string, unknown>} values
      */
     setInitialValues(values = {}) {
-        this._config.initialValues = copyObjectProps(values);
+        this._config && (this._config.initialValues = copyObjectProps(values));
     }
 
     /**
@@ -285,7 +283,7 @@ class FormComponent extends HTMLFormElement {
         if (!this.id) throw new Error('Form must have an id.');
         if (!canRender(this)) return;
         attr(this, { novalidate: true, 'aria-label': this.getTitle() });
-        const { variant } = this._config;
+        const { variant } = this._config || {};
         this.renderTemplate();
         this._initializeFields();
         this._initializeNodes();
@@ -402,7 +400,7 @@ class FormComponent extends HTMLFormElement {
      * @param {FormSubmitType} callback
      */
     onSubmit(callback) {
-        this._config.onSubmit = callback;
+        this._config && (this._config.onSubmit = callback);
     }
 
     /**
@@ -410,7 +408,7 @@ class FormComponent extends HTMLFormElement {
      * @returns {FormSubmitType | undefined}
      */
     getOnSubmit() {
-        return this._config.onSubmit;
+        return this._config?.onSubmit;
     }
 
     /**
@@ -447,7 +445,7 @@ class FormComponent extends HTMLFormElement {
         if (this.hasAttribute('debounce')) {
             return Number(this.getAttribute('debounce'));
         }
-        return Number(this._config.debounce);
+        return Number(this._config?.debounce);
     }
 
     /**
