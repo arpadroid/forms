@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
 import { formatBytes } from '@arpadroid/tools';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
@@ -8,6 +7,7 @@ import { TextFileSmall } from '../../test/mocks/fileMock.js';
 import { createImageFileFromURL } from '../../test/mocks/imageMock.js';
 
 const html = String.raw;
+// eslint-disable-next-line sonarjs/no-clear-text-protocols
 const assetsURL = 'http://www.local/arpadroid/forms/assets';
 
 const ImageFieldStory = {
@@ -111,6 +111,7 @@ export const Test = {
 
         await step('Sets allow-multiple, adds multiple images and checks the uploaded images list.', async () => {
             field.setAttribute('allow-multiple', '');
+            await new Promise(resolve => setTimeout(resolve, 100));
             await fireEvent.change(input, { target: { files: [planeImage, flowerImage] } });
             const items = uploadList.listResource.getItems();
             await waitFor(() => {

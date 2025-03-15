@@ -121,6 +121,10 @@ class FileItem extends ListItem {
         return Number(size.replace(/\D/g, ''));
     }
 
+    getExtension() {
+        return this.payload?.extension || '';
+    }
+
     // #endregion
 
     //////////////////
@@ -131,29 +135,30 @@ class FileItem extends ListItem {
         return {
             ...super.getTemplateVars(),
             size: this.getReadableSize(),
-            extension: this.payload?.extension,
+            extension: this.renderExtension(),
             metaData: this.renderMetadata()
         };
     }
 
-    renderTitleContent(title = this.getTitle()) {
+    renderTitleContent(title = this.getTitle() || '', titleIcon = this.getProperty('title-icon')) {
         return html`
             <div class="fileItem__titleContent">
-                <arpa-icon>{titleIcon}</arpa-icon>
+                ${(titleIcon && html`<arpa-icon>${titleIcon}</arpa-icon>`) || ''}
                 <span class="fileItem__name">${title}</span>
             </div>
-            <span class="fileItem__extension">.{extension}</span>
-            {metaData}
+            {extension} {metaData}
         `;
     }
 
+    renderExtension(extension = this.getExtension()) {
+        return (extension && html`<span class="fileItem__extension">.${extension}</span>`) || '';
+    }
+
     renderMetadata(size = this.getReadableSize()) {
-        return render(
-            size,
-            html`<div class="fileItem__metadata">
-                <span class="fileItem__size tag">${size}</span>
-            </div>`
-        );
+        if (!size) return '';
+        return html`<div class="fileItem__metadata">
+            <span class="fileItem__size tag">${size}</span>
+        </div>`;
     }
 
     renderRhs() {
