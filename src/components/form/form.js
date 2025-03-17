@@ -29,9 +29,10 @@ class FormComponent extends HTMLFormElement {
      */
     constructor(config) {
         super();
+        this.setConfig(config);
         zoneMixin(this);
         observerMixin(this);
-        this.setConfig(config);
+
         this.promise = this.getPromise();
         this._childNodes = [...this.childNodes];
     }
@@ -70,7 +71,13 @@ class FormComponent extends HTMLFormElement {
             onSubmit: undefined,
             debounce: 1000,
             successMessage: this.i18n('msgSuccess'),
-            errorMessage: this.i18n('msgError')
+            errorMessage: this.i18n('msgError'),
+            zoneSelector: 'zone:not(.arpaField)',
+            zoneFilter: zones =>
+                zones.filter(zone => {
+                    const parent = /** @type {HTMLElement} */ (zone._parentNode);
+                    return parent?.classList?.contains('arpaField');
+                })
         };
     }
 
@@ -252,6 +259,14 @@ class FormComponent extends HTMLFormElement {
     reset() {
         // !this.hasInitialValues() && this.render();
         this.messageResource?.deleteMessages();
+    }
+
+    /**
+     * Sets the debounce time for the form.
+     * @param {number} value - The debounce time in milliseconds.
+     */
+    setDebounce(value) {
+        this._config && (this._config.debounce = value);
     }
 
     // #endregion Set

@@ -8,7 +8,8 @@
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  * @typedef {import('./components/fieldLabel/fieldLabel.js').default} FieldLabel
  */
-import { defineCustomElement, dummyListener, dummySignal, mergeObjects, observerMixin, processTemplate } from '@arpadroid/tools';
+import { attr, defineCustomElement, dummyListener, dummySignal, mergeObjects } from '@arpadroid/tools';
+import { observerMixin, processTemplate } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
@@ -109,15 +110,12 @@ class Field extends ArpaElement {
     /**
      * Initializes the input element for the field.
      * @param {FieldInputType} input
+     * @param {Record<string, unknown> | undefined} attributes
      */
-    _initializeInputNode(input = this.querySelector('input')) {
+    _initializeInputNode(input = this.querySelector('input'), attributes = this._config?.inputAttributes) {
         /** @type {FieldInputType} */
         this.input = input;
-        if (this.input) {
-            for (const [key, value] of Object.entries(this._config?.inputAttributes || {})) {
-                !this.input.hasAttribute(key) && this.input.setAttribute(key, String(value));
-            }
-        }
+        attributes && input && attr(input, attributes);
     }
 
     _initializeNodes() {
@@ -195,7 +193,7 @@ class Field extends ArpaElement {
         {subHeader}
         <div class="arpaField__body">
             {description} {beforeInput}
-            <div class="arpaField__inputWrapper">{input}{inputRhs}{inputMask}</div>
+            <div class="arpaField__inputWrapper" zone="input-wrapper">{input}{inputRhs}{inputMask}</div>
             {afterInput}
         </div>
         <div class="arpaField__footer">{footnote}</div>
@@ -426,6 +424,21 @@ class Field extends ArpaElement {
     }
 
     /**
+     * Returns the pre-processed value for the field.
+     * @param {unknown} value
+     * @returns {unknown}
+     */
+    preProcessValue(value) {
+        const { preProcessValue } = this._config;
+        if (typeof preProcessValue === 'function') {
+            const preProcessedVal = preProcessValue(value);
+            this.setValue(preProcessedVal, false);
+            return preProcessedVal;
+        }
+        return value;
+    }
+
+    /**
      * Returns the ID for the field.
      * @returns {string | undefined}
      */
@@ -447,7 +460,12 @@ class Field extends ArpaElement {
      * @returns {unknown}
      */
     getOutputValue(_values) {
-        return this.getValue();
+        const { preProcessOutputValue } = this._config;
+        const val = this.getValue();
+        if (typeof preProcessOutputValue === 'function') {
+            return preProcessOutputValue(val);
+        }
+        return val;
     }
 
     /**
@@ -455,7 +473,9 @@ class Field extends ArpaElement {
      * @returns {unknown}
      */
     getValue() {
-        return this?.input?.value ?? this?.input?.getAttribute('value') ?? this.getProperty('value') ?? this.value ?? '';
+        return this.preProcessValue(
+            this?.input?.value ?? this?.input?.getAttribute('value') ?? this.getProperty('value') ?? this.value ?? ''
+        );
     }
 
     getTooltip() {

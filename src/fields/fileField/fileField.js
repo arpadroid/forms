@@ -201,7 +201,7 @@ class FileField extends Field {
     }
 
     getOutputValue() {
-        const value = this.getValue();
+        const value = super.getOutputValue();
         if (!this.allowMultiple() && Array.isArray(value)) {
             return value[0];
         }

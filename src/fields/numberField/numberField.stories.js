@@ -50,7 +50,7 @@ export const Test = {
         step: 2
     },
     play: async ({ canvasElement, step }) => {
-        const { input, submitButton, canvas, onErrorMock, onSubmitMock } = await FieldTest.playSetup(canvasElement);
+        const { input, submitButton, canvas, onErrorMock, onSubmitMock, field } = await FieldTest.playSetup(canvasElement);
 
         await step('Submits form with invalid regex value: "some value".', () => {
             input.value = 'some value';
@@ -106,10 +106,34 @@ export const Test = {
         });
 
         await step('Submits form with valid field value.', async () => {
-            input.value = '20';
+            input.value = '18';
+            await fireEvent.input(input);
             submitButton.click();
             await waitFor(() => {
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'number-field': 18 });
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
+            });
+        });
+
+        await step('Sets enforce value to true and submits form with value above max.', async () => {
+            field.setAttribute('enforce-value', '');
+            input.value = '25';
+            await fireEvent.input(input);
+            submitButton.click();
+            await waitFor(() => {
+                expect(input.value).toBe('20');
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'number-field': 20 });
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
+            });
+        });
+
+        await step('Sets enforce value to true and submits form with value below min.', async () => {
+            input.value = '5';
+            await fireEvent.input(input);
+            submitButton.click();
+            await waitFor(() => {
+                expect(input.value).toBe('10');
+                expect(onSubmitMock).toHaveBeenLastCalledWith({ 'number-field': 10 });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
         });

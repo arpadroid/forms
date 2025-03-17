@@ -1,4 +1,8 @@
-/** @typedef {import('./numberField.types').NumberFieldConfigType} NumberFieldConfigType */
+/**
+ * @typedef {import('./numberField.types').NumberFieldConfigType} NumberFieldConfigType
+ * @typedef {import('../field/field.types.js').FieldConfigType} FieldConfigType
+ * @typedef {import('../field/field.types.js').PreProcessValueType<number | string>} PreProcessValueType
+ */
 import { defineCustomElement, validateNumber } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
@@ -11,6 +15,7 @@ class NumberField extends Field {
      * @returns {NumberFieldConfigType} The default configuration object.
      */
     getDefaultConfig() {
+        this.bind('enforceValidValue');
         return {
             ...super.getDefaultConfig(),
             icon: 'numbers',
@@ -23,6 +28,17 @@ class NumberField extends Field {
         };
     }
 
+    getOutputValue() {
+        const enforceValue = this.hasProperty('enforce-value') || false;
+        const val = Number(super.getOutputValue());
+        if (enforceValue && val) {
+            const rv = this.enforceValidValue(val);
+            this.setValue(rv, false);
+            return rv;
+        }
+        return val;
+    }
+
     /**
      * Sets the minimum value for the number field.
      * @param {number} value - The minimum value.
@@ -30,6 +46,14 @@ class NumberField extends Field {
     setMin(value) {
         this.setAttribute('min', value.toString());
         this.input?.setAttribute('min', value.toString());
+    }
+
+    getMin() {
+        return parseFloat(this.getProperty('min'));
+    }
+
+    getMax() {
+        return parseFloat(this.getProperty('max')) || undefined;
     }
 
     /**
@@ -61,6 +85,23 @@ class NumberField extends Field {
         const val = /** @type {string} */ (super.getValue());
         const value = parseFloat(val);
         return isNaN(value) ? undefined : value;
+    }
+
+    /**
+     * Pre-processes the number field value.
+     * @type {PreProcessValueType}
+     */
+    enforceValidValue(value) {
+        const val = parseFloat(String(value));
+        const max = this.getMax();
+        const min = this.getMin();
+        if (typeof max !== 'undefined' && val > max) {
+            return max;
+        }
+        if (typeof min !== 'undefined' && val < min) {
+            return min;
+        }
+        return value;
     }
 
     /**

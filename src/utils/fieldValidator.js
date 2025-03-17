@@ -185,7 +185,6 @@ class FieldValidator {
      * @returns {boolean} - True if the value size is equal to the specified size, false otherwise.
      */
     size(value = /** @type {string|number} */ (this.field.getValue()), size = this.field.getSize()) {
-        console.log('value', value);
         const valid = validateSize(value, size);
         if (!valid) {
             this.setError(this.field.i18n('errSize', { minLength: String(size[0]), maxLength: String(size[1]) }));

@@ -89,7 +89,7 @@ class DateField extends Field {
     }
 
     getOutputValue() {
-        const value = this.getValue();
+        const value = super.getOutputValue();
         if (!value) return value;
         const format = this.getProperty('output-format') ?? this.getFormat();
         return formatDate(String(value), format);

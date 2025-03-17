@@ -1,3 +1,4 @@
+import { ArpaElementConfigType } from '@arpadroid/ui';
 import type FormComponent from './form';
 
 export type FormSubmitResponseType = {
@@ -9,7 +10,7 @@ export type FormSubmitType<T = Record<string, unknown>> = (
     form?: FormComponent
 ) => Promise<FormSubmitResponseType> | boolean;
 
-export type FormConfigType = {
+export type FormConfigType = ArpaElementConfigType & {
     id?: string;
     initialValues?: Record<string, unknown>;
     variant?: string;

@@ -7,6 +7,8 @@ export type FieldOnChangeType = (value: unknown, field: Field, event: Event) => 
 
 export type FieldValidationType = (value: unknown, field: Field) => string | boolean;
 
+export type PreProcessValueType<T> = (value: T) => T;
+
 export type FieldConfigType = ArpaElementConfigType & {
     className?: string;
     classNames?: string[];
@@ -25,6 +27,8 @@ export type FieldConfigType = ArpaElementConfigType & {
     onFocus?: (field: Field) => boolean;
     validator?: typeof FieldValidator;
     validation?: FieldValidationType;
+    preProcessValue?: PreProcessValueType;  
+    preProcessOutputValue?: PreProcessValueType;
     outputObject?: string;
     placeholder?: string;
     minLength?: number;
