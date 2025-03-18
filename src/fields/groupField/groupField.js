@@ -108,7 +108,7 @@ class GroupField extends Field {
         <{detailsTag} {isOpen} class="groupField__details">
             <{summaryTag} class="groupField__summary">
                 <arpa-icon class="groupField__icon">{icon}</arpa-icon>
-                <span class="groupField__summary__label">{label}</span>
+                <span class="groupField__summary__label" zone="label">{label}</span>
                 <arpa-tooltip position="bottom-right">{tooltip}</arpa-tooltip>
                 <arpa-icon class="groupField__iconRight">{iconRight}</arpa-icon>
             </{summaryTag}>

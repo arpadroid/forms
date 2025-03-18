@@ -119,7 +119,7 @@
 /* Compact */
 .arpaForm[variant='compact'] {
     gap: 0.6rem;
-    padding: .7rem;
+    padding: .4rem .7rem .7rem .7rem;
     .message.message {
         border-radius: 8px;
     }
@@ -127,7 +127,7 @@
         margin-top: 0;
         gap: 1rem;
         .groupField__fields.groupField__fields {
-            gap: 0;
+            gap: 1rem;
             margin-bottom: 0;
         }
     }
@@ -136,9 +136,17 @@
         gap: 0.5rem;
         display: flex;
         flex-direction: column;
+        .groupField__fields.groupField__fields {
+            box-shadow: none;
+            padding: 0;
+        }
     }
     .groupField__summary {
-        padding: 0.75rem 0.5rem;
+        padding: 0.75rem 0rem;
+    }
+
+    form-title {
+        padding-left: 0;
     }
 
     .arpaField.arpaField {

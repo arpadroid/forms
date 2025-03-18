@@ -82,6 +82,13 @@ class SelectCombo extends SelectField {
         super.reRender();
     }
 
+    async _initializeValue() {
+        this.promise.then(() => {
+            this.selectedOption = this.getSelectedOption();
+            this.updateValue();
+        });
+    }
+
     _initializeNodes() {
         super._initializeNodes();
         this._initializeButtonInput();
@@ -198,16 +205,24 @@ class SelectCombo extends SelectField {
     async updateValue() {
         await this.promise;
         await this.onReady();
-        const { renderValue } = this._config;
         /** @type {SelectOption} */
         this.selectedOption = this.getSelectedOption();
         this.getOptions().forEach(option => option.removeAttribute('aria-selected'));
         this.selectedOption?.setAttribute('aria-selected', 'true');
-        const configValue = typeof renderValue === 'function' && renderValue(this.selectedOption);
-        const label =
-            configValue || this.selectedOption?.getProperty('label') || this.selectedOption?.textContent || this.getPlaceholder();
+        const label = this.getValueLabel();
         this.updateButtonLabel(label);
         this.updateSearchInputLabel(label);
+    }
+
+    getValueLabel() {
+        const { renderValue } = this._config;
+        const configValue = typeof renderValue === 'function' && renderValue(this.selectedOption);
+        return (
+            configValue ||
+            this.selectedOption?.getProperty('label') ||
+            this.selectedOption?.textContent?.trim() ||
+            this.getPlaceholder()
+        );
     }
 
     /**

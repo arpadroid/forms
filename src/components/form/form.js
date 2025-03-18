@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
  * @typedef {import('./form.types').FormConfigType} FormConfigType
  * @typedef {import('./form.types').FormTemplatePropsType} FormTemplatePropsType

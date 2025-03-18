@@ -52,7 +52,6 @@
 }
 
 .groupField__summary__label {
-    font-family: var(--font-family-avant-garde-gothic);
     color: var(--grey-600);
     font-weight: normal;
 }
