@@ -43,7 +43,8 @@ export const Default = {
         ...FieldStory.getArgs(),
         id: 'tag-field',
         label: 'Tag field',
-        required: true
+        required: true,
+        value: 'IS-N::Isaac Newton, AB-E::Albert Einstein',
     }
 };
 

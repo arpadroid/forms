@@ -24,7 +24,8 @@ export const Default = {
         ...FieldStory.getArgs(),
         id: 'radio-field',
         label: 'Radio field',
-        required: true
+        required: true,
+        value: ''
     }
 };
 

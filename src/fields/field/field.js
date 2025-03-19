@@ -416,7 +416,7 @@ class Field extends ArpaElement {
      * @returns {FormComponent | undefined}
      */
     getForm() {
-        return /** @type {FormComponent | undefined} */ (this._config.form || this.closest('form'));
+        return /** @type {FormComponent | undefined} */ (this.form || this._config.form || this.closest('arpa-form'));
     }
 
     getOnChangeValue() {

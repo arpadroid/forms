@@ -22,6 +22,17 @@ class RadioField extends OptionsField {
         return 'radio-field';
     }
 
+    async _initializeValue() {
+        this.selectedOption = this.getSelectedOption(false);
+        if (this.selectedOption) {
+            this.selectedOption?.querySelector('input[type="radio"]')?.setAttribute('checked', '');
+        }
+    }
+
+    _initializeInputNode() {
+        // Override to prevent input node initialization since radio fields have an input node for each option.
+    }
+
     /**
      * Returns the value of the selected radio option.
      * @returns {string|null|unknown} The value of the selected radio option, or null if no option is selected.

@@ -71,7 +71,7 @@ class RadioOption extends FieldOption {
     }
 
     async _onConnected() {
-        await this.onReady();
+        await this.field?.promise;
         super._onConnected();
         this.input = this.querySelector('input');
         if (this.input) {

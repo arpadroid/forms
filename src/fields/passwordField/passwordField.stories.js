@@ -58,11 +58,16 @@ export const Test = {
         });
 
         await step('Tests visibility button.', async () => {
-            const buttons = canvas.getAllByRole('button', {
-                name: 'Show password'
-            });
+            const buttons = await waitFor(() =>
+                canvas.getAllByRole('button', {
+                    name: 'Show password'
+                })
+            );
             input.value = 'password';
-            expect(canvas.getAllByText('Show password')).toHaveLength(2);
+            await waitFor(() => {
+                expect(canvas.getAllByText('Show password')).toHaveLength(2);
+            });
+
             expect(input.type).toBe('password');
             await fireEvent.click(buttons[0]);
             expect(input.type).toBe('text');
@@ -101,6 +106,7 @@ export const Test = {
             submitButton.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
+                    // eslint-disable-next-line sonarjs/no-hardcoded-passwords
                     'password-field': 'P455w0rd??'
                 });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -119,6 +125,7 @@ export const Test = {
                 submitButton.click();
                 await waitFor(() => {
                     expect(onSubmitMock).toHaveBeenLastCalledWith({
+                        // eslint-disable-next-line sonarjs/no-hardcoded-passwords
                         'password-field': 'pass'
                     });
                     canvas.getByText(I18n.getText('forms.form.msgSuccess'));

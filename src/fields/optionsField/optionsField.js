@@ -68,10 +68,13 @@ class OptionsField extends Field {
 
     /**
      * Returns the selected option of the options field.
+     * @param {boolean} [returnDefault] - Whether to return the default option if no option is selected.
      * @returns {FieldOption | undefined}
      */
-    getSelectedOption() {
-        return /** @type {FieldOption} */ (this.getOption(this.getValue()) || this.getDefaultOption());
+    getSelectedOption(returnDefault = true) {
+        return /** @type {FieldOption} */ (
+            this.getOption(this.getValue()) || (returnDefault && this.getDefaultOption()) || undefined
+        );
     }
 
     /**
@@ -203,6 +206,7 @@ class OptionsField extends Field {
      * Initializes the value of the options field.
      */
     async _initializeValue() {
+        await this.promise;
         this.selectedOption = this.getSelectedOption();
     }
 

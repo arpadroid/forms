@@ -109,7 +109,7 @@ export const Test = {
             
             await userEvent.type(input, 'United', { delay: 10 });
             await fireEvent.keyUp(input, { key: 'Space' });
-            const searchMatches = canvas.getAllByText('United');
+            const searchMatches = await waitFor(() => canvas.getAllByText('United'));
             expect(searchMatches).toHaveLength(2);
             expect(canvas.getByText('Spain')).not.toBeVisible();
             await fireEvent.click(searchMatches[1]);

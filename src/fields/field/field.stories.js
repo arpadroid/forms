@@ -26,11 +26,11 @@ const FieldStory = {
         renderScript = FieldStory.renderScript
     ) => {
         return html`
-            <form id="field-form" is="arpa-form">
+            <arpa-form id="field-form">
                 <${fieldTag} ${attrString(args)}>
                     ${renderContent(args, story)}
                 </${fieldTag}>
-            </form>
+            </arpa-form>
             ${renderScript(args, story)}
         `.trim();
     },
@@ -217,7 +217,7 @@ export const Test = {
         await customElements.whenDefined('arpa-field');
         /** @type {Field} */
         const field = canvasElement.querySelector('.arpaField');
-        const form = canvasElement.querySelector('form');
+        const form = canvasElement.querySelector('arpa-form');
         form.setAttribute('debounce', '0');
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
         const onSubmitMock = fn(values => {
@@ -325,7 +325,7 @@ export const Zones = {
     },
     render: args => {
         return html`
-            <form is="arpa-form" id="field-form">
+            <arpa-form id="field-form">
                 <text-field required id="zone-field">
                     <zone name="label">Field label</zone>
                     <zone name="description">Test description</zone>
@@ -338,7 +338,7 @@ export const Zones = {
                     </zone>
                     ${args.content}
                 </text-field>
-            </form>
+            </arpa-form>
         `;
     },
     /**

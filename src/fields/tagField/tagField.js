@@ -58,7 +58,7 @@ class TagField extends SelectCombo {
     /////////////////////
 
     async _initializeValue() {
-        // await this.load;
+        await this.promise;
         if (this._hasInitializedValue) {
             return;
         }

@@ -57,14 +57,18 @@ class FieldOption extends ArpaElement {
         return `field-option-${this.field?.getHtmlId()}-${valueString}`;
     }
 
+    async _preRender() {
+        super._preRender();
+        const field = this.getField();
+        field && (this.field = field);
+    }
+
     /**
      * Renders the field option element.
      */
     async render() {
         await this.onReady();
-        const field = this.getField();
-        field && (this.field = field);
-        if (!field) return;
+        if (!this.field) return;
         if (this.tagName.toLowerCase() === 'option') {
             this.removeAttribute('role');
         } else {

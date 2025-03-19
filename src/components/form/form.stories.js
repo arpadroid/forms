@@ -16,7 +16,7 @@ const FormStory = {
     tags: [],
     render: (args, story, renderContent = FormStory.renderContent, renderScript = FormStory.renderScript) => {
         return html`
-            <form is="arpa-form" ${attrString(args)}>${renderContent(args, story)}</form>
+            <arpa-form ${attrString(args)}>${renderContent(args, story)}</arpa-form>
             ${renderScript(args, story)}
         `.trim();
     },
@@ -169,7 +169,7 @@ export const Test = {
     playSetup: async canvasElement => {
         const canvas = within(canvasElement);
         await customElements.whenDefined('arpa-form');
-        const form = canvasElement.querySelector('form');
+        const form = canvasElement.querySelector('arpa-form');
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
         const onSubmitMock = fn(() => true);
         form.onSubmit(onSubmitMock);

@@ -31,6 +31,12 @@ export type FormTemplatePropsType = {
     formId?: string;
     description?: string;
     submitButton?: string;
+    content?: string;
+    header?: string;
+    messages?: string;
+    footer?: string;
+    fullLayout?: string;
+    miniLayout?: string;
 };
 
 export type FormPayloadType = {
