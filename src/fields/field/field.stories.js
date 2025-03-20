@@ -13,7 +13,7 @@ import Field from './field.js';
 const html = String.raw;
 
 const FieldStory = {
-    title: 'Forms/Field',
+    title: 'Forms/Fields/Field',
     tags: [],
     parameters: {
         layout: 'padded'
@@ -215,9 +215,11 @@ export const Test = {
     playSetup: async canvasElement => {
         const canvas = within(canvasElement);
         await customElements.whenDefined('arpa-field');
+        await customElements.whenDefined('submit-button');
         /** @type {Field} */
         const field = canvasElement.querySelector('.arpaField');
         const form = canvasElement.querySelector('arpa-form');
+        await form.promise;
         form.setAttribute('debounce', '0');
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
         const onSubmitMock = fn(values => {

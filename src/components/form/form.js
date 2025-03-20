@@ -8,21 +8,28 @@
  * @typedef {import('@arpadroid/resources').MessageResource} MessageResource
  */
 import { mergeObjects, copyObjectProps, appendNodes, defineCustomElement } from '@arpadroid/tools';
-import { observerMixin, renderNode, render } from '@arpadroid/tools';
+import { observerMixin, renderNode, render, dummySignal, dummyListener, dummyOff } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
 
 const html = String.raw;
-
 class FormComponent extends ArpaElement {
     /** @type {Record<string, FieldComponent>} */
     fields = {};
+
+    constructor(config = {}) {
+        super(config);
+        this.signal = dummySignal;
+        this.on = dummyListener;
+        this.off = dummyOff;
+        observerMixin(this);
+    }
 
     //////////////////////////////////
     // #region Initialization & Config
     //////////////////////////////////
     _initialize() {
-        observerMixin(this);
+        this.bind('_onChange', '_onSubmit');
     }
 
     /**
@@ -49,6 +56,7 @@ class FormComponent extends ArpaElement {
             onSubmit: undefined,
             debounce: 1000,
             successMessage: this.i18n('msgSuccess'),
+            submitIcon: 'check_circle',
             errorMessage: this.i18n('msgError'),
             zoneSelector: 'zone:not(.arpaField)',
             zoneFilter: zones =>
@@ -89,7 +97,7 @@ class FormComponent extends ArpaElement {
 
     _initializeSubmit() {
         this.submitButton = this.querySelector('button[type="submit"]');
-        this.addEventListener('submit', this._onSubmit.bind(this));
+        this.addEventListener('submit', this._onSubmit);
     }
 
     _initializeFields() {
@@ -140,11 +148,11 @@ class FormComponent extends ArpaElement {
     }
 
     getTitle() {
-        return this.getAttribute('title') || this._config?.title;
+        return this.getProperty('title');
     }
 
     getVariant() {
-        return this.getAttribute('variant') || this._config?.variant;
+        return this.getProperty('variant');
     }
 
     // #endregion Get
@@ -206,6 +214,15 @@ class FormComponent extends ArpaElement {
     registerField(field) {
         const id = field.getId();
         id && (this.fields[id] = field);
+        field.on('change', this._onChange);
+    }
+
+    /**
+     * Called when a field changes.
+     * @param {FieldComponent} field - The field that changed.
+     */
+    _onChange(field) {
+        this.signal('change', { field, form: this });
     }
 
     reset() {
@@ -307,9 +324,9 @@ class FormComponent extends ArpaElement {
     renderSubmitButton() {
         return render(
             this.hasSubmitButton() && this.getProperty('variant') !== 'mini',
-            html`<button icon-right="check_circle" type="submit" class="arpaForm__submitBtn" is="submit-button">
+            html`<submit-button icon="${this.getProperty('submit-icon')}" type="submit" class="arpaForm__submitBtn">
                 ${this.getSubmitText()}
-            </button>`
+            </submit-button>`
         );
     }
 
@@ -343,6 +360,14 @@ class FormComponent extends ArpaElement {
             this.classList.add('formComponent--invalid');
         }
         return this._isValid;
+    }
+
+    _validate() {
+        return (
+            this.getFields()
+                .map(field => field._validate())
+                .indexOf(false) === -1
+        );
     }
 
     getErrorMessage() {

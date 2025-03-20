@@ -361,7 +361,7 @@ class Field extends ArpaElement {
      * @returns {boolean}
      */
     validate(value = this.getValue(), update = true) {
-        const isValid = this?.validator?.validate(value) ?? true;
+        const isValid = this._validate(value);
         if (isValid) {
             this.classList.remove('arpaField--hasError');
         } else {
@@ -371,6 +371,11 @@ class Field extends ArpaElement {
         this.updateErrors();
         !isValid && this.signal('error', this.getErrorMessages(), this);
         return isValid;
+    }
+
+
+    _validate(value = this.getValue()) {
+        return this?.validator?.validate(value) ?? true;
     }
 
     /**

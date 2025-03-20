@@ -1,6 +1,7 @@
 {
     "form": {
         "msgSuccess": "Great success! Your form has been submitted successfully.",
-        "msgError": "Oops, there are errors in the form. Please review the submission and try again."
+        "msgError": "Oops, there are errors in the form. Please review the submission and try again.",
+        "lblSubmit": "Submit"
     }
 }

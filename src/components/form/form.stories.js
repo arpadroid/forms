@@ -170,6 +170,7 @@ export const Test = {
         const canvas = within(canvasElement);
         await customElements.whenDefined('arpa-form');
         const form = canvasElement.querySelector('arpa-form');
+        await form.promise;
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
         const onSubmitMock = fn(() => true);
         form.onSubmit(onSubmitMock);

@@ -234,9 +234,9 @@ class FileField extends Field {
     renderFileSelect(inputId = this.getHtmlId()) {
         return this.hasDropArea()
             ? html`<drop-area input-id="${inputId}"></drop-area>`
-            : html`<button is="arpa-button" icon="upload_file" class="fileField__selectButton">
+            : html`<arpa-button icon="upload_file" class="fileField__selectButton">
                   ${this.getProperty('lbl-add-file')}
-              </button>`;
+              </arpa-button>`;
     }
 
     renderUploadList(id = this.getHtmlId()) {

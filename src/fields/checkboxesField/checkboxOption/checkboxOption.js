@@ -35,7 +35,6 @@ class CheckboxOption extends RadioOption {
      * @param {boolean} [callOnChange] - Indicates whether to call the onChange callback.
      */
     _onChange(event, callOnChange = true) {
-        console.log('_onChange');
         const input = /** @type {HTMLInputElement} */ (event?.target);
         const checked = input?.checked;
         /** @type {string | number | boolean} */

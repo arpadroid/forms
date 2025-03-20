@@ -65,7 +65,7 @@ export const Test = {
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
                 expect(onChangeMock).toHaveBeenCalledWith([], field, expect.anything());
-                const errorContainer = field.querySelector('.fieldErrors__list li');
+                const errorContainer = field.querySelector('i18n-text[key="forms.fields.image.errExtensions"]');
                 expect(errorContainer).toBeInTheDocument();
                 expect(errorContainer.textContent).toBe(
                     I18n.getText('forms.fields.image.errExtensions', {

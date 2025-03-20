@@ -64,6 +64,7 @@ export const Test = {
                 })
             );
             input.value = 'password';
+            input.focus();
             await waitFor(() => {
                 expect(canvas.getAllByText('Show password')).toHaveLength(2);
             });
