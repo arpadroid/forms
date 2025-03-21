@@ -37,7 +37,7 @@ class WeekField extends TextField {
     renderWeekButton() {
         const { pickerLabel } = this._config;
         const button = renderNode(
-            html`<button is="icon-button" icon="date_range" label="${pickerLabel}" tooltip-position="left "variant="minimal"></icon-button>`
+            html`<icon-button icon="date_range" label="${pickerLabel}" tooltip-position="left "variant="minimal"></icon-button>`
         );
         button.addEventListener('click', () => this.input?.showPicker());
         return button;

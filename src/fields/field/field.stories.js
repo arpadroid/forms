@@ -334,9 +334,9 @@ export const Zones = {
                     <zone name="footnote">This is a footnote</zone>
                     <zone name="tooltip">test tooltip</zone>
                     <zone name="input-rhs">
-                        <button is="icon-button" icon="more_horiz">
+                        <icon-button icon="more_horiz">
                             <zone name="tooltip-content">More options</zone>
-                        </button>
+                        </icon-button>
                     </zone>
                     ${args.content}
                 </text-field>

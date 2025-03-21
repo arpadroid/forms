@@ -40,8 +40,10 @@ class TimeField extends TextField {
     async _initializeNodes() {
         super._initializeNodes();
         super._onInitialized();
-        this.timeButton = this.renderTimeButton();
-        this.inputMask?.addRhs('timeButton', this.timeButton);
+        if (!this.timeButton) {
+            this.timeButton = this.renderTimeButton();
+            this.inputMask?.addRhs('timeButton', this.timeButton);
+        }
     }
 
     async _onConnected() {
@@ -55,13 +57,7 @@ class TimeField extends TextField {
     renderTimeButton() {
         const { pickerLabel } = this._config;
         const button = renderNode(
-            html`<button
-                is="icon-button"
-                icon="schedule"
-                label="${pickerLabel}"
-                tooltip-position="left"
-                variant="minimal"
-            ></button>`
+            html`<icon-button icon="schedule" label="${pickerLabel}" tooltip-position="left" variant="minimal"></icon-button>`
         );
         button.addEventListener('click', () => this.input?.showPicker());
         return button;

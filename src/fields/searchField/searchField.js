@@ -72,7 +72,7 @@ class SearchField extends Field {
     renderMiniButton() {
         return render(
             this.getVariant() === 'mini',
-            html`<button is="icon-button" icon="search" class="searchField__button"></button>`
+            html`<icon-button icon="search" class="searchField__button"></icon-button>`
         );
     }
 

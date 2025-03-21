@@ -80,13 +80,12 @@ class PasswordField extends TextField {
     renderVisibilityButton() {
         const { lblShowPassword } = this._config;
         const button = renderNode(
-            html`<button
-                is="icon-button"
+            html`<icon-button
                 icon="visibility"
                 label="${lblShowPassword}"
                 variant="minimal"
                 tooltip-position="left"
-            ></button>`
+            ></icon-button>`
         );
         button.addEventListener('click', () => this.togglePasswordVisibility());
         return button;
@@ -164,7 +163,7 @@ class PasswordField extends TextField {
     togglePasswordVisibility() {
         const isPassword = this.input?.getAttribute('type') === 'password';
         this.input?.setAttribute('type', isPassword ? 'text' : 'password');
-        this.visButton?.setLabel(isPassword ? this.i18nText('lblHidePassword') : this.i18nText('lblShowPassword'));
+        this.visButton?.setTooltip(isPassword ? this.i18nText('lblHidePassword') : this.i18nText('lblShowPassword'));
         this.visButton?.setIcon(isPassword ? 'visibility_off' : 'visibility');
     }
 

@@ -167,18 +167,17 @@ class FileItem extends ListItem {
     }
 
     renderEditButton() {
-        return render(this.hasEditButton(), html`<button is="icon-button" icon="edit" class="fileItem__editButton"></button>`);
+        return render(this.hasEditButton(), html`<icon-button icon="edit" class="fileItem__editButton"></icon-button>`);
     }
 
     renderDeleteButton(fieldOnDelete = this.fieldConfig?.onDelete, onDelete = this._config?.onDelete) {
         return render(
             Boolean(fieldOnDelete || onDelete),
-            html`<button
-                is="icon-button"
+            html`<icon-button
                 variant="delete"
                 class="fileItem__deleteButton iconButton--small"
-                label="${this.getProperty('lbl-remove-file')}"
-            ></button>`
+                tooltip="${this.getProperty('lbl-remove-file')}"
+            ></icon-button>`
         );
     }
 

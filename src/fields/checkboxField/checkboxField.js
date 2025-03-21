@@ -14,18 +14,6 @@ class CheckboxField extends Field {
     /** @type {CheckboxFieldConfigType} */
     _config = this._config;
 
-    static template = html`
-        <label is="field-label" class="fieldInput checkboxField__label">
-            <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
-            <span class="fieldLabel__text" zone="checkbox-label"></span>
-            <arpa-icon class="arpaField__iconRight">{iconRight}</arpa-icon>
-            <field-errors></field-errors>
-            <arpa-tooltip position="left">{tooltip}</arpa-tooltip>
-            {input}
-        </label>
-        <p is="field-description"></p>
-    `;
-
     /**
      * Returns the default configuration for the checkbox field.
      * @returns {CheckboxFieldConfigType}
@@ -46,17 +34,36 @@ class CheckboxField extends Field {
         return 'checkbox-field';
     }
 
+    _getTemplate() {
+        return html`
+            <label is="field-label" class="fieldInput checkboxField__label">
+                <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
+                <span class="fieldLabel__text" zone="checkbox-label"></span>
+                <arpa-icon class="arpaField__iconRight">{iconRight}</arpa-icon>
+                <field-errors></field-errors>
+                {tooltip} {input}
+            </label>
+            <p is="field-description"></p>
+        `;
+    }
+
     /**
      * Returns the template variables for the checkbox field.
      * @returns {Record<string, string>} The template variables.
      */
     getTemplateVars() {
         return mergeObjects(super.getTemplateVars(), {
-            tooltip: this.getTooltip(),
+            tooltip: this.renderTooltip(),
             icon: this.getProperty('icon'),
             iconRight: this.getProperty('icon-right'),
             label: this.getLabel()
         });
+    }
+
+    renderTooltip() {
+        return this.hasContent('tooltip')
+            ? html`<arpa-tooltip position="${this.getTooltipPosition}">${this.getTooltip()}}</arpa-tooltip>`
+            : '';
     }
 
     /**

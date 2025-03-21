@@ -207,7 +207,7 @@ export const Test = {
         });
 
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
-            const deleteButton = canvasElement.querySelector('.fileField__uploadList .deleteButton');
+            const deleteButton = canvasElement.querySelector('.fileField__uploadList .button--delete');
             await userEvent.click(deleteButton);
             await waitFor(() => {
                 expect(onDeleteUpload).toHaveBeenLastCalledWith(deleteButton.closest('file-item'));

@@ -210,6 +210,7 @@ class Field extends ArpaElement {
             id: this.getHtmlId(),
             input: this.renderInput(),
             tooltip: this.renderTooltip(),
+            tooltipPosition: this.getTooltipPosition(),
             label: this.renderLabel(),
             icon: this.getIcon(),
             iconRight: this.getIconRight(),
@@ -223,9 +224,13 @@ class Field extends ArpaElement {
         };
     }
 
+    getTooltipPosition() {
+        return this.getProperty('tooltip-position') || 'top';
+    }
+
     renderTooltip() {
         return this.hasContent('tooltip')
-            ? html`<arpa-tooltip class="arpaField__tooltip" icon="info" position="bottom-right">
+            ? html`<arpa-tooltip class="arpaField__tooltip" icon="info" position="{tooltipPosition}" zone="tooltip">
                   <zone name="tooltip-content">${this.getTooltip() || ''}</zone>
               </arpa-tooltip>`
             : '';
@@ -372,7 +377,6 @@ class Field extends ArpaElement {
         !isValid && this.signal('error', this.getErrorMessages(), this);
         return isValid;
     }
-
 
     _validate(value = this.getValue()) {
         return this?.validator?.validate(value) ?? true;
