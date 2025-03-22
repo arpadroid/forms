@@ -1,33 +1,37 @@
 /**
  * @typedef {import('../../field').default} Field
+ * @typedef {import('./fieldLabel.types').FieldLabelConfigType} FieldLabelConfigType
  */
-import {
-    mergeObjects,
-    handleZones,
-    zoneMixin,
-    getProperty,
-    hasProperty,
-    processTemplate,
-    defineCustomElement
-} from '@arpadroid/tools';
+import { defineCustomElement, attrString } from '@arpadroid/tools';
+import { ArpaElement } from '@arpadroid/ui';
 
 const html = String.raw;
-class FieldLabel extends HTMLLabelElement {
-    static defaultConfig = {
-        required: false,
-        template: html`<span class="fieldLabel__text" zone="label">{label}</span>{required}`,
-        requiredTemplate: html`<span class="fieldLabel__required">*</span>`,
-        label: undefined
-    };
-
-    constructor(config = {}) {
-        super();
-        zoneMixin(this);
-        this._config = mergeObjects(FieldLabel.defaultConfig, config);
+class FieldLabel extends ArpaElement {
+    /** @type {FieldLabelConfigType} */
+    _config = this._config;
+    _initialize() {
+        this.field = /** @type {Field} */ (this.closest('.arpaField'));
     }
 
+    /**
+     * Returns the default configuration for the field label.
+     * @returns {FieldLabelConfigType}
+     */
+    getDefaultConfig() {
+        /** @type {FieldLabelConfigType} */
+        const config = {
+            required: false,
+            requiredTemplate: html`<span class="fieldLabel__required">*</span>`
+        };
+        return super.getDefaultConfig(config);
+    }
+
+    ////////////////////////
+    // #region Get
+    ////////////////////////
+
     getLabel() {
-        return this.field?.getLabel() || getProperty(this, 'label') || '';
+        return this.field?.getLabel() || this.getProperty('label') || '';
     }
 
     hasLabel() {
@@ -35,46 +39,51 @@ class FieldLabel extends HTMLLabelElement {
     }
 
     isRequired() {
-        return this.field?.isRequired() || hasProperty(this, 'required');
+        return this.field?.isRequired() || this.hasProperty('required');
     }
 
-    render() {
-        const textNode = this.querySelector('.fieldLabel__text');
-        if (textNode) {
-            const label = this.getLabel();
-            typeof label === 'string' && label.length && (textNode.innerHTML = label);
-            return;
-        }
-        this.innerHTML = processTemplate(this._config.template, this.getTemplateVars());
-    }
+    // #endregion Get
 
-    connectedCallback() {
+    ////////////////////////
+    // #region Render
+    ///////////////////////
+
+    _preRender() {
+        super._preRender();
         this.field = /** @type {Field} */ (this.closest('.arpaField'));
-        this.id = this.field?.getLabelId();
-        this.field && this.setAttribute('for', this.field?.getHtmlId());
-        this.render();
-        this.labelNode = this.querySelector('.fieldLabel__text');
-        this.classList.add('fieldLabel');
-        handleZones();
-        this._onRenderComplete();
+        this._id = this.field?.getLabelId();
     }
 
-    disconnectedCallback() {
-        this._onDestroy();
+    _getTemplate() {
+        return html`
+            <label
+                ${attrString({
+                    class: 'fieldLabel',
+                    for: this.field?.getHtmlId()
+                })}
+            >
+                <span class="fieldLabel__text" zone="label">{label}</span>
+                {requiredSign}
+            </label>
+        `;
     }
-
-    _onDestroy() {}
-
-    _onRenderComplete() {}
 
     getTemplateVars() {
         return {
             label: this.getLabel(),
-            required: this.isRequired() && this._config.requiredTemplate
+            requiredSign: this.renderRequiredSign()
         };
+    }
+
+    renderRequiredSign() {
+        return this.isRequired() ? html`<span class="fieldLabel__required">*</span>` : '';
+    }
+
+    _initializeNodes() {
+        this.labelNode = this.querySelector('.fieldLabel__text');
     }
 }
 
-defineCustomElement('field-label', FieldLabel, { extends: 'label' });
+defineCustomElement('field-label', FieldLabel);
 
 export default FieldLabel;

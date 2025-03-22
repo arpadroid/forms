@@ -126,7 +126,7 @@ class Field extends ArpaElement {
         this.inputMask = this.querySelector('field-input-mask');
         this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
         /** @type {FieldLabel | null} */
-        this.label = this.querySelector('label[is="field-label"]');
+        this.label = this.querySelector('field-label label');
         this.headerNode = this.querySelector('.arpaField__header');
         this.bodyNode = this.querySelector('.arpaField__body');
         /** @type {Tooltip | null} */
@@ -265,7 +265,7 @@ class Field extends ArpaElement {
     }
 
     renderLabel() {
-        return this.renderChild('label', { tag: 'label', hasZone: false, attr: { is: 'field-label' } });
+        return this.renderChild('label', { tag: 'field-label', hasZone: false });
     }
 
     renderInput() {

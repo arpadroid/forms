@@ -36,14 +36,14 @@ class CheckboxField extends Field {
 
     _getTemplate() {
         return html`
-            <label is="field-label" class="fieldInput checkboxField__label">
+            <label for="${this.getHtmlId()}" class="fieldInput checkboxField__label fieldLabel">
                 <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
-                <span class="fieldLabel__text" zone="checkbox-label"></span>
+                <span class="fieldLabel__text" zone="checkbox-label">${this.getLabel()}</span>
                 <arpa-icon class="arpaField__iconRight">{iconRight}</arpa-icon>
                 <field-errors></field-errors>
                 {tooltip} {input}
             </label>
-            <p is="field-description"></p>
+            {description}
         `;
     }
 

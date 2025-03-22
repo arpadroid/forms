@@ -6,6 +6,8 @@ export {
     FormPayloadType
 } from './components/form/form.types';
 
+export { FieldLabelConfigType } from './fields/field/components/fieldLabel/fieldLabel.types';
+
 export { CheckboxesFieldConfigType } from './fields/checkboxesField/checkboxesField.types';
 
 export { CheckboxFieldConfigType } from './fields/checkboxField/checkboxField.types';
