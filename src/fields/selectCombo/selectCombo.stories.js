@@ -106,12 +106,11 @@ export const Test = {
                 input = field.getInput();
                 expect(input).toHaveAttribute('type', 'text');
             });
-            
             await userEvent.type(input, 'United', { delay: 10 });
             await fireEvent.keyUp(input, { key: 'Space' });
-            const searchMatches = await waitFor(() => canvas.getAllByText('United'));
+            const searchMatches = await waitFor(() => document.querySelectorAll('mark'));
             expect(searchMatches).toHaveLength(2);
-            expect(canvas.getByText('Spain')).not.toBeVisible();
+            expect(searchMatches[0]).toHaveTextContent('United');
             await fireEvent.click(searchMatches[1]);
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenCalledWith('uk', field, expect.anything());

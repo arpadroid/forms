@@ -162,9 +162,10 @@ class GroupField extends Field {
         }
     }
 
-    _initializeNodes() {
-        super._initializeNodes();
+    async _initializeNodes() {
+        await super._initializeNodes();
         this.fieldsNode = this.querySelector('.groupField__fields');
+        return true;
     }
 
     // #endregion

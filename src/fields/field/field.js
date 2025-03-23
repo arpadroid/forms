@@ -115,11 +115,12 @@ class Field extends ArpaElement {
     _initializeInputNode(input = this.querySelector('input'), attributes = this._config?.inputAttributes) {
         /** @type {FieldInputType} */
         this.input = input;
-        attributes && input && attr(input, attributes);
+        attributes && input && attr(input, attributes, false);
     }
 
-    _initializeNodes() {
+    async _initializeNodes() {
         /** @type {FormComponent} */
+        await new Promise(resolve => setTimeout(resolve, 0));
         this.form = this.getForm();
         this._initializeInputNode();
         /** @type {fieldInputMask | null} */
@@ -131,6 +132,7 @@ class Field extends ArpaElement {
         this.bodyNode = this.querySelector('.arpaField__body');
         /** @type {Tooltip | null} */
         this.tooltip = this.querySelector('.arpaField__tooltip');
+        return true;
     }
 
     // #endregion Initialization
@@ -337,8 +339,8 @@ class Field extends ArpaElement {
     /**
      * Called after the component has rendered.
      */
-    _onConnected() {
-        this._initializeNodes();
+    async _onConnected() {
+        await this._initializeNodes();
         this._initializeValue();
     }
 
@@ -567,7 +569,7 @@ class Field extends ArpaElement {
      * @returns {string}
      */
     getLabel() {
-        return this.getProperty('label');
+        return this.getProperty('label') || '';
     }
 
     getLabelId() {

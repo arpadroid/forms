@@ -38,7 +38,7 @@ class CheckboxField extends Field {
         return html`
             <label for="${this.getHtmlId()}" class="fieldInput checkboxField__label fieldLabel">
                 <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
-                <span class="fieldLabel__text" zone="checkbox-label">${this.getLabel()}</span>
+                <span class="fieldLabel__text" zone="checkbox-label">{label}</span>
                 <arpa-icon class="arpaField__iconRight">{iconRight}</arpa-icon>
                 <field-errors></field-errors>
                 {tooltip} {input}

@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
  * @typedef {import('./selectOption/selectOption.js').default} SelectOption
  * @typedef {import('../optionsField/optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType
@@ -8,7 +7,7 @@
  * @typedef {import('@arpadroid/tools').SearchToolCallbackType} SearchToolCallbackType
  * @typedef {import('@arpadroid/ui').InputComboNodeType} InputComboNodeType
  */
-import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString, defineCustomElement } from '@arpadroid/tools';
+import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString, defineCustomElement, renderNode } from '@arpadroid/tools';
 import SelectField from '../selectField/selectField.js';
 import { I18n } from '@arpadroid/i18n';
 import { InputCombo } from '@arpadroid/ui';
@@ -70,16 +69,22 @@ class SelectCombo extends SelectField {
      * @param {string} oldValue
      * @param {string} newValue
      */
-    attributeChangedCallback(name, oldValue, newValue) {
+    async attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'has-search') {
-            this.reRender();
+            this._convertInputToSearch();
         }
     }
 
-    reRender() {
-        this.inputCombo = null;
-        super.reRender();
+    _convertInputToSearch() {
+        const oldInput = this.searchInput || this.buttonInput;
+        const newInput = renderNode(this.renderComboInput());
+        if (oldInput && newInput) {
+            oldInput.replaceWith(newInput);
+            this.searchInput = newInput;
+            this._initializeSearch();
+            this._initializeInputCombo();
+        }
     }
 
     async _initializeValue() {
@@ -89,17 +94,23 @@ class SelectCombo extends SelectField {
         });
     }
 
-    _initializeNodes() {
-        super._initializeNodes();
+    async _initializeNodes() {
+        await super._initializeNodes();
         this._initializeButtonInput();
         this._initializeSearchInput();
-        /** @type {OptionsNodeType} */
-        this.optionsNode = this.querySelector('.selectCombo__options');
+        this._initializeOptionsNode();
         this._initializeInputCombo();
         if (this.label) {
             this.label.removeEventListener('click', this.onLabelClick);
             this.label.addEventListener('click', this.onLabelClick);
         }
+        return true;
+    }
+
+    async _initializeOptionsNode() {
+        /** @type {OptionsNodeType} */
+        this.optionsNode = this.optionsNode || this.querySelector('.selectCombo__options');
+        return true;
     }
 
     _initializeButtonInput() {
@@ -107,8 +118,7 @@ class SelectCombo extends SelectField {
     }
 
     _initializeSearchInput() {
-        /** @type {HTMLInputElement | null} */
-        this.searchInput = this.querySelector('input.optionsField__searchInput');
+        this.searchInput = /** @type {HTMLInputElement | null} */ (this.querySelector('input.optionsField__searchInput'));
         if (this.searchInput) {
             this.searchInput.removeEventListener('focus', this.onSearchInputFocus);
             this.searchInput.addEventListener('focus', this.onSearchInputFocus);
@@ -136,20 +146,18 @@ class SelectCombo extends SelectField {
      */
     _initializeInputCombo() {
         const handler = this.getInput();
-        if (handler) {
-            if (!this.inputCombo?.input.isConnected) {
-                this.optionsNode = this.querySelector('.selectCombo__options');
-                this.optionsNode &&
-                    (this.inputCombo = new InputCombo(handler, this.optionsNode, {
-                        containerSelector: this.getProperty('option-component'),
-                        position: this.getProperty('options-position'),
-                        closeOnClick: true,
-                        onOpen: () => this.onOpenCombo(),
-                        onClose: () => this.onCloseCombo()
-                    }));
-            } else {
-                this.optionsNode = this.inputCombo?.combo;
-            }
+        this.optionsNode = this.optionsNode || this.querySelector('.selectCombo__options');
+        if (!handler || !this.optionsNode) return;
+        if (!this.inputCombo) {
+            this.inputCombo = new InputCombo(handler, this.optionsNode, {
+                containerSelector: this.getProperty('option-component'),
+                position: this.getProperty('options-position'),
+                closeOnClick: true,
+                onOpen: () => this.onOpenCombo(),
+                onClose: () => this.onCloseCombo()
+            });
+        } else {
+            this.inputCombo.initialize(handler, this.optionsNode);
         }
     }
 

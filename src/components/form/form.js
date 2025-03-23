@@ -262,7 +262,7 @@ class FormComponent extends ArpaElement {
         };
     }
 
-    _initializeNodes() {
+    async _initializeNodes() {
         const { variant } = this._config || {};
         this.bodyNode = this.querySelector('.arpaForm__body');
         /** @type {HTMLFormElement | null} */
@@ -276,6 +276,7 @@ class FormComponent extends ArpaElement {
         this.titleNode = this.querySelector('form-title');
         this.headerNode = this.querySelector('.arpaForm__header');
         this.errorsNode = this.querySelector('.arpaForm__errors');
+        return true;
     }
 
     _getTemplate() {

@@ -40,6 +40,9 @@ export const Test = {
     name: 'Render',
     play: async ({ canvasElement, step, canvas }) => {
         const { form } = await SubmitButtonStory.playSetup(canvasElement);
+        const textField = form.getField('text');
+        const numberField = form.getField('number');
+        await numberField?.promise;
         const submitButton = await waitFor(() => canvas.getByRole('button', { name: 'Submit' }));
         console.log('submitButton', submitButton);
         await step(
@@ -53,12 +56,11 @@ export const Test = {
         );
 
         await step('Fills the form and expects data-invalid attribute to be removed', async () => {
-            const textField = form.getField('text');
-            const numberField = form.getField('number');
             await customElements.whenDefined('text-field');
             textField.setValue('text');
-            numberField.setValue('32');
             await fireEvent.input(textField.input);
+            numberField.setValue('32');
+            await fireEvent.input(numberField.input);
             await new Promise(resolve => setTimeout(resolve, 200));
             await waitFor(() => {
                 expect(submitButton.parentNode).toHaveAttribute('data-invalid');

@@ -38,12 +38,12 @@ class TimeField extends TextField {
     }
 
     async _initializeNodes() {
-        super._initializeNodes();
-        super._onInitialized();
+        await super._initializeNodes();
         if (!this.timeButton) {
             this.timeButton = this.renderTimeButton();
             this.inputMask?.addRhs('timeButton', this.timeButton);
         }
+        return true;
     }
 
     async _onConnected() {

@@ -136,10 +136,12 @@ class CheckboxesField extends ArrayField {
 
     /**
      * Event handler for when the checkboxes field is connected to the DOM.
+     * @returns {Promise<boolean>} A promise that resolves with a boolean value.
      */
-    _onConnected() {
-        super._onConnected();
-        this._handleLabelToggle();
+    async _initializeNodes() {
+        await super._initializeNodes();
+        this.promise.then(() => this._handleLabelToggle());
+        return true;
     }
 
     // #endregion Lifecycle

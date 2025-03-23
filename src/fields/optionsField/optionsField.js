@@ -215,10 +215,16 @@ class OptionsField extends Field {
         this.initializeOptions();
     }
 
-    _initializeNodes() {
-        super._initializeNodes();
+    async _initializeNodes() {
+        await super._initializeNodes();
+        await this._initializeOptionsNode();
+        return true;
+    }
+
+    async _initializeOptionsNode() {
         /** @type {OptionsNodeType | null} */
         this.optionsNode = this.querySelector('.optionsField__options');
+        return true;
     }
 
     /**

@@ -263,9 +263,8 @@ class FileField extends Field {
     // #region LIFECYCLE
     ////////////////////
 
-    async _onInitialized() {
-        super._onInitialized();
-        await this.onReady();
+    async _initializeNodes() {
+        await super._initializeNodes();
         this.classList.add(!this.allowMultiple() ? 'fileField--single' : 'fileField--multiple');
         this._initializeFileList();
         /** @type {FileList | null} */
@@ -280,6 +279,7 @@ class FileField extends Field {
         this.fileSelectBtn = this.querySelector('.fileField__selectButton');
         this.fileSelectBtn?.addEventListener('click', this._onFileSelectClick);
         this.handleUploadWarning();
+        return true;
     }
 
     _initializeFileList() {

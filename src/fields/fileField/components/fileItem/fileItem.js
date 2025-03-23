@@ -184,9 +184,10 @@ class FileItem extends ListItem {
     // #endregion
 
     async _initializeNodes() {
-        super._initializeNodes();
+        await super._initializeNodes();
         this._initializeDeleteButton();
         this._initializeEditButton();
+        return true;
     }
 
     _initializeEditButton() {

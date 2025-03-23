@@ -3,7 +3,7 @@
  */
 /* eslint-disable sonarjs/no-duplicate-string */
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect } from '@storybook/test';
+import { waitFor, expect, userEvent } from '@storybook/test';
 
 const html = String.raw;
 const category = 'Group Field Props';
@@ -93,7 +93,7 @@ export const Test = {
         });
 
         await step('Submits the form and receives expected values', async () => {
-            submitButton.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
                     email: 'some@email.com',

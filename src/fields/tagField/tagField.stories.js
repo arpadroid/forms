@@ -58,6 +58,7 @@ export const Test = {
     play: async ({ canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { field, submitButton, canvas, onErrorMock, onChangeMock, input } = setup;
+        await field.promise;
         field.setFetchOptions(queryPeople);
         const onDeleteTag = fn();
         field.on('deleteTag', onDeleteTag);

@@ -13,7 +13,7 @@ import Field from './field.js';
 const html = String.raw;
 
 const FieldStory = {
-    title: 'Forms/Fields/Field',
+    title: 'Forms/Field',
     tags: [],
     parameters: {
         layout: 'padded'
@@ -218,6 +218,7 @@ export const Test = {
         await customElements.whenDefined('submit-button');
         /** @type {Field} */
         const field = canvasElement.querySelector('.arpaField');
+        await field.promise;
         const form = canvasElement.querySelector('arpa-form');
         await form.promise;
         form.setAttribute('debounce', '0');
@@ -234,7 +235,7 @@ export const Test = {
             field.on('change', onChangeMock);
         }
         const input = typeof field?.getInput === 'function' && field?.getInput();
-        await field.promise;
+
         await new Promise(resolve => setTimeout(resolve, 100));
         return { canvas, field, form, submitButton, onSubmitMock, onErrorMock, onChangeMock, input };
     },
@@ -332,7 +333,7 @@ export const Zones = {
                     <zone name="label">Field label</zone>
                     <zone name="description">Test description</zone>
                     <zone name="footnote">This is a footnote</zone>
-                    <zone name="tooltip">test tooltip</zone>
+                    <!-- <zone name="tooltip">test tooltip</zone> -->
                     <zone name="input-rhs">
                         <icon-button icon="more_horiz">
                             <zone name="tooltip-content">More options</zone>
@@ -342,7 +343,7 @@ export const Zones = {
                 </text-field>
             </arpa-form>
         `;
-    },
+    }
     /**
      * Plays the zone field.
      * @param {{ canvasElement: HTMLElement, step: StepFunction }} args

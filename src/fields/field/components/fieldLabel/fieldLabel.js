@@ -79,8 +79,9 @@ class FieldLabel extends ArpaElement {
         return this.isRequired() ? html`<span class="fieldLabel__required">*</span>` : '';
     }
 
-    _initializeNodes() {
+    async _initializeNodes() {
         this.labelNode = this.querySelector('.fieldLabel__text');
+        return true;
     }
 }
 

@@ -67,9 +67,10 @@ class TagField extends SelectCombo {
     }
 
     async _initializeNodes() {
-        super._initializeNodes();
+        await super._initializeNodes();
         /** @type {TagList | null} */
         this.tagList = this.querySelector('tag-list');
+        return true;
     }
 
     _initializeSearchInput() {

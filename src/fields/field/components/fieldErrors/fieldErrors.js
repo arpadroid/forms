@@ -24,9 +24,10 @@ class FieldErrors extends ArpaElement {
         </arpa-tooltip>`;
     }
 
-    _initializeNodes() {
+    async _initializeNodes() {
         this.tooltip = this.querySelector('.fieldErrors__tooltip');
         this.errorList = this.querySelector('.fieldErrors__list');
+        return true;
     }
 
     /**

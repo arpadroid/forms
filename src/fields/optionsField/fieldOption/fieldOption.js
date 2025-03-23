@@ -80,7 +80,7 @@ class FieldOption extends ArpaElement {
         this._onConnected();
     }
 
-    _initializeNodes() {
+    async _initializeNodes() {
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = this.querySelector('.fieldOption__content');
         const childNodes = isIOsSafari()
@@ -88,6 +88,7 @@ class FieldOption extends ArpaElement {
             : this._childNodes?.filter((/** @type {ElementType}*/ node) => !node?.tagName?.toLowerCase().includes('dialog'));
 
         this.contentNode && appendNodes(this.contentNode, childNodes);
+        return true;
     }
 
     /**

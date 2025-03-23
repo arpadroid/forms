@@ -37,13 +37,9 @@ class DateField extends Field {
     ////////////////////////////
     // #region LIFECYCLE
     ///////////////////////////
-    /**
-     * Event handler for when the date field is connected to the DOM.
-     * Renders the calendar button.
-     */
-    async _onConnected() {
-        await this.onReady();
-        super._onConnected();
+    
+    async _initializeNodes() {
+        await super._initializeNodes();
         const min = this.getProperty('min');
         const max = this.getProperty('max');
         attr(this.input, { min, max });
@@ -57,7 +53,9 @@ class DateField extends Field {
             this.calendarButton = this.renderCalendarButton();
             this.inputMask?.addRhs('calendarButton', this.calendarButton);
         }
+        return true;
     }
+
     // #endregion
 
     //////////////////////////////
@@ -143,9 +141,7 @@ class DateField extends Field {
     renderCalendarButton() {
         const label = I18n.getText(`${this.getI18nKey()}.txtShowPicker`);
         const buttonHTML = html`
-            <icon-button label="${label}" variant="minimal" tooltip-position="left">
-                calendar_month
-            </icon-button>
+            <icon-button label="${label}" variant="minimal" tooltip-position="left"> calendar_month </icon-button>
         `;
         const button = renderNode(buttonHTML);
         button.addEventListener('click', () => this.showPicker());

@@ -63,8 +63,16 @@ export const Test = {
     play: async ({ canvasElement, step }) => {
         const { submitButton, canvas, onErrorMock, onSubmitMock, field, input } = await FieldTest.playSetup(canvasElement);
 
-        await step('Default value is OK.', async () => {
+        await step('Renders the date field with default value', async () => {
             expect(input.value).toBe('2021-06-12');
+        });
+
+        await step('Focuses on the picker button and displays label', async () => {
+            const pickerButton = canvas.getByRole('button', { name: 'Show picker' });
+            pickerButton.focus();
+            await waitFor(() => {
+                expect(canvas.getByText('Show picker')).toBeInTheDocument();
+            });
         });
 
         await step('Sets values in date and string formats.', async () => {

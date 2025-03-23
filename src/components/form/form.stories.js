@@ -199,6 +199,8 @@ export const Test = {
 
         await step('Fills in the required fields and submits the form', async () => {
             const passwordField = form.getField('password-field');
+            await passwordField?.promise;
+            await passwordField.confirmField?.promise;
             passwordField.setValue('P455w0rd!!');
             passwordField.confirmField.setValue('P455w0rd!!');
             requestAnimationFrame(() => submitButton.click());

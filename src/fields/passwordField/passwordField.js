@@ -95,17 +95,16 @@ class PasswordField extends TextField {
     // #region Lifecycle
     //////////////////////
 
-    /**
-     * Initializes the confirm field if the PasswordField has a confirm field.
-     */
-    async _onConnected() {
-        await this.onReady();
-        super._onConnected();
-        this._initializeConfirmField();
-        if (!this.visButton) {
-            this.visButton = this.renderVisibilityButton();
-            this.inputMask?.addRhs('visibilityButton', this.visButton);
-        }
+    async _initializeNodes() {
+        await super._initializeNodes();
+        this.promise.then(() => {
+            this._initializeConfirmField();
+            if (!this.visButton) {
+                this.visButton = this.renderVisibilityButton();
+                this.inputMask?.addRhs('visibilityButton', this.visButton);
+            }
+        });  
+        return true;
     }
 
     static get observedAttributes() {
