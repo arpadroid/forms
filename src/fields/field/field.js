@@ -135,6 +135,10 @@ class Field extends ArpaElement {
         return true;
     }
 
+    _onDomReady() {
+        this._initializeValue();
+    }
+
     // #endregion Initialization
 
     /////////////////////////////
@@ -334,14 +338,6 @@ class Field extends ArpaElement {
         if (Array.isArray(this._config.classNames)) {
             this.classList.add(...this._config.classNames);
         }
-    }
-
-    /**
-     * Called after the component has rendered.
-     */
-    async _onConnected() {
-        await this._initializeNodes();
-        this._initializeValue();
     }
 
     // #endregion Lifecycle

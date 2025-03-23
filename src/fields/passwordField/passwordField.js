@@ -122,7 +122,7 @@ class PasswordField extends TextField {
         if (name === 'confirm') {
             this._initializeConfirmField();
         } else if (name === 'mode') {
-            this.connectedCallback();
+            this.reRender();
         }
     }
 

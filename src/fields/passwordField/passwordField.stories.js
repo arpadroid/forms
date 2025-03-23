@@ -117,12 +117,13 @@ export const Test = {
         await step(
             'Switches mode to login and removes confirm field, then submits form successfully without validation.',
             async () => {
+                await field.promise;
                 field.setAttribute('mode', 'login');
                 field.removeAttribute('regex');
                 await waitFor(() => {
                     expect(canvas.queryByText('Confirm Password')).not.toBeInTheDocument();
                 });
-                input.value = 'pass';
+                await field.setValue('pass');
                 submitButton.click();
                 await waitFor(() => {
                     expect(onSubmitMock).toHaveBeenLastCalledWith({
