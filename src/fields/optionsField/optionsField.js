@@ -27,10 +27,7 @@ class OptionsField extends Field {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             autoFetchOptions: true,
-            inputTemplate: html`
-                {input}
-                <div role="listbox" class="optionsField__options" aria-labelledby="{labelId}">{options}</div>
-            `,
+            inputTemplate: html` <div role="listbox" class="optionsField__options" aria-labelledby="{labelId}">{options}</div> `,
             optionComponent: 'field-option',
             options: undefined,
             optionTemplate: html`<{optionComponent} role="option"></{optionComponent}`
@@ -269,8 +266,8 @@ class OptionsField extends Field {
      * Returns the template variables for the input element.
      * @returns {Record<string, any>} The template variables.
      */
-    getInputTemplateVars() {
-        return mergeObjects(super.getInputTemplateVars(), {
+    getTemplateVars() {
+        return mergeObjects(super.getTemplateVars(), {
             options: this._content
         });
     }

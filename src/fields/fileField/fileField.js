@@ -222,9 +222,9 @@ class FileField extends Field {
     // #region RENDER
     /////////////////
 
-    getInputTemplateVars() {
+    getTemplateVars() {
         return {
-            ...super.getInputTemplateVars(),
+            ...super.getTemplateVars(),
             fileList: this.renderFileList(),
             uploadList: this.renderUploadList(),
             fileSelect: this.renderFileSelect()

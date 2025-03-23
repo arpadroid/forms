@@ -18,9 +18,9 @@ class RangeField extends Field {
      * Returns the input template variables.
      * @returns {Record<string, unknown>}
      */
-    getInputTemplateVars() {
+    getTemplateVars() {
         return {
-            ...super.getInputTemplateVars(),
+            ...super.getTemplateVars(),
             min: this.getProperty('min'),
             max: this.getProperty('max'),
             step: this.getProperty('step'),

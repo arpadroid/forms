@@ -214,6 +214,7 @@ class Field extends ArpaElement {
     getTemplateVars() {
         return {
             id: this.getHtmlId(),
+            labelId: this.getLabelId(),
             input: this.renderInput(),
             tooltip: this.renderTooltip(),
             tooltipPosition: this.getTooltipPosition(),
@@ -279,22 +280,11 @@ class Field extends ArpaElement {
         if (this.isReadOnly()) {
             return html`<div class="arpaField__readOnly fieldInput">${this.getValue()}</div>`;
         }
-        return inputTemplate ? processTemplate(inputTemplate, this.getInputTemplateVars()) : '';
+        return inputTemplate;
     }
 
     renderSubHeader() {
         return this.renderChild('sub-header');
-    }
-
-    /**
-     * Renders the input template variables for the field.
-     * @returns {Record<string, unknown>} The rendered input template.
-     */
-    getInputTemplateVars() {
-        return {
-            id: this.getHtmlId(),
-            labelId: this.getLabelId()
-        };
     }
 
     /**
