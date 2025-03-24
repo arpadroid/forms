@@ -18,8 +18,10 @@ export type FieldConfigType = ArpaElementConfigType & {
     icon?: string;
     iconRight?: string;
     id?: string;
+    inputComponent?: string;
     inputAttributes?: Record<string, unknown>;
     inputTemplate?: string;
+    inputTag?: string;
     hasInputMask?: boolean;
     label?: string;
     name?: string;

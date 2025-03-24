@@ -9,7 +9,7 @@
  * @typedef {import('./components/fieldLabel/fieldLabel.js').default} FieldLabel
  */
 import { attr, defineCustomElement, dummyListener, dummySignal, mergeObjects } from '@arpadroid/tools';
-import { observerMixin, processTemplate } from '@arpadroid/tools';
+import { observerMixin } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
@@ -56,6 +56,8 @@ class Field extends ArpaElement {
             inputTemplate: Field.inputTemplate,
             validator: FieldValidator,
             hasInputMask: true,
+            inputComponent: 'field-input',
+            inputTag: 'input',
             inputAttributes: {
                 type: 'text'
             }
@@ -107,22 +109,27 @@ class Field extends ArpaElement {
         }
     }
 
-    /**
-     * Initializes the input element for the field.
-     * @param {FieldInputType} input
-     * @param {Record<string, unknown> | undefined} attributes
-     */
-    _initializeInputNode(input = this.querySelector('input'), attributes = this._config?.inputAttributes) {
-        /** @type {FieldInputType} */
-        this.input = input;
-        attributes && input && attr(input, attributes, false);
+    async _initializeInputNode() {
+        const attributes = this._config?.inputAttributes || {};
+        this.input = this.getInput();
+        
+        const inputComponent = this.getProperty('input-component');
+        if (inputComponent) {
+            await customElements.whenDefined(inputComponent);
+            /** @type {FieldInput | null} */
+            this.inputComponent = this.querySelector(inputComponent);
+            this.inputComponent?.promise && (await this.inputComponent.promise);
+            this.input = this.inputComponent?.input;
+        }
+        attributes && this.input && attr(this.input, attributes, false);
+        return true;
     }
 
     async _initializeNodes() {
         /** @type {FormComponent} */
         await new Promise(resolve => setTimeout(resolve, 0));
         this.form = this.getForm();
-        this._initializeInputNode();
+        await this._initializeInputNode();
         /** @type {fieldInputMask | null} */
         this.inputMask = this.querySelector('field-input-mask');
         this.inputWrapper = this.querySelector('.arpaField__inputWrapper');
@@ -205,7 +212,7 @@ class Field extends ArpaElement {
         <div class="arpaField__footer">{footnote}</div>
     `;
 
-    static inputTemplate = html`<input is="field-input" />`;
+    static inputTemplate = html`<field-input></field-input>`;
 
     /**
      * Returns the template variables for the field.
@@ -227,7 +234,8 @@ class Field extends ArpaElement {
             description: this.renderDescription(),
             footnote: this.renderFootnote(),
             inputRhs: this.renderInputRhs(),
-            errors: this.renderErrors()
+            errors: this.renderErrors(),
+            value: this.getValue()
         };
     }
 
@@ -278,7 +286,7 @@ class Field extends ArpaElement {
     renderInput() {
         const { inputTemplate } = this._config;
         if (this.isReadOnly()) {
-            return html`<div class="arpaField__readOnly fieldInput">${this.getValue()}</div>`;
+            return html`<div class="arpaField__readOnly fieldInput">{value}</div>`;
         }
         return inputTemplate;
     }
@@ -448,7 +456,8 @@ class Field extends ArpaElement {
      * @returns {FieldInputType | undefined}
      */
     getInput() {
-        return this.input;
+        const inputTag = this.getProperty('input-tag');
+        return this.input || this.inputComponent?.input || inputTag && this.querySelector(inputTag);
     }
 
     /**
@@ -470,8 +479,9 @@ class Field extends ArpaElement {
      * @returns {unknown}
      */
     getValue() {
+        const input = this.getInput();
         return this.preProcessValue(
-            this?.input?.value ?? this?.input?.getAttribute('value') ?? this.getProperty('value') ?? this.value ?? ''
+            input?.value ?? input?.getAttribute('value') ?? this.getProperty('value') ?? this.value ?? ''
         );
     }
 
@@ -659,15 +669,16 @@ class Field extends ArpaElement {
      * Sets the value for the field.
      * @param {any} value
      * @param {boolean} update
-     * @returns {this}
+     * @returns {Field}
      */
     setValue(value, update = true) {
         this.value = value;
+        this.input = this.getInput();
         if (this.input instanceof HTMLTextAreaElement) {
             this.input.innerHTML = value;
-        } else if (this.input && 'setValue' in this.input && typeof this.input?.setValue === 'function') {
-            this.input.setValue(value);
-        } else if (this.input) {
+        } else if (this.inputComponent && 'setValue' in this.inputComponent && typeof this.inputComponent?.setValue === 'function') {
+            this.inputComponent.setValue(value);
+        } else if (this.input instanceof HTMLInputElement) {
             this.input.value = value;
         }
         if (update && this.isConnected) {

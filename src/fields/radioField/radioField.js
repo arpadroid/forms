@@ -29,8 +29,9 @@ class RadioField extends OptionsField {
         }
     }
 
-    _initializeInputNode() {
+    async _initializeInputNode() {
         // Override to prevent input node initialization since radio fields have an input node for each option.
+        return true;
     }
 
     /**
@@ -39,8 +40,8 @@ class RadioField extends OptionsField {
      */
     getValue() {
         /** @type {HTMLInputElement | null | undefined} */
-        const input = /** @type {HTMLInputElement} */ this.optionsNode?.querySelector('input[type="radio"]:checked');
-        return input?.value || super.getValue();
+        const input = /** @type {HTMLInputElement | null} */ (this.optionsNode?.querySelector('input[type="radio"]:checked'));
+        return input?.value;
     }
 }
 

@@ -8,8 +8,10 @@ const html = String.raw;
 const SelectComboStory = {
     title: 'Forms/Fields/SelectCombo',
     tags: [],
-    render: (args, story) =>
-        FieldStory.render(args, story, 'select-combo', FieldStory.renderFieldContent, SelectComboStory.renderScript),
+    render: (args, story) => {
+        delete args.options;
+        return FieldStory.render(args, story, 'select-combo', FieldStory.renderFieldContent, SelectComboStory.renderScript);
+    },
     renderScript: (args, story) => {
         return story.name === 'Test'
             ? ''
@@ -48,7 +50,8 @@ export const Default = {
         ...FieldStory.getArgs(),
         id: 'select-combo-test',
         label: 'Select combo',
-        required: true
+        required: true,
+        value: 'es'
     }
 };
 
@@ -66,7 +69,9 @@ export const Test = {
         const { field, submitButton, canvas, onErrorMock, onChangeMock } = setup;
         let { input } = setup;
         await customElements.whenDefined('select-combo');
+        await field.promise;
         field.setOptions(CountryOptions);
+
         await step('Renders the field with four select options', async () => {
             expect(canvas.getByText('Select combo')).toBeInTheDocument();
         });

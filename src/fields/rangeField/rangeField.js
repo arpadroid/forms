@@ -10,7 +10,7 @@ class RangeField extends Field {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             inputAttributes: { type: 'range' },
-            inputTemplate: html`<input is="field-input" value="{value}" min="{min}" max="{max}" step="{step}" />`
+            inputTemplate: html`<field-input value="{value}" min="{min}" max="{max}" step="{step}"></field-input>`
         });
     }
 

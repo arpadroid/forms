@@ -115,12 +115,13 @@ export const Test = {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } = await FieldTest.playSetup(
             canvasElement
         );
-
+        
         field._config.onDelete = onDelete;
         field._config.onDeleteUpload = onDeleteUpload;
         await customElements.whenDefined('file-list');
         const uploadList = canvasElement.querySelector('.fileField__uploadList');
         const i18nKey = field.i18nKey;
+        await field.promise;
 
         await step('Renders the field', async () => {
             await waitFor(() => {
@@ -148,7 +149,7 @@ export const Test = {
         });
 
         await step('Adds an invalid file type and displays an error', async () => {
-            await fireEvent.change(input, { target: { files: [EmptyImage] } });
+            await fireEvent.change(field.input, { target: { files: [EmptyImage] } });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
                 const errorContainer = field.querySelector('.fieldErrors__list');

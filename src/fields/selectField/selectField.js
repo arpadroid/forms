@@ -18,6 +18,7 @@ class SelectField extends OptionsField {
             inputTemplate: html`<select id="{id}" class="optionsField__options fieldInput">
                 {options}
             </select>`,
+            inputTag: 'select',
             optionComponent: 'option',
             optionTemplate: html`<{optionComponent} role="option" {selected}>{label}</{optionComponent}>`
         });
@@ -27,10 +28,11 @@ class SelectField extends OptionsField {
         return 'select';
     }
 
-    _initializeInputNode() {
-        const input = this.querySelector('select');
-        super._initializeInputNode(input);
+    async _initializeInputNode() {
+        await super._initializeInputNode();
+        const input = this.getInput();
         input?.addEventListener('change', this._callOnChange);
+        return true;
     }
 
     async _initializeValue() {

@@ -8,7 +8,6 @@
 
 import { mergeObjects, isObject, defineCustomElement } from '@arpadroid/tools';
 import SelectCombo from '../selectCombo/selectCombo.js';
-import Field from '../field/field.js';
 import ArrayField from '../arrayField/arrayField.js';
 import { I18n } from '@arpadroid/i18n';
 
@@ -115,17 +114,12 @@ class TagField extends SelectCombo {
 
     /**
      * Sets the value of the field.
-     * @param {unknown} value - The value to set.
-     * @returns {this} The field instance.
+     * @param {unknown} value
+     * @returns {this}
      */
     setValue(value) {
-        const tags = this.setTags(value);
-        return /** @type {this} */ (
-            Field.prototype.setValue.call(
-                this,
-                tags?.map(tag => tag.value)
-            )
-        );
+        this.setTags(value);
+        return this;
     }
 
     /**

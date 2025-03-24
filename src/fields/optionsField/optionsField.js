@@ -204,6 +204,7 @@ class OptionsField extends Field {
      */
     async _initializeValue() {
         await this.promise;
+        super._initializeValue();
         this.selectedOption = this.getSelectedOption();
     }
 

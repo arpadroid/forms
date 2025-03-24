@@ -1,11 +1,29 @@
+/**
+ * @typedef {import('./fieldInput.types.js').FieldInputConfigType} FieldInputConfigType
+ */
+import { ArpaElement } from '@arpadroid/ui';
 import Field from '../../field.js';
-import { attr, defineCustomElement } from '@arpadroid/tools';
-class FieldInput extends HTMLInputElement {
-    constructor() {
-        super();
-        this._onFocus = this._onFocus.bind(this);
-        this._onInput = this._onInput.bind(this);
-        this.classList.add('fieldInput');
+import { attrString, defineCustomElement, mergeObjects } from '@arpadroid/tools';
+class FieldInput extends ArpaElement {
+    _initialize() {
+        this.bind('_onFocus', '_onInput');
+        /** @type {Record<string, unknown>} */
+        this.inputAttributes = {};
+        for (const attr of this.attributes) {
+            this.inputAttributes[attr.name] = attr.value;
+            this.removeAttribute(attr.name);
+        }
+    }
+
+    /**
+     * Returns the default configuration for the field input.
+     * @returns {FieldInputConfigType}
+     */
+    getDefaultConfig() {
+        return {
+            inputAttributes: {},
+            inputClass: 'fieldInput'
+        };
     }
 
     /**
@@ -13,39 +31,50 @@ class FieldInput extends HTMLInputElement {
      * @param {string} value
      */
     setValue(value) {
-        this.value = value;
-        this.setAttribute('value', value);
+        this.input && (this.input.value = value);
+        this.input?.setAttribute('value', value);
     }
 
-    onReady() {
+    /**
+     * Called when the element is ready.
+     * @returns {Promise<any>}
+     */
+    async onReady() {
         return customElements.whenDefined('arpa-field');
     }
 
-    async connectedCallback() {
-        this.update();
+    _preRender() {
         if (!this.field) {
-            this.field = /** @type {Field} */ (this.closest('.arpaField'));
+            /** @type {Field | null} */
+            this.field = this.closest('.arpaField');
         }
-        await this.field?.promise;
-        if (typeof this.field?.getHtmlId === 'function') {
-            this.id = this.field?.getHtmlId();
-            const id = this.field?.getId();
-            id && (this.name = id);
-            attr(this, {
-                disabled: this.field?.isDisabled(),
-                placeholder: this.field?.getPlaceholder()
-            });
-        } else {
-            console.error('Field not found for input', this);
-        }
+    }
+
+    _getTemplate() {
+        const attr = mergeObjects(this.inputAttributes, {
+            class: this.getProperty('input-class'),
+            id: this.field?.getHtmlId(),
+            name: this.field?.getId(),
+            disabled: this.field?.isDisabled(),
+            placeholder: this.field?.getPlaceholder(),
+            value: this.field?.getValue()?.toString(),
+        });
+
+        return `<input ${attrString(attr)} />`;
+    }
+
+    async _initializeNodes() {
+        /** @type {HTMLInputElement | null} */
+        this.input = this.querySelector('input');
         this.initializeListeners();
+        return true;
     }
 
     initializeListeners() {
-        this.removeEventListener('focus', this._onFocus);
-        this.addEventListener('focus', this._onFocus);
-        this.removeEventListener('input', this._onInput);
-        this.addEventListener('input', this._onInput);
+        this.input?.removeEventListener('focus', this._onFocus);
+        this.input?.addEventListener('focus', this._onFocus);
+        this.input?.removeEventListener('input', this._onInput);
+        this.input?.addEventListener('input', this._onInput);
     }
 
     /**
@@ -59,10 +88,8 @@ class FieldInput extends HTMLInputElement {
     _onFocus() {
         this.field?._onFocus();
     }
-
-    update() {}
 }
 
-defineCustomElement('field-input', FieldInput, { extends: 'input' });
+defineCustomElement('field-input', FieldInput);
 
 export default FieldInput;

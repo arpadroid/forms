@@ -13,25 +13,34 @@ class FileFieldInput extends FieldInput {
     /** @type {FileField | undefined} */
     field;
 
-    constructor() {
-        super();
-        this._onInputChange = this._onInputChange.bind(this);
+    _initialize() {
+        super._initialize();
+        this.bind('_onInputChange');
     }
 
     getUploads() {
         return this.uploads;
     }
 
-    async connectedCallback() {
-        super.connectedCallback();
-        this.style.display = 'none';
+    /**
+     * Initializes the nodes.
+     * @returns {Promise<boolean>}
+     */
+    async _initializeNodes() {
+        await super._initializeNodes();
+        const input = this.input;
+        if (!input) {
+            return false;
+        }
+        input.style.display = 'none';
         this.allowMultiple = this.field?.allowMultiple();
         if (this.allowMultiple) {
-            this.setAttribute('multiple', '');
+            input.setAttribute('multiple', '');
         }
-        this.removeEventListener('change', this._onInputChange);
-        this.addEventListener('change', this._onInputChange);
+        input.removeEventListener('change', this._onInputChange);
+        input.addEventListener('change', this._onInputChange);
         this._initializeDropArea();
+        return true;
     }
 
     async _initializeDropArea() {
@@ -45,7 +54,7 @@ class FileFieldInput extends FieldInput {
      * @param {Event} event - The event object.
      * @param {FileList | null} _files - The files to process.
      */
-    _onInputChange(event, _files = this.files) {
+    _onInputChange(event, _files = this.input?.files || null) {
         const files = Array.from(_files || []);
         if (!files?.length) {
             return;
@@ -89,6 +98,6 @@ class FileFieldInput extends FieldInput {
     }
 }
 
-defineCustomElement('file-field-input', FileFieldInput, { extends: 'input' });
+defineCustomElement('file-field-input', FileFieldInput);
 
 export default FileFieldInput;

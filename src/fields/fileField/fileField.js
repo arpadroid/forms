@@ -12,6 +12,8 @@ import { defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools'
 
 const html = String.raw;
 class FileField extends Field {
+    /** @type {FileFieldInput} */
+    inputComponent = this.inputComponent;
     /** @type {FileFieldInput | null} */
     input = this.input;
     /** @type {FileFieldConfigType} */
@@ -39,13 +41,14 @@ class FileField extends Field {
         const conf = {
             className: 'fileField',
             inputTemplate: html`
-                <input is="file-field-input" />
+                <file-field-input type="file"></file-field-input>
                 <div class="fileField__fileLists">{fileList} {uploadList}</div>
                 {fileSelect}
             `,
             listComponent: 'file-list',
             uploadListComponent: 'file-list',
             fileComponent: 'file-item',
+            inputComponent: 'file-field-input',
             lblUploads: this.i18n('lblUploads', {}, {}, 'common.labels'),
             fileListLabel: this.i18n('lblUploadedFiles'),
             lblAddFile: this.i18n('lblAddFile'),
@@ -91,7 +94,7 @@ class FileField extends Field {
 
     clearUploads() {
         this.uploadList?.removeItems();
-        this.input && (this.input.uploads = []);
+        this.inputComponent && (this.inputComponent.uploads = []);
     }
 
     getFieldType() {
@@ -117,7 +120,7 @@ class FileField extends Field {
     hasUploadWarning() {
         return Boolean(
             !this.allowMultiple() &&
-                Number(this.input?.uploads?.length) > 0 &&
+                Number(this.inputComponent?.uploads?.length) > 0 &&
                 Number(this.fileList?.itemsNode?.children.length) > 0
         );
     }
@@ -197,7 +200,7 @@ class FileField extends Field {
     }
 
     getValue() {
-        return this.input?.getUploads();
+        return this.inputComponent?.getUploads();
     }
 
     getOutputValue() {
@@ -274,6 +277,7 @@ class FileField extends Field {
         this.dropArea = this.querySelector('drop-area');
         /** @type {FileFieldInput} */
         this.input = this.getInput();
+        
         this.input?.removeEventListener('change', this._onChange);
         this.input?.addEventListener('change', this._onChange);
         this.fileSelectBtn = this.querySelector('.fileField__selectButton');

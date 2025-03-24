@@ -14,7 +14,8 @@ class TextAreaField extends TextField {
         return {
             ...super.getDefaultConfig(),
             rows: 6,
-            inputTemplate: html`<textarea id="{id}" class="fieldInput"></textarea>`
+            inputTemplate: html`<textarea id="{id}" class="fieldInput"></textarea>`,
+            inputTag: 'textarea'
         };
     }
 
@@ -31,15 +32,17 @@ class TextAreaField extends TextField {
         super._initialize();
     }
 
-    _initializeInputNode() {
-        super._initializeInputNode(this.querySelector('textarea'));
+    async _initializeInputNode() {
+        await super._initializeInputNode();
+        this.input = /** @type {HTMLTextAreaElement} */ (this.getInput());
+        
         if (this.input) {
-            attr(this.input, {
-                rows: this.getProperty('rows')
-            });
+            
+            attr(this.input, { rows: this.getProperty('rows') });
             this.input?.removeEventListener('input', this._onInput);
             this.input?.addEventListener('input', this._onInput);
         }
+        return true;
     }
 
     /**

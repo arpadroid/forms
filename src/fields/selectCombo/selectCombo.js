@@ -33,8 +33,9 @@ class SelectCombo extends SelectField {
             searchItemContentSelector: '.fieldOption__label, .fieldOption__subTitle',
             placeholder: I18n.getText('forms.fields.selectCombo.lblNoSelection'),
             optionsPosition: 'bottom-left',
+            inputAttributes: { type: undefined },
             inputTemplate: html`
-                {input}
+                {comboInput}
                 <div class="selectCombo__options optionsField__options comboBox">{options}</div>
             `,
             optionComponent: 'select-option'
@@ -88,10 +89,10 @@ class SelectCombo extends SelectField {
     }
 
     async _initializeValue() {
-        this.promise.then(() => {
-            this.selectedOption = this.getSelectedOption();
-            this.updateValue();
-        });
+        /** @type {OptionsNodeType} */
+        this.optionsNode = this.querySelector('.selectCombo__options');
+        this.selectedOption = this.getSelectedOption();
+        this.updateValue();
     }
 
     async _initializeNodes() {
@@ -109,7 +110,7 @@ class SelectCombo extends SelectField {
 
     async _initializeOptionsNode() {
         /** @type {OptionsNodeType} */
-        this.optionsNode = this.optionsNode || this.querySelector('.selectCombo__options');
+        this.optionsNode = this.querySelector('.selectCombo__options');
         return true;
     }
 
@@ -161,6 +162,10 @@ class SelectCombo extends SelectField {
         }
     }
 
+    getValue() {
+        const input = this.getInput();
+        return this.preProcessValue(input?.getAttribute('value') || this.getProperty('value') || '');
+    } 
     // #endregion
 
     ////////////////////
@@ -213,9 +218,11 @@ class SelectCombo extends SelectField {
     async updateValue() {
         await this.promise;
         await this.onReady();
+        this.optionsNode = this.querySelector('.selectCombo__options');
         /** @type {SelectOption} */
         this.selectedOption = this.getSelectedOption();
-        this.getOptions().forEach(option => option.removeAttribute('aria-selected'));
+        const options = this.getOptions();
+        options.forEach(option => option.removeAttribute('aria-selected'));
         this.selectedOption?.setAttribute('aria-selected', 'true');
         const label = this.getValueLabel();
         this.updateButtonLabel(label);
@@ -268,10 +275,10 @@ class SelectCombo extends SelectField {
      * Returns the template variables for the select combo field.
      * @returns {Record<string, unknown>} The template variables for the select combo field.
      */
-    getInputTemplateVars() {
+    getTemplateVars() {
         return {
-            ...super.getInputTemplateVars(),
-            input: this.renderComboInput()
+            ...super.getTemplateVars(),
+            comboInput: this.renderComboInput()
         };
     }
 
