@@ -30,7 +30,7 @@ class ColorField extends Field {
         return 'color-field';
     }
 
-    _initializeInputNode() {
+    async _initializeInputNode() {
         this.input = this.querySelector('input[type="color"]');
         this.input?.removeEventListener('input', this.onInput);
         this.input?.addEventListener('input', this.onInput);
@@ -42,6 +42,7 @@ class ColorField extends Field {
             this.textInput.value = this.getProperty('value') ?? '';
         }
         requestAnimationFrame(() => this.updateColorInput(undefined, false));
+        return true;
     }
 
     /**

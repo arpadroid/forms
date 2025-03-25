@@ -24,6 +24,7 @@ export type FileItemConfigType = ListItemConfigType & {
     onEdit?: (fileItem: FileItem) => void;
     onImageError?: (event: Event, image: HTMLElement) => void;
     onImageLoaded?: (event: Event, image: HTMLElement) => void;
+    hasIcon?: boolean;
     progress?: number;
     rhsContent?: string;
     size?: string;

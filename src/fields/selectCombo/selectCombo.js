@@ -90,7 +90,7 @@ class SelectCombo extends SelectField {
 
     async _initializeValue() {
         /** @type {OptionsNodeType} */
-        this.optionsNode = this.querySelector('.selectCombo__options');
+        this.optionsNode = this.getOptionsNode();
         this.selectedOption = this.getSelectedOption();
         this.updateValue();
     }
@@ -105,12 +105,6 @@ class SelectCombo extends SelectField {
             this.label.removeEventListener('click', this.onLabelClick);
             this.label.addEventListener('click', this.onLabelClick);
         }
-        return true;
-    }
-
-    async _initializeOptionsNode() {
-        /** @type {OptionsNodeType} */
-        this.optionsNode = this.querySelector('.selectCombo__options');
         return true;
     }
 
@@ -147,7 +141,7 @@ class SelectCombo extends SelectField {
      */
     _initializeInputCombo() {
         const handler = this.getInput();
-        this.optionsNode = this.optionsNode || this.querySelector('.selectCombo__options');
+        this.optionsNode = this.getOptionsNode();
         if (!handler || !this.optionsNode) return;
         if (!this.inputCombo) {
             this.inputCombo = new InputCombo(handler, this.optionsNode, {
@@ -165,7 +159,7 @@ class SelectCombo extends SelectField {
     getValue() {
         const input = this.getInput();
         return this.preProcessValue(input?.getAttribute('value') || this.getProperty('value') || '');
-    } 
+    }
     // #endregion
 
     ////////////////////
@@ -205,11 +199,22 @@ class SelectCombo extends SelectField {
      */
     setOptions(options) {
         super.setOptions(options);
-        if (options.length && !this._initializedOptions) {
-            this.updateValue();
-            this._initializedOptions = true;
-        }
+        this.promise.then(() => {
+            if (options.length && !this._initializedOptions) {
+                this.updateValue();
+                this._initializedOptions = true;
+            }
+        });
+
         return this;
+    }
+
+    /**
+     * Returns the options node for the select combo field.
+     * @returns {OptionsNodeType | null} The options node for the select combo field.
+     */
+    getOptionsNode() {
+        return this.optionsNode || this.querySelector('.selectCombo__options');
     }
 
     /**
@@ -217,8 +222,6 @@ class SelectCombo extends SelectField {
      */
     async updateValue() {
         await this.promise;
-        await this.onReady();
-        this.optionsNode = this.querySelector('.selectCombo__options');
         /** @type {SelectOption} */
         this.selectedOption = this.getSelectedOption();
         const options = this.getOptions();

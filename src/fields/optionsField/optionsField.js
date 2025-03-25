@@ -69,9 +69,16 @@ class OptionsField extends Field {
      * @returns {FieldOption | undefined}
      */
     getSelectedOption(returnDefault = true) {
-        return /** @type {FieldOption} */ (
-            this.getOption(this.getValue()) || (returnDefault && this.getDefaultOption()) || undefined
-        );
+        const option = this.getOption(this.getValue());
+        return /** @type {FieldOption} */ (option || (returnDefault && this.getDefaultOption()) || undefined);
+    }
+
+    /**
+     * Returns the options node for the select combo field.
+     * @returns {OptionsNodeType | null} The options node for the select combo field.
+     */
+    getOptionsNode() {
+        return this.querySelector('.optionsField__options');
     }
 
     /**
@@ -81,7 +88,7 @@ class OptionsField extends Field {
      */
     getOption(value) {
         return /** @type {FieldOption} */ (
-            [...(this.optionsNode?.children ?? [])].find(option => {
+            [...(this.getOptionsNode()?.children ?? [])].find(option => {
                 return option?.getAttribute('value') === value;
             })
         );
@@ -89,7 +96,7 @@ class OptionsField extends Field {
 
     getDefaultOption() {
         return (
-            [...(this.optionsNode?.children ?? [])].find(option => {
+            [...(this.getOptionsNode()?.children ?? [])].find(option => {
                 return option?.hasAttribute('default');
             }) || this.getOption(this.getProperty('default-option'))
         );
@@ -221,7 +228,7 @@ class OptionsField extends Field {
 
     async _initializeOptionsNode() {
         /** @type {OptionsNodeType | null} */
-        this.optionsNode = this.querySelector('.optionsField__options');
+        this.optionsNode = this.getOptionsNode();
         return true;
     }
 

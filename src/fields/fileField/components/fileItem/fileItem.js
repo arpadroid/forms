@@ -17,16 +17,9 @@ class FileItem extends ListItem {
     // #region INITIALIZATION
     //////////////////////////
 
-    /**
-     * Creates a new file item.
-     * @param {FileItemConfigType} config - The configuration object.
-     * @param {Record<string, unknown>} payload - The file object.
-     * @param {Record<string, string>} map
-     */
-    constructor(config, payload, map) {
-        super(config, payload, map);
-        this.onDelete = this.onDelete.bind(this);
-        this.onEdit = this.onEdit.bind(this);
+    _initialize() {
+        super._initialize();
+        this.bind('onDelete', 'onEdit');
     }
 
     /**
@@ -34,13 +27,15 @@ class FileItem extends ListItem {
      * @returns {FileItemConfigType}
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {FileItemConfigType} */
+        const config = {
             icon: undefined,
             hasIcon: true,
-            onDelete: true,
-            onEdit: false,
+            // onDelete: true,
+            // onEdit: false,
             lblRemoveFile: I18n.getText('forms.fields.file.lblRemoveFile')
-        });
+        };
+        return mergeObjects(super.getDefaultConfig(), config);
     }
 
     _initializeFile() {

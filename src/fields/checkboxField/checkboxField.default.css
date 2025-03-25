@@ -43,6 +43,10 @@
         font-weight: var(--field-option-weight);
         font-size: var(--field-option-size);
     }
+
+    field-input {
+        flex: 0 0 auto;
+    }
 }
 
 checkbox-field.arpaField:has(.arpaField__icon) .fieldInput {

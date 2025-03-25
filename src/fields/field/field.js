@@ -8,7 +8,7 @@
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  * @typedef {import('./components/fieldLabel/fieldLabel.js').default} FieldLabel
  */
-import { attr, defineCustomElement, dummyListener, dummySignal, mergeObjects } from '@arpadroid/tools';
+import { attrString, defineCustomElement, dummyListener, dummySignal, mergeObjects } from '@arpadroid/tools';
 import { observerMixin } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
@@ -53,7 +53,7 @@ class Field extends ArpaElement {
     getDefaultConfig() {
         return {
             template: Field.template,
-            inputTemplate: Field.inputTemplate,
+            inputTemplate: html`<field-input {inputAttr}></field-input>`,
             validator: FieldValidator,
             hasInputMask: true,
             inputComponent: 'field-input',
@@ -110,9 +110,8 @@ class Field extends ArpaElement {
     }
 
     async _initializeInputNode() {
-        const attributes = this._config?.inputAttributes || {};
         this.input = this.getInput();
-        
+
         const inputComponent = this.getProperty('input-component');
         if (inputComponent) {
             await customElements.whenDefined(inputComponent);
@@ -121,7 +120,7 @@ class Field extends ArpaElement {
             this.inputComponent?.promise && (await this.inputComponent.promise);
             this.input = this.inputComponent?.input;
         }
-        attributes && this.input && attr(this.input, attributes, false);
+
         return true;
     }
 
@@ -212,8 +211,6 @@ class Field extends ArpaElement {
         <div class="arpaField__footer">{footnote}</div>
     `;
 
-    static inputTemplate = html`<field-input></field-input>`;
-
     /**
      * Returns the template variables for the field.
      * @returns {Record<string, unknown>} The template variables.
@@ -235,12 +232,14 @@ class Field extends ArpaElement {
             footnote: this.renderFootnote(),
             inputRhs: this.renderInputRhs(),
             errors: this.renderErrors(),
-            value: this.getValue()
+            value: this.getValue(),
+            inputAttr: this.renderInputAttributes()
         };
     }
 
-    getTooltipPosition() {
-        return this.getProperty('tooltip-position') || 'top';
+    renderInputAttributes() {
+        const { inputAttributes = {} } = this._config;
+        return attrString(inputAttributes);
     }
 
     renderTooltip() {
@@ -457,7 +456,11 @@ class Field extends ArpaElement {
      */
     getInput() {
         const inputTag = this.getProperty('input-tag');
-        return this.input || this.inputComponent?.input || inputTag && this.querySelector(inputTag);
+        return this.input || this.inputComponent?.input || (inputTag && this.querySelector(inputTag));
+    }
+
+    getTooltipPosition() {
+        return this.getProperty('tooltip-position') || 'top';
     }
 
     /**
@@ -480,7 +483,7 @@ class Field extends ArpaElement {
      */
     getValue() {
         const input = this.getInput();
-        return this.preProcessValue(
+        return this.preProcessValue( // @ts-ignore
             input?.value ?? input?.getAttribute('value') ?? this.getProperty('value') ?? this.value ?? ''
         );
     }
@@ -676,7 +679,11 @@ class Field extends ArpaElement {
         this.input = this.getInput();
         if (this.input instanceof HTMLTextAreaElement) {
             this.input.innerHTML = value;
-        } else if (this.inputComponent && 'setValue' in this.inputComponent && typeof this.inputComponent?.setValue === 'function') {
+        } else if (
+            this.inputComponent &&
+            'setValue' in this.inputComponent &&
+            typeof this.inputComponent?.setValue === 'function'
+        ) {
             this.inputComponent.setValue(value);
         } else if (this.input instanceof HTMLInputElement) {
             this.input.value = value;

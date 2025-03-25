@@ -21,6 +21,7 @@ class FileList extends List {
                 hasControls: false,
                 itemComponent: FileItem,
                 itemTag: 'file-item',
+                controls: [],
                 mapItemId: payload => {
                     const file = /** @type {File} */ (payload.file);
                     return mechanize(`${file.name}-${file.size}`);

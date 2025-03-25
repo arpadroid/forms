@@ -79,7 +79,7 @@ class DateField extends Field {
      * @param {string | Date} value
      * @param {boolean} [update]
      * @param {string} [format]
-     * @returns {this} The formatted value.
+     * @returns {Field} The formatted value.
      */
     setValue(value, update = true, format = this._config?.inputFormat || this._config.format) {
         const val = formatDate(value, format);

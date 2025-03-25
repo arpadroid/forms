@@ -41,7 +41,7 @@ class FileField extends Field {
         const conf = {
             className: 'fileField',
             inputTemplate: html`
-                <file-field-input type="file"></file-field-input>
+                <file-field-input {inputAttr}></file-field-input>
                 <div class="fileField__fileLists">{fileList} {uploadList}</div>
                 {fileSelect}
             `,
