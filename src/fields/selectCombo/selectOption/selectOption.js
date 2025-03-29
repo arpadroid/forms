@@ -29,7 +29,7 @@ class SelectOption extends FieldOption {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'comboBox__item',
             template: html`
-                <button type="button" class="fieldOption__handler" data-value="{value}" tabindex="-1">
+                <button class="fieldOption__handler" data-value="{value}" tabindex="-1">
                     ${FieldOption.template}
                 </button>
             `
