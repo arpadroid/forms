@@ -9,7 +9,7 @@ import { waitFor, within, expect, fn, getByText } from '@storybook/test';
 const html = String.raw;
 
 const FormStory = {
-    title: 'Forms/Form/All Fields',
+    title: 'Forms/Form',
     parameters: {
         layout: 'padded'
     },
@@ -137,7 +137,7 @@ const FormStory = {
 };
 
 export const Default = {
-    name: 'Render',
+    name: 'All fields',
     /** @type {FieldConfigType} */
 
     parameters: {

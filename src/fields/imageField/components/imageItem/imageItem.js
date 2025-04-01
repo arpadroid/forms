@@ -3,7 +3,7 @@
 import FileItem from '../../../fileField/components/fileItem/fileItem.js';
 import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 // import GalleryDialog from '../../../../../../gallery/components/galleryDialog/galleryDialog.js';
-
+const html = String.raw;
 class ImageItem extends FileItem {
     /** @type {ImageItemConfigType} */
     _config = this._config;
@@ -12,12 +12,23 @@ class ImageItem extends FileItem {
      * @returns {ImageItemConfigType}
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        this.i18nKey = 'forms.fields.image.item';
+        /** @type {ImageItemConfigType} */
+        const config = {
             icon: '',
             hasIcon: false,
-            width: 100,
-            height: 100
-        });
+            defaultImageSize: 'small',
+            imagePreview: true,
+            imagePreviewTitle: undefined
+        };
+        return mergeObjects(super.getDefaultConfig(), config);
+    }
+
+    _preRender() {
+        super._preRender();
+        const payload = this.getPayload();
+        const name = String(payload.name || '');
+        this._config.imagePreviewTitle = this._config.imagePreviewTitle ?? name;
     }
 
     async _onConnected() {
@@ -36,6 +47,24 @@ class ImageItem extends FileItem {
             this._config.image = URL.createObjectURL(this._config.file);
             this._config.highResImage = this._config.image;
         }
+    }
+
+    getTemplateVars() {
+        return {
+            ...super.getTemplateVars(),
+            previewButton: this.renderPreviewButton()
+        };
+    }
+
+    _getTemplate() {
+        const content = super._getTemplate();
+        return html`${content}<zone name="rhs">{previewButton}</zone>`;
+    }
+
+    renderPreviewButton() {
+        return html`<icon-button icon="visibility">
+            <zone name="tooltip-content">${this.i18n('lblPreview')}</zone>
+        </icon-button>`;
     }
 
     // onEdit() {

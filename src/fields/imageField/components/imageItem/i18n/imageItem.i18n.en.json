@@ -1,0 +1,9 @@
+{
+    "fields": {
+        "image": {
+            "item": {
+                "lblPreview": "Preview"
+            }
+        }
+    }
+}

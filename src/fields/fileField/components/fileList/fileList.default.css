@@ -5,9 +5,8 @@
 
     h2 {
         font-size: 1rem;
-        font-weight: 500;
+        font-weight: 600;
         text-align: left;
-        padding-bottom: 0.8rem;
     }
 
     .arpaList__items {
@@ -17,5 +16,9 @@
         justify-content: center;
         gap: 0.5rem;
         contain: layout style;
+        padding: 0.5rem 0;
+        &:not(:has(*)) {
+            display: none;
+        }
     }
 }

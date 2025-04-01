@@ -166,14 +166,11 @@ class FileItem extends ListItem {
     }
 
     renderDeleteButton(fieldOnDelete = this.fieldConfig?.onDelete, onDelete = this._config?.onDelete) {
-        return render(
-            Boolean(fieldOnDelete || onDelete),
-            html`<icon-button
-                variant="delete"
-                class="fileItem__deleteButton iconButton--small"
-                tooltip="${this.getProperty('lbl-remove-file')}"
-            ></icon-button>`
-        );
+        return html`<icon-button
+            variant="delete"
+            class="fileItem__deleteButton iconButton--small"
+            tooltip="${this.getProperty('lbl-remove-file')}"
+        ></icon-button>`;
     }
 
     // #endregion
