@@ -90,8 +90,9 @@
 
 .arpaField__footnote.arpaField__footnote {
     font-size: 14px;
+    font-weight: 500;
     position: relative;
-    padding: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 1.2rem;
     line-height: 18px;
     margin: 0;
 }

@@ -146,7 +146,7 @@ class SelectCombo extends SelectField {
         if (!this.inputCombo) {
             this.inputCombo = new InputCombo(handler, this.optionsNode, {
                 containerSelector: this.getProperty('option-component'),
-                position: this.getProperty('options-position'),
+                position: { position: this.getProperty('options-position') },
                 closeOnClick: true,
                 onOpen: () => this.onOpenCombo(),
                 onClose: () => this.onCloseCombo()
@@ -286,8 +286,7 @@ class SelectCombo extends SelectField {
     }
 
     renderComboInput() {
-        const placeholder = this.getPlaceholder();
-        const inputAttributes = attrString({ placeholder });
+        const inputAttributes = attrString({ placeholder: this.getPlaceholder(), autocomplete: 'off' });
         return this.hasSearch()
             ? html`<input id="${this.getHtmlId()}" type="text" class="optionsField__searchInput fieldInput" ${inputAttributes} />`
             : html`<button id="${this.getHtmlId()}" type="button" class="optionsField__input fieldInput">

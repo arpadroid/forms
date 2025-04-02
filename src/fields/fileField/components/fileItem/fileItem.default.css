@@ -13,6 +13,10 @@
         align-self: center;
     }
 
+    .listItem__contentHeader {
+        display: block;
+    }
+
     .fileItem__metadata {
         position: relative;
         padding: 0 8px;

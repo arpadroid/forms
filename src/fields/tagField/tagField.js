@@ -6,7 +6,7 @@
  * @typedef {import('@arpadroid/lists').TagItemConfigType} TagItemConfigType
  */
 
-import { mergeObjects, isObject, defineCustomElement } from '@arpadroid/tools';
+import { mergeObjects, isObject, defineCustomElement, listen } from '@arpadroid/tools';
 import SelectCombo from '../selectCombo/selectCombo.js';
 import ArrayField from '../arrayField/arrayField.js';
 import { I18n } from '@arpadroid/i18n';
@@ -74,9 +74,8 @@ class TagField extends SelectCombo {
 
     _initializeSearchInput() {
         super._initializeSearchInput();
-        if (this.searchInput) {
-            this.searchInput.removeEventListener('keydown', this._onSearchInputKeyDown);
-            this.searchInput.addEventListener('keydown', this._onSearchInputKeyDown);
+        if (this.searchInput) { // @ts-ignore
+            listen(this.searchInput, 'keydown', this._onSearchInputKeyDown);
         }
     }
 

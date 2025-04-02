@@ -62,9 +62,21 @@ class ImageItem extends FileItem {
     }
 
     renderPreviewButton() {
-        return html`<icon-button icon="visibility">
-            <zone name="tooltip-content">${this.i18n('lblPreview')}</zone>
+        return html`<icon-button class="imageItem__previewButtonRhs" icon="visibility">
+            <zone name="tooltip">${this.i18n('lblPreview')}</zone>
         </icon-button>`;
+    }
+    
+
+    async _initializeNodes() {
+        await super._initializeNodes();
+        const previewButton = this.querySelector('.imageItem__previewButtonRhs button');
+        previewButton?.addEventListener('click', () => {
+            /** @type {HTMLButtonElement | null} */
+            const btn = this.querySelector('.image__previewButton');
+            btn?.click();
+        });
+        return true;
     }
 
     // onEdit() {
