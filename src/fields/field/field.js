@@ -460,7 +460,7 @@ class Field extends ArpaElement {
     }
 
     getTooltipPosition() {
-        return this.getProperty('tooltip-position') || 'bottom-right';
+        return this.getProperty('tooltip-position') || 'left';
     }
 
     /**

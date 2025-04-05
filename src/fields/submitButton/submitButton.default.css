@@ -1,3 +1,3 @@
-submit-button[data-invalid] {
-    opacity: 0.2;
+submit-button button[data-invalid] {
+    opacity: 0.5;
 }

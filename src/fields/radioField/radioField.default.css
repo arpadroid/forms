@@ -4,6 +4,7 @@ checkboxes-field {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 4px;
+        gap: .5rem;
+        padding: 0 0 .6rem;
     }
 }

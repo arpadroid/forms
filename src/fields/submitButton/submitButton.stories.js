@@ -50,7 +50,7 @@ export const Test = {
             async () => {
                 await waitFor(() => {
                     expect(submitButton).not.toBeNull();
-                    expect(submitButton.parentNode).toHaveAttribute('data-invalid');
+                    expect(submitButton).toHaveAttribute('data-invalid');
                 });
             }
         );
@@ -63,12 +63,12 @@ export const Test = {
             await fireEvent.input(numberField.input);
             await new Promise(resolve => setTimeout(resolve, 200));
             await waitFor(() => {
-                expect(submitButton.parentNode).toHaveAttribute('data-invalid');
+                expect(submitButton).toHaveAttribute('data-invalid');
             });
             await new Promise(resolve => setTimeout(resolve, 200));
             numberField.setValue('20');
             await fireEvent.input(textField.input);
-            await waitFor(() => expect(submitButton.parentNode).not.toHaveAttribute('data-invalid'));
+            await waitFor(() => expect(submitButton).not.toHaveAttribute('data-invalid'));
         });
     }
 };

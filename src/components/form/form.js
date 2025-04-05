@@ -30,6 +30,10 @@ class FormComponent extends ArpaElement {
     //////////////////////////////////
     _initialize() {
         this.bind('_onChange', '_onSubmit');
+        if (this.hasAttribute('title')) {
+            this._config.title = this.getProperty('title');
+            this.removeAttribute('title');
+        }
     }
 
     /**
@@ -311,7 +315,8 @@ class FormComponent extends ArpaElement {
     }
 
     renderTitle() {
-        return this.hasTitle() ? html`<form-title zone="form-title"></form-title>` : '';
+        const title = this.getTitle();
+        return this.hasTitle() ? html`<form-title zone="form-title">${title}</form-title>` : '';
     }
 
     renderFooter() {

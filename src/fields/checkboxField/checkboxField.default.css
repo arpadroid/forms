@@ -1,6 +1,7 @@
 .checkboxField {
     position: relative;
     max-height: var(--input-height);
+    padding-bottom: 1rem;
     label {
         cursor: pointer;
         flex: 0;

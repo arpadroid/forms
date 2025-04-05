@@ -8,7 +8,7 @@
 
 import { I18n } from '@arpadroid/i18n';
 import Field from '../field/field.js';
-import { defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
+import { attrString, defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
 
 const html = String.raw;
 class FileField extends Field {
@@ -243,21 +243,26 @@ class FileField extends Field {
     }
 
     renderUploadList(id = this.getHtmlId()) {
-        const { uploadListComponent: list } = this._config;
-        return html`
-            <${list} id="${id}-uploadList" class="fileField__uploadList"> 
+        const { uploadListComponent: list, uploadListIcon = 'publish' } = this._config;
+
+        return html`<${list} ${attrString({
+            id: `${id}-uploadList`,
+            class: 'fileField__uploadList',
+            'title-icon': uploadListIcon
+        })}> 
                 <zone name="title">${this.getProperty('lbl-uploads')}</zone>
-            </${list}>
-        `;
+            </${list}>`;
     }
 
     renderFileList(id = this.getHtmlId()) {
-        const { listComponent: list } = this._config;
-        return html`
-            <${list} id="${id}-fileList" class="fileField__fileList">
-                <zone name="title">${this.getProperty('file-list-label')}</zone>
-            </${list}>
-        `;
+        const { listComponent: list, fileListIcon = 'gallery_thumbnail' } = this._config;
+        return html`<${list} ${attrString({
+            id: `${id}-fileList`,
+            class: 'fileField__fileList',
+            'title-icon': fileListIcon
+        })}>
+            <zone name="title">${this.getProperty('file-list-label')}</zone>
+        </${list}>`;
     }
 
     // #endregion
@@ -277,7 +282,7 @@ class FileField extends Field {
         this.dropArea = this.querySelector('drop-area');
         /** @type {FileFieldInput} */
         this.input = this.getInput();
-        
+
         this.input?.removeEventListener('change', this._onChange);
         this.input?.addEventListener('change', this._onChange);
         this.fileSelectBtn = this.querySelector('.fileField__selectButton');

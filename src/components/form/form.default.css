@@ -17,8 +17,11 @@
 .arpaForm__form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     width: 100%;
+}
+
+.arpaForm__messages {
+    margin-bottom: 1rem;
 }
 
 .arpaForm__messages:empty {

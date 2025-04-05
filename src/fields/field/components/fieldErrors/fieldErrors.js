@@ -17,7 +17,7 @@ class FieldErrors extends ArpaElement {
      * Renders the content.
      */
     render() {
-        this.innerHTML = html`<arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="left">
+        this.innerHTML = html`<arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="top-right" arrow="false">
             <zone name="tooltip-content">
                 <ul class="fieldErrors__list"></ul>
             </zone>

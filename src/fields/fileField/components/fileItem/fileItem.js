@@ -1,6 +1,7 @@
 /**
  * @typedef {import('./fileItem.types').FileItemConfigType} FileItemConfigType
  * @typedef {import('../../fileField.js').default} FileField
+ * @typedef {import('@arpadroid/ui').IconButton} IconButton
  * @typedef {import('../../fileField.types').FileFieldConfigType} FileFieldConfigType
  * @typedef {import('./fileItem.types').FileItemPayloadType} FileItemPayloadType
  */
@@ -19,7 +20,7 @@ class FileItem extends ListItem {
 
     _initialize() {
         super._initialize();
-        this.bind('onDelete', 'onEdit');
+        this.bind('_onDelete', 'onEdit');
     }
 
     /**
@@ -165,7 +166,7 @@ class FileItem extends ListItem {
         return render(this.hasEditButton(), html`<icon-button icon="edit" class="fileItem__editButton"></icon-button>`);
     }
 
-    renderDeleteButton(fieldOnDelete = this.fieldConfig?.onDelete, onDelete = this._config?.onDelete) {
+    renderDeleteButton() {
         return html`<icon-button
             variant="delete"
             class="fileItem__deleteButton iconButton--small"
@@ -187,33 +188,30 @@ class FileItem extends ListItem {
         this.editButtonNode?.addEventListener('click', this.onEdit);
     }
 
-    _initializeDeleteButton() {
-        this.deleteButtonNode = this.querySelector('.fileItem__deleteButton');
-        this.deleteButtonNode?.addEventListener('click', this.onDelete);
+    async _initializeDeleteButton() {
+        /** @type {IconButton | null} */
+        this.deleteButtonComponent = this.querySelector('.fileItem__deleteButton');
+        await this.deleteButtonComponent?.promise;
+        this.deleteButtonNode = this.deleteButtonComponent?.querySelector('button');
+        this.deleteButtonNode?.addEventListener('click', this._onDelete);
     }
 
     //////////////////////////////
     // #region EVENTS
     /////////////////////////////
 
-    onDelete() {
+    async _onDelete() {
         const fieldOnDelete = this.fieldConfig?.onDelete;
         const onDelete = this._config.onDelete;
         if (typeof onDelete === 'function') {
             onDelete(this);
         }
         if (typeof fieldOnDelete === 'function') {
-            /** @type {Promise<unknown> | undefined} */
-            const promise = /** @type {Promise<unknown> | undefined} */ (fieldOnDelete(this));
-            if (promise instanceof Promise) {
-                return promise.then(() => this.delete());
-            }
-            if (promise !== false) {
-                this.delete();
-            }
-            return promise;
+            const rv = await fieldOnDelete(this);
+            rv !== false && this.delete();
+            return rv;
         }
-        // this.remove();
+        this.remove();
     }
 
     onEdit() {

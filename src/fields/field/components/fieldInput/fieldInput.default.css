@@ -1,9 +1,11 @@
 :root {
-    --input-height: 54px;
-    --input-border-radius: 4rem;
+    --input-height: 3.2rem;
+    --input-border-radius: 0.75rem;
+    --input-border-radius-round: var(--input-height);
     --input-padding: 1.2rem;
     --input-icon-padding: 52px;
     --input-bg-color: var(--grey-30);
+    --input-box-shadow: inset 6px 6px 6px var(--grey-150), inset -6px -6px 6px var(--grey-0);
 }
 
 field-input {
@@ -14,9 +16,9 @@ field-input {
 
 .fieldInput {
     background-color: var(--input-bg-color);
-    border-radius: var(--input-border-radius);
+    border-radius: var(--input-border-radius-round);
     border: 2px solid var(--border-color);
-    box-shadow: none;
+    box-shadow: var(--input-box-shadow);
     color: var(--text-color);
     flex: 1 1 auto;
     font-family: var(--primary-font);
@@ -27,11 +29,12 @@ field-input {
     padding-right: var(--input-padding);
     transition: var(--theme-transition);
     width: 100%;
+    border: none;
 
     &:focus,
     &:hover {
         background-color: var(--primary-hilight);
-        border: 2px solid var(--primary-highlight-outline);
+        /* border: 2px solid var(--primary-highlight-outline); */
         outline: none;
     }
 }
@@ -44,5 +47,16 @@ button.fieldInput {
     arpa-icon {
         position: relative;
         top: -1px;
+    }
+}
+
+.fieldInput--compact.fieldInput--compact {
+    padding: 1rem;
+    --input-height: 3rem;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 }

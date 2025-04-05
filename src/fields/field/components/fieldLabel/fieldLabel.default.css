@@ -10,6 +10,8 @@ field-label {
     cursor: pointer;
     align-items: center;
     /* padding: 0 0.5rem; */
+    padding-left: .5rem;
+    
 }
 
 .fieldLabel__required {
@@ -24,14 +26,9 @@ field-label {
 
 .fieldLabel__text {
     flex: 0 1 auto;
-    color: var(--grey-700);
-    font-weight: 600;
-    font-size: 1.1rem;
-    text-decoration: underline;
-    text-decoration-color: var(--grey-150);
-    text-decoration-style: dashed;
-    text-underline-offset: 0.4rem;
-    text-decoration-thickness: 2px;
+    color: var(--grey-600);
+    font-weight: 700;
+    font-size: 1.05rem;
 }
 
 .fieldLabel__icon.fieldLabel__icon {
