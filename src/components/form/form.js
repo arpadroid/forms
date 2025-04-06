@@ -316,7 +316,7 @@ class FormComponent extends ArpaElement {
 
     renderTitle() {
         const title = this.getTitle();
-        return this.hasTitle() ? html`<form-title zone="form-title">${title}</form-title>` : '';
+        return this.hasTitle() ? html`<form-title zone="form-title">${title || ''}</form-title>` : '';
     }
 
     renderFooter() {
