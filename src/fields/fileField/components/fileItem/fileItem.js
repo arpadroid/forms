@@ -59,6 +59,7 @@ class FileItem extends ListItem {
     /////////////////////
 
     _preRender() {
+        super._preRender();
         const ext = this.payload?.extension;
         typeof ext === 'string' && (this.fileType = getFileType(ext));
         this.addTypeClass();
@@ -142,7 +143,7 @@ class FileItem extends ListItem {
                 ${(titleIcon && html`<arpa-icon>${titleIcon}</arpa-icon>`) || ''}
                 <span class="fileItem__name">${title}</span>
             </div>
-            {extension} {metaData}
+            ${this.renderExtension()} ${this.renderMetadata()}
         `;
     }
 
