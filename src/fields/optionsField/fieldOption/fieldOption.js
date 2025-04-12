@@ -4,7 +4,7 @@
  * @typedef {import('@arpadroid/tools').ElementType} ElementType
  * @typedef {import('../../field/field.js').FieldInput} FieldInput
  */
-import { mechanize, appendNodes, isIOsSafari, defineCustomElement } from '@arpadroid/tools';
+import { mechanize, appendNodes, defineCustomElement } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 
 const html = String.raw;
@@ -84,11 +84,7 @@ class FieldOption extends ArpaElement {
     async _initializeNodes() {
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = this.querySelector('.fieldOption__content');
-        const childNodes = isIOsSafari()
-            ? this._childNodes
-            : this._childNodes?.filter((/** @type {ElementType}*/ node) => !node?.tagName?.toLowerCase().includes('dialog'));
-
-        this.contentNode && appendNodes(this.contentNode, childNodes);
+        this.contentNode && appendNodes(this.contentNode, this._childNodes);
         return true;
     }
 
