@@ -4,7 +4,7 @@
     --input-border-radius-round: var(--input-height);
     --input-padding: 1.2rem;
     --input-icon-padding: 52px;
-    --input-bg-color: var(--grey-30);
+    --input-bg-color: var(--color-background);
     --input-box-shadow: inset 6px 6px 6px var(--grey-150), inset -6px -6px 6px var(--grey-0);
 }
 

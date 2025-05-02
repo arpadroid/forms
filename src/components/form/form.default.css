@@ -48,7 +48,8 @@
 }
 
 .arpaForm__fields:has(.arpaForm__column) {
-    gap: 1.5rem;
+    gap: 1.5rem 1.5rem;
+    justify-content: space-between;
 }
 
 /**
@@ -102,20 +103,20 @@
         display: flex;
         flex-wrap: wrap;
         > .groupField {
-            max-width: calc(50% - 1rem);
+            max-width: calc(50% - 2rem);
             flex: 1 1 auto;
         }
     }
 
     .arpaForm__column {
-        width: calc(50% - 12px);
+        width: calc(50% - 1.5rem);
     }
 }
 
 @container arpa-form (max-width: 980px) {
-    .arpaForm__fields {
+    .arpaForm__fields.arpaForm__fields {
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 0 1.5rem;
     }
     .arpaForm__column {
         width: 100%;
