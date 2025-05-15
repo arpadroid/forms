@@ -70,7 +70,6 @@
  */
 
 .arpaFrom__footer {
-    background-color: var(--overlay);
     bottom: 0;
     display: flex;
     margin-left: -1rem;

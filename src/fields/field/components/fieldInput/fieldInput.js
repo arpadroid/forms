@@ -51,14 +51,14 @@ class FieldInput extends ArpaElement {
     }
 
     _getTemplate() {
-        const attr = mergeObjects(this.inputAttributes, {
+        const attr = mergeObjects({
             class: this.getProperty('input-class'),
             id: this.field?.getHtmlId(),
             name: this.field?.getId(),
             disabled: this.field?.isDisabled(),
             placeholder: this.field?.getPlaceholder(),
             value: this.field?.getValue()?.toString(),
-        });
+        }, this.inputAttributes);
 
         return `<input ${attrString(attr)} />`;
     }

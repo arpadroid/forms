@@ -26,7 +26,6 @@ class RangeField extends Field {
                 value="{value}"
                 min="{min}"
                 max="{max}"
-                step="{step}"
             >
             </field-input>`
         });
@@ -66,6 +65,7 @@ class RangeField extends Field {
 
     async _initializeNodes() {
         await super._initializeNodes();
+        this.input?.setAttribute('step', this.getProperty('step') || '1');
         this._initializeTextInput();
         return true;
     }
