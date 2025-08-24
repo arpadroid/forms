@@ -245,7 +245,7 @@ class Field extends ArpaElement {
     renderTooltip() {
         return this.hasContent('tooltip')
             ? html`<arpa-tooltip class="arpaField__tooltip" icon="info" position="{tooltipPosition}" zone="tooltip">
-                  <zone name="tooltip-content">${this.getTooltip() || ''}</zone>
+                  <zone name="tooltip-content">${this.getTooltip()}</zone>
               </arpa-tooltip>`
             : '';
     }
