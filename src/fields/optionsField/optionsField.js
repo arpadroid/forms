@@ -6,7 +6,7 @@
  */
 import { attr, defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
 import Field from '../field/field.js';
-import { processTemplate } from '@arpadroid/ui';
+import { ArpaElement, processTemplate } from '@arpadroid/ui';
 
 const html = String.raw;
 
@@ -319,14 +319,14 @@ class OptionsField extends Field {
     /**
      * Renders an option for the options field.
      * @param {FieldOptionConfigType} option - The option to render.
-     * @returns {FieldOption} The rendered option.
+     * @returns {FieldOption | null} The rendered option.
      */
     _renderOption(option) {
         const { optionTemplate = '' } = this._config;
         const optionComponent = this.getProperty('option-component');
-        const template = processTemplate(optionTemplate, { optionComponent }, this);
-        /** @type {FieldOption} */
-        const optionNode = renderNode(template);
+        const template = processTemplate(optionTemplate, { optionComponent }, /** @type {ArpaElement} */ (this));
+        
+        const optionNode = /** @type {FieldOption | null} */ (renderNode(template));
         if (optionNode instanceof HTMLElement) {
             attr(optionNode, option);
             this.optionsNode?.appendChild(optionNode);

@@ -7,6 +7,7 @@
  * @typedef {import('./components/fieldInput/fieldInput.types.js').FieldInputType} FieldInputType
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  * @typedef {import('./components/fieldLabel/fieldLabel.js').default} FieldLabel
+ * @typedef {import('@arpadroid/ui').ZoneToolPlaceZoneType} ZoneToolPlaceZoneType
  */
 import { attrString, defineCustomElement, dummyListener, dummySignal, mergeObjects } from '@arpadroid/tools';
 import { observerMixin } from '@arpadroid/tools';
@@ -251,15 +252,17 @@ class Field extends ArpaElement {
     }
 
     /**
-     * Manual allocation of zones.
-     * @param {import('@arpadroid/ui').ZoneToolPlaceZoneType} payload
-     * @returns {boolean | undefined}
+     * Handles a lost zone.
+     * @param {ZoneToolPlaceZoneType} payload
+     * @returns {boolean | ((payload: ZoneToolPlaceZoneType) => any) | undefined}
      */
-    _onLostZone({ zoneName, zone }) {
+    _onLostZone(payload) {
+        const { zoneName, zone } = payload;
         if (zoneName === 'tooltip') {
             zone?.childNodes?.length && this.tooltip?.contentNode?.append(...(zone?.childNodes || []));
             return true;
         }
+        return false;
     }
 
     renderErrors() {
@@ -483,7 +486,8 @@ class Field extends ArpaElement {
      */
     getValue() {
         const input = this.getInput();
-        return this.preProcessValue( // @ts-ignore
+        return this.preProcessValue(
+            // @ts-ignore
             input?.value ?? input?.getAttribute('value') ?? this.getProperty('value') ?? this.value ?? ''
         );
     }

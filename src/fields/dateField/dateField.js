@@ -37,7 +37,7 @@ class DateField extends Field {
     ////////////////////////////
     // #region LIFECYCLE
     ///////////////////////////
-    
+
     async _initializeNodes() {
         await super._initializeNodes();
         const min = this.getProperty('min');
@@ -51,7 +51,7 @@ class DateField extends Field {
         }
         if (!this.calendarButton) {
             this.calendarButton = this.renderCalendarButton();
-            this.inputMask?.addRhs('calendarButton', this.calendarButton);
+            this.calendarButton && this.inputMask?.addRhs('calendarButton', this.calendarButton);
         }
         return true;
     }
@@ -136,15 +136,15 @@ class DateField extends Field {
 
     /**
      * Renders the calendar button for the date field.
-     * @returns {HTMLButtonElement}
+     * @returns {HTMLButtonElement | null}
      */
     renderCalendarButton() {
         const label = I18n.getText(`${this.getI18nKey()}.txtShowPicker`);
         const buttonHTML = html`
             <icon-button label="${label}" variant="minimal" tooltip-position="left"> calendar_month </icon-button>
         `;
-        const button = renderNode(buttonHTML);
-        button.addEventListener('click', () => this.showPicker());
+        const button = /** @type {HTMLButtonElement | null} */ (renderNode(buttonHTML));
+        button?.addEventListener('click', () => this.showPicker());
         return button;
     }
 

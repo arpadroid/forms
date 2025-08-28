@@ -75,19 +75,21 @@ class PasswordField extends TextField {
 
     /**
      * Renders the visibility button for toggling password visibility.
-     * @returns {IconButton}
+     * @returns {IconButton | null}
      */
     renderVisibilityButton() {
         const { lblShowPassword } = this._config;
-        const button = renderNode(
-            html`<icon-button
-                icon="visibility"
-                label="${lblShowPassword}"
-                variant="minimal"
-                tooltip-position="left"
-            ></icon-button>`
+        const button = /** @type {IconButton | null} */ (
+            renderNode(
+                html`<icon-button
+                    icon="visibility"
+                    label="${lblShowPassword}"
+                    variant="minimal"
+                    tooltip-position="left"
+                ></icon-button>`
+            )
         );
-        button.addEventListener('click', () => this.togglePasswordVisibility());
+        button?.addEventListener('click', () => this.togglePasswordVisibility());
         return button;
     }
 
@@ -101,9 +103,9 @@ class PasswordField extends TextField {
             this._initializeConfirmField();
             if (!this.visButton) {
                 this.visButton = this.renderVisibilityButton();
-                this.inputMask?.addRhs('visibilityButton', this.visButton);
+                this.visButton && this.inputMask?.addRhs('visibilityButton', this.visButton);
             }
-        });  
+        });
         return true;
     }
 

@@ -1,7 +1,6 @@
 /**
  * @typedef {import('../../field/field.js').default} Field
  * @typedef {import('./fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
- * @typedef {import('@arpadroid/tools').ElementType} ElementType
  * @typedef {import('../../field/field.js').FieldInput} FieldInput
  */
 import { mechanize, appendNodes, defineCustomElement } from '@arpadroid/tools';

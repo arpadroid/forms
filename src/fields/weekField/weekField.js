@@ -31,7 +31,7 @@ class WeekField extends TextField {
         await this.onReady();
         super._onInitialized();
         this.weekButton = this.renderWeekButton();
-        this.inputMask?.addRhs('timeButton', this.weekButton);
+        this.weekButton && this.inputMask?.addRhs('timeButton', this.weekButton);
     }
 
     renderWeekButton() {
@@ -39,7 +39,7 @@ class WeekField extends TextField {
         const button = renderNode(
             html`<icon-button icon="date_range" label="${pickerLabel}" tooltip-position="left "variant="minimal"></icon-button>`
         );
-        button.addEventListener('click', () => this.input?.showPicker());
+        button?.addEventListener('click', () => this.input?.showPicker());
         return button;
     }
 

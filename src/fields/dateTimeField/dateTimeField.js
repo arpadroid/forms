@@ -27,11 +27,11 @@ class DateTimeField extends DateField {
 
     /**
      * Renders the calendar button for the DateTimeField.
-     * @returns {HTMLButtonElement} The rendered calendar button element.
+     * @returns {HTMLButtonElement | null} The rendered calendar button element.
      */
     renderCalendarButton() {
         const button = super.renderCalendarButton();
-        button.setAttribute('icon', 'calendar_clock');
+        button?.setAttribute('icon', 'calendar_clock');
         return button;
     }
 }

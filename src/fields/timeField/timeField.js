@@ -41,7 +41,7 @@ class TimeField extends TextField {
         await super._initializeNodes();
         if (!this.timeButton) {
             this.timeButton = this.renderTimeButton();
-            this.inputMask?.addRhs('timeButton', this.timeButton);
+            this.timeButton && this.inputMask?.addRhs('timeButton', this.timeButton);
         }
         return true;
     }
@@ -59,7 +59,7 @@ class TimeField extends TextField {
         const button = renderNode(
             html`<icon-button icon="schedule" label="${pickerLabel}" tooltip-position="left" variant="minimal"></icon-button>`
         );
-        button.addEventListener('click', () => this.input?.showPicker());
+        button?.addEventListener('click', () => this.input?.showPicker());
         return button;
     }
 

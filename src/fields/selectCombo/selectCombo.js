@@ -82,7 +82,8 @@ class SelectCombo extends SelectField {
         const newInput = renderNode(this.renderComboInput());
         if (oldInput && newInput) {
             oldInput.replaceWith(newInput);
-            this.searchInput = newInput;
+            
+            this.searchInput = /** @type {HTMLInputElement |  null} */ (newInput);
             this._initializeSearch();
             this._initializeInputCombo();
         }
@@ -113,7 +114,7 @@ class SelectCombo extends SelectField {
     }
 
     _initializeSearchInput() {
-        this.searchInput = /** @type {HTMLInputElement | null} */ (this.querySelector('input.optionsField__searchInput'));
+        this.searchInput = /** @type {HTMLInputElement |  null} */ (this.querySelector('input.optionsField__searchInput'));
         if (this.searchInput) {
             this.searchInput.removeEventListener('focus', this.onSearchInputFocus);
             this.searchInput.addEventListener('focus', this.onSearchInputFocus);
