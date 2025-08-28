@@ -252,7 +252,7 @@ class Field extends ArpaElement {
 
     /**
      * Manual allocation of zones.
-     * @param {import('@arpadroid/tools').ZoneToolPlaceZoneType} payload
+     * @param {import('@arpadroid/ui').ZoneToolPlaceZoneType} payload
      * @returns {boolean | undefined}
      */
     _onLostZone({ zoneName, zone }) {
