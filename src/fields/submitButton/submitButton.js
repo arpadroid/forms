@@ -34,7 +34,7 @@ class SubmitButton extends Button {
     _handleButtonState() {
         const isValid = this.form?._validate();
         const iconInvalid = this.getProperty('icon-invalid');
-        const icon = this.form?.getProperty('submit-icon') || this.getIcon();
+        const icon = this.form?.getProperty('submit-icon') || this.getProperty('icon');
         if (isValid) {
             this.button?.removeAttribute('data-invalid');
             icon && this.setIcon(icon);

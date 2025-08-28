@@ -3,7 +3,8 @@
  * @typedef {import('../../radioField/radioField.js').default} RadioField
  */
 import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
-import { defineCustomElement, processTemplate } from '@arpadroid/tools';
+import { defineCustomElement } from '@arpadroid/tools';
+import { processTemplate } from '@arpadroid/ui';
 
 const html = String.raw;
 
@@ -45,7 +46,7 @@ class RadioOption extends FieldOption {
     renderInput(type = 'radio', name = this.field?.getId(), optionId = this.getOptionId(), value = this.getProperty('value')) {
         const checked = this.field?.getValue() === value ? 'checked' : '';
         const template = html`<input type="${type}" id="{optionId}" name="{name}" value="{value}" {checked} />`;
-        return processTemplate(template, { name, optionId, value, checked });
+        return processTemplate(template, { name, optionId, value, checked }, this);
     }
 
     /**

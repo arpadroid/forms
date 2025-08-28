@@ -4,8 +4,9 @@
  * @typedef {import('./fieldOption/fieldOption.js').default} FieldOption
  * @typedef {import('./optionsField.types').OptionsNodeType} OptionsNodeType
  */
-import { attr, defineCustomElement, mergeObjects, processTemplate, renderNode } from '@arpadroid/tools';
+import { attr, defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
 import Field from '../field/field.js';
+import { processTemplate } from '@arpadroid/ui';
 
 const html = String.raw;
 
@@ -323,7 +324,7 @@ class OptionsField extends Field {
     _renderOption(option) {
         const { optionTemplate = '' } = this._config;
         const optionComponent = this.getProperty('option-component');
-        const template = processTemplate(optionTemplate, { optionComponent });
+        const template = processTemplate(optionTemplate, { optionComponent }, this);
         /** @type {FieldOption} */
         const optionNode = renderNode(template);
         if (optionNode instanceof HTMLElement) {
