@@ -228,7 +228,7 @@ class FieldValidator {
      * @param {unknown} value - The value to validate.
      * @returns {boolean} - True if the value is a valid color, false otherwise.
      */
-    color(value) { // @ts-ignore
+    color(value) {
         const field = /** @type {ColorField} */ (this.field);
         if (typeof value === 'undefined') {
             value = field.getValue();
