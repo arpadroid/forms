@@ -137,10 +137,10 @@ class FileItem extends ListItem {
         };
     }
 
-    renderTitleContent(title = this.getTitle() || '', titleIcon = this.getProperty('title-icon')) {
+    renderTitleContent(title = this.getTitle() || '') {
         return html`
             <div class="fileItem__titleContent">
-                ${(titleIcon && html`<arpa-icon>${titleIcon}</arpa-icon>`) || ''}
+                {titleIcon}
                 <span class="fileItem__name">${title}</span>
             </div>
             ${this.renderExtension()} ${this.renderMetadata()}

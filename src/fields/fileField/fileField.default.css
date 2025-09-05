@@ -23,7 +23,7 @@ image-field {
     }
 
     .fileField__uploadList {
-        .arpaList__title {
+        .arpaList__titleWrapper {
             arpa-icon {
                 color: var(--color-primary);
             }
