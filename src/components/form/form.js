@@ -5,7 +5,7 @@
  * @typedef {import('./form.types').FormSubmitResponseType} FormSubmitResponseType
  * @typedef {import('../../fields/field/field').default} FieldComponent
  * @typedef {import('@arpadroid/messages').Messages} Messages
- * @typedef {import('@arpadroid/resources').MessageResource} MessageResource
+ * @typedef {import('@arpadroid/resources').ListResource} ListResource
  */
 import { mergeObjects, copyObjectProps, appendNodes, defineCustomElement } from '@arpadroid/tools';
 import { observerMixin, renderNode, render, dummySignal, dummyListener, dummyOff } from '@arpadroid/tools';
@@ -95,8 +95,6 @@ class FormComponent extends ArpaElement {
         await customElements.whenDefined('arpa-messages');
         /** @type {Messages | null} */
         this.messages = this.querySelector('arpa-messages');
-        /** @type {MessageResource} */
-        this.messageResource = this.messages?.resource;
     }
 
     _initializeSubmit() {
@@ -231,7 +229,7 @@ class FormComponent extends ArpaElement {
 
     reset() {
         // !this.hasInitialValues() && this.render();
-        this.messageResource?.deleteMessages();
+        this.messages?.deleteMessages();
     }
 
     /**
@@ -357,12 +355,9 @@ class FormComponent extends ArpaElement {
         if (this._isValid) {
             this.classList.remove('formComponent--invalid');
         } else {
-            this.messageResource?.deleteMessages();
+            this.messages?.deleteMessages();
             const msg = this.getErrorMessage();
-            msg &&
-                this.messageResource?.error(msg, {
-                    canClose: true
-                });
+            msg && this.messages?.error(msg, { canClose: true });
             this.classList.add('formComponent--invalid');
         }
         return this._isValid;
@@ -448,7 +443,7 @@ class FormComponent extends ArpaElement {
      * @returns {Promise<FormSubmitResponseType> | undefined | boolean}
      */
     _callOnSubmit() {
-        this?.messageResource?.deleteMessages();
+        this?.messages?.deleteMessages();
         const onSubmit = this.getOnSubmit();
         if (typeof onSubmit === 'function') {
             const payload = this._values;
@@ -492,7 +487,7 @@ class FormComponent extends ArpaElement {
     _onSubmitSuccess() {
         this.getFields().forEach(field => field.onSubmitSuccess());
         const successMessage = this.getSuccessMessage();
-        successMessage && this.messageResource?.success(successMessage, { canClose: true });
+        successMessage && this.messages?.success(successMessage, { canClose: true });
     }
 
     startLoading() {
