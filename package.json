@@ -6,10 +6,11 @@
     "types": "./dist/@types/types.compiled.d.ts",
     "type": "module",
     "scripts": {
-        "build": "node ./node_modules/@arpadroid/module/scripts/build-project.mjs --project=forms --minify",
-        "prepublish": "npm run build",
-        "storybook": "npm run build -- --storybook=6005 --watch",
-        "test": "node ./node_modules/@arpadroid/module/scripts/test-project.mjs --project=forms --storybook --jest --port=6005"
+        "build": "arpadroid-build --minify",
+        "dev": "arpadroid-build --watch --storybook=6005",
+        "clean": "rm -rf ./dist ./node_modules package-lock.json",
+        "test": "arpadroid-test --storybook --jest --port=6005",
+        "test:ci": "npm run test -- --ci"
     },
     "repository": {
         "type": "git",
@@ -40,7 +41,7 @@
     },
     "peerDependencies": {
         "@arpadroid/module": "file:../module",
-        "@arpadroid/stylesheet-bundler": "file:../stylesheet-bundler",
+        "@arpadroid/style-bun": "file:../style-bun",
         "@arpadroid/context": "file:../context",
         "@arpadroid/i18n": "file:../i18n",
         "@arpadroid/lists": "file:../lists",
