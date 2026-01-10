@@ -8,7 +8,7 @@ import { createImageFileFromURL } from '../../test/mocks/imageMock.js';
 
 const html = String.raw;
 // eslint-disable-next-line sonarjs/no-clear-text-protocols
-const assetsURL = 'http://www.local/arpadroid/forms/assets';
+const assetsURL = '/test-assets';
 
 const ImageFieldStory = {
     title: 'Forms/Fields/Image',
@@ -45,9 +45,9 @@ export const Test = {
         const uploadList = canvasElement.querySelector('.fileField__uploadList');
         const i18nKey = field.i18nKey;
 
-        const galaxyImage = await createImageFileFromURL('/assets/galaxy.jpg', 'galaxy.jpg');
-        const flowerImage = await createImageFileFromURL('/assets/flower.jpg', 'flower.jpg');
-        const planeImage = await createImageFileFromURL('/assets/plane.jpg', 'plane.jpg');
+        const galaxyImage = await createImageFileFromURL('/test-assets/galaxy.jpg', 'galaxy.jpg');
+        const flowerImage = await createImageFileFromURL('/test-assets/flower.jpg', 'flower.jpg');
+        const planeImage = await createImageFileFromURL('/test-assets/plane.jpg', 'plane.jpg');
 
         await step('Renders the field', async () => {
             canvas.getByText('Image field');
