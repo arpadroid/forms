@@ -141,7 +141,7 @@ class DateField extends Field {
     renderCalendarButton() {
         const label = I18n.getText(`${this.getI18nKey()}.txtShowPicker`);
         const buttonHTML = html`
-            <icon-button label="${label}" variant="minimal" tooltip-position="left"> calendar_month </icon-button>
+            <icon-button label="${label}" variant="minimal" tooltip-position="left" icon="calendar_month"></icon-button>
         `;
         const button = /** @type {HTMLButtonElement | null} */ (renderNode(buttonHTML));
         button?.addEventListener('click', () => this.showPicker());

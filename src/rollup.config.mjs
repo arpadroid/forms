@@ -1,6 +1,4 @@
 import { getBuild, isSlim } from '@arpadroid/module';
-const { build = {} } =
-    getBuild('forms', 'uiComponent', {
-        external: (isSlim() && ['lists']) || undefined
-    }) || {};
+const external = (isSlim() && ['lists']) || undefined;
+const { build = {} } = getBuild('forms', { external });
 export default build;
