@@ -32,16 +32,10 @@
     "homepage": "https://github.com/arpadroid/forms#readme",
     "devDependencies": {
         "@babel/core": "^7.24",
-        "@babel/plugin-proposal-optional-chaining-assign": "^7.23.7",
-        "@babel/plugin-syntax-import-assertions": "^7.23.3",
-        "@babel/preset-env": "^7.23.9",
-        "babel-loader": "^9.1.3",
-        "dts-bundle-generator": "^9.3.1",
-        "jsdoc-to-markdown": "^8.0.1"
+        "@babel/preset-env": "^7.23.9"
     },
     "peerDependencies": {
         "@arpadroid/module": "file:../module",
-        "@arpadroid/style-bun": "file:../style-bun",
         "@arpadroid/context": "file:../context",
         "@arpadroid/i18n": "file:../i18n",
         "@arpadroid/lists": "file:../lists",

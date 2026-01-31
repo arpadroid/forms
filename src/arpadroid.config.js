@@ -1,3 +1,4 @@
+/** @type {import('@arpadroid/module').BuildConfigType} */
 const config = {
     deps: ['messages'],
     style_patterns: 'fields/**/*',
