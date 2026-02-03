@@ -1,3 +1,4 @@
+// @ts-ignore
 import { bootstrapDecorator } from '@arpadroid/module/storybook/decorators';
 import { setService } from '@arpadroid/context';
 import { Router } from '@arpadroid/services';
@@ -11,7 +12,7 @@ export default {
         }
     },
     decorators: [
-        bootstrapDecorator(() => {
+        bootstrapDecorator(() => { // @ts-ignore
             setService('router', new Router());
         })
     ]
