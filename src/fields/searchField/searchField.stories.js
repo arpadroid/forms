@@ -1,17 +1,24 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('./fieldInterface.js').FieldConfigType} FieldConfigType
+ * @typedef {import('../field/field.types').FieldConfigType} FieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  */
+
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent } from '@storybook/test';
+import { waitFor, expect, fireEvent } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
+/** @type {Meta} */
 const SearchFieldStory = {
     title: 'Forms/Fields/Search',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'search-field')
+    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'search-field')
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -25,10 +32,11 @@ export const Default = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     args: Default.args,
     parameters: { ...FieldTest.parameters },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const { input, submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
 
         await step('Renders the field', async () => {
@@ -49,4 +57,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default SearchFieldStory;

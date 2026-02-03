@@ -1,18 +1,26 @@
+/**
+ * @typedef {import('./selectCombo.js').default} SelectCombo
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
+
 /* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, userEvent, fireEvent } from '@storybook/test';
+import { waitFor, expect, userEvent, fireEvent } from 'storybook/test';
 import { CountryOptions } from '../../demo/demoFormOptions.js';
 
 const html = String.raw;
 const SelectComboStory = {
     title: 'Forms/Fields/SelectCombo',
     tags: [],
-    render: (args, story) => {
+    render: (/** @type {Args} */ args, /** @type {any} */ story) => {
         delete args.options;
         return FieldStory.render(args, story, 'select-combo', FieldStory.renderFieldContent, SelectComboStory.renderScript);
     },
-    renderScript: (args, story) => {
+    renderScript: (/** @type {Args} */ args, /** @type {any} */ story) => {
         return story.name === 'Test'
             ? ''
             : html`
@@ -39,7 +47,7 @@ export const Default = {
         debounceSearch: { control: 'number', table: { category: 'Select Combo Props' } },
         ...FieldStory.getArgTypes('Field Props')
     },
-    play: async ({ canvasElement }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { field } = setup;
         await customElements.whenDefined('select-combo');
@@ -64,7 +72,7 @@ export const Test = {
         debounceSearch: 1,
         id: 'select-combo'
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { field, submitButton, canvas, onErrorMock, onChangeMock } = setup;
         let { input } = setup;
@@ -80,7 +88,7 @@ export const Test = {
         });
 
         await step('Submits the form without selecting an option and receives required error', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -97,7 +105,7 @@ export const Test = {
                 expect(field.getValue()).toBe('es');
                 expect(input).toHaveTextContent('Spain');
             });
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 /** @todo Fix flaky test. */

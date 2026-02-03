@@ -1,13 +1,21 @@
+/**
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, fireEvent } from '@storybook/test';
+import { waitFor, expect, fireEvent } from 'storybook/test';
 
+/** @type {Meta} */
 const CheckboxFieldStory = {
     title: 'Forms/Fields/Checkbox',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'checkbox-field')
+    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'checkbox-field')
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -20,6 +28,7 @@ export const Default = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
@@ -27,7 +36,7 @@ export const Test = {
         required: true,
         value: 'option1, option2'
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } =
             await FieldTest.playSetup(canvasElement);
 
@@ -37,11 +46,11 @@ export const Test = {
         await step('Renders the checkbox field.', async () => {
             expect(label).toBeTruthy();
             expect(icon).toBeTruthy();
-            expect(input.checked).toBe(false);
+            expect(input?.checked).toBe(false);
         });
 
         await step('Gets an error because the field is required.', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).not.toHaveBeenCalled();
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
@@ -60,7 +69,7 @@ export const Test = {
         });
 
         await step('Submits the form and receives expected value.', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'checkbox-field': true });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -69,4 +78,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default CheckboxFieldStory;

@@ -1,13 +1,21 @@
+/**
+ * @typedef {import('./radioField.js').default} RadioField
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
+
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect } from '@storybook/test';
+import { waitFor, expect } from 'storybook/test';
 
 const html = String.raw;
 
 const RadioFieldStory = {
     title: 'Forms/Fields/Radio',
     tags: [],
-    render: (args, story) =>
+    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
         FieldStory.render(args, story, 'radio-field', RadioFieldStory.renderFieldContent, FieldStory.renderScript),
     renderFieldContent: () => html`
         <radio-option value="option1" label="Option 1"></radio-option>
@@ -34,7 +42,7 @@ export const Test = {
     args: {
         ...Default.args
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = await FieldTest.playSetup(canvasElement);
 
         await step('Renders the field with three radio options', async () => {
@@ -47,7 +55,7 @@ export const Test = {
         });
 
         await step('Submits the form without selecting a radio option', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -59,11 +67,11 @@ export const Test = {
             const options = field.getOptions();
             options[1].input.click();
             await waitFor(() => expect(onChangeMock).toHaveBeenCalledWith('option2', field, expect.anything()));
-            expect(options[1].input).toBeChecked(true);
+            expect(options[1].input).toBeChecked();
         });
 
         await step('Submits the form with the selected radio option', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => expect(onSubmitMock).toHaveBeenCalled());
             expect(onSubmitMock).toHaveBeenCalledWith({ 'radio-field': 'option2' });
         });

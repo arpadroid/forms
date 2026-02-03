@@ -1,8 +1,15 @@
-import { I18n } from '@arpadroid/i18n';
-import { formatBytes } from '@arpadroid/tools';
+/**
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
+
+import { expect, fireEvent, waitFor } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import FileFieldStory from '../fileField/fileField.stories.js';
-import { waitFor, expect, fireEvent } from '@storybook/test';
+import { formatBytes } from '@arpadroid/tools';
+import { I18n } from '@arpadroid/i18n';
 import { TextFileSmall } from '../../test/mocks/fileMock.js';
 import { createImageFileFromURL } from '../../test/mocks/imageMock.js';
 
@@ -10,13 +17,16 @@ const html = String.raw;
 // eslint-disable-next-line sonarjs/no-clear-text-protocols
 const assetsURL = '/test-assets';
 
+/** @type {Meta} */
 const ImageFieldStory = {
     title: 'Forms/Fields/Image',
     tags: [],
-    render: (args, story) =>
+    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
         FieldStory.render(args, story, 'image-field', ImageFieldStory.renderFieldContent, FileFieldStory.renderScript),
     renderFieldContent: () => html`<image-item src="${assetsURL}/girl.jpg"></image-item>`
 };
+
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -36,7 +46,7 @@ delete Default.args.extensions;
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: { ...Default.args, id: 'image-field-test' },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } = await FieldTest.playSetup(
             canvasElement
         );
@@ -89,7 +99,7 @@ export const Test = {
         });
 
         await step('Submits the form and checks the file is uploaded.', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList.listResource.getItems();
@@ -121,7 +131,7 @@ export const Test = {
                 expect(canvas.getByText(formatBytes(planeImage.size))).toBeInTheDocument();
                 expect(canvas.getByText(formatBytes(flowerImage.size))).toBeInTheDocument();
             });
-            submitButton.click();
+            submitButton?.click();
 
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'image-field-test': [planeImage, flowerImage] });

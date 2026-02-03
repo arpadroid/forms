@@ -1,12 +1,20 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+/**
+ * @typedef {import('./dateField.js').default} DateField
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect } from '@storybook/test';
+import { waitFor, expect } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 const category = 'Date Field Props';
+/** @type {Meta} */
 const DateFieldStory = {
     title: 'Forms/Fields/Date',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'date-field'),
+    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'date-field'),
     getArgTypes: () => {
         return {
             format: {
@@ -42,8 +50,7 @@ const DateFieldStory = {
         };
     }
 };
-
-export const Default = {
+/** @type {StoryObj} */ export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: DateFieldStory.getArgTypes(),
@@ -53,6 +60,7 @@ export const Default = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
@@ -60,11 +68,11 @@ export const Test = {
         required: true,
         value: '12 June 2021'
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const { submitButton, canvas, onErrorMock, onSubmitMock, field, input } = await FieldTest.playSetup(canvasElement);
 
         await step('Renders the date field with default value', async () => {
-            expect(input.value).toBe('2021-06-12');
+            expect(input?.value).toBe('2021-06-12');
         });
 
         await step('Focuses on the picker button and displays label', async () => {
@@ -77,20 +85,20 @@ export const Test = {
 
         await step('Sets values in date and string formats.', async () => {
             field.setValue('12 Dec 2026');
-            expect(input.value).toBe('2026-12-12');
+            expect(input?.value).toBe('2026-12-12');
             field.setValue(new Date('12 Jan 2028'));
-            expect(input.value).toBe('2028-01-12');
+            expect(input?.value).toBe('2028-01-12');
         });
 
         await step('Submits form with different output formats and checks for expected submission values', async () => {
             field.setValue('1 October 1983');
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '1 Oct 1983' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
             field.setValue(new Date('17 July 1984'));
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '17 Jul 1984' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -102,7 +110,7 @@ export const Test = {
             async () => {
                 field.setAttribute('disable-past', true);
                 field.setValue('31 Feb 1900');
-                submitButton.click();
+                submitButton?.click();
                 await waitFor(() => {
                     canvas.getByText(I18n.getText('forms.fields.date.errPastDisabled'));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -111,7 +119,7 @@ export const Test = {
 
                 field.setAttribute('disable-future', true);
                 field.setValue('1 Jan 3000');
-                submitButton.click();
+                submitButton?.click();
                 await waitFor(() => {
                     canvas.getByText(I18n.getText('forms.fields.date.errFutureDisabled'));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -126,7 +134,7 @@ export const Test = {
             field.setAttribute('min', '1 Jan 2000');
             field.setAttribute('max', '31 Dec 2020');
             field.setValue('1 Jan 1999');
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.date.errMinDate', { date: '1 Jan 2000' }));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -134,7 +142,7 @@ export const Test = {
             });
 
             field.setValue('31 Dec 2021');
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.date.errMaxDate', { date: '31 Dec 2020' }));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -144,7 +152,7 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             field.setValue(new Date('30 December 2020'));
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '30 Dec 2020' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -153,4 +161,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default DateFieldStory;

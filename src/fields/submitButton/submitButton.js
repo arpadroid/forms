@@ -27,7 +27,6 @@ class SubmitButton extends Button {
         /** @type {import('../field/field').FormComponent | null} */
         this.form = this.closest('arpa-form');
         this.form?.on('change', this._handleButtonState);
-        console.log('Submit button initialized', this.button);
         return true;
     }
 

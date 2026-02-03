@@ -1,15 +1,23 @@
-/** @typedef {import('./optionsField.js').default} OptionsField */
+/**
+ * @typedef {import('./optionsField.js').default} OptionsField
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
+
 /* eslint-disable sonarjs/no-duplicate-string */
+import { expect, fn, waitFor } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, fn } from '@storybook/test';
 
 const html = String.raw;
 
+/** @type {Meta} */
 const OptionsFieldStory = {
     title: 'Forms/Fields/Options',
     tags: [],
-    render: (args, story) =>
-        FieldStory.render(args, story, 'options-field', OptionsFieldStory.renderFieldContent, OptionsFieldStory.renderScript),
+    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
+        FieldStory.render(args, story, 'options-field', OptionsFieldStory.renderFieldContent),
     renderFieldContent: () => html`
         <field-option value="option1" label="Option 1"></field-option>
         <field-option value="option2" label="Option 2"></field-option>
@@ -35,6 +43,7 @@ const OptionsFieldStory = {
     })
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -47,7 +56,7 @@ export const Test = {
     args: {
         ...Default.args
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { canvas } = setup;
         /** @type {OptionsField} */

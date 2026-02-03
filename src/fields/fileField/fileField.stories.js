@@ -1,24 +1,32 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { I18n } from '@arpadroid/i18n';
-import { formatBytes } from '@arpadroid/tools';
+/**
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
+
+import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, fireEvent, fn, userEvent } from '@storybook/test';
-import { action } from '@storybook/addon-actions';
+import { formatBytes } from '@arpadroid/tools';
+import { I18n } from '@arpadroid/i18n';
 import { EmptyImage } from '../../test/mocks/imageMock.js';
 import { TextFileLarge, TextFileMock, TextFileMock2, TextFileMock3, TextFileSmall } from '../../test/mocks/fileMock.js';
+import { action } from 'storybook/actions';
 
 const html = String.raw;
 
+/** @type {Meta} */
 const FileFieldStory = {
     title: 'Forms/Fields/File',
     tags: [],
-    render: (args, story) =>
+    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
         FieldStory.render(args, story, 'file-field', FileFieldStory.renderFieldContent, FileFieldStory.renderScript),
     renderFieldContent: () => html`
         <file-item size="10000" src="http://localhost:8000/demo/assets/The Strange Case of Dr Jekyll and Mr Hyde.txt">
         </file-item>
     `,
-    renderScript: (args, story) => {
+    renderScript: (/** @type {Args} */ args, /** @type {any} */ story) => {
         if (story.name === 'Test') {
             return '';
         }
@@ -111,7 +119,7 @@ export const Test = {
         minSize: 0.0001,
         maxSize: 0.0002
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } = await FieldTest.playSetup(
             canvasElement
         );
@@ -140,7 +148,7 @@ export const Test = {
         });
 
         await step('Submits the form without a file and expects an error', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 const errorContainer = field.querySelector('.fieldErrors__list li');
                 expect(errorContainer).toHaveTextContent(I18n.getText('forms.field.errRequired'));
@@ -172,6 +180,7 @@ export const Test = {
                 const errorContainer = field.querySelector('i18n-text[key="forms.fields.file.errMinSize"]');
                 expect(errorContainer).toBeInTheDocument();
                 const errorText = I18n.getText('forms.fields.file.errMinSize', {
+                    // @ts-expect-error
                     minSize: formatBytes('0.0001'),
                     size: formatBytes(TextFileSmall.size),
                     file: TextFileSmall.name
@@ -187,6 +196,7 @@ export const Test = {
                 expect(errorContainer).toBeInTheDocument();
                 expect(onChangeMock).toHaveBeenLastCalledWith([], field, expect.anything());
                 const errorText = I18n.getText('forms.fields.file.errMaxSize', {
+                    // @ts-expect-error
                     maxSize: formatBytes('0.0002'),
                     size: formatBytes(TextFileLarge.size),
                     file: 'large text file.txt'
@@ -220,7 +230,7 @@ export const Test = {
         await step('Adds a valid file and submits the form receiving expected value', async () => {
             await fireEvent.change(input, { target: { files: [TextFileMock] } });
             expect(uploadList.listResource.getItems()).toHaveLength(1);
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': TextFileMock });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -252,7 +262,7 @@ export const Test = {
                 expect(canvas.getByText('yet another text file')).toBeInTheDocument();
                 expect(canvas.getByText('128 bytes')).toBeInTheDocument();
             });
-            submitButton.click();
+            submitButton?.click();
             await new Promise(resolve => setTimeout(resolve, 100));
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': [TextFileMock2, TextFileMock3] });

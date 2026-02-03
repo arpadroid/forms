@@ -1,17 +1,23 @@
 /**
  * @typedef {import('./field.types').FieldConfigType} FieldConfigType
- * @typedef {import('./field.js').default} Field
+ * @typedef {import('./field').default} Field
+ * @typedef {import('../../components/form/form').default} Form
  * @typedef {import('@arpadroid/module').StepFunction} StepFunction
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  */
-/* eslint-disable sonarjs/no-duplicate-string */
+
 import { I18n } from '@arpadroid/i18n';
 import { attrString } from '@arpadroid/tools';
-import { action } from '@storybook/addon-actions';
-import { waitFor, within, expect, fn, getByText } from '@storybook/test';
-import Field from './field.js';
+import { action } from 'storybook/actions';
+import { waitFor, within, expect, fn, getByText } from 'storybook/test';
+// import Field from './field.js';
 
 const html = String.raw;
 
+/** @type {Meta} */
 const FieldStory = {
     title: 'Forms/Field',
     tags: [],
@@ -19,8 +25,8 @@ const FieldStory = {
         layout: 'padded'
     },
     render: (
-        args,
-        story,
+        /** @type {Args} */ args,
+        /** @type {StoryContext} */ story,
         fieldTag = 'arpa-field',
         renderContent = FieldStory.renderContent,
         renderScript = FieldStory.renderScript
@@ -37,7 +43,7 @@ const FieldStory = {
     renderContent() {
         return '';
     },
-    renderScript: (args, story, javaScript = '') => {
+    renderScript: (/** @type {Args} */ args, /** @type {StoryContext} */ story, javaScript = '') => {
         if (story.name === 'Test') {
             return '';
         }
@@ -172,10 +178,9 @@ const FieldStory = {
     }
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
-    /** @type {FieldConfigType} */
-
     parameters: {
         // actions: { disable: true },
         interactions: { disable: true },
@@ -198,8 +203,8 @@ export const Default = {
     argTypes: FieldStory.getArgTypes()
 };
 
+/** @type {StoryObj} */
 export const Test = {
-    args: Default.args,
     parameters: {
         controls: { disable: true },
         usage: { disable: true },
@@ -212,34 +217,36 @@ export const Test = {
         minLength: 2,
         maxLength: 10
     },
-    playSetup: async canvasElement => {
+    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
         const canvas = within(canvasElement);
         await customElements.whenDefined('arpa-field');
         await customElements.whenDefined('submit-button');
-        /** @type {Field} */
+        /** @type {Field | null} */
         const field = canvasElement.querySelector('.arpaField');
-        await field.promise;
+        await field?.promise;
+        /** @type {Form | null} */
         const form = canvasElement.querySelector('arpa-form');
-        await form.promise;
-        form.setAttribute('debounce', '0');
+        await form?.promise;
+        form?.setAttribute('debounce', '0');
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
         const onSubmitMock = fn(values => {
             console.log('values', values);
             return true;
         });
         const onChangeMock = fn();
-        form.onSubmit(onSubmitMock);
+        form?.onSubmit(onSubmitMock);
         const onErrorMock = fn();
-        if (typeof field.on === 'function') {
+        if (typeof field?.on === 'function') {
             field.on('error', onErrorMock);
             field.on('change', onChangeMock);
         }
-        const input = typeof field?.getInput === 'function' && field?.getInput();
+        /** @type {import('src/types').FieldInputType | null} */
+        const input = (typeof field?.getInput === 'function' && field?.getInput()) || null;
 
         await new Promise(resolve => setTimeout(resolve, 100));
         return { canvas, field, form, submitButton, onSubmitMock, onErrorMock, onChangeMock, input };
     },
-    play: async ({ canvasElement, step, args }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step, args }) => {
         const { canvas, field, submitButton, onSubmitMock, onErrorMock, input } = await Test.playSetup(canvasElement);
 
         await step('Renders the field.', async () => {
@@ -252,7 +259,7 @@ export const Test = {
         });
 
         await step('Submits form with empty required field and shows field and form error messages.', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.field.errRequired'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -265,7 +272,7 @@ export const Test = {
             'Submits form with value not satisfying the minLength validation and shows field and form error messages.',
             async () => {
                 input.value = 'a';
-                submitButton.click();
+                submitButton?.click();
                 await waitFor(() => {
                     canvas.getByText(I18n.getText('forms.field.errMinLength', { minLength: args.minLength }));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -279,7 +286,7 @@ export const Test = {
             'Submits form with value not satisfying the maxLength validation and shows field and form error messages.',
             async () => {
                 input.value = '12345678901';
-                submitButton.click();
+                submitButton?.click();
                 await waitFor(() => {
                     canvas.getByText(I18n.getText('forms.field.errMaxLength', { maxLength: args.maxLength }));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -297,12 +304,13 @@ export const Test = {
             input.dispatchEvent(event);
             await waitFor(() => {
                 expect(args.onChange).toHaveBeenLastCalledWith('test value', field, expect.anything());
-                expect(field.getValue()).toBe(input.value).toBe('test value');
+                expect(field.getValue()).toBe('test value');
+                expect(input.value).toBe('test value');
             });
         });
 
         await step('Submits form with valid field value.', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'test-field': 'test value' });
@@ -326,7 +334,7 @@ export const Zones = {
         content: 'Test content',
         label: undefined
     },
-    render: args => {
+    render: (/** @type {Args} */ args) => {
         return html`
             <arpa-form id="field-form">
                 <text-field required id="zone-field">

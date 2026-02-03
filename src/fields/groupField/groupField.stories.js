@@ -1,16 +1,21 @@
 /**
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  * @typedef {import('./groupField.js').default} GroupField
  */
 /* eslint-disable sonarjs/no-duplicate-string */
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, userEvent } from '@storybook/test';
+import { waitFor, expect, userEvent } from 'storybook/test';
 
 const html = String.raw;
 const category = 'Group Field Props';
+/** @type {Meta} */
 const GroupFieldStory = {
     title: 'Forms/Fields/Group',
     tags: [],
-    render: (args, story) =>
+    render: (/** @type {Args} */ args, /** @type {StoryContext} */ story) =>
         FieldStory.render(args, story, 'group-field', GroupFieldStory.renderFieldContent, GroupFieldStory.renderScript),
     renderFieldContent: () => html`
         <email-field id="email" label="Email" required value="some@email.com"></email-field>
@@ -18,7 +23,7 @@ const GroupFieldStory = {
         <textarea-field id="text-area" label="Text area" required value="some text"></textarea-field>
         <number-field id="number" label="Number" required value="1"></number-field>
     `,
-    renderScript: (args, story) => {
+    renderScript: (/** @type {Args} */ args, /** @type {StoryContext} */ story) => {
         if (story.name === 'Test') {
             return '';
         }
@@ -35,6 +40,7 @@ const GroupFieldStory = {
         `;
     }
 };
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -53,6 +59,7 @@ export const Default = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
@@ -60,7 +67,7 @@ export const Test = {
         rememberToggle: false,
         open: true
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
         /** @type {GroupField} */
@@ -106,4 +113,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default GroupFieldStory;

@@ -1,15 +1,24 @@
-/** @typedef {import('./fieldInterface.js').FieldConfigType} FieldConfigType */
+/**
+ *
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('../field/field.types').FieldConfigType} FieldConfigType
+ */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent } from '@storybook/test';
+import { waitFor, expect, fireEvent } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
+/** @type {Meta} */
 const TimeFieldStory = {
     title: 'Forms/Fields/Time',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'time-field')
+    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'time-field')
 };
 
 const category = 'Time Field Props';
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -34,8 +43,8 @@ export const Default = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
-    args: Default.args,
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
@@ -44,13 +53,13 @@ export const Test = {
         min: '12:01',
         max: '20:00'
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { input, submitButton, canvas, onErrorMock, onSubmitMock } = setup;
         const msgErrorKey = 'forms.form.msgError';
         await step('Renders the field with value "10:15".', () => {
             expect(canvas.getByText('Time Field')).toBeTruthy();
-            expect(input.value).toBe('10:15');
+            expect(input?.value).toBe('10:15');
         });
 
         await step('Types invalid value and submits the form receiving error message.', async () => {
@@ -94,4 +103,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default TimeFieldStory;

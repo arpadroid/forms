@@ -1,13 +1,24 @@
-import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+/**
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
 
+import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
+import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { I18n } from '@arpadroid/i18n';
+
+const html = String.raw;
+
+/** @type {Meta} */
 const ColorFieldStory = {
     title: 'Forms/Fields/Color',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'color-field')
+    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'color-field')
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -22,15 +33,15 @@ export const Default = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
-    args: Default.args,
-    parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
         id: 'color-field',
         required: true
     },
-    play: async ({ canvasElement, step }) => {
+    parameters: { ...FieldTest.parameters },
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const {  canvas, onErrorMock, form, onSubmitMock, field } = setup;
         const textInput = field.textInput;
@@ -61,4 +72,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default ColorFieldStory;

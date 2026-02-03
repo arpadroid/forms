@@ -1,15 +1,20 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('./fieldInterface.js').FieldConfigType} FieldConfigType
+ * @typedef {import('./textAreaField.js').default} TextAreaField
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  */
+
+/* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent, userEvent } from '@storybook/test';
+import { waitFor, expect, fireEvent, userEvent } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const TextAreaFieldStory = {
     title: 'Forms/Fields/Textarea',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'textarea-field')
+    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'textarea-field')
 };
 
 export const Default = {
@@ -27,17 +32,16 @@ export const Default = {
 };
 
 export const Test = {
-    args: Default.args,
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
         required: true
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { field, input, submitButton, canvas, onErrorMock, onChangeMock, onSubmitMock } = setup;
         await step('Submits empty required field and checks for error message', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.field.errRequired'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));

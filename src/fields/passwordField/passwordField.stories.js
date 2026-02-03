@@ -1,20 +1,24 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('./fieldInterface.js').FieldConfigType} FieldConfigType
+ * @typedef {import('./passwordField.js').default} PasswordField
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  */
+
+/* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent } from '@storybook/test';
+import { waitFor, expect, fireEvent } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 
 const PasswordFieldStory = {
     title: 'Forms/Fields/Password',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'password-field')
+    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'password-field')
 };
 const category = 'Password Field Props';
 export const Default = {
     name: 'Render',
-    /** @type {FieldConfigType} */
     parameters: { ...FieldDefault.parameters },
     argTypes: {
         confirm: {
@@ -39,7 +43,6 @@ export const Default = {
 };
 
 export const Test = {
-    args: Default.args,
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
@@ -47,7 +50,7 @@ export const Test = {
         mode: 'register',
         confirm: true
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const { input, submitButton, canvas, onErrorMock, onSubmitMock, field } = await FieldTest.playSetup(canvasElement);
 
         await step('Renders the field with confirm field.', async () => {
@@ -80,7 +83,7 @@ export const Test = {
         });
 
         await step('Submits form with invalid password and empty confirm value and receives expected message.', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
@@ -93,7 +96,7 @@ export const Test = {
         await step('Submits form with valid password and invalid confirm value and receives expected message.', async () => {
             input.value = 'P455w0rd??';
             field.confirmField.input.value = 'P455w0rd?!!?';
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
@@ -104,7 +107,7 @@ export const Test = {
 
         await step('Submits form with valid password and confirm value and receives expected message.', async () => {
             field.confirmField.input.value = 'P455w0rd??';
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
                     // eslint-disable-next-line sonarjs/no-hardcoded-passwords
@@ -124,7 +127,7 @@ export const Test = {
                     expect(canvas.queryByText('Confirm Password')).not.toBeInTheDocument();
                 });
                 await field.setValue('pass');
-                submitButton.click();
+                submitButton?.click();
                 await waitFor(() => {
                     expect(onSubmitMock).toHaveBeenLastCalledWith({
                         // eslint-disable-next-line sonarjs/no-hardcoded-passwords

@@ -1,12 +1,22 @@
+/**
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
+
+import { expect, fireEvent, waitFor } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, fireEvent } from '@storybook/test';
 import { I18n } from '@arpadroid/i18n';
+
 const html = String.raw;
 
+/** @type {Meta} */
 const CheckboxesFieldStory = {
     title: 'Forms/Fields/Checkboxes',
     tags: [],
-    render: (args, story) => FieldStory.render(args, story, 'checkboxes-field', CheckboxesFieldStory.renderFieldContent),
+    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
+        FieldStory.render(args, story, 'checkboxes-field', CheckboxesFieldStory.renderFieldContent),
     renderFieldContent: () => html`
         <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
         <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
@@ -14,6 +24,7 @@ const CheckboxesFieldStory = {
     `
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -34,6 +45,7 @@ export const Default = {
 delete Default.args.placeholder;
 delete Default.argTypes.placeholder;
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
@@ -41,7 +53,7 @@ export const Test = {
         required: true,
         value: 'option1, option2'
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = await FieldTest.playSetup(canvasElement);
         const label = canvas.getByText('Checkboxes Field');
 
@@ -83,7 +95,7 @@ export const Test = {
         });
 
         await step('Submits form with invalid empty value and checks for error messages.', async () => {
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.field.errRequired'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -93,7 +105,7 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             await fireEvent.click(label);
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
                     'checkboxes-field': ['option1', 'option2', 'option3']
@@ -103,10 +115,10 @@ export const Test = {
         });
 
         await step('Switches to binary data mode, submits form and receives expected data.', async () => {
-            field.setAttribute('binary', true);
+            field.setAttribute('binary', 'true');
             const option2 = canvas.getByText('Option 2');
             await fireEvent.click(option2);
-            submitButton.click();
+            submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
                     'checkboxes-field': {
@@ -120,4 +132,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default CheckboxesFieldStory;

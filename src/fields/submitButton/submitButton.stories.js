@@ -1,11 +1,16 @@
 // import { attrString } from '@arpadroid/tools';
-import { waitFor, expect, within, fireEvent } from '@storybook/test';
+/** @typedef {import('@storybook/web-components-vite').Meta} Meta */
+/** @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj */
+/** @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext */
+/** @typedef {import('@storybook/web-components-vite').Args} Args */
+import { waitFor, expect, within, fireEvent } from 'storybook/test';
 const category = 'Submit Button Props';
 const html = String.raw;
+/** @type {Meta} */
 const SubmitButtonStory = {
     title: 'Forms/Components/Submit Button',
     tags: [],
-    playSetup: async canvasElement => {
+    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
         const canvas = within(canvasElement);
         await customElements.whenDefined('arpa-button');
         await customElements.whenDefined('text-field');
@@ -23,7 +28,7 @@ const SubmitButtonStory = {
         icon: { control: { type: 'text' }, table: { category } },
         iconRight: { control: { type: 'text' }, table: { category } }
     },
-    render: args => {
+    render: (/** @type {Args} */ args) => {
         delete args.content;
         return html`<arpa-form id="submit-button-form">
             <text-field id="text" label="Text" required></text-field>
@@ -32,13 +37,15 @@ const SubmitButtonStory = {
     }
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render'
 };
 
+/** @type {StoryObj} */
 export const Test = {
     name: 'Render',
-    play: async ({ canvasElement, step, canvas }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step, canvas }) => {
         const { form } = await SubmitButtonStory.playSetup(canvasElement);
         const textField = form.getField('text');
         const numberField = form.getField('number');
@@ -73,4 +80,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default SubmitButtonStory;

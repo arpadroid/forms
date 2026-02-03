@@ -1,20 +1,32 @@
 /**
- * @typedef {import('./fieldInterface.js').FieldConfigType} FieldConfigType
- * @typedef {import('./field.js').default} Field
+ * @typedef {import('../../fields/field/field.types').FieldConfigType} FieldConfigType
+ * @typedef {import('../../fields/field/field.js').default} Field
+ * @typedef {import('./form.js').default} Form
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
  */
-import { I18n } from '@arpadroid/i18n';
+
+import { expect, fn, getByText, waitFor, within } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
-import { waitFor, within, expect, fn, getByText } from '@storybook/test';
+import { I18n } from '@arpadroid/i18n';
 
 const html = String.raw;
 
+/** @type {Meta} */
 const FormStory = {
     title: 'Forms/Form',
     parameters: {
         layout: 'padded'
     },
     tags: [],
-    render: (args, story, renderContent = FormStory.renderContent, renderScript = FormStory.renderScript) => {
+    render: (
+        /** @type {Args} */ args,
+        /** @type {any} */ story,
+        renderContent = FormStory.renderContent,
+        renderScript = FormStory.renderScript
+    ) => {
         return html`
             <arpa-form ${attrString(args)}>${renderContent(args, story)}</arpa-form>
             ${renderScript(args, story)}
@@ -89,7 +101,7 @@ const FormStory = {
             </div>
         `;
     },
-    renderScript: (args, story) => {
+    renderScript: (/** @type {Args} */ args, /** @type {StoryContext} */ story) => {
         if (story.name === 'Test') {
             return '';
         }
@@ -136,10 +148,9 @@ const FormStory = {
     }
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'All fields',
-    /** @type {FieldConfigType} */
-
     parameters: {
         options: {
             selectedPanel: 'storybook/controls/panel'
@@ -151,13 +162,8 @@ export const Default = {
     argTypes: FormStory.getArgTypes()
 };
 
+/** @type {StoryObj} */
 export const Test = {
-    args: Default.args,
-    parameters: {
-        controls: { disable: true },
-        usage: { disable: true },
-        options: { selectedPanel: 'storybook/interactions/panel' }
-    },
     args: {
         ...Default.args,
         id: 'demo-form',
@@ -166,18 +172,24 @@ export const Test = {
         successMessage: 'Form submitted successfully!',
         errorMessage: 'Form submission failed!'
     },
-    playSetup: async canvasElement => {
+    parameters: {
+        controls: { disable: true },
+        usage: { disable: true },
+        options: { selectedPanel: 'storybook/interactions/panel' }
+    },
+    playSetup: async (/** @type {HTMLElement} */ canvasElement) => {
         const canvas = within(canvasElement);
         await customElements.whenDefined('arpa-form');
+        /** @type {Form | null} */
         const form = canvasElement.querySelector('arpa-form');
-        await form.promise;
+        await form?.promise;
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
         const onSubmitMock = fn(() => true);
-        form.onSubmit(onSubmitMock);
-        await form.promise;
+        form?.onSubmit(onSubmitMock);
+        await form?.promise;
         return { canvas, form, submitButton, onSubmitMock };
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await Test.playSetup(canvasElement);
         const { submitButton, form, canvas } = setup;
         await step('Renders the form.', () => {
@@ -211,4 +223,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default FormStory;

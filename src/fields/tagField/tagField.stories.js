@@ -1,15 +1,22 @@
+/**
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, userEvent, fn, fireEvent } from '@storybook/test';
+import { waitFor, expect, userEvent, fn, fireEvent } from 'storybook/test';
 import { queryPeople } from '../../demo/demoFormOptions.js';
 
 const html = String.raw;
+/** @type {Meta} */
 const TagFieldStory = {
     title: 'Forms/Fields/Tag',
     tags: [],
-    render: (args, story) =>
+    render: (/** @type {Args} */ args, /** @type {StoryContext} */ story) =>
         FieldStory.render(args, story, 'tag-field', FieldStory.renderFieldContent, TagFieldStory.renderScript),
-    renderScript: (args, story) => {
+    renderScript: (/** @type {Args} */ args, /** @type {StoryContext} */ story) => {
         return story.name === 'Test'
             ? ''
             : html`
@@ -29,6 +36,7 @@ const TagFieldStory = {
     }
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -44,10 +52,11 @@ export const Default = {
         id: 'tag-field',
         label: 'Tag field',
         required: true,
-        value: 'IS-N::Isaac Newton, AB-E::Albert Einstein',
+        value: 'IS-N::Isaac Newton, AB-E::Albert Einstein'
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
@@ -55,7 +64,7 @@ export const Test = {
         value: 'IS-N::Isaac Newton, AB-E::Albert Einstein',
         debounceSearch: 1
     },
-    play: async ({ canvasElement, step }) => {
+    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
         const setup = await FieldTest.playSetup(canvasElement);
         const { field, submitButton, canvas, onErrorMock, onChangeMock, input } = setup;
         await field.promise;
@@ -102,6 +111,7 @@ export const Test = {
         });
 
         await step('Performs search and verifies search results', async () => {
+            await new Promise(r => setTimeout(r, 100)); // Wait for debounce
             await userEvent.type(input, 'and');
             await fireEvent.keyDown(input);
             await waitFor(() => {
@@ -128,4 +138,5 @@ export const Test = {
     }
 };
 
+/** @type {Meta} */
 export default TagFieldStory;
