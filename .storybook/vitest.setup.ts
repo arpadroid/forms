@@ -3,6 +3,7 @@
  * Initializes the Storybook preview annotations for Vitest testing
  * This ensures that framework functions like renderToCanvas are available
  */
+// @ts-ignore --- IGNORE ---
 import { setProjectAnnotations } from '@storybook/web-components-vite';
 import * as previewAnnotations from './preview.js';
 
