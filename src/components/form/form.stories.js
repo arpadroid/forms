@@ -8,7 +8,7 @@
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-import { expect, fn, getByText, waitFor, within } from 'storybook/test';
+import { expect, fn, waitFor, within } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
 
