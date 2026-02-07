@@ -12,7 +12,6 @@ import { formatBytes } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
 import { EmptyImage } from '../../test/mocks/imageMock.js';
 import { TextFileLarge, TextFileMock, TextFileMock2, TextFileMock3, TextFileSmall } from '../../test/mocks/fileMock.js';
-import { action } from 'storybook/actions';
 
 const html = String.raw;
 
@@ -102,12 +101,10 @@ export const Default = {
 };
 
 const onDelete = fn(() => {
-    action('onDelete');
     return true;
 });
 
 const onDeleteUpload = fn(() => {
-    action('onDeleteUpload');
     return true;
 });
 
@@ -120,10 +117,9 @@ export const Test = {
         maxSize: 0.0002
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } = await FieldTest.playSetup(
-            canvasElement
-        );
-        
+        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } =
+            await FieldTest.playSetup(canvasElement);
+
         field._config.onDelete = onDelete;
         field._config.onDeleteUpload = onDeleteUpload;
         await customElements.whenDefined('file-list');

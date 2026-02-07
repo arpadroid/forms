@@ -8,7 +8,8 @@
 
 /* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+
+import { DefaultStory as FieldDefault, TestDefault as FieldTest, Story } from '../field/stories.util.js';
 import { waitFor, expect, userEvent, fireEvent } from 'storybook/test';
 import { CountryOptions } from '../../demo/demoFormOptions.js';
 
@@ -18,7 +19,7 @@ const SelectComboStory = {
     tags: [],
     render: (/** @type {Args} */ args, /** @type {any} */ story) => {
         delete args.options;
-        return FieldStory.render(args, story, 'select-combo', FieldStory.renderFieldContent, SelectComboStory.renderScript);
+        return Story.render(args, story, 'select-combo', Story.renderFieldContent, SelectComboStory.renderScript);
     },
     renderScript: (/** @type {Args} */ args, /** @type {any} */ story) => {
         return story.name === 'Test'
@@ -45,7 +46,7 @@ export const Default = {
     argTypes: {
         hasSearch: { control: 'boolean', table: { category: 'Select Combo Props' } },
         debounceSearch: { control: 'number', table: { category: 'Select Combo Props' } },
-        ...FieldStory.getArgTypes('Field Props')
+        ...Story.getArgTypes('Field Props')
     },
     play: async (/** @type {StoryContext} */ { canvasElement }) => {
         const setup = await FieldTest.playSetup(canvasElement);
@@ -55,7 +56,7 @@ export const Default = {
     },
     args: {
         hasSearch: false,
-        ...FieldStory.getArgs(),
+        ...Story.getArgs(),
         id: 'select-combo-test',
         label: 'Select combo',
         required: true,
