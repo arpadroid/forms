@@ -46,8 +46,10 @@ export const Test = {
     parameters: { ...FieldTest.parameters },
     args: { ...Default.args, id: 'image-field-test' },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } =
+        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input, form } =
             await FieldTest.playSetup(canvasElement);
+        form._config.debounce = 0;
+            console.log('fform', form._config.debounce);
 
         await customElements.whenDefined('file-list');
         const uploadList = canvasElement.querySelector('.fileField__uploadList');
@@ -122,7 +124,7 @@ export const Test = {
 
         await step('Sets allow-multiple, adds multiple images and checks the uploaded images list.', async () => {
             field.setAttribute('allow-multiple', '');
-
+            await new Promise(resolve => setTimeout(resolve, 100));
             await fireEvent.change(input, { target: { files: [planeImage, flowerImage] } });
 
             await waitFor(() => {
