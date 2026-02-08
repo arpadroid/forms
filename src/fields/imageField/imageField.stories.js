@@ -6,15 +6,14 @@
  */
 
 import { expect, fireEvent, waitFor } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import FileFieldStory from '../fileField/fileField.stories.js';
-import { formatBytes } from '@arpadroid/tools';
+import { Story as FieldStory, DefaultStory as FieldDefault, TestDefault as FieldTest } from '../field/stories.util.js';
+import { Story as FileFieldStory } from '../fileField/stories.util.js';
 import { I18n } from '@arpadroid/i18n';
 import { TextFileSmall } from '../../test/mocks/fileMock.js';
 import { createImageFileFromURL } from '../../test/mocks/imageMock.js';
+import { formatBytes } from '@arpadroid/tools';
 
 const html = String.raw;
-// eslint-disable-next-line sonarjs/no-clear-text-protocols
 const assetsURL = '/test-assets';
 
 /** @type {Meta} */
@@ -47,9 +46,8 @@ export const Test = {
     parameters: { ...FieldTest.parameters },
     args: { ...Default.args, id: 'image-field-test' },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } = await FieldTest.playSetup(
-            canvasElement
-        );
+        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } =
+            await FieldTest.playSetup(canvasElement);
 
         await customElements.whenDefined('file-list');
         const uploadList = canvasElement.querySelector('.fileField__uploadList');
@@ -60,9 +58,11 @@ export const Test = {
         const planeImage = await createImageFileFromURL('/test-assets/plane.jpg', 'plane.jpg');
 
         await step('Renders the field', async () => {
-            canvas.getByText('Image field');
-            expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeInTheDocument();
-            expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeDefined();
+            await waitFor(() => {
+                canvas.getByText('Image field');
+                expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeInTheDocument();
+                expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeDefined();
+            });
         });
 
         await step('Renders the default image', async () => {
@@ -87,6 +87,7 @@ export const Test = {
         });
 
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
+            await new Promise(resolve => setTimeout(resolve, 100));
             await fireEvent.change(input, { target: { files: [galaxyImage] } });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenCalledWith([galaxyImage], field, expect.anything());
@@ -121,10 +122,11 @@ export const Test = {
 
         await step('Sets allow-multiple, adds multiple images and checks the uploaded images list.', async () => {
             field.setAttribute('allow-multiple', '');
-            await new Promise(resolve => setTimeout(resolve, 100));
+
             await fireEvent.change(input, { target: { files: [planeImage, flowerImage] } });
-            const items = uploadList.listResource.getItems();
+
             await waitFor(() => {
+                const items = uploadList.listResource.getItems();
                 expect(items).toHaveLength(2);
                 expect(canvas.getByText('plane')).toBeInTheDocument();
                 expect(canvas.getByText('flower')).toBeInTheDocument();
