@@ -229,7 +229,7 @@ export const TestDefault = {
         form?.setAttribute('debounce', '0');
         const submitButton = getByText(canvasElement, 'Submit').closest('button');
         const onSubmitMock = fn(values => {
-            console.log('values', values);
+            // console.log('values', values);
             return true;
         });
         const onChangeMock = fn();

@@ -51,7 +51,6 @@ export const Test = {
         const numberField = form.getField('number');
         await numberField?.promise;
         const submitButton = await waitFor(() => canvas.getByRole('button', { name: 'Submit' }));
-        console.log('submitButton', submitButton);
         await step(
             'Renders the button and expects data-invalid attribute to be present in container since the fields are required',
             async () => {

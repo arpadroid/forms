@@ -25,7 +25,6 @@ const TagFieldStory = {
                       customElements.whenDefined('arpa-form').then(() => {
                           const form = document.getElementById('field-form');
                           form.onSubmit(values => {
-                              console.log('form values', values);
                               return true;
                           });
                           const tagField = form.getField('tag-field');
