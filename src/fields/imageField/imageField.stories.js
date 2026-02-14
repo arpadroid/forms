@@ -49,7 +49,6 @@ export const Test = {
         const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input, form } =
             await FieldTest.playSetup(canvasElement);
         form._config.debounce = 0;
-            console.log('fform', form._config.debounce);
 
         await customElements.whenDefined('file-list');
         const uploadList = canvasElement.querySelector('.fileField__uploadList');
@@ -60,11 +59,8 @@ export const Test = {
         const planeImage = await createImageFileFromURL('/test-assets/plane.jpg', 'plane.jpg');
 
         await step('Renders the field', async () => {
-            await waitFor(() => {
-                canvas.getByText('Image field');
-                expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeInTheDocument();
-                expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeDefined();
-            });
+            expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeInTheDocument();
+            expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeDefined();
         });
 
         await step('Renders the default image', async () => {
