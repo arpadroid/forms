@@ -29,8 +29,8 @@ export type FieldConfigType = ArpaElementConfigType & {
     onFocus?: (field: Field) => boolean;
     validator?: typeof FieldValidator;
     validation?: FieldValidationType;
-    preProcessValue?: PreProcessValueType;  
-    preProcessOutputValue?: PreProcessValueType;
+    preProcessValue?: PreProcessValueType<unknown>;
+    preProcessOutputValue?: PreProcessValueType<unknown>;
     outputObject?: string;
     placeholder?: string;
     minLength?: number;

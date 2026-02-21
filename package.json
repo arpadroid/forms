@@ -10,7 +10,9 @@
         "dev": "arpadroid-build --watch --storybook",
         "clean": "arpadroid-clean",
         "test": "arpadroid-test --storybook --jest",
-        "t": "npm run test -- --slim"
+        "t": "npm run test -- --slim",
+        "initialize": "arpadroid-initialize",
+        "build:manifest": "arpadroid-manifest"
     },
     "repository": {
         "type": "git",
