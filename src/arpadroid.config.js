@@ -4,6 +4,7 @@ const config = {
     style_patterns: 'fields/**/*',
     buildTypes: true,
     storybook_port: 6005,
+    turbo: false,
     buildType: 'uiComponent',
     logo: `            ┓    • ┓  ┏        
    ┏┓┏┓┏┓┏┓┏┫┏┓┏┓┓┏┫  ╋┏┓┏┓┏┳┓┏

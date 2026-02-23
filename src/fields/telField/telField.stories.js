@@ -13,7 +13,7 @@ import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field
 const TextFieldStory = {
     title: 'Forms/Fields/Tel',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'tel-field')
+    render: (args, story) => FieldStory.render(args, story, 'tel-field')
 };
 
 // const category = 'Tel Field Props';

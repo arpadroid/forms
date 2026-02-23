@@ -2,17 +2,23 @@
     "name": "@arpadroid/forms",
     "version": "1.0.0",
     "description": "A web components library for building forms",
-    "exports": "./dist/arpadroid-forms.js",
+    "exports": {
+        ".": {
+            "types": "./dist/@types/types.compiled.d.ts",
+            "import": "./dist/arpadroid-forms.js"
+        }
+    },
     "types": "./dist/@types/types.compiled.d.ts",
     "type": "module",
     "scripts": {
+        "build:manifest": "arpadroid-manifest",
         "build": "arpadroid-build --minify",
-        "dev": "arpadroid-build --watch --storybook",
+        "check:types": "arpadroid-check-types",
         "clean": "arpadroid-clean",
-        "test": "arpadroid-test --storybook --jest",
-        "t": "npm run test -- --slim",
+        "dev": "arpadroid-build --watch --storybook",
         "initialize": "arpadroid-initialize",
-        "build:manifest": "arpadroid-manifest"
+        "t": "npm run test -- --slim",
+        "test": "arpadroid-test --storybook --jest"
     },
     "repository": {
         "type": "git",
