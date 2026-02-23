@@ -28,7 +28,7 @@ export { ImageItemConfigType } from './fields/imageField/components/imageItem/im
 
 export { ImageFieldConfigType } from './fields/imageField/imageField.types';
 
-export { NumberFieldConfigType } from './fields/numberField/numberFIeld.types';
+export { NumberFieldConfigType } from './fields/numberField/numberField.types';
 
 export {
     FieldOptionConfigType,
