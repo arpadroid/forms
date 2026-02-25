@@ -93,8 +93,8 @@ class FormComponent extends ArpaElement {
 
     async _initializeMessages() {
         await customElements.whenDefined('arpa-messages');
-        /** @type {Messages | null} */
-        this.messages = this.querySelector('arpa-messages');
+
+        this.messages = /** @type {Messages | null} */ (this.querySelector('arpa-messages'));
     }
 
     _initializeSubmit() {
