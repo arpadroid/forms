@@ -9,12 +9,13 @@
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect, fireEvent } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
 /** @type {Meta} */
 const TimeFieldStory = {
     title: 'Forms/Fields/Time',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'time-field')
+    render: ( args, story) => renderField(args, story, 'time-field')
 };
 
 const category = 'Time Field Props';
@@ -31,12 +32,12 @@ export const Default = {
             control: { type: 'text' },
             table: { category }
         },
-        ...FieldStory.getArgTypes()
+        ...getArgTypes()
     },
     args: {
         min: undefined,
         max: undefined,
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'time-field',
         label: 'Time Field',
         required: true
@@ -53,9 +54,16 @@ export const Test = {
         min: '12:01',
         max: '20:00'
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
-        const { input, submitButton, canvas, onErrorMock, onSubmitMock } = setup;
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'time-field'
+        });
+        const { canvas, onErrorMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement | null} */ (setup.input);
+        if (!input) throw new Error('Input element not found');
+        const submitButton = setup.submitButton;
+        if (!submitButton) throw new Error('Submit button not found');
+        
         const msgErrorKey = 'forms.form.msgError';
         await step('Renders the field with value "10:15".', () => {
             expect(canvas.getByText('Time Field')).toBeTruthy();

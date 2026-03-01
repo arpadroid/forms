@@ -9,58 +9,34 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { expect, fn, waitFor } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-
-const html = String.raw;
+import { playSetup, renderField } from '../field/field.stories.util.js';
+import { getArgs, getArgTypes, renderFieldContent } from './optionsField.stories.util.js';
 
 /** @type {Meta} */
 const OptionsFieldStory = {
     title: 'Forms/Fields/Options',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
-        FieldStory.render(args, story, 'options-field', OptionsFieldStory.renderFieldContent),
-    renderFieldContent: () => html`
-        <field-option value="option1" label="Option 1"></field-option>
-        <field-option value="option2" label="Option 2"></field-option>
-        <field-option value="option3" label="Option 3"></field-option>
-    `,
-    getArgs: () => ({
-        autoFetchOptions: true,
-        ...FieldStory.getArgs(),
-        id: 'options-field',
-        label: 'Options field',
-        required: true
-    }),
-    getArgTypes: () => ({
-        autoFetchOptions: {
-            control: 'boolean',
-            table: { category: 'Options Field Props' }
-        },
-        fetchOptions: {
-            control: 'callback',
-            table: { category: 'Options Field Props' }
-        },
-        ...FieldStory.getArgTypes('Field Props')
-    })
+    render: (args, story) => renderField(args, story, 'options-field', renderFieldContent)
 };
 
 /** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: { ...OptionsFieldStory.getArgTypes() },
-    args: { ...OptionsFieldStory.getArgs() }
+    argTypes: { ...getArgTypes() },
+    args: { ...getArgs() }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, { fieldTag: 'options-field' });
         const { canvas } = setup;
-        /** @type {OptionsField} */
-        const field = setup.field;
+        const field = /** @type {OptionsField} */ (setup.field);
 
         step('Renders the field with three radio options', async () => {
             expect(canvas.getByText('Options field')).toBeInTheDocument();

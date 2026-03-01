@@ -6,15 +6,17 @@
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
 /** @type {Meta} */
 const TextFieldStory = {
     title: 'Forms/Fields/Text',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'text-field')
+    render: (args, story) => renderField(args, story, 'text-field')
 };
 
 const category = 'Text Field Props';
+
 /** @type {StoryObj} */
 export const Default = {
     name: 'Render',
@@ -22,12 +24,12 @@ export const Default = {
     argTypes: {
         regex: { table: { category } },
         regexMessage: { table: { category } },
-        ...FieldStory.getArgTypes()
+        ...getArgTypes()
     },
     args: {
         regex: '^([a-z0-9]+)$',
         regexMessage: 'Only lowercase letters and numbers are allowed.',
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'text-field',
         label: 'Text Field',
         icon: 'match_case',
@@ -41,13 +43,14 @@ export const Test = {
     args: {
         ...Default.args,
         required: true,
-        regex: Default.args.regex,
-        regexMessage: Default.args.regexMessage
+        regex: Default.args?.regex,
+        regexMessage: Default.args?.regexMessage
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
-        const { input, submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement);
+        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement | null} */ (setup.input);
+        if (!input) throw new Error('Input element not found');
         await step('Submits form with invalid regex value: "some value".', () => {
             input.value = 'some value';
             submitButton?.click();

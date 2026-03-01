@@ -3,35 +3,39 @@
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
  * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./selectField.js').default} SelectField
  */
 import { I18n } from '@arpadroid/i18n';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { waitFor, expect, fireEvent } from 'storybook/test';
+import { getArgs, getArgTypes, playSetup, renderField, renderScript } from '../field/field.stories.util.js';
 
 const html = String.raw;
 
-/** @type {Meta} */
-const SelectFieldStory = {
-    title: 'Forms/Fields/Select',
-    tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
-        FieldStory.render(args, story, 'select-field', SelectFieldStory.renderFieldContent, SelectFieldStory.renderScript),
-    renderFieldContent: () => html`
+function renderFieldContent() {
+    return html`
         <option value="">Please select</option>
         <option value="volvo">Volvo</option>
         <option value="saab">Saab</option>
         <option value="mercedes">Mercedes</option>
         <option value="audi">Audi</option>
-    `
+    `;
+}
+
+/** @type {Meta} */
+const SelectFieldStory = {
+    title: 'Forms/Fields/Select',
+    tags: [],
+    render: (args, story) => renderField(args, story, 'select-field', renderFieldContent, renderScript)
 };
 
 /** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: { ...FieldStory.getArgTypes('Field Props') },
+    argTypes: { ...getArgTypes('Field Props') },
     args: {
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'select-field',
         label: 'Select field',
         required: true
@@ -45,9 +49,14 @@ export const Test = {
         ...Default.args,
         value: undefined
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } = setup;
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'select-field'
+        });
+        const { submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = setup;
+        const field = /** @type {SelectField} */ (setup.field);
+        const input = /** @type {HTMLSelectElement | null} */ (setup.input);
+        if (!input) throw new Error('Select input element not found in the setup.');
         await step('Renders the field with four select options', async () => {
             expect(canvas.getByText('Select field')).toBeInTheDocument();
             expect(canvas.getByText('Volvo')).toBeInTheDocument();
@@ -79,5 +88,4 @@ export const Test = {
     }
 };
 
-/** @type {Meta} */
 export default SelectFieldStory;

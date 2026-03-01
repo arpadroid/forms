@@ -5,21 +5,22 @@
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
 /** @type {Meta} */
 const UrlFieldStory = {
     title: 'Forms/Fields/Url',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'url-field')
+    render: (args, story) => renderField(args, story, 'url-field')
 };
 
 /** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: { ...FieldStory.getArgTypes() },
+    argTypes: { ...getArgTypes() },
     args: {
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'url-field',
         label: 'URL Field'
     }
@@ -33,7 +34,10 @@ export const Test = {
         required: true
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { input, submitButton, canvas, onErrorMock, onSubmitMock } = await FieldTest.playSetup(canvasElement);
+        const setup = await playSetup(canvasElement, { fieldTag: 'url-field' });
+        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement | null} */ (setup.input);
+        if (!input) throw new Error('Input element not found');
 
         await step('Submits form with invalid regex value "some value" and checks for error messages.', async () => {
             input.value = 'some value';

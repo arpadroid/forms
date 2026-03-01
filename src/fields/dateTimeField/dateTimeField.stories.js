@@ -1,17 +1,21 @@
-/** @typedef {import('@storybook/web-components-vite').Meta} Meta */
-/** @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj */
-/** @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext */
-/** @typedef {import('@storybook/web-components-vite').Args} Args */
+/**
+ * @typedef {import('./dateTimeField.js').default} DateTimeField
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ */
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { Default as DateDefault } from '../dateField/dateField.stories.js';
+import { playSetup, renderField } from '../field/field.stories.util.js';
 
 /** @type {Meta} */
 const DateFieldStory = {
     title: 'Forms/Fields/DateTime',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'date-time-field')
+    render: (args, story) => renderField(args, story, 'date-time-field')
 };
 
 /** @type {StoryObj} */
@@ -34,10 +38,15 @@ export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
-        required: true,
+        required: true
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { submitButton, canvas, onSubmitMock, field, input } = await FieldTest.playSetup(canvasElement);
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'date-time-field'
+        });
+        const { submitButton, canvas, onSubmitMock } = setup;
+        const field = /** @type {DateTimeField} */ (setup.field);
+        const input = /** @type {HTMLInputElement} */ (setup.input);
 
         await step('Default value is OK.', async () => {
             expect(input?.value).toBe('2021-06-12T15:30');

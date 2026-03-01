@@ -4,12 +4,14 @@
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
  * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./monthField.js').default} MonthField
  */
 
 import { expect, waitFor } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import DateFieldStory from '../dateField/dateField.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { I18n } from '@arpadroid/i18n';
+import { getArgs, getArgTypes } from '../dateField/dateField.stories.util.js';
+import { playSetup, renderField } from '../field/field.stories.util.js';
 
 const html = String.raw;
 
@@ -17,7 +19,7 @@ const html = String.raw;
 const MonthFieldStory = {
     title: 'Forms/Fields/Month',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'month-field')
+    render: (args, story) => renderField(args, story, 'month-field')
 };
 
 /** @type {StoryObj} */
@@ -25,10 +27,10 @@ export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
-        ...DateFieldStory.getArgTypes()
+        ...getArgTypes()
     },
     args: {
-        ...DateFieldStory.getArgs(),
+        ...getArgs(),
         id: 'month-field',
         label: 'Month Field',
         required: true
@@ -44,8 +46,13 @@ export const Test = {
         format: 'MMM YYYY'
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { submitButton, canvas, onErrorMock, onSubmitMock, field, input } = await FieldTest.playSetup(canvasElement);
-        
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'month-field'
+        });
+        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement} */ (setup.input);
+        const field = /** @type {MonthField} */ (setup.field);
+
         await step('Default value is OK.', async () => {
             expect(input?.value).toBe('2021-06');
         });
@@ -60,7 +67,7 @@ export const Test = {
         await step(
             'Disables past and future, submits form with invalid past and future dates and checks for error messages.',
             async () => {
-                field.setAttribute('disable-past', true);
+                field.setAttribute('disable-past', 'true');
                 field.setValue('31 Feb 1900');
                 submitButton?.click();
                 await waitFor(() => {
@@ -69,7 +76,7 @@ export const Test = {
                     expect(onErrorMock).toHaveBeenCalled();
                 });
 
-                field.setAttribute('disable-future', true);
+                field.setAttribute('disable-future', 'true');
                 field.setValue('1 Jan 3000');
                 submitButton?.click();
                 await waitFor(() => {

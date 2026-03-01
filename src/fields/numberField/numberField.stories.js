@@ -4,19 +4,19 @@
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
  * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./numberField.js').default} NumberField
  */
 
 import { expect, fireEvent, waitFor } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { I18n } from '@arpadroid/i18n';
-
-const html = String.raw;
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
 /** @type {Meta} */
 const NumberFieldStory = {
     title: 'Forms/Fields/Number',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'number-field')
+    render: (args, story) => renderField(args, story, 'number-field')
 };
 
 /** @type {StoryObj} */
@@ -36,19 +36,20 @@ export const Default = {
             control: { type: 'number' },
             table: { category: 'Props' }
         },
-        ...FieldStory.getArgTypes()
+        ...getArgTypes()
     },
     args: {
         step: 1,
         min: 0,
         max: 0,
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'number-field',
         label: 'Number Field',
         required: true
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
@@ -58,9 +59,15 @@ export const Test = {
         max: 20,
         step: 2
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { input, submitButton, canvas, onErrorMock, onSubmitMock, field } = await FieldTest.playSetup(canvasElement);
-
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'number-field'
+        });
+        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement} */ (setup.input);
+        const field = /** @type {NumberField} */ (setup.field);
+        if (!input) throw new Error('Input element not found');
+        if (!submitButton) throw new Error('Submit button not found');
         await step('Submits form with invalid regex value: "some value".', () => {
             input.value = 'some value';
             submitButton?.click();

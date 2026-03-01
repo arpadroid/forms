@@ -3,26 +3,31 @@
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
  * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('@arpadroid/lists').List} List
+ * @typedef {import('./imageField.js').default} ImageField
  */
 
 import { expect, fireEvent, waitFor } from 'storybook/test';
-import { Story as FieldStory, DefaultStory as FieldDefault, TestDefault as FieldTest } from '../field/stories.util.js';
-import { Story as FileFieldStory } from '../fileField/stories.util.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { I18n } from '@arpadroid/i18n';
 import { TextFileSmall } from '../../test/mocks/fileMock.js';
 import { createImageFileFromURL } from '../../test/mocks/imageMock.js';
 import { formatBytes } from '@arpadroid/tools';
+import { playSetup, renderField } from '../field/field.stories.util.js';
+import { getArgs, getArgTypes, renderScript } from '../fileField/fileField.stories.util.js';
 
 const html = String.raw;
 const assetsURL = '/test-assets';
+
+function renderFieldContent() {
+    return html`<image-item src="${assetsURL}/girl.jpg"></image-item>`;
+}
 
 /** @type {Meta} */
 const ImageFieldStory = {
     title: 'Forms/Fields/Image',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
-        FieldStory.render(args, story, 'image-field', ImageFieldStory.renderFieldContent, FileFieldStory.renderScript),
-    renderFieldContent: () => html`<image-item src="${assetsURL}/girl.jpg"></image-item>`
+    render: (args, story) => renderField(args, story, 'image-field', renderFieldContent, renderScript)
 };
 
 /** @type {StoryObj} */
@@ -30,27 +35,33 @@ export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
-        ...FileFieldStory.getArgTypes('File Props')
+        ...getArgTypes('File Props')
     },
     args: {
-        ...FileFieldStory.getArgs(),
+        ...getArgs(),
         id: 'image-field',
         label: 'Image field',
         required: true
     }
 };
 
-delete Default.args.extensions;
+delete Default.args?.extensions;
 
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: { ...Default.args, id: 'image-field-test' },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input, form } =
-            await FieldTest.playSetup(canvasElement);
-        form._config.debounce = 0;
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'image-field'
+        });
+        const { submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, form } = setup;
+        const field = /** @type {ImageField} */ (setup.field);
+        const input = /** @type {HTMLInputElement | null} */ (setup.input);
+        if (!input) throw new Error('Input element not found');
+        if (!form) throw new Error('Form element not found');
 
         await customElements.whenDefined('file-list');
+        /** @type {List | null} */
         const uploadList = canvasElement.querySelector('.fileField__uploadList');
         const i18nKey = field.i18nKey;
 
@@ -75,7 +86,7 @@ export const Test = {
                 expect(onChangeMock).toHaveBeenCalledWith([], field, expect.anything());
                 const errorContainer = field.querySelector('i18n-text[key="forms.fields.image.errExtensions"]');
                 expect(errorContainer).toBeInTheDocument();
-                expect(errorContainer.textContent).toBe(
+                expect(errorContainer?.textContent).toBe(
                     I18n.getText('forms.fields.image.errExtensions', {
                         extensions: 'jpg, png, gif, jpeg, svg',
                         file: TextFileSmall.name
@@ -101,7 +112,7 @@ export const Test = {
             submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
-                const items = field.fileList.listResource.getItems();
+                const items = field.fileList?.listResource?.getItems();
                 expect(items).toHaveLength(1);
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'image-field-test': galaxyImage });
             });
@@ -124,7 +135,7 @@ export const Test = {
             await fireEvent.change(input, { target: { files: [planeImage, flowerImage] } });
 
             await waitFor(() => {
-                const items = uploadList.listResource.getItems();
+                const items = uploadList?.listResource?.getItems();
                 expect(items).toHaveLength(2);
                 expect(canvas.getByText('plane')).toBeInTheDocument();
                 expect(canvas.getByText('flower')).toBeInTheDocument();
@@ -136,7 +147,7 @@ export const Test = {
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'image-field-test': [planeImage, flowerImage] });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
-                const items = field.fileList.listResource.getItems();
+                const items = field.fileList?.listResource?.getItems();
                 expect(items).toHaveLength(3);
             });
         });

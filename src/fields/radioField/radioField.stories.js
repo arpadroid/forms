@@ -7,29 +7,32 @@
  */
 
 import { I18n } from '@arpadroid/i18n';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { waitFor, expect } from 'storybook/test';
+import { getArgs, getArgTypes, playSetup, renderField, renderScript } from '../field/field.stories.util.js';
 
 const html = String.raw;
 
+function renderFieldContent() {
+    return html`<radio-option value="option1" label="Option 1"></radio-option>
+        <radio-option value="option2" label="Option 2"></radio-option>
+        <radio-option value="option3" label="Option 3"></radio-option>`;
+}
+
+/** @type {Meta} */
 const RadioFieldStory = {
     title: 'Forms/Fields/Radio',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
-        FieldStory.render(args, story, 'radio-field', RadioFieldStory.renderFieldContent, FieldStory.renderScript),
-    renderFieldContent: () => html`
-        <radio-option value="option1" label="Option 1"></radio-option>
-        <radio-option value="option2" label="Option 2"></radio-option>
-        <radio-option value="option3" label="Option 3"></radio-option>
-    `
+    render: (args, story) => renderField(args, story, 'radio-field', renderFieldContent, renderScript)
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: { ...FieldStory.getArgTypes('Field Props') },
+    argTypes: { ...getArgTypes('Field Props') },
     args: {
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'radio-field',
         label: 'Radio field',
         required: true,
@@ -37,13 +40,18 @@ export const Default = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = await FieldTest.playSetup(canvasElement);
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'radio-field'
+        });
+        const { submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = setup;
+        const field = /** @type {RadioField} */ (setup.field);
 
         await step('Renders the field with three radio options', async () => {
             await waitFor(() => {
@@ -64,9 +72,11 @@ export const Test = {
         });
 
         await step('Select the first radio option', async () => {
-            const options = field.getOptions();
+            const options = field?.getOptions();
+            // @ts-ignore
             options[1].input.click();
             await waitFor(() => expect(onChangeMock).toHaveBeenCalledWith('option2', field, expect.anything()));
+            // @ts-ignore
             expect(options[1].input).toBeChecked();
         });
 

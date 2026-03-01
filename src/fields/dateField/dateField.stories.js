@@ -9,54 +9,22 @@
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { playSetup, renderField } from '../field/field.stories.util.js';
+import { getArgs, getArgTypes } from './dateField.stories.util.js';
 const category = 'Date Field Props';
 /** @type {Meta} */
 const DateFieldStory = {
     title: 'Forms/Fields/Date',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'date-field'),
-    getArgTypes: () => {
-        return {
-            format: {
-                table: { category }
-            },
-            disablePast: {
-                table: { category }
-            },
-            disableFuture: {
-                table: { category }
-            },
-            min: {
-                control: { type: 'text' },
-                table: { category }
-            },
-            max: {
-                control: { type: 'text' },
-                table: { category }
-            },
-            ...FieldStory.getArgTypes('Field Props')
-        };
-    },
-    getArgs: () => {
-        return {
-            disablePast: false,
-            disableFuture: false,
-            min: '',
-            max: '',
-            ...FieldStory.getArgs(),
-            id: 'date-field',
-            label: 'Date Field',
-            required: true
-        };
-    }
+    render: (args, story) => renderField(args, story, 'date-field')
 };
 /** @type {StoryObj} */ export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: DateFieldStory.getArgTypes(),
+    argTypes: getArgTypes(),
     args: {
         format: 'D MMM YYYY',
-        ...DateFieldStory.getArgs()
+        ...getArgs()
     }
 };
 
@@ -69,7 +37,12 @@ export const Test = {
         value: '12 June 2021'
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { submitButton, canvas, onErrorMock, onSubmitMock, field, input } = await FieldTest.playSetup(canvasElement);
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'date-field'
+        });
+        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement} */ (setup.input);
+        const field = /** @type {DateField} */ (setup.field);
 
         await step('Renders the date field with default value', async () => {
             expect(input?.value).toBe('2021-06-12');
@@ -108,7 +81,7 @@ export const Test = {
         await step(
             'Disables past and future, submits form with invalid past and future dates and checks for error messages.',
             async () => {
-                field.setAttribute('disable-past', true);
+                field.setAttribute('disable-past', 'true');
                 field.setValue('31 Feb 1900');
                 submitButton?.click();
                 await waitFor(() => {
@@ -117,7 +90,7 @@ export const Test = {
                     expect(onErrorMock).toHaveBeenCalled();
                 });
 
-                field.setAttribute('disable-future', true);
+                field.setAttribute('disable-future', 'true');
                 field.setValue('1 Jan 3000');
                 submitButton?.click();
                 await waitFor(() => {

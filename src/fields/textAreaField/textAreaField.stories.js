@@ -10,36 +10,47 @@
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect, fireEvent, userEvent } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
+/** @type {Meta} */
 const TextAreaFieldStory = {
     title: 'Forms/Fields/Textarea',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'textarea-field')
+    render: (args, story) => renderField(args, story, 'textarea-field')
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
-        ...FieldStory.getArgTypes('Field Props')
+        ...getArgTypes('Field Props')
     },
     args: {
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'textarea-field',
         label: 'Textarea Field',
         required: true
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
         required: true
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
-        const { field, input, submitButton, canvas, onErrorMock, onChangeMock, onSubmitMock } = setup;
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'textarea-field'
+        });
+        const { field, canvas, onErrorMock, onChangeMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLTextAreaElement | null} */ (setup.input);
+        if (!input) throw new Error('Textarea input element not found');
+        const submitButton = setup.submitButton;
+        if (!submitButton) throw new Error('Submit button not found');
+
         await step('Submits empty required field and checks for error message', async () => {
             submitButton?.click();
             await waitFor(() => {

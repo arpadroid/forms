@@ -6,55 +6,35 @@
  * @typedef {import('./groupField.js').default} GroupField
  */
 /* eslint-disable sonarjs/no-duplicate-string */
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { waitFor, expect, userEvent } from 'storybook/test';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { renderFieldContent, renderScript } from './groupField.stories.util.js';
 
-const html = String.raw;
 const category = 'Group Field Props';
+
 /** @type {Meta} */
 const GroupFieldStory = {
     title: 'Forms/Fields/Group',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {StoryContext} */ story) =>
-        FieldStory.render(args, story, 'group-field', GroupFieldStory.renderFieldContent, GroupFieldStory.renderScript),
-    renderFieldContent: () => html`
-        <email-field id="email" label="Email" required value="some@email.com"></email-field>
-        <text-field id="text" label="Text" required value="some more text"></text-field>
-        <textarea-field id="text-area" label="Text area" required value="some text"></textarea-field>
-        <number-field id="number" label="Number" required value="1"></number-field>
-    `,
-    renderScript: (/** @type {Args} */ args, /** @type {StoryContext} */ story) => {
-        if (story.name === 'Test') {
-            return '';
-        }
-        return html`
-            <script type="module">
-                customElements.whenDefined('arpa-form').then(() => {
-                    const form = document.getElementById('field-form');
-                    form.onSubmit(values => {
-                        console.log('Form values', values);
-                        return true;
-                    });
-                });
-            </script>
-        `;
-    }
+    render: (args, story) => renderField(args, story, 'group-field', renderFieldContent, renderScript)
 };
+
 /** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
+        ...getArgTypes(),
         open: { control: 'boolean', table: { category } },
         isCollapsible: { control: 'boolean', table: { category } },
-        rememberToggle: { control: 'boolean', table: { category } },
-        ...FieldStory.getArgTypes()
+        rememberToggle: { control: 'boolean', table: { category } }
     },
     args: {
         open: true,
         isCollapsible: true,
         rememberToggle: false,
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         label: 'Field Group'
     }
 };
@@ -68,11 +48,12 @@ export const Test = {
         open: true
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
-        const { submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
-        /** @type {GroupField} */
-        const field = setup.field;
-
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'group-field'
+        });
+        const { submitButton, canvas, onSubmitMock } = setup;
+        const field = /** @type {GroupField} */ (setup.field);
+        if (!submitButton) throw new Error('Submit button not found');
         await step('Renders the group and the fields', () => {
             expect(canvas.getByText('Field Group')).toBeInTheDocument();
             const fields = field.getFields();

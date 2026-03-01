@@ -7,22 +7,23 @@
  */
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
 /** @type {Meta} */
 const TextFieldStory = {
     title: 'Forms/Fields/Email',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'email-field')
+    render: (args, story) => renderField(args, story, 'email-field')
 };
 
 /** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: { ...FieldStory.getArgTypes() },
+    argTypes: { ...getArgTypes() },
     args: {
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'email-field',
         label: 'Email Field'
     }
@@ -35,9 +36,13 @@ export const Test = {
         ...Default.args,
         required: true
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { input, submitButton, canvas, onErrorMock, onSubmitMock } = await FieldTest.playSetup(canvasElement);
-
+    play: async ({ canvasElement, step } ) => {
+        const setup = await playSetup(canvasElement);
+        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement | null} */ (setup.input);
+        if (!input) {
+            throw new Error('Input element not found');
+        }
         await step('Submits form with invalid regex value "some value" and checks for error messages.', () => {
             input.value = 'some value';
             submitButton?.click();

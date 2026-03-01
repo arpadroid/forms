@@ -9,54 +9,42 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
 
-import { DefaultStory as FieldDefault, TestDefault as FieldTest, Story } from '../field/stories.util.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { waitFor, expect, userEvent, fireEvent } from 'storybook/test';
 import { CountryOptions } from '../../demo/demoFormOptions.js';
+import { getArgs, getArgTypes, playSetup, renderContent, renderField } from '../field/field.stories.util.js';
+import { renderScript } from './selectCombo.stories.util.js';
 
-const html = String.raw;
+/** @type {Meta} */
 const SelectComboStory = {
     title: 'Forms/Fields/SelectCombo',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => {
+    render: (args, story) => {
         delete args.options;
-        return Story.render(args, story, 'select-combo', Story.renderFieldContent, SelectComboStory.renderScript);
-    },
-    renderScript: (/** @type {Args} */ args, /** @type {any} */ story) => {
-        return story.name === 'Test'
-            ? ''
-            : html`
-                  <script type="module">
-                      // We are going to set many options to the select combo field, therefore we'll do so programmatically.
-                      import { CountryOptions } from '../../demo/demoFormOptions.js';
-                      customElements.whenDefined('arpa-form').then(async () => {
-                          const form = document.getElementById('field-form');
-                          form.onSubmit(values => {
-                              console.log('values2', values);
-                              return true;
-                          });
-                      });
-                  </script>
-              `;
+        return renderField(args, story, 'select-combo', renderContent, renderScript);
     }
 };
 
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
         hasSearch: { control: 'boolean', table: { category: 'Select Combo Props' } },
         debounceSearch: { control: 'number', table: { category: 'Select Combo Props' } },
-        ...Story.getArgTypes('Field Props')
+        ...getArgTypes('Field Props')
     },
-    play: async (/** @type {StoryContext} */ { canvasElement }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
-        const { field } = setup;
+    play: async ({ canvasElement }) => {
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'select-combo'
+        });
+        const field = /** @type {SelectCombo} */ (setup.field);
         await customElements.whenDefined('select-combo');
         field.setOptions(CountryOptions);
     },
     args: {
         hasSearch: false,
-        ...Story.getArgs(),
+        ...getArgs(),
         id: 'select-combo-test',
         label: 'Select combo',
         required: true,
@@ -64,6 +52,7 @@ export const Default = {
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
@@ -73,10 +62,13 @@ export const Test = {
         debounceSearch: 1,
         id: 'select-combo'
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
-        const { field, submitButton, canvas, onErrorMock, onChangeMock } = setup;
-        let { input } = setup;
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, { fieldTag: 'select-combo' });
+        const { submitButton, canvas, onErrorMock, onChangeMock } = setup;
+        let input = /** @type {HTMLInputElement | null} */ (setup.input);
+        const field = /** @type {SelectCombo} */ (setup.field);
+        if (!input) throw new Error('Input element not found in the setup.');
+
         await customElements.whenDefined('select-combo');
         await field.promise;
         field.setOptions(CountryOptions);
@@ -98,7 +90,7 @@ export const Test = {
         });
 
         await step('Selects the first option and submits the form', async () => {
-            await input.focus();
+            await input?.focus();
             const spainButton = canvas.getByText('Spain').closest('button');
             spainButton.click();
             await waitFor(() => {
@@ -120,6 +112,7 @@ export const Test = {
                 input = field.getInput();
                 expect(input).toHaveAttribute('type', 'text');
             });
+            if (!input) throw new Error('Input element not found after enabling search.');
             await userEvent.type(input, 'United', { delay: 10 });
             await fireEvent.keyUp(input, { key: 'Space' });
             const searchMatches = await waitFor(() => document.querySelectorAll('mark'));

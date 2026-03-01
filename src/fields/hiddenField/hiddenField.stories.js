@@ -7,10 +7,16 @@
  */
 
 import { expect, fireEvent, waitFor } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { I18n } from '@arpadroid/i18n';
+import { playSetup, renderField } from '../field/field.stories.util.js';
 
-const html = String.raw;
+/** @type {Meta} */
+const TextFieldStory = {
+    title: 'Forms/Fields/Hidden',
+    tags: [],
+    render: (args, story) => renderField(args, story, 'hidden-field')
+};
 
 /** @type {StoryObj} */
 export const Default = {
@@ -23,21 +29,17 @@ export const Default = {
     }
 };
 
-/** @type {Meta} */
-const TextFieldStory = {
-    title: 'Forms/Fields/Hidden',
-    tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'hidden-field')
-};
-
 /** @type {StoryObj} */
 export const Test = {
     args: { ...Default.args },
     parameters: { ...FieldTest.parameters },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
+        const { submitButton, canvas, onSubmitMock } = await playSetup(canvasElement, {
+            fieldTag: 'hidden-field'
+        });
+        if (!submitButton) throw new Error('Submit button not found');
         await step('Submits form with field value.', async () => {
-            await fireEvent.click(submitButton);    
+            await fireEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'hidden-field': 'hidden value' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

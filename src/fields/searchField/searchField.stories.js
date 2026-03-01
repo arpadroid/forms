@@ -9,13 +9,14 @@
 
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect, fireEvent } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
 /** @type {Meta} */
 const SearchFieldStory = {
     title: 'Forms/Fields/Search',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'search-field')
+    render: (args, story) => renderField(args, story, 'search-field')
 };
 
 /** @type {StoryObj} */
@@ -23,10 +24,10 @@ export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
-        ...FieldStory.getArgTypes()
+        ...getArgTypes()
     },
     args: {
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'search-field',
         label: 'Search Field'
     }
@@ -36,8 +37,13 @@ export const Default = {
 export const Test = {
     args: Default.args,
     parameters: { ...FieldTest.parameters },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { input, submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'search-field'
+        });
+        const { canvas, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement} */ (setup.input);
+        const submitButton = /** @type {HTMLButtonElement} */ (setup.submitButton);
 
         await step('Renders the field', async () => {
             await waitFor(() => {

@@ -5,23 +5,25 @@
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 import { I18n } from '@arpadroid/i18n';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { waitFor, expect, fireEvent } from 'storybook/test';
+import { playSetup, renderField } from '../field/field.stories.util.js';
+import { getArgs, getArgTypes } from '../../components/form/form.stories.util.js';
 
 /** @type {Meta} */
 const CheckboxFieldStory = {
     title: 'Forms/Fields/Checkbox',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'checkbox-field')
+    render: (args, story) => renderField(args, story, 'checkbox-field')
 };
 
 /** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: { ...FieldStory.getArgTypes() },
+    argTypes: { ...getArgTypes() },
     args: {
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         icon: 'check_box',
         id: 'checkbox-field',
         label: 'Checkbox Field'
@@ -36,9 +38,16 @@ export const Test = {
         required: true,
         value: 'option1, option2'
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock, input } =
-            await FieldTest.playSetup(canvasElement);
+    play: async context => {
+        const { canvasElement, step } = context;
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'checkbox-field'
+        });
+        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = setup;
+        const input = /** @type {HTMLInputElement | null} */ (setup.input);
+        if (!input) {
+            throw new Error('Checkbox input element not found');
+        }
 
         const label = canvas.getByText('Checkbox Field');
         const icon = canvas.getByText('check_box');

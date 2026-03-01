@@ -10,12 +10,13 @@
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from 'storybook/test';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
 /** @type {Meta} */
 const RangeFieldStory = {
     title: 'Forms/Fields/Range',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'range-field')
+    render: (args, story) => renderField(args, story, 'range-field')
 };
 
 /** @type {StoryObj} */
@@ -35,13 +36,13 @@ export const Default = {
             control: 'number',
             table: { category: 'Range Props' }
         },
-        ...FieldStory.getArgTypes('Field Props')
+        ...getArgTypes('Field Props')
     },
     args: {
         min: '0',
         max: 100,
         step: 1,
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'range-field',
         label: 'Range Field',
         required: true,
@@ -58,7 +59,9 @@ export const Test = {
         value: 25
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { submitButton, canvas, onSubmitMock } = await FieldTest.playSetup(canvasElement);
+        const { submitButton, canvas, onSubmitMock } = await playSetup(canvasElement, {
+            fieldTag: 'range-field'
+        });
 
         await step('Submits form with valid field value.', async () => {
             submitButton?.click();

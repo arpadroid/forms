@@ -9,14 +9,19 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect, fireEvent } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
+const category = 'Password Field Props';
+
+/** @type {Meta} */
 const PasswordFieldStory = {
     title: 'Forms/Fields/Password',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) => FieldStory.render(args, story, 'password-field')
+    render: (args, story) => renderField(args, story, 'password-field')
 };
-const category = 'Password Field Props';
+
+/** @type {StoryObj} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -30,18 +35,19 @@ export const Default = {
             options: [null, 'login', 'register'],
             table: { category }
         },
-        ...FieldStory.getArgTypes('Field Props')
+        ...getArgTypes('Field Props')
     },
     args: {
         confirm: true,
         mode: 'register',
         // confirm: true,
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'password-field',
         label: 'Password Field'
     }
 };
 
+/** @type {StoryObj} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
@@ -51,7 +57,14 @@ export const Test = {
         confirm: true
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { input, submitButton, canvas, onErrorMock, onSubmitMock, field } = await FieldTest.playSetup(canvasElement);
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'password-field'
+        });
+        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
+        const input = /** @type {HTMLInputElement} */ (setup.input);
+        const field = /** @type {PasswordField} */ (setup.field);
+        if (!field) throw new Error('PasswordField not found in the setup.');
+        if (!input) throw new Error('Input element not found in the setup.');
 
         await step('Renders the field with confirm field.', async () => {
             await waitFor(() => {
@@ -95,7 +108,9 @@ export const Test = {
 
         await step('Submits form with valid password and invalid confirm value and receives expected message.', async () => {
             input.value = 'P455w0rd??';
-            field.confirmField.input.value = 'P455w0rd?!!?';
+            if (field.confirmField?.input instanceof HTMLInputElement) {
+                field.confirmField.input.value = 'P455w0rd?!!?';
+            }
             submitButton?.click();
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -106,7 +121,9 @@ export const Test = {
         });
 
         await step('Submits form with valid password and confirm value and receives expected message.', async () => {
-            field.confirmField.input.value = 'P455w0rd??';
+            if (field.confirmField?.input instanceof HTMLInputElement) {
+                field.confirmField.input.value = 'P455w0rd??';
+            }
             submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({

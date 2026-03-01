@@ -3,25 +3,33 @@
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
  * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./checkboxesField.js').default} CheckboxesField
  */
 
 import { expect, fireEvent, waitFor } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { I18n } from '@arpadroid/i18n';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
 
 const html = String.raw;
+
+/**
+ * Renders the content of the checkboxes field for stories.
+ * @param {Args} _args - The story arguments.
+ * @param {StoryContext} _story - The story context.
+ * @returns {string} The HTML content for the checkboxes field.
+ */
+function renderFieldContent(_args, _story) {
+    return html`<checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
+        <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
+        <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>`;
+}
 
 /** @type {Meta} */
 const CheckboxesFieldStory = {
     title: 'Forms/Fields/Checkboxes',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {any} */ story) =>
-        FieldStory.render(args, story, 'checkboxes-field', CheckboxesFieldStory.renderFieldContent),
-    renderFieldContent: () => html`
-        <checkbox-option value="option1" label="Option 1" icon="grocery"></checkbox-option>
-        <checkbox-option value="option2" label="Option 2" icon="nutrition"></checkbox-option>
-        <checkbox-option value="option3" label="Option 3" icon="person"></checkbox-option>
-    `
+    render: (args, story) => renderField(args, story, 'checkboxes-field', renderFieldContent)
 };
 
 /** @type {StoryObj} */
@@ -29,21 +37,24 @@ export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
     argTypes: {
+        ...getArgTypes(),
         binary: {
             table: { category: 'Props' }
-        },
-        ...FieldDefault.argTypes
+        }
     },
     args: {
         binary: false,
-        ...FieldDefault.defaultArgs,
+        ...getArgs(),
         id: 'checkboxes-field',
         label: 'Checkboxes Field',
         value: 'option1, option2'
     }
 };
-delete Default.args.placeholder;
-delete Default.argTypes.placeholder;
+/**
+ * @todo: handle the properties below properly, this can lead to flaky outcomes.
+ */
+delete Default.args?.placeholder;
+delete Default.argTypes?.placeholder;
 
 /** @type {StoryObj} */
 export const Test = {
@@ -53,8 +64,12 @@ export const Test = {
         required: true,
         value: 'option1, option2'
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = await FieldTest.playSetup(canvasElement);
+    play: async ({ canvasElement, step }) => {
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'checkboxes-field'
+        });
+        const { submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = setup;
+        const field = /** @type {CheckboxesField} */ (setup.field);
         const label = canvas.getByText('Checkboxes Field');
 
         await step('Renders the checkboxes field with options.', async () => {
@@ -66,7 +81,7 @@ export const Test = {
         });
 
         await step('Checks the field has the correct value', async () => {
-            expect(field.hasValue('option1')).toBeTruthy();
+            expect(field?.hasValue('option1')).toBeTruthy();
             expect(field.hasValue('option2')).toBeTruthy();
             expect(field.hasValue('option3')).toBeFalsy();
         });

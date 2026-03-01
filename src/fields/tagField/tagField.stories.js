@@ -3,36 +3,46 @@
  * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
  * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
  * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./tagField.js').default} TagField
  */
 import { I18n } from '@arpadroid/i18n';
 import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { waitFor, expect, userEvent, fn, fireEvent } from 'storybook/test';
 import { queryPeople } from '../../demo/demoFormOptions.js';
+import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { renderFieldContent } from '../fileField/fileField.stories.util.js';
 
 const html = String.raw;
+
+/**
+ * Renders the script for tag field story.
+ * @param {Args} args - The story arguments.
+ * @param {StoryContext} story - The story context.
+ * @returns {string} - The script to be rendered in the story.
+ */
+function renderScript(args, story) {
+    return story.name === 'Test'
+        ? ''
+        : html`
+              <script type="module">
+                  import { queryPeople } from '../../demo/demoFormOptions.js';
+                  customElements.whenDefined('arpa-form').then(() => {
+                      const form = document.getElementById('field-form');
+                      form.onSubmit(values => {
+                          return true;
+                      });
+                      const tagField = form.getField('tag-field');
+                      tagField.setFetchOptions(queryPeople);
+                  });
+              </script>
+          `;
+}
+
 /** @type {Meta} */
 const TagFieldStory = {
     title: 'Forms/Fields/Tag',
     tags: [],
-    render: (/** @type {Args} */ args, /** @type {StoryContext} */ story) =>
-        FieldStory.render(args, story, 'tag-field', FieldStory.renderFieldContent, TagFieldStory.renderScript),
-    renderScript: (/** @type {Args} */ args, /** @type {StoryContext} */ story) => {
-        return story.name === 'Test'
-            ? ''
-            : html`
-                  <script type="module">
-                      import { queryPeople } from '../../demo/demoFormOptions.js';
-                      customElements.whenDefined('arpa-form').then(() => {
-                          const form = document.getElementById('field-form');
-                          form.onSubmit(values => {
-                              return true;
-                          });
-                          const tagField = form.getField('tag-field');
-                          tagField.setFetchOptions(queryPeople);
-                      });
-                  </script>
-              `;
-    }
+    render: (args, story) => renderField(args, story, 'tag-field', renderFieldContent, renderScript)
 };
 
 /** @type {StoryObj} */
@@ -42,12 +52,12 @@ export const Default = {
     argTypes: {
         allowText: { control: 'boolean', table: { category: 'Tag Field Props' } },
         hasSearch: { control: 'boolean', table: { category: 'Tag Field Props' } },
-        ...FieldStory.getArgTypes('Field Props')
+        ...getArgTypes('Field Props')
     },
     args: {
         allowText: true,
         hasSearch: false,
-        ...FieldStory.getArgs(),
+        ...getArgs(),
         id: 'tag-field',
         label: 'Tag field',
         required: true,
@@ -64,8 +74,19 @@ export const Test = {
         debounceSearch: 1
     },
     play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await FieldTest.playSetup(canvasElement);
-        const { field, submitButton, canvas, onErrorMock, onChangeMock, input } = setup;
+        const setup = await playSetup(canvasElement, {
+            fieldTag: 'tag-field'
+        });
+
+        const { canvas, onErrorMock, onChangeMock } = setup;
+        let input = /** @type {HTMLInputElement | null} */ (setup.input);
+        const field = /** @type {TagField} */ (setup.field);
+        const submitButton = /** @type {HTMLButtonElement | null} */ (setup.submitButton);
+
+        if (!input) throw new Error('Input element not found in the setup.');
+        if (!field) throw new Error('Field not found in the setup.');
+        if (!submitButton) throw new Error('Submit button not found in the setup.');
+
         await field.promise;
         field.setFetchOptions(queryPeople);
         const onDeleteTag = fn();
