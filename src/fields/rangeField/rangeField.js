@@ -2,7 +2,10 @@
 import { defineCustomElement, listen, mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
+
 class RangeField extends Field {
+    /** @type {HTMLInputElement | null} */
+    input = this.input;
     /**
      * Creates an instance of RangeField.
      * @param {RangeFieldConfigType} config - The configuration object.
@@ -20,13 +23,7 @@ class RangeField extends Field {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             inputAttributes: { type: 'range' },
-            inputTemplate: html`<field-input
-                {inputAttr}
-                input-class="rangeField__input"
-                value="{value}"
-                min="{min}"
-                max="{max}"
-            >
+            inputTemplate: html`<field-input {inputAttr} input-class="rangeField__input" value="{value}" min="{min}" max="{max}">
             </field-input>`
         });
     }
@@ -73,7 +70,7 @@ class RangeField extends Field {
     _initializeTextInput() {
         /** @type {HTMLInputElement | null} */
         this.textInput = this.querySelector('.rangeField__textInput');
-        if (!this.textInput) return true; // @ts-ignore
+        if (!this.textInput) return true;
         this.textInput.value = String(this.input?.value);
         listen(this.textInput, 'input', this._onTextInputChange);
     }
@@ -83,8 +80,9 @@ class RangeField extends Field {
      * @param {Event} event - The event object.
      */
     _onTextInputChange(event) {
-        if (!this.textInput) return; // @ts-ignore
-        const value = parseFloat(event.target?.value);
+        if (!this.textInput) return;
+        const input = /** @type {HTMLInputElement} */ (event.target);
+        const value = parseFloat(input.value);
         const max = parseFloat(this.textInput?.getAttribute('max') || '0');
         const min = parseFloat(this.textInput?.getAttribute('min') || '0');
         if (value > max) {

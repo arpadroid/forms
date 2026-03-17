@@ -86,7 +86,8 @@ class FieldValidator {
      */
     runValidationMethods(value) {
         let isValid = true;
-        for (const _method of this.getMethods()) { // @ts-ignore
+        for (const _method of this.getMethods()) {
+            // @ts-ignore
             const method = this.getMethod(_method);
             if (typeof method === 'function') {
                 const isFieldValid = method(value);
