@@ -329,7 +329,6 @@ class FormComponent extends ArpaElement {
         return render(
             this.hasSubmitButton() && this.getProperty('variant') !== 'mini',
             html`<submit-button icon="${this.getProperty('submit-icon')}" type="submit" class="arpaForm__submitBtn">
-                ${this.getSubmitText()}
             </submit-button>`
         );
     }

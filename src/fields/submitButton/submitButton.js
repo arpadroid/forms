@@ -14,7 +14,7 @@ class SubmitButton extends Button {
         /** @type {SubmitButtonConfigType} */
         const config = {
             type: 'submit',
-            labelText: this.i18nText('lblSubmit'),
+            label: this.i18nText('lblSubmit'),
             iconInvalid: 'block',
             variant: 'submit'
         };
