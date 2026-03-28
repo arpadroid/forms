@@ -59,6 +59,7 @@ class Field extends ArpaElement {
             hasInputMask: true,
             inputComponent: 'field-input',
             inputTag: 'input',
+            handleContent: false,
             inputAttributes: {
                 type: 'text'
             }
