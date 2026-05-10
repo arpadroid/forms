@@ -1,9 +1,11 @@
 /**
  * @typedef {import('./timeField.types').TimeFieldConfigType} TimeFieldConfigType
+ * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
 import { mergeObjects, attr, timeStringToSeconds, renderNode, defineCustomElement } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
+
 const html = String.raw;
 class TimeField extends TextField {
     /** @type {HTMLInputElement} */
@@ -56,8 +58,10 @@ class TimeField extends TextField {
 
     renderTimeButton() {
         const { pickerLabel } = this._config;
-        const button = renderNode(
-            html`<icon-button icon="schedule" label="${pickerLabel}" tooltip-position="left" variant="minimal"></icon-button>`
+        const button = /** @type {IconButton} */ (
+            renderNode(
+                html`<icon-button icon="schedule" label="${pickerLabel}" tooltip-position="left" variant="minimal"></icon-button>`
+            )
         );
         button?.addEventListener('click', () => this.input?.showPicker());
         return button;

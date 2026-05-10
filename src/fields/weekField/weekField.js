@@ -1,5 +1,6 @@
 /**
  * @typedef {import('./weekField.types').WeekFieldConfigType} WeekFieldConfigType
+ * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
 import { defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
@@ -36,8 +37,15 @@ class WeekField extends TextField {
 
     renderWeekButton() {
         const { pickerLabel } = this._config;
-        const button = renderNode(
-            html`<icon-button icon="date_range" label="${pickerLabel}" tooltip-position="left "variant="minimal"></icon-button>`
+        const button = /** @type {IconButton} */ (
+            renderNode(
+                html`<icon-button
+                    icon="date_range"
+                    label="${pickerLabel}"
+                    tooltip-position="left "
+                    variant="minimal"
+                ></icon-button>`
+            )
         );
         button?.addEventListener('click', () => this.input?.showPicker());
         return button;

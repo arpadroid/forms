@@ -1,13 +1,15 @@
 /**
  * @typedef {import('./searchField.types').SearchFieldConfigType} SearchFieldConfigType
+ * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
 import { I18n } from '@arpadroid/i18n';
 import Field from '../field/field.js';
 import { defineCustomElement, mergeObjects, prepend, render, renderNode } from '@arpadroid/tools';
 
 const html = String.raw;
+
 class SearchField extends Field {
-    /** @type {SearchFieldConfigType} */ 
+    /** @type {SearchFieldConfigType} */
     _config = this._config;
     preventOnSubmit = false;
 
@@ -60,7 +62,7 @@ class SearchField extends Field {
 
     handleMiniButton() {
         if (!this.miniButton) {
-            this.miniButton = renderNode(this.renderMiniButton());
+            this.miniButton = /** @type {IconButton} */ (renderNode(this.renderMiniButton()));
         }
         if (this.miniButton) {
             this.miniButton.removeEventListener('click', this._callOnSubmit);
@@ -68,12 +70,12 @@ class SearchField extends Field {
             this.bodyNode instanceof HTMLElement && prepend(this.bodyNode, this.miniButton);
         }
     }
-
+    /**
+     * Renders the mini button for the search field.
+     * @returns {string} The mini button element.
+     */
     renderMiniButton() {
-        return render(
-            this.getVariant() === 'mini',
-            html`<icon-button icon="search" class="searchField__button"></icon-button>`
-        );
+        return render(this.getVariant() === 'mini', html`<icon-button icon="search" class="searchField__button"></icon-button>`);
     }
 
     /**
