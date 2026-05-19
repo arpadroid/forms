@@ -32,7 +32,6 @@ export function renderScript(_args, story) {
           `;
 }
 
-
 export default {
     renderScript
-}
+};
