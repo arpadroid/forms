@@ -30,7 +30,7 @@ const SubmitButtonStory = {
     tags: [],
     args: {
         content: 'Click me',
-        icon: 'task_alt',
+        icon: 'check_circle',
         submitText: 'Submit'
     },
     argTypes: {
