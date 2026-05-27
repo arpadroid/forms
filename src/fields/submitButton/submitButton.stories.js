@@ -1,10 +1,9 @@
-// import { attrString } from '@arpadroid/tools';
-/** @typedef {import('@storybook/web-components-vite').Meta} Meta */
-/** @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj */
-/** @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext */
-/** @typedef {import('@storybook/web-components-vite').Args} Args */
 /**
- * @typedef {import('../field/field').FormComponent} FormComponent
+ * @typedef {import('@storybook/web-components-vite').Meta} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
+ * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
+ * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('../../components/form/form').default} FormComponent
  */
 import { waitFor, expect, within, fireEvent } from 'storybook/test';
 const category = 'Submit Button Props';
@@ -20,7 +19,7 @@ async function playSetup(canvasElement) {
     await customElements.whenDefined('arpa-button');
     await customElements.whenDefined('text-field');
     const buttonNode = canvasElement.querySelector('button');
-    const form = /** @type {FormComponent } */ (canvasElement.querySelector('arpa-form'));
+    const form = /** @type { FormComponent } */ (/** @type {unknown} */ (canvasElement.querySelector('arpa-form')));
     return { canvas, buttonNode, form };
 }
 
@@ -58,7 +57,7 @@ export const Test = {
     play: async ({ canvasElement, step, canvas }) => {
         const { form } = await playSetup(canvasElement);
         const textField = /** @type {import('../textField/textField').default} */ (form.getField('text'));
-        const numberField = form.getField('number');
+        const numberField = /** @type {import('../numberField/numberField').default} */ (form.getField('number'));
         await numberField?.promise;
         const submitButton = await waitFor(() => canvas.getByRole('button', { name: 'Submit' }));
         await step(

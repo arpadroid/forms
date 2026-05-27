@@ -70,8 +70,10 @@ export const Test = {
         const planeImage = await createImageFileFromURL('/test-assets/plane.jpg', 'plane.jpg');
 
         await step('Renders the field', async () => {
-            expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeInTheDocument();
-            expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeDefined();
+            await waitFor(() => {
+                expect(canvas.getByText(I18n.getText(`${i18nKey}.lblUploadedFiles`))).toBeInTheDocument();
+                expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeDefined();
+            });
         });
 
         await step('Renders the default image', async () => {
