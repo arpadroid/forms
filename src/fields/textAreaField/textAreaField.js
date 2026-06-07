@@ -28,7 +28,7 @@ class TextAreaField extends TextField {
     }
 
     async _initialize() {
-        this.value = this.innerHTML || this.getProperty('value');
+        this.value = this.innerHTML || this.getProp('value');
         super._initialize();
     }
 
@@ -38,7 +38,7 @@ class TextAreaField extends TextField {
         
         if (this.input) {
             
-            attr(this.input, { rows: this.getProperty('rows') });
+            attr(this.input, { rows: this.getProp('rows') });
             this.input?.removeEventListener('input', this._onInput);
             this.input?.addEventListener('input', this._onInput);
         }

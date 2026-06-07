@@ -31,7 +31,7 @@ class FormComponent extends ArpaElement {
     _initialize() {
         this.bind('_onChange', '_onSubmit');
         if (this.hasAttribute('title')) {
-            this._config.title = this.getProperty('title');
+            this._config.title = this.getProp('title');
             this.removeAttribute('title');
         }
     }
@@ -116,7 +116,7 @@ class FormComponent extends ArpaElement {
     /////////////////////////////////
 
     getSubmitText() {
-        return this.getProperty('submit-text') || html`<i18n-text key="common.labels.lblSubmit" />`;
+        return this.getProp('submit-text') || html`<i18n-text key="common.labels.lblSubmit" />`;
     }
 
     getFields() {
@@ -150,11 +150,11 @@ class FormComponent extends ArpaElement {
     }
 
     getTitle() {
-        return this.getProperty('title');
+        return this.getProp('title');
     }
 
     getVariant() {
-        return this.getProperty('variant');
+        return this.getProp('variant');
     }
 
     // #endregion Get
@@ -169,7 +169,7 @@ class FormComponent extends ArpaElement {
     }
 
     hasTitle() {
-        return this.getProperty('title') || this.hasZone('form-title');
+        return this.getProp('title') || this.hasZone('form-title');
     }
 
     hasFooter() {
@@ -177,7 +177,7 @@ class FormComponent extends ArpaElement {
     }
 
     hasDescription() {
-        return this.getProperty('description') || this.hasZone('description');
+        return this.getProp('description') || this.hasZone('description');
     }
 
     hasHeader() {
@@ -327,14 +327,14 @@ class FormComponent extends ArpaElement {
 
     renderSubmitButton() {
         return render(
-            this.hasSubmitButton() && this.getProperty('variant') !== 'mini',
-            html`<submit-button icon="${this.getProperty('submit-icon')}" type="submit" class="arpaForm__submitBtn">
+            this.hasSubmitButton() && this.getProp('variant') !== 'mini',
+            html`<submit-button icon="${this.getProp('submit-icon')}" type="submit" class="arpaForm__submitBtn">
             </submit-button>`
         );
     }
 
     hasSubmitButton() {
-        return this.hasProperty('has-submit');
+        return this.hasProp('has-submit');
     }
 
     // #endregion Rendering
@@ -371,11 +371,11 @@ class FormComponent extends ArpaElement {
     }
 
     getErrorMessage() {
-        return this.getProperty('error-message');
+        return this.getProp('error-message');
     }
 
     getSuccessMessage() {
-        return this.getProperty('success-message');
+        return this.getProp('success-message');
     }
 
     // #endregion Validation

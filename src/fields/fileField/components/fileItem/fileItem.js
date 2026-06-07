@@ -40,7 +40,7 @@ class FileItem extends ListItem {
     }
 
     _initializeFile() {
-        const src = this.getProperty('src');
+        const src = this.getProp('src');
         if (typeof src === 'string') {
             const fileName = String(src?.split('/').pop() || '');
             /** @type {FileItemPayloadType} */
@@ -63,7 +63,7 @@ class FileItem extends ListItem {
         const ext = this.payload?.extension;
         typeof ext === 'string' && (this.fileType = getFileType(ext));
         this.addTypeClass();
-        !this.getProperty('icon') && this.getProperty('has-icon') && (this._config.icon = getFileIcon(String(ext)));
+        !this.getProp('icon') && this.getProp('has-icon') && (this._config.icon = getFileIcon(String(ext)));
     }
 
     addTypeClass(fileType = this.fileType || 'file') {
@@ -101,7 +101,7 @@ class FileItem extends ListItem {
     }
 
     getSize() {
-        return this.payload?.size || this.getProperty('size');
+        return this.payload?.size || this.getProp('size');
     }
 
     getReadableSize(size = this.getSize()) {
@@ -171,7 +171,7 @@ class FileItem extends ListItem {
         return html`<icon-button
             variant="delete"
             class="fileItem__deleteButton iconButton--small"
-            tooltip="${this.getProperty('lbl-remove-file')}"
+            tooltip="${this.getProp('lbl-remove-file')}"
         ></icon-button>`;
     }
 

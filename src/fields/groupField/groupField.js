@@ -71,7 +71,7 @@ class GroupField extends Field {
     }
 
     getRememberToggle() {
-        return this.hasProperty('remember-toggle');
+        return this.hasProp('remember-toggle');
     }
 
     getSavedToggleState() {
@@ -83,7 +83,7 @@ class GroupField extends Field {
     }
 
     isCollapsible() {
-        return this.hasProperty('is-collapsible') ?? true;
+        return this.hasProp('is-collapsible') ?? true;
     }
 
     _isOpen() {
@@ -91,7 +91,7 @@ class GroupField extends Field {
         if (this.getRememberToggle() && savedToggle) {
             return savedToggle === 'true';
         }
-        return this.hasProperty('open');
+        return this.hasProp('open');
     }
 
     isOpen() {

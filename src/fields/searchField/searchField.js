@@ -47,11 +47,11 @@ class SearchField extends Field {
     }
 
     getVariant() {
-        return this.getProperty('variant');
+        return this.getProp('variant');
     }
 
     getIconRight() {
-        return this.getVariant() === 'mini' ? undefined : this.getProperty('icon-right');
+        return this.getVariant() === 'mini' ? undefined : this.getProp('icon-right');
     }
 
     async _onInitialized() {

@@ -38,7 +38,7 @@ class ImageItem extends FileItem {
 
     _initializeFile() {
         super._initializeFile();
-        const src = this.getProperty('src');
+        const src = this.getProp('src');
         if (typeof src === 'string') {
             this._config.image = src;
             this._config.highResImage = src;

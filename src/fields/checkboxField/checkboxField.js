@@ -54,8 +54,8 @@ class CheckboxField extends Field {
     getTemplateVars() {
         return mergeObjects(super.getTemplateVars(), {
             tooltip: this.renderTooltip(),
-            icon: this.getProperty('icon'),
-            iconRight: this.getProperty('icon-right'),
+            icon: this.getProp('icon'),
+            iconRight: this.getProp('icon-right'),
             label: this.getLabel()
         });
     }

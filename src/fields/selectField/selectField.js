@@ -36,7 +36,7 @@ class SelectField extends OptionsField {
     }
 
     async _initializeValue() {
-        const value = this.getProperty('value');
+        const value = this.getProp('value');
         if (value && this.input) {
             this.input.value = value;
         }

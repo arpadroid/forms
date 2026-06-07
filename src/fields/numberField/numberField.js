@@ -21,15 +21,15 @@ class NumberField extends Field {
             icon: 'numbers',
             inputAttributes: {
                 type: 'number',
-                min: this.getProperty('min'),
-                max: this.getProperty('max'),
-                step: this.getProperty('step')
+                min: this.getProp('min'),
+                max: this.getProp('max'),
+                step: this.getProp('step')
             }
         };
     }
 
     getOutputValue() {
-        const enforceValue = this.hasProperty('enforce-value') || false;
+        const enforceValue = this.hasProp('enforce-value') || false;
         const val = Number(super.getOutputValue());
         if (enforceValue && val) {
             const rv = this.enforceValidValue(val);
@@ -49,11 +49,11 @@ class NumberField extends Field {
     }
 
     getMin() {
-        return parseFloat(this.getProperty('min'));
+        return parseFloat(this.getProp('min'));
     }
 
     getMax() {
-        return parseFloat(this.getProperty('max')) || undefined;
+        return parseFloat(this.getProp('max')) || undefined;
     }
 
     /**
@@ -117,17 +117,17 @@ class NumberField extends Field {
             this.validator?.setError(html`<i18n-text key="forms.fields.number.errNumber"></i18n-text>`);
             return false;
         }
-        const min = this.getProperty('min');
+        const min = this.getProp('min');
         if (value && min && value < min) {
             this.validator?.setError(html`<i18n-text key="forms.fields.number.errMin" replacements="min::${min}"></i18n-text>`);
             return false;
         }
-        const max = this.getProperty('max');
+        const max = this.getProp('max');
         if (value && max && value > max) {
             this.validator?.setError(html`<i18n-text key="forms.fields.number.errMax" replacements="max::${max}"></i18n-text>`);
             return false;
         }
-        const step = this.getProperty('step');
+        const step = this.getProp('step');
         if (value && step && value % step !== 0) {
             this.validator?.setError(
                 html`<i18n-text key="forms.fields.number.errStep" replacements="step::${step}"></i18n-text>`

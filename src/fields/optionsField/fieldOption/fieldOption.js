@@ -53,7 +53,7 @@ class FieldOption extends ArpaElement {
      * @returns {string}
      */
     getOptionId() {
-        const valueString = mechanize(this.getProperty('value'));
+        const valueString = mechanize(this.getProp('value'));
         return `field-option-${this.field?.getHtmlId()}-${valueString}`;
     }
 
@@ -128,16 +128,16 @@ class FieldOption extends ArpaElement {
      * @returns {Record<string, unknown>} The template variables.
      */
     getTemplateVars() {
-        const subTitle = this.getProperty('subtitle');
+        const subTitle = this.getProp('subtitle');
         return {
             content: this._content,
-            icon: this.getProperty('icon'),
-            iconLeft: this.getProperty('icon-left'),
-            label: this.getProperty('label'),
+            icon: this.getProp('icon'),
+            iconLeft: this.getProp('icon-left'),
+            label: this.getProp('label'),
             subTitle: subTitle && html`<span class="fieldOption__subTitle">${subTitle}</span>`,
             input: this.renderInput(),
             optionId: this.getOptionId(),
-            value: this.getProperty('value')
+            value: this.getProp('value')
         };
     }
 

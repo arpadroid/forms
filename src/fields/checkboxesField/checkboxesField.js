@@ -63,7 +63,7 @@ class CheckboxesField extends ArrayField {
      * @returns {Record<string, unknown> | unknown[] | undefined | unknown} The output value for this field.
      */
     getOutputValue(values = {}) {
-        const mergeOutput = this.hasProperty('merge-output');
+        const mergeOutput = this.hasProp('merge-output');
         if (!this.isBinary() && !mergeOutput) {
             return super.getOutputValue(values);
         }

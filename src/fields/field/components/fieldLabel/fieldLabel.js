@@ -31,7 +31,7 @@ class FieldLabel extends ArpaElement {
     ////////////////////////
 
     getLabel() {
-        return this.field?.getLabel() || this.getProperty('label') || '';
+        return this.field?.getLabel() || this.getProp('label') || '';
     }
 
     hasLabel() {
@@ -39,7 +39,7 @@ class FieldLabel extends ArpaElement {
     }
 
     isRequired() {
-        return this.field?.isRequired() || this.hasProperty('required');
+        return this.field?.isRequired() || this.hasProp('required');
     }
 
     // #endregion Get

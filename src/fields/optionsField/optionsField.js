@@ -100,7 +100,7 @@ class OptionsField extends Field {
         return (
             [...(this.getOptionsNode()?.children ?? [])].find(option => {
                 return option?.hasAttribute('default');
-            }) || this.getOption(this.getProperty('default-option'))
+            }) || this.getOption(this.getProp('default-option'))
         );
     }
 
@@ -324,7 +324,7 @@ class OptionsField extends Field {
      */
     _renderOption(option) {
         const { optionTemplate = '' } = this._config;
-        const optionComponent = this.getProperty('option-component');
+        const optionComponent = this.getProp('option-component');
         const template = processTemplate(optionTemplate, { optionComponent }, /** @type {ArpaElement} */ (this));
 
         const optionNode = /** @type {FieldOption | null} */ (renderNode(template));

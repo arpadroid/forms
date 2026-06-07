@@ -43,7 +43,7 @@ class RadioOption extends FieldOption {
      * @param {string} [value] - The value attribute of the input element.
      * @returns {string} The rendered input element.
      */
-    renderInput(type = 'radio', name = this.field?.getId(), optionId = this.getOptionId(), value = this.getProperty('value')) {
+    renderInput(type = 'radio', name = this.field?.getId(), optionId = this.getOptionId(), value = this.getProp('value')) {
         const checked = this.field?.getValue() === value ? 'checked' : '';
         const template = html`<input type="${type}" id="{optionId}" name="{name}" value="{value}" {checked} />`;
         return processTemplate(template, { name, optionId, value, checked }, this);

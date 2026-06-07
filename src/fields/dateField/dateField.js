@@ -40,8 +40,8 @@ class DateField extends Field {
 
     async _initializeNodes() {
         await super._initializeNodes();
-        const min = this.getProperty('min');
-        const max = this.getProperty('max');
+        const min = this.getProp('min');
+        const max = this.getProp('max');
         attr(this.input, { min, max });
         if (this.isFutureDisabled()) {
             this.input.setAttribute('max', formatDate(new Date(), this.getFormat()));
@@ -89,7 +89,7 @@ class DateField extends Field {
     getOutputValue() {
         const value = super.getOutputValue();
         if (!value) return value;
-        const format = this.getProperty('output-format') ?? this.getFormat();
+        const format = this.getProp('output-format') ?? this.getFormat();
         return formatDate(String(value), format);
     }
 
@@ -114,7 +114,7 @@ class DateField extends Field {
      * @returns {string}
      */
     getFormat() {
-        return this.getProperty('format');
+        return this.getProp('format');
     }
 
     /**
@@ -169,8 +169,8 @@ class DateField extends Field {
             this.validator?.setError(html`<i18n-text key="${this.i18nKey}.errFutureDisabled"></i18n-text>`);
             return false;
         }
-        const min = this.getProperty('min');
-        const max = this.getProperty('max');
+        const min = this.getProp('min');
+        const max = this.getProp('max');
         if (min && isBefore(value, min)) {
             const minDate = formatDate(min, this.getFormat());
             this.validator?.setError(

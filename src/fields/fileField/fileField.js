@@ -182,7 +182,7 @@ class FileField extends Field {
     }
 
     getMaxSize() {
-        return parseFloat(this.getProperty('max-size'));
+        return parseFloat(this.getProp('max-size'));
     }
 
     /**
@@ -196,7 +196,7 @@ class FileField extends Field {
     }
 
     getMinSize() {
-        return parseFloat(this.getProperty('min-size'));
+        return parseFloat(this.getProp('min-size'));
     }
 
     getValue() {
@@ -238,7 +238,7 @@ class FileField extends Field {
         return this.hasDropArea()
             ? html`<drop-area input-id="${inputId}"></drop-area>`
             : html`<arpa-button icon="upload_file" class="fileField__selectButton">
-                  ${this.getProperty('lbl-add-file')}
+                  ${this.getProp('lbl-add-file')}
               </arpa-button>`;
     }
 
@@ -250,7 +250,7 @@ class FileField extends Field {
             class: 'fileField__uploadList',
             'title-icon': uploadListIcon
         })}> 
-                <zone name="title">${this.getProperty('lbl-uploads')}</zone>
+                <zone name="title">${this.getProp('lbl-uploads')}</zone>
             </${list}>`;
     }
 
@@ -261,7 +261,7 @@ class FileField extends Field {
             class: 'fileField__fileList',
             'title-icon': fileListIcon
         })}>
-            <zone name="title">${this.getProperty('file-list-label')}</zone>
+            <zone name="title">${this.getProp('file-list-label')}</zone>
         </${list}>`;
     }
 

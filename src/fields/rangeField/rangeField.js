@@ -53,16 +53,16 @@ class RangeField extends Field {
     getTemplateVars() {
         return {
             ...super.getTemplateVars(),
-            min: this.getProperty('min'),
-            max: this.getProperty('max'),
-            step: this.getProperty('step'),
+            min: this.getProp('min'),
+            max: this.getProp('max'),
+            step: this.getProp('step'),
             value: this.getValue()
         };
     }
 
     async _initializeNodes() {
         await super._initializeNodes();
-        this.input?.setAttribute('step', this.getProperty('step') || '1');
+        this.input?.setAttribute('step', this.getProp('step') || '1');
         this._initializeTextInput();
         return true;
     }

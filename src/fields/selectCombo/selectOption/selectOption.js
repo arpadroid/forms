@@ -39,7 +39,7 @@ class SelectOption extends FieldOption {
     getTemplateVars() {
         return {
             ...super.getTemplateVars(),
-            value: this.getProperty('value')
+            value: this.getProp('value')
         };
     }
 

@@ -102,9 +102,9 @@ class Field extends ArpaElement {
      * Initializes the value for the field.
      * @param {unknown} value
      */
-    _initializeValue(value = this.getProperty('value')) {
+    _initializeValue(value = this.getProp('value')) {
         if (typeof value === 'undefined') {
-            value = this.getProperty('default-value');
+            value = this.getProp('default-value');
         }
         if (typeof value !== 'undefined') {
             this.setValue(value);
@@ -114,7 +114,7 @@ class Field extends ArpaElement {
     async _initializeInputNode() {
         this.input = this.getInput();
 
-        const inputComponent = this.getProperty('input-component');
+        const inputComponent = this.getProp('input-component');
         if (inputComponent) {
             await customElements.whenDefined(inputComponent);
             /** @type {FieldInput | null} */
@@ -451,7 +451,7 @@ class Field extends ArpaElement {
      * @returns {string | undefined}
      */
     getId() {
-        return this._id || this.id || this.getProperty('id');
+        return this._id || this.id || this.getProp('id');
     }
 
     /**
@@ -459,12 +459,12 @@ class Field extends ArpaElement {
      * @returns {FieldInputType | undefined}
      */
     getInput() {
-        const inputTag = this.getProperty('input-tag');
+        const inputTag = this.getProp('input-tag');
         return this.input || this.inputComponent?.input || (inputTag && this.querySelector(inputTag));
     }
 
     getTooltipPosition() {
-        return this.getProperty('tooltip-position') || 'left';
+        return this.getProp('tooltip-position') || 'left';
     }
 
     /**
@@ -489,7 +489,7 @@ class Field extends ArpaElement {
         const input = this.getInput();
         return this.preProcessValue(
             // @ts-ignore
-            input?.value ?? input?.getAttribute('value') ?? this.getProperty('value') ?? this.value ?? ''
+            input?.value ?? input?.getAttribute('value') ?? this.getProp('value') ?? this.value ?? ''
         );
     }
 
@@ -518,7 +518,7 @@ class Field extends ArpaElement {
      * @returns {unknown}
      */
     getDefaultValue() {
-        return this.getProperty('defaultValue');
+        return this.getProp('defaultValue');
     }
 
     /**
@@ -557,7 +557,7 @@ class Field extends ArpaElement {
      * @returns {string}
      */
     getIcon() {
-        return this.getProperty('icon')?.trim();
+        return this.getProp('icon')?.trim();
     }
 
     /**
@@ -565,7 +565,7 @@ class Field extends ArpaElement {
      * @returns {string | undefined}
      */
     getIconRight() {
-        return this.getProperty('icon-right');
+        return this.getProp('icon-right');
     }
 
     /**
@@ -573,7 +573,7 @@ class Field extends ArpaElement {
      * @returns {string}
      */
     getLabel() {
-        return this.getProperty('label') || '';
+        return this.getProp('label') || '';
     }
 
     getLabelId() {
@@ -585,7 +585,7 @@ class Field extends ArpaElement {
      * @returns {number}
      */
     getLength() {
-        return this.getProperty('length');
+        return this.getProp('length');
     }
 
     /**
@@ -593,7 +593,7 @@ class Field extends ArpaElement {
      * @returns {number}
      */
     getMaxLength() {
-        return parseFloat(this.getProperty('max-length'));
+        return parseFloat(this.getProp('max-length'));
     }
 
     /**
@@ -601,7 +601,7 @@ class Field extends ArpaElement {
      * @returns {number}
      */
     getMinLength() {
-        return parseFloat(this.getProperty('min-length'));
+        return parseFloat(this.getProp('min-length'));
     }
 
     /**
@@ -609,7 +609,7 @@ class Field extends ArpaElement {
      * @returns {string}
      */
     getPlaceholder() {
-        return this.getProperty('placeholder');
+        return this.getProp('placeholder');
     }
 
     getOnFocus() {
@@ -621,7 +621,7 @@ class Field extends ArpaElement {
      * @returns {string}
      */
     getRegex() {
-        return this.getProperty('regex');
+        return this.getProp('regex');
     }
 
     /**
@@ -629,7 +629,7 @@ class Field extends ArpaElement {
      * @returns {number[]}
      */
     getSize() {
-        const size = this.getArrayProperty('size') || [];
+        const size = this.getArrayProp('size') || [];
         return Array.isArray(size) ? size.map((/** @type {string | number} */ size) => Number(size)) : [];
     }
 
@@ -640,7 +640,7 @@ class Field extends ArpaElement {
     //////////////////////////
 
     hasInputMask() {
-        return this.getProperty('has-input-mask');
+        return this.getProp('has-input-mask');
     }
 
     // #endregion Has

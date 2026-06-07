@@ -39,7 +39,7 @@ class ColorField extends Field {
         if (this.textInput) {
             this.textInput.removeEventListener('keyup', this.updateColorInput);
             this.textInput.addEventListener('keyup', this.updateColorInput);
-            this.textInput.value = this.getProperty('value') ?? '';
+            this.textInput.value = this.getProp('value') ?? '';
         }
         requestAnimationFrame(() => this.updateColorInput(undefined, false));
         return true;

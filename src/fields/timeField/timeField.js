@@ -51,8 +51,8 @@ class TimeField extends TextField {
     async _onConnected() {
         await this.onReady();
         super._onConnected();
-        const min = this.getProperty('min');
-        const max = this.getProperty('max');
+        const min = this.getProp('min');
+        const max = this.getProp('max');
         this.input && attr(this.input, { min, max });
     }
 
@@ -73,7 +73,7 @@ class TimeField extends TextField {
      * @returns {boolean} True if the value is valid, false otherwise.
      */
     validateMin(value) {
-        const min = this.getProperty('min');
+        const min = this.getProp('min');
         if (value && min) {
             const minSeconds = timeStringToSeconds(min);
             const seconds = timeStringToSeconds(value);
@@ -93,7 +93,7 @@ class TimeField extends TextField {
      * @returns {boolean} True if the value is valid, false otherwise.
      */
     validateMax(value) {
-        const max = this.getProperty('max');
+        const max = this.getProp('max');
         if (value && max) {
             const maxSeconds = timeStringToSeconds(max);
             const seconds = timeStringToSeconds(value);

@@ -208,7 +208,7 @@ class TagField extends SelectCombo {
     }
 
     allowTextInput() {
-        return this.getProperty('allow-text-input');
+        return this.getProp('allow-text-input');
     }
 
     async updateSearchInputLabel() {

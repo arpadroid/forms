@@ -30,7 +30,7 @@ class TextField extends Field {
      * @param {string | RegExp} [regex] - The regular expression or the name of a predefined regex pattern.
      * @param {string} [message] - The error message to display if the validation fails.
      */
-    setRegexValidation(regex = this.getProperty('regex'), message = this.getProperty('regex-message')) {
+    setRegexValidation(regex = this.getProp('regex'), message = this.getProp('regex-message')) {
         if (typeof regex === 'string') {
             if (RegexTool[regex]) {
                 regex = RegexTool[regex];

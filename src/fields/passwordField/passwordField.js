@@ -61,7 +61,7 @@ class PasswordField extends TextField {
     }
 
     getMode() {
-        return this.getProperty('mode');
+        return this.getProp('mode');
     }
 
     /**
@@ -70,7 +70,7 @@ class PasswordField extends TextField {
      */
     hasConfirm() {
         const { isConfirm } = this._config;
-        return Boolean(!isConfirm && this.getMode() !== 'login' && this.hasProperty('confirm')) ?? true;
+        return Boolean(!isConfirm && this.getMode() !== 'login' && this.hasProp('confirm')) ?? true;
     }
 
     /**

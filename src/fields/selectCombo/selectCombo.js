@@ -129,9 +129,9 @@ class SelectCombo extends SelectField {
         if (this.searchInput && !this.search) {
             this.search = new SearchTool(this.searchInput, {
                 container: this.optionsNode,
-                searchSelector: this.getProperty('search-item-content-selector'),
+                searchSelector: this.getProp('search-item-content-selector'),
                 onSearch: this.onSearch,
-                debounceDelay: this.getProperty('debounce-search')
+                debounceDelay: this.getProp('debounce-search')
             });
         }
     }
@@ -146,8 +146,8 @@ class SelectCombo extends SelectField {
         if (!handler || !this.optionsNode) return;
         if (!this.inputCombo) {
             this.inputCombo = new InputCombo(handler, this.optionsNode, {
-                containerSelector: this.getProperty('option-component'),
-                position: { position: this.getProperty('options-position') },
+                containerSelector: this.getProp('option-component'),
+                position: { position: this.getProp('options-position') },
                 closeOnClick: true,
                 onOpen: () => this.onOpenCombo(),
                 onClose: () => this.onCloseCombo()
@@ -159,7 +159,7 @@ class SelectCombo extends SelectField {
 
     getValue() {
         const input = this.getInput();
-        return this.preProcessValue(input?.getAttribute('value') || this.getProperty('value') || '');
+        return this.preProcessValue(input?.getAttribute('value') || this.getProp('value') || '');
     }
     // #endregion
 
@@ -184,7 +184,7 @@ class SelectCombo extends SelectField {
     }
 
     getContentSelector() {
-        return this.getProperty('search-item-content-selector');
+        return this.getProp('search-item-content-selector');
     }
 
     hasSearch() {
@@ -238,7 +238,7 @@ class SelectCombo extends SelectField {
         const configValue = typeof renderValue === 'function' && renderValue(this.selectedOption);
         return (
             configValue ||
-            this.selectedOption?.getProperty('label') ||
+            this.selectedOption?.getProp('label') ||
             this.selectedOption?.textContent?.trim() ||
             this.getPlaceholder()
         );
@@ -320,7 +320,7 @@ class SelectCombo extends SelectField {
     }
 
     onSearchInputBlur() {
-        this.searchInput && (this.searchInput.value = this.getSelectedOption()?.getProperty('label') || '');
+        this.searchInput && (this.searchInput.value = this.getSelectedOption()?.getProp('label') || '');
     }
 
     onOpenCombo() {
