@@ -65,8 +65,8 @@ class TagField extends SelectCombo {
         this._hasInitializedValue = true;
     }
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         /** @type {TagList | null} */
         this.tagList = this.querySelector('tag-list');
         return true;

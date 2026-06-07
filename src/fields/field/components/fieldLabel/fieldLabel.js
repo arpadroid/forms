@@ -9,7 +9,7 @@ const html = String.raw;
 class FieldLabel extends ArpaElement {
     /** @type {FieldLabelConfigType} */
     _config = this._config;
-    _initialize() {
+    $initialize() {
         this.field = /** @type {Field} */ (this.closest('.arpaField'));
     }
 
@@ -54,7 +54,7 @@ class FieldLabel extends ArpaElement {
         this._id = this.field?.getLabelId();
     }
 
-    _getTemplate() {
+    $renderTemplate() {
         return html`
             <label
                 ${attrString({
@@ -79,7 +79,7 @@ class FieldLabel extends ArpaElement {
         return this.isRequired() ? html`<span class="fieldLabel__required">*</span>` : '';
     }
 
-    async _initializeNodes() {
+    async $initializeNodes() {
         this.labelNode = this.querySelector('.fieldLabel__text');
         return true;
     }

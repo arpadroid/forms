@@ -38,8 +38,8 @@ class DateField extends Field {
     // #region LIFECYCLE
     ///////////////////////////
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         const min = this.getProp('min');
         const max = this.getProp('max');
         attr(this.input, { min, max });

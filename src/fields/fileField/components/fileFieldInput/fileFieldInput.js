@@ -13,8 +13,8 @@ class FileFieldInput extends FieldInput {
     /** @type {FileField | undefined} */
     field;
 
-    _initialize() {
-        super._initialize();
+    $initialize() {
+        super.$initialize();
         this.bind('_onInputChange');
     }
 
@@ -26,8 +26,8 @@ class FileFieldInput extends FieldInput {
      * Initializes the nodes.
      * @returns {Promise<boolean>}
      */
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         const input = this.input;
         if (!input) {
             return false;

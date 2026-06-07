@@ -28,9 +28,9 @@ class WeekField extends TextField {
         return 'week-field';
     }
 
-    async _onInitialized() {
+    async $onInitialized() {
         await this.onReady();
-        super._onInitialized();
+        super.$onInitialized();
         this.weekButton = this.renderWeekButton();
         this.weekButton && this.inputMask?.addRhs('timeButton', this.weekButton);
     }

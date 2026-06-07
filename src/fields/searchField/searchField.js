@@ -38,9 +38,9 @@ class SearchField extends Field {
         return 'search-field';
     }
 
-    async _initialize() {
+    async $initialize() {
         const { variant } = this._config;
-        super._initialize();
+        super.$initialize();
         if (variant === 'mini') {
             this._config.iconRight = undefined;
         }
@@ -54,8 +54,8 @@ class SearchField extends Field {
         return this.getVariant() === 'mini' ? undefined : this.getProp('icon-right');
     }
 
-    async _onInitialized() {
-        await super._onInitialized();
+    async $onInitialized() {
+        await super.$onInitialized();
         this.classList.add('searchField', `searchField--${this.getVariant()}`);
         this.handleMiniButton();
     }

@@ -21,8 +21,8 @@ class HiddenField extends Field {
         return 'hidden-field';
     }
 
-    async _onConnected() {
-        super._onConnected();
+    async $onConnected() {
+        super.$onConnected();
         await this.onReady();
         if (this.isConnected) {
             this.input?.classList.add('arpaField');

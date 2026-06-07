@@ -77,10 +77,10 @@ class FieldOption extends ArpaElement {
         this.setIsSelected();
         super.render();
         this._config.className && this.classList.add(this._config.className);
-        this._onConnected();
+        this.$onConnected();
     }
 
-    async _initializeNodes() {
+    async $initializeNodes() {
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = this.querySelector('.fieldOption__content');
         this.contentNode && appendNodes(this.contentNode, this._childNodes);
@@ -112,16 +112,16 @@ class FieldOption extends ArpaElement {
         this.isSelected() ? this.setAttribute('aria-selected', 'true') : this.removeAttribute('aria-selected');
     }
 
-    async _onInitialized() {
+    async $onInitialized() {
         await this.onReady();
         this.field?.on('change', () => this.setIsSelected());
-        super._onInitialized();
+        super.$onInitialized();
     }
 
     /**
      * Handles the connected event for the field option element.
      */
-    _onConnected() {}
+    $onConnected() {}
 
     /**
      * Returns the template variables for rendering the field option element.

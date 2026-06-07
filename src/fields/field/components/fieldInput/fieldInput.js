@@ -5,7 +5,7 @@ import { ArpaElement } from '@arpadroid/ui';
 import Field from '../../field.js';
 import { attrString, defineCustomElement, mergeObjects } from '@arpadroid/tools';
 class FieldInput extends ArpaElement {
-    _initialize() {
+    $initialize() {
         this.bind('_onFocus', '_onInput');
         /** @type {Record<string, unknown>} */
         this.inputAttributes = {};
@@ -50,7 +50,7 @@ class FieldInput extends ArpaElement {
         }
     }
 
-    _getTemplate() {
+    $renderTemplate() {
         const attr = mergeObjects({
             class: this.getProp('input-class'),
             id: this.field?.getHtmlId(),
@@ -63,7 +63,7 @@ class FieldInput extends ArpaElement {
         return `<input ${attrString(attr)} />`;
     }
 
-    async _initializeNodes() {
+    async $initializeNodes() {
         /** @type {HTMLInputElement | null} */
         this.input = this.querySelector('input');
         this.initializeListeners();

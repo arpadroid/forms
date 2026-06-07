@@ -27,9 +27,9 @@ class TextAreaField extends TextField {
         return 'textarea-field';
     }
 
-    async _initialize() {
+    async $initialize() {
         this.value = this.innerHTML || this.getProp('value');
-        super._initialize();
+        super.$initialize();
     }
 
     async _initializeInputNode() {

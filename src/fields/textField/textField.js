@@ -12,8 +12,8 @@ class TextField extends Field {
      * Called when the element is connected to the DOM.
      * @override
      */
-    _onInitialized() {
-        super._onInitialized();
+    $onInitialized() {
+        super.$onInitialized();
         this.setRegexValidation();
     }
 

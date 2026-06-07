@@ -5,11 +5,11 @@ const html = String.raw;
  * Represents a custom element for displaying field errors.
  */
 class FieldErrors extends ArpaElement {
-    _initialize() {
+    $initialize() {
         this.field = this.closest('.arpaField');
     }
 
-    _onConnected() {
+    $onConnected() {
         this.classList.add('fieldErrors');
     }
 
@@ -24,7 +24,7 @@ class FieldErrors extends ArpaElement {
         </arpa-tooltip>`;
     }
 
-    async _initializeNodes() {
+    async $initializeNodes() {
         this.tooltip = this.querySelector('.fieldErrors__tooltip');
         this.errorList = this.querySelector('.fieldErrors__list');
         return true;

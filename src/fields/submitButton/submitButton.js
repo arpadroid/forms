@@ -21,8 +21,8 @@ class SubmitButton extends Button {
         return mergeObjects(super.getDefaultConfig(), config);
     }
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this._handleButtonState();
         /** @type {import('../field/field').FormComponent | null} */
         this.form = this.closest('arpa-form');

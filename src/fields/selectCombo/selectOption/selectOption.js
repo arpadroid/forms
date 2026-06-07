@@ -47,8 +47,8 @@ class SelectOption extends FieldOption {
      * Called when the element is connected to the DOM.
      * @returns {Promise<boolean>}
      */
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this.handler = /** @type {HTMLElement | null} */ (this.querySelector('.fieldOption__handler'));
         this.handler?.removeEventListener('click', this._onSelected);
         this.handler?.addEventListener('click', this._onSelected);

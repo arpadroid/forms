@@ -60,8 +60,8 @@ class RangeField extends Field {
         };
     }
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this.input?.setAttribute('step', this.getProp('step') || '1');
         this._initializeTextInput();
         return true;

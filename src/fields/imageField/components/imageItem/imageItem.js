@@ -31,8 +31,8 @@ class ImageItem extends FileItem {
         this._config.imagePreviewTitle = this._config.imagePreviewTitle ?? name;
     }
 
-    async _onConnected() {
-        super._onConnected();
+    async $onConnected() {
+        super.$onConnected();
         this.classList.add('imageItem');
     }
 
@@ -56,8 +56,8 @@ class ImageItem extends FileItem {
         };
     }
 
-    _getTemplate() {
-        const content = super._getTemplate();
+    $renderTemplate() {
+        const content = super.$renderTemplate();
         return html`${content}<zone name="rhs">{previewButton}</zone>`;
     }
 
@@ -68,8 +68,8 @@ class ImageItem extends FileItem {
     }
     
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         const previewButton = this.querySelector('.imageItem__previewButtonRhs button');
         previewButton?.addEventListener('click', () => {
             /** @type {HTMLButtonElement | null} */

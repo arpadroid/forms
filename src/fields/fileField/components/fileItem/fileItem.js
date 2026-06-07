@@ -18,8 +18,8 @@ class FileItem extends ListItem {
     // #region INITIALIZATION
     //////////////////////////
 
-    _initialize() {
-        super._initialize();
+    $initialize() {
+        super.$initialize();
         this.bind('_onDelete', 'onEdit');
     }
 
@@ -177,8 +177,8 @@ class FileItem extends ListItem {
 
     // #endregion
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this._initializeDeleteButton();
         this._initializeEditButton();
         return true;

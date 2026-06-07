@@ -71,9 +71,9 @@ class RadioOption extends FieldOption {
         callOnChange && this.field?._callOnChange(event);
     }
 
-    async _onConnected() {
+    async $onConnected() {
         await this.field?.promise;
-        super._onConnected();
+        super.$onConnected();
         this.input = this.querySelector('input');
         if (this.input) {
             this.input.removeEventListener('change', this._onChange);

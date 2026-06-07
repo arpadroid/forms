@@ -97,8 +97,8 @@ class PasswordField extends TextField {
     // #region Lifecycle
     //////////////////////
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this.promise.then(() => {
             this._initializeConfirmField();
             if (!this.visButton) {

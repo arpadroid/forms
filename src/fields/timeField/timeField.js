@@ -39,8 +39,8 @@ class TimeField extends TextField {
         return 'time-field';
     }
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         if (!this.timeButton) {
             this.timeButton = this.renderTimeButton();
             this.timeButton && this.inputMask?.addRhs('timeButton', this.timeButton);
@@ -48,9 +48,9 @@ class TimeField extends TextField {
         return true;
     }
 
-    async _onConnected() {
+    async $onConnected() {
         await this.onReady();
-        super._onConnected();
+        super.$onConnected();
         const min = this.getProp('min');
         const max = this.getProp('max');
         this.input && attr(this.input, { min, max });

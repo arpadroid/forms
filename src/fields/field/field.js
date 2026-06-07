@@ -40,7 +40,7 @@ class Field extends ArpaElement {
      * Initializes the field after constructor.
      * @throws {Error} If the field does not have an id.
      */
-    async _initialize() {
+    async $initialize() {
         const id = this.getId();
         if (!id) throw new Error('Field must have an id');
         await this.onReady();
@@ -79,7 +79,7 @@ class Field extends ArpaElement {
      * Initializes the properties for the field.
      * @returns {boolean}
      */
-    initializeProperties() {
+    $initializeProperties() {
         /** @type {FormComponent} */
         if (this.id) {
             this._id = this.id;
@@ -94,7 +94,7 @@ class Field extends ArpaElement {
         return false;
     }
 
-    _onInitialized() {
+    $onInitialized() {
         this.initializeValidation();
     }
 
@@ -126,7 +126,7 @@ class Field extends ArpaElement {
         return true;
     }
 
-    async _initializeNodes() {
+    async $initializeNodes() {
         /** @type {FormComponent} */
         await new Promise(resolve => setTimeout(resolve, 0));
         this.form = this.getForm();
@@ -143,7 +143,7 @@ class Field extends ArpaElement {
         return true;
     }
 
-    _onDomReady() {
+    $onDomReady() {
         this._initializeValue();
     }
 
@@ -329,7 +329,7 @@ class Field extends ArpaElement {
         this.form = this.getForm();
         this.classList.add('arpaField');
         this._initializeClassNames();
-        this.initializeProperties();
+        this.$initializeProperties();
     }
 
     _initializeClassNames() {

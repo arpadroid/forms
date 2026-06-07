@@ -28,7 +28,7 @@ class FormComponent extends ArpaElement {
     //////////////////////////////////
     // #region Initialization & Config
     //////////////////////////////////
-    _initialize() {
+    $initialize() {
         this.bind('_onChange', '_onSubmit');
         if (this.hasAttribute('title')) {
             this._config.title = this.getProp('title');
@@ -264,7 +264,7 @@ class FormComponent extends ArpaElement {
         };
     }
 
-    async _initializeNodes() {
+    async $initializeNodes() {
         const { variant } = this._config || {};
         this.bodyNode = this.querySelector('.arpaForm__body');
         /** @type {HTMLFormElement | null} */
@@ -281,7 +281,7 @@ class FormComponent extends ArpaElement {
         return true;
     }
 
-    _getTemplate() {
+    $renderTemplate() {
         !this.id && console.warn('Form must have an id.', this);
         const variant = this.getVariant();
         return html`<form class="arpaForm__form" novalidate>${variant === 'mini' ? this.renderMini() : this.renderFull()}</form>`;

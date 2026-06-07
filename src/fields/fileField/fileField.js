@@ -271,8 +271,8 @@ class FileField extends Field {
     // #region LIFECYCLE
     ////////////////////
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this.classList.add(!this.allowMultiple() ? 'fileField--single' : 'fileField--multiple');
         this._initializeFileList();
         /** @type {FileList | null} */

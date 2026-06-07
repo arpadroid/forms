@@ -96,8 +96,8 @@ class SelectCombo extends SelectField {
         this.updateValue();
     }
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this._initializeButtonInput();
         this._initializeSearchInput();
         this._initializeOptionsNode();

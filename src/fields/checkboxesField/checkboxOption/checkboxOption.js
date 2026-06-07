@@ -22,8 +22,8 @@ class CheckboxOption extends RadioOption {
         return super.renderInput('checkbox', name);
     }
 
-    async _onConnected() {
-        await super._onConnected();
+    async $onConnected() {
+        await super.$onConnected();
         if (this.input && this.field) {
             this.input.checked = this.field?.hasValue(this.getAttribute('value'));
         }

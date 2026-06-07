@@ -217,13 +217,13 @@ class OptionsField extends Field {
         this.selectedOption = this.getSelectedOption();
     }
 
-    _onInitialized() {
-        super._onInitialized();
+    $onInitialized() {
+        super.$onInitialized();
         this.initializeOptions();
     }
 
-    async _initializeNodes() {
-        await super._initializeNodes();
+    async $initializeNodes() {
+        await super.$initializeNodes();
         await this._initializeOptionsNode();
         return true;
     }
