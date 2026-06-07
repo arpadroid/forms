@@ -1,18 +1,22 @@
 field-errors {
-    --tooltip-border-color: var(--red-light);
-    --tooltip-bg-color: var(--red-lightest);
-    --tooltip-text-color: var(--red-dark);
+    .tooltip {
+        --border-color: var(--red-light);
+        --bg-color: var(--red-lightest);
+        --text-color: var(--red-dark);
+    }
 
     margin-right: 0.8rem;
+
     &:not(:has(.fieldErrors__list)),
     &:has(.fieldErrors__list:empty) {
         display: none;
     }
 
     arpa-icon.icon {
-        color: var(--red-medium);
         margin: 0;
+        color: var(--red-medium);
     }
+
     &:focus-within .icon.icon {
         color: var(--red-medium);
     }
