@@ -491,7 +491,7 @@ class FormComponent extends ArpaElement {
 
     startLoading() {
         if (!this.preloader) {
-            this.preloader = renderNode(html`<circular-preloader></circular-preloader>`);
+            this.preloader = renderNode(html`<circular-spinner></circular-spinner>`);
         }
         this.preloader && this.bodyNode?.append(this.preloader);
     }

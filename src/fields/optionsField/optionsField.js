@@ -342,7 +342,7 @@ class OptionsField extends Field {
     renderOptionsPreloader() {
         if (!this.optionsPreloader) {
             this.optionsPreloader = /** @type {CircularPreloader} */ (
-                renderNode(html`<circular-preloader></circular-preloader>`)
+                renderNode(html`<circular-spinner></circular-spinner>`)
             );
         }
         this.optionsPreloader && this.optionsNode?.append(this.optionsPreloader);
