@@ -3,7 +3,7 @@
  * @typedef {import('./optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType
  * @typedef {import('./fieldOption/fieldOption.js').default} FieldOption
  * @typedef {import('./optionsField.types').OptionsNodeType} OptionsNodeType
- * @typedef {import('@arpadroid/ui').CircularPreloader} CircularPreloader
+ * @typedef {import('@arpadroid/ui').CircularSpinner} CircularSpinner
  */
 import { attr, defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
 import Field from '../field/field.js';
@@ -32,7 +32,7 @@ class OptionsField extends Field {
             inputTemplate: html` <div role="listbox" class="optionsField__options" aria-labelledby="{labelId}">{options}</div> `,
             optionComponent: 'field-option',
             options: undefined,
-            optionTemplate: html`<{optionComponent} role="option"></{optionComponent}`
+            optionTemplate: html`<{optionComponent} role="option"></{optionComponent}>`
         });
     }
 
@@ -341,7 +341,7 @@ class OptionsField extends Field {
 
     renderOptionsPreloader() {
         if (!this.optionsPreloader) {
-            this.optionsPreloader = /** @type {CircularPreloader} */ (
+            this.optionsPreloader = /** @type {CircularSpinner} */ (
                 renderNode(html`<circular-spinner></circular-spinner>`)
             );
         }
