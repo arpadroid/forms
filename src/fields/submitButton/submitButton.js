@@ -36,10 +36,10 @@ class SubmitButton extends Button {
         const icon = this.form?.getProp('submit-icon') || this.getProp('icon');
         if (isValid) {
             this.button?.removeAttribute('data-invalid');
-            icon && this.setIcon(icon);
+            icon && this.setProp('icon', icon);
         } else {
             this.button?.setAttribute('data-invalid', '');
-            iconInvalid && this.setIcon(iconInvalid);
+            iconInvalid && this.setProp('icon', iconInvalid);
         }
     }
 }

@@ -63,7 +63,7 @@ class ImageItem extends FileItem {
 
     renderPreviewButton() {
         return html`<icon-button class="imageItem__previewButtonRhs" icon="visibility">
-            <zone name="tooltip-content">${this.i18n('lblPreview')}</zone>
+            <arpa-zone name="tooltip">${this.i18n('lblPreview')}</arpa-zone>
         </icon-button>`;
     }
     

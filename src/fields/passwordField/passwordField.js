@@ -83,7 +83,7 @@ class PasswordField extends TextField {
             renderNode(
                 html`<icon-button
                     icon="visibility"
-                    label="${lblShowPassword}"
+                    tooltip="${lblShowPassword}"
                     variant="minimal"
                     tooltip-position="left"
                 ></icon-button>`
@@ -164,8 +164,8 @@ class PasswordField extends TextField {
     togglePasswordVisibility() {
         const isPassword = this.input?.getAttribute('type') === 'password';
         this.input?.setAttribute('type', isPassword ? 'text' : 'password');
-        this.visButton?.setTooltip(isPassword ? this.i18nText('lblHidePassword') : this.i18nText('lblShowPassword'));
-        this.visButton?.setIcon(isPassword ? 'visibility_off' : 'visibility');
+        this.visButton?.setProp('tooltip', isPassword ? this.i18nText('lblHidePassword') : this.i18nText('lblShowPassword'));
+        this.visButton?.setProp('icon', isPassword ? 'visibility_off' : 'visibility');
     }
 
     // #endregion Lifecycle
