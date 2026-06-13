@@ -159,7 +159,7 @@ export const Test = {
 
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
             /** @type {HTMLButtonElement | null} */
-            const deleteButton = canvasElement.querySelector('.fileField__uploadList .button--delete');
+            const deleteButton = canvasElement.querySelector('.fileField__uploadList button[variant="delete"]');
             if (!deleteButton) {
                 throw new Error('Delete button not found');
             }
