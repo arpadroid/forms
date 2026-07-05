@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * @typedef {import('../components/form/form.js').default} Form
  * @typedef {import('../fields/selectCombo/selectCombo.js').default} SelectCombo

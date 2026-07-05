@@ -43,7 +43,7 @@ class FieldOption extends ArpaElement {
         {input}
         <div class="fieldOption__content">
             <span class="fieldOption__label">{label}</span>
-            {subTitle}
+            {subtitle}
         </div>
         <arpa-icon class="fieldOption__icon">{icon}</arpa-icon>
     `;
@@ -82,7 +82,7 @@ class FieldOption extends ArpaElement {
 
     async $initializeNodes() {
         this.handlerNode = this.querySelector('.fieldOption__handler');
-        this.contentNode = this.querySelector('.fieldOption__content');
+        this.contentNode = /** @type {HTMLElement} */ (this.querySelector('.fieldOption__content'));
         this.contentNode && appendNodes(this.contentNode, this._childNodes);
         return true;
     }
@@ -128,13 +128,13 @@ class FieldOption extends ArpaElement {
      * @returns {Record<string, unknown>} The template variables.
      */
     getTemplateVars() {
-        const subTitle = this.getProp('subtitle');
+        const subtitle = this.getProp('subtitle');
         return {
             content: this._content,
             icon: this.getProp('icon'),
             iconLeft: this.getProp('icon-left'),
             label: this.getProp('label'),
-            subtitle: subTitle && html`<span class="fieldOption__subtitle">${subTitle}</span>`,
+            subtitle: subtitle && html`<span class="fieldOption__subtitle">${subtitle}</span>`,
             input: this.renderInput(),
             optionId: this.getOptionId(),
             value: this.getProp('value')
