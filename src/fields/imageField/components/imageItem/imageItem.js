@@ -58,7 +58,7 @@ class ImageItem extends FileItem {
 
     $renderTemplate() {
         const content = super.$renderTemplate();
-        return html`${content}<zone name="rhs">{previewButton}</zone>`;
+        return html`${content}<arpa-zone name="rhs">{previewButton}</arpa-zone>`;
     }
 
     renderPreviewButton() {

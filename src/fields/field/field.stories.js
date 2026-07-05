@@ -2,17 +2,14 @@
  * @typedef {import('./field.types').FieldConfigType} FieldConfigType
  * @typedef {import('./field').default} Field
  * @typedef {import('../../components/form/form').default} Form
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story
  */
 
 import { I18n } from '@arpadroid/i18n';
-import { attrString } from '@arpadroid/tools';
 
 import { waitFor, expect } from 'storybook/test';
-import { getArgs, getArgTypes, playSetup, renderContent, renderField, renderScript } from './field.stories.util.js';
+import { getArgs, getArgTypes, playSetup, renderField } from './field.stories.util.js';
 
 const html = String.raw;
 
@@ -26,7 +23,7 @@ const FieldStory = {
     render: renderField
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
     parameters: {
@@ -50,7 +47,7 @@ export const Default = {
     argTypes: getArgTypes()
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
     parameters: {
         controls: { disable: true },
@@ -96,7 +93,7 @@ export const Test = {
                 input.value = 'a';
                 submitButton?.click();
                 await waitFor(() => {
-                    canvas.getByText(I18n.getText('forms.field.errMinLength', { minLength: args.minLength }));
+                    canvas.getByText(I18n.getText('forms.field.errMinLength', { minLength: args.minLength || '' }));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
                     expect(onSubmitMock).not.toHaveBeenCalled();
                     expect(onErrorMock).toHaveBeenCalled();
@@ -110,7 +107,7 @@ export const Test = {
                 input.value = '12345678901';
                 submitButton?.click();
                 await waitFor(() => {
-                    canvas.getByText(I18n.getText('forms.field.errMaxLength', { maxLength: args.maxLength }));
+                    canvas.getByText(I18n.getText('forms.field.errMaxLength', { maxLength: args.maxLength || '' }));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
                     expect(onSubmitMock).not.toHaveBeenCalled();
                     expect(onErrorMock).toHaveBeenCalled();
@@ -119,7 +116,7 @@ export const Test = {
         );
 
         await step('Calls onChange listener when change event is fired', async () => {
-            field?.on('change', args.onChange);
+            args.onChange && field?.on('change', args.onChange);
             expect(args.onChange).not.toHaveBeenCalled();
             if (!input) {
                 throw new Error('Input element not found');
@@ -153,45 +150,41 @@ export const Test = {
     }
 };
 
+/** @type {Story} */
 export const Zones = {
     args: {
         id: 'zoned-field',
         content: 'Test content',
         label: undefined
     },
-    render: (/** @type {Args} */ args) => {
+    render: args => {
         return html`
             <arpa-form id="field-form">
                 <text-field required id="zone-field">
-                    <zone name="label">Field label</zone>
-                    <zone name="description">Test description</zone>
-                    <zone name="footnote">This is a footnote</zone>
-                    <!-- <zone name="tooltip">test tooltip</zone> -->
-                    <zone name="input-rhs">
+                    <arpa-zone name="label">Field label</arpa-zone>
+                    <arpa-zone name="description">Test description</arpa-zone>
+                    <arpa-zone name="footnote">This is a footnote</arpa-zone>
+                    <arpa-zone name="tooltip">test tooltip</arpa-zone>
+                    <arpa-zone name="input-rhs">
                         <icon-button icon="more_horiz">
-                            <zone name="tooltip-content">More options</zone>
+                            <arpa-zone name="tooltip">More options</arpa-zone>
                         </icon-button>
-                    </zone>
+                    </arpa-zone>
                     ${args.content}
                 </text-field>
             </arpa-form>
         `;
+    },
+    play: async ({ step, canvas }) => {
+        await step('Renders the zone content.', async () => {
+            await waitFor(() => {
+                expect(canvas.getByText('This is a footnote')).toBeInTheDocument();
+                expect(canvas.getByText('Test description')).toBeInTheDocument();
+                expect(canvas.getByText('test tooltip')).toBeInTheDocument();
+                expect(canvas.getByText('Field label')).toBeInTheDocument();
+            });
+        });
     }
-    /**
-     * Plays the zone field.
-     * @param {{ canvasElement: HTMLElement, step: StepFunction }} args
-     * @todo Investigate why test is failing in CI.
-     */
-    // play: async ({ canvasElement, step }) => {
-    //     const canvas = within(canvasElement);
-    //     await new Promise(resolve => setTimeout(resolve, 500));
-    //     await step('Renders the zone content.', async () => {
-    //         expect(canvas.getByText('This is a footnote')).toBeInTheDocument();
-    //         expect(canvas.getByText('Test description')).toBeInTheDocument();
-    //         expect(canvas.getByText('test tooltip')).toBeInTheDocument();
-    //         expect(canvas.getByText('Field label')).toBeInTheDocument();
-    //     });
-    // }
 };
 
 export default FieldStory;

@@ -44,7 +44,7 @@ customElements.whenDefined('arpa-form').then(() => {
             return [...People].filter(
                 option =>
                     option.label.toLowerCase().includes(query.toLowerCase()) ||
-                    option.subTitle.toLowerCase().includes(query.toLowerCase())
+                    option.subtitle.toLowerCase().includes(query.toLowerCase())
             );
         });
     });

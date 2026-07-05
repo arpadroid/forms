@@ -13,7 +13,7 @@ export type FieldOptionOnChangeType = (checked: boolean, payload: FieldOptionOnC
 
 export type FieldOptionConfigType = ArpaElementConfigType & {
     label?: string;
-    subTitle?: string;
+    subtitle?: string;
     value?: string;
     disabled?: boolean;
     selected?: boolean;

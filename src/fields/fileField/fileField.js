@@ -250,7 +250,7 @@ class FileField extends Field {
             class: 'fileField__uploadList',
             'title-icon': uploadListIcon
         })}> 
-                <zone name="title">${this.getProp('lbl-uploads')}</zone>
+                <arpa-zone name="title">${this.getProp('lbl-uploads')}</arpa-zone>
             </${list}>`;
     }
 
@@ -261,7 +261,7 @@ class FileField extends Field {
             class: 'fileField__fileList',
             'title-icon': fileListIcon
         })}>
-            <zone name="title">${this.getProp('file-list-label')}</zone>
+            <arpa-zone name="title">${this.getProp('file-list-label')}</arpa-zone>
         </${list}>`;
     }
 

@@ -84,7 +84,7 @@ export async function playSetup(canvasElement, opt) {
     await form?.promise;
     form?.setAttribute('debounce', '0');
     const submitButton = getByText(canvasElement, 'Submit').closest('button');
-    const onSubmitMock = fn(values => {
+    const onSubmitMock = fn(_values => {
         // console.log('values', values);
         return true;
     });
@@ -95,7 +95,7 @@ export async function playSetup(canvasElement, opt) {
         field.on('error', onErrorMock);
         field.on('change', onChangeMock);
     }
-    /** @type {import('src/types').FieldInputType | null} */
+    /** @type {import('../../types').FieldInputType | null} */
     const input = (typeof field?.getInput === 'function' && field?.getInput()) || null;
 
     await new Promise(resolve => setTimeout(resolve, 100));

@@ -134,7 +134,7 @@ class FieldOption extends ArpaElement {
             icon: this.getProp('icon'),
             iconLeft: this.getProp('icon-left'),
             label: this.getProp('label'),
-            subTitle: subTitle && html`<span class="fieldOption__subTitle">${subTitle}</span>`,
+            subtitle: subTitle && html`<span class="fieldOption__subtitle">${subTitle}</span>`,
             input: this.renderInput(),
             optionId: this.getOptionId(),
             value: this.getProp('value')

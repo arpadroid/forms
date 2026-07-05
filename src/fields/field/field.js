@@ -52,7 +52,8 @@ class Field extends ArpaElement {
      * @returns {FieldConfigType}
      */
     getDefaultConfig() {
-        return {
+        /** @type {FieldConfigType} */
+        const config = {
             template: Field.template,
             inputTemplate: html`<field-input {inputAttr}></field-input>`,
             validator: FieldValidator,
@@ -64,6 +65,7 @@ class Field extends ArpaElement {
                 type: 'text'
             }
         };
+        return super.getDefaultConfig(config);
     }
 
     /**
@@ -203,14 +205,14 @@ class Field extends ArpaElement {
     //////////////////////////
 
     static template = html`
-        <div class="arpaField__header">{label}{errors}{tooltip}</div>
+        <div class="arpaField__header">{renderLabel()}{errors}{tooltip}</div>
         {subHeader}
         <div class="arpaField__body">
-            {description} {beforeInput}
-            <div class="arpaField__inputWrapper" zone="input-wrapper">{input}{inputRhs}{inputMask}</div>
+            {renderDescription()} {beforeInput}
+            <div class="arpaField__inputWrapper" zone="input-wrapper">{input}{renderInputRhs()}{renderInputMask()}</div>
             {afterInput}
         </div>
-        <div class="arpaField__footer">{footnote}</div>
+        <div class="arpaField__footer">{renderFootnote()}</div>
     `;
 
     /**
@@ -224,19 +226,18 @@ class Field extends ArpaElement {
             input: this.renderInput(),
             tooltip: this.renderTooltip(),
             tooltipPosition: this.getTooltipPosition(),
-            label: this.renderLabel(),
             icon: this.getIcon(),
             iconRight: this.getIconRight(),
             content: this._content,
-            inputMask: this.hasInputMask() && html`<field-input-mask></field-input-mask>`,
             subHeader: this.renderSubHeader(),
-            description: this.renderDescription(),
-            footnote: this.renderFootnote(),
-            inputRhs: this.renderInputRhs(),
             errors: this.renderErrors(),
             value: this.getValue(),
             inputAttr: this.renderInputAttributes()
         };
+    }
+
+    renderInputMask() {
+        return this.hasInputMask() ? html`<field-input-mask></field-input-mask>` : '';
     }
 
     renderInputAttributes() {
@@ -246,8 +247,9 @@ class Field extends ArpaElement {
 
     renderTooltip() {
         return this.hasContent('tooltip')
-            ? html`<arpa-tooltip class="arpaField__tooltip" icon="info" position="{tooltipPosition}" zone="tooltip">
-                  <zone name="tooltip-content">${this.getTooltip()}</zone>
+            ? html`<arpa-tooltip class="arpaField__tooltip" icon="info" position="{tooltipPosition}">
+                  <div zone="tooltip"></div>
+                  ${this.getTooltip() || ''}
               </arpa-tooltip>`
             : '';
     }
@@ -275,15 +277,15 @@ class Field extends ArpaElement {
     }
 
     renderDescription() {
-        return this.renderChild('description', { tag: 'p' });
+        return html`<arpa-node name="description" tag="p" can-render="description"></arpa-node>`;
     }
 
     renderFootnote() {
-        return this.renderChild('footnote', { tag: 'p' });
+        return html`<arpa-node name="footnote" tag="p" can-render="footnote"></arpa-node>`;
     }
 
     renderLabel() {
-        return this.renderChild('label', { tag: 'field-label', hasZone: false });
+        return html`<arpa-node name="label" tag="field-label" can-render="label"></arpa-node>`;
     }
 
     renderInput() {
@@ -334,7 +336,7 @@ class Field extends ArpaElement {
 
     _initializeClassNames() {
         if (typeof this._config?.className === 'string') {
-            this.classList.add(...this._config.className.trim().split(' '));
+            this.classList.add(...this._config.className.trim());
         }
         if (Array.isArray(this._config.classNames)) {
             this.classList.add(...this._config.classNames);

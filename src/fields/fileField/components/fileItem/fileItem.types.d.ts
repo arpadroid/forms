@@ -29,7 +29,6 @@ export type FileItemConfigType = ListItemConfigType & {
     rhsContent?: string;
     size?: string;
     status?: string;
-    subTitle?: string;
     title?: string;
     titleIcon?: string;
     titleLink?: string;

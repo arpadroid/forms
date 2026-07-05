@@ -1,8 +1,13 @@
 import { I18n } from '@arpadroid/i18n';
 import TextField from '../textField/textField.js';
 import { defineCustomElement } from '@arpadroid/tools';
+/** @typedef {import('../field/field.types').FieldConfigType} FieldConfigType */
 
 class EmailField extends TextField {
+    /**
+     * Returns the default configuration for the email field, extending the base field configuration with email-specific settings.
+     * @returns {FieldConfigType}
+     */
     getDefaultConfig() {
         return {
             ...super.getDefaultConfig(),

@@ -14,7 +14,7 @@ export type FieldConfigType = ArpaElementConfigType & {
     classNames?: string[];
     description?: string;
     disabled?: boolean;
-    footNote?: string;
+    footnote?: string;
     icon?: string;
     iconRight?: string;
     id?: string;

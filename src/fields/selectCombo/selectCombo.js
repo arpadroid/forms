@@ -30,7 +30,7 @@ class SelectCombo extends SelectField {
         const config = {
             hasSearch: false,
             debounceSearch: 500,
-            searchItemContentSelector: '.fieldOption__label, .fieldOption__subTitle',
+            searchItemContentSelector: '.fieldOption__label, .fieldOption__subtitle',
             placeholder: I18n.getText('forms.fields.selectCombo.lblNoSelection'),
             optionsPosition: 'bottom-left',
             inputAttributes: { type: undefined },
