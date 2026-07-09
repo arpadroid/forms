@@ -1,16 +1,20 @@
 .fileItem {
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 1px 10px 0px;
+    --listItem-gap: 0.5rem;
+
+    padding: 0.25rem 0.75rem;
     border-radius: var(--input-border-radius);
-    padding: 0.5rem var(--input-padding);
+    box-shadow: rgb(99 99 99 / 20%) 0 1px 10px 0;
 
     .listItem__title {
         display: flex;
         flex-direction: row;
-        font-weight: 600;
+        align-items: baseline;
+        min-width: 100px;
     }
 
     .listItem__contentWrapper {
-        align-self: center;
+        align-self: baseline;
+        padding: 0;
     }
 
     .listItem__contentHeader {
@@ -19,31 +23,27 @@
 
     .fileItem__metadata {
         position: relative;
-        padding: 0 8px;
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        align-items: baseline;
+        padding: 0 8px;
         margin-left: auto;
     }
 }
 
-.fileItem__titleContent {
-    flex: 0 1 auto;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-    position: relative;
-    min-width: 0;
-    overflow: hidden;
+.fileItem__extensionWrapper {
+    display: flex;
+    gap: 0.125rem;
+    align-items: baseline;
 }
 
-.fileItem.fileItem .listItem__icon {
-    --icon-size: 1.8rem;
+.fileItem__titleContent {
     position: relative;
-    left: -4px;
-    font-size: var(--icon-size);
-    font-weight: 500;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .fileItem__deleteButton:hover {
@@ -52,19 +52,20 @@
 
 .fileItem__name {
     max-width: 100%;
-    font-weight: 500;
     font-size: 1rem;
+    font-weight: 500;
 }
 
 .fileItem__extension {
-    font-weight: 900;
     font-size: 1rem;
+    font-weight: 900;
     color: var(--color-primary);
 }
 
 .fileItem__size {
-    font-weight: bold;
+    min-width: 2.5rem;
     font-size: 0.9rem;
+    font-weight: bold;
 }
 
 /* .fileItem--markedForDeletion.fileItem--markedForDeletion {} */

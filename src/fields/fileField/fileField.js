@@ -52,6 +52,7 @@ class FileField extends Field {
             lblUploads: this.i18n('lblUploads', {}, {}, 'common.labels'),
             fileListLabel: this.i18n('lblUploadedFiles'),
             lblAddFile: this.i18n('lblAddFile'),
+            lblRemoveFile: this.i18nText('lblRemoveFile'),
             hasDropArea: false,
             hasInputMask: false,
             allowMultiple: false,
@@ -76,7 +77,7 @@ class FileField extends Field {
     addUpload(file) {
         return this.uploadList?.addItem({
             file,
-            lblRemoveFile: this.i18nText('lblRemoveUpload'),
+            lblRemoveFile: this.i18nText('lblRemoveFile'),
             onDelete: this._config.onDeleteUpload,
             key: file.name + file.size
         });
@@ -120,8 +121,8 @@ class FileField extends Field {
     hasUploadWarning() {
         return Boolean(
             !this.allowMultiple() &&
-                Number(this.inputComponent?.uploads?.length) > 0 &&
-                Number(this.fileList?.itemsNode?.children.length) > 0
+            Number(this.inputComponent?.uploads?.length) > 0 &&
+            Number(this.fileList?.itemsNode?.children.length) > 0
         );
     }
 
@@ -251,6 +252,7 @@ class FileField extends Field {
             'title-icon': uploadListIcon
         })}> 
                 <arpa-zone name="title">${this.getProp('lbl-uploads')}</arpa-zone>
+                <template template-type="list-item" lbl-remove-file="{lblRemoveFile}"></template>
             </${list}>`;
     }
 
@@ -261,7 +263,9 @@ class FileField extends Field {
             class: 'fileField__fileList',
             'title-icon': fileListIcon
         })}>
+            <template template-type="list-item" lbl-remove-file="${this.getProp('lblRemoveFile')}"></template>
             <arpa-zone name="title">${this.getProp('file-list-label')}</arpa-zone>
+            
         </${list}>`;
     }
 
@@ -317,13 +321,9 @@ class FileField extends Field {
     }
 
     renderUploadWarning() {
-        return html`
-            <warning-message
-                i18n="${this.i18nKey}.msgFileOverwriteWarning"
-                class="fileField__overwriteWarning"
-                can-close
-            ></warning-message>
-        `;
+        return html`<warning-message class="fileField__overwriteWarning" can-close>
+            ${this.i18n('msgFileOverwriteWarning')}
+        </warning-message>`;
     }
 
     // #endregion

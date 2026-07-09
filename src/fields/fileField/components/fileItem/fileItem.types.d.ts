@@ -7,6 +7,8 @@ export type FileItemConfigType = ListItemConfigType & {
     // list item props
     // nav?: IconMenuInterface;
     action?: () => void;
+    hasDelete?: boolean;
+    hasEdit?: boolean;
     error?: string;
     extension?: string;
     file?: File;
@@ -36,7 +38,6 @@ export type FileItemConfigType = ListItemConfigType & {
     url?: string;
     key?: string;
 };
-
 
 export type FileItemPayloadType = Record<string, unknown> & {
     extension?: string;

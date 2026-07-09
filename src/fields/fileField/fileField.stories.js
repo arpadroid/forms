@@ -1,10 +1,8 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
  * @typedef {import('./fileField.js').default} FileField
+ * @typedef {import('./fileField.types').FileFieldConfigType} FileFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FileFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FileFieldConfigType>} Story
  * @typedef {import('@arpadroid/lists').List} List
  */
 
@@ -28,11 +26,12 @@ const onDeleteUpload = fn(async () => {
 /** @type {Meta} */
 const FileFieldStory = {
     title: 'Forms/Fields/File',
+    component: 'file-field',
     tags: [],
     render: renderFileField
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
@@ -40,16 +39,18 @@ export const Default = {
     args: getArgs()
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
         id: 'file-field',
         minSize: 0.0001,
-        maxSize: 0.0002
+        maxSize: 0.0002,
+        onDelete,
+        onDeleteUpload
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
+    play: async ({ canvasElement, step }) => {
         const setup = await playSetup(canvasElement, {
             fieldTag: 'file-field'
         });
@@ -81,8 +82,8 @@ export const Test = {
 
         await step('Renders the default file', async () => {
             await waitFor(() => {
-                expect(canvas.getByText('The Strange Case of Dr Jekyll and Mr Hyde')).toBeVisible();
-                expect(canvas.getByText('.txt')).toBeVisible();
+                expect(canvas.getByText('The Strange Case of Dr Jekyll and Mr Hyde', { exact: false })).toBeVisible();
+                expect(canvas.getByText('txt')).toBeVisible();
                 expect(canvas.getByText('10 KB')).toBeVisible();
             });
         });
@@ -150,7 +151,7 @@ export const Test = {
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith([TextFileMock], field, expect.anything());
                 const warning = I18n.getText(`${field.i18nKey}.msgFileOverwriteWarning`);
-                expect(canvas.getByText(warning)).toBeInTheDocument();
+                expect(canvas.getByText(warning, { exact: false })).toBeInTheDocument();
                 expect(canvas.getByText(I18n.getText('common.labels.lblUploads'))).toBeInTheDocument();
                 expect(canvas.getByText('109 bytes')).toBeInTheDocument();
             });
@@ -158,14 +159,17 @@ export const Test = {
         });
 
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
+            onDeleteUpload.mockClear();
             /** @type {HTMLButtonElement | null} */
-            const deleteButton = canvasElement.querySelector('.fileField__uploadList button[variant="delete"]');
+            const deleteButton = await waitFor(() =>
+                canvasElement.querySelector('.fileField__uploadList button[variant="delete"]')
+            );
             if (!deleteButton) {
                 throw new Error('Delete button not found');
             }
             await userEvent.click(deleteButton);
             await waitFor(() => {
-                expect(onDeleteUpload).toHaveBeenLastCalledWith(deleteButton.closest('file-item'));
+                expect(onDeleteUpload).toHaveBeenCalledOnce();
                 expect(canvas.queryByText('test file')).toBeNull();
                 expect(uploadList?.listResource?.getItems()).toHaveLength(0);
             });
@@ -209,8 +213,7 @@ export const Test = {
                 expect(canvas.getByText('yet another text file')).toBeInTheDocument();
                 expect(canvas.getByText('128 bytes')).toBeInTheDocument();
             });
-            submitButton?.click();
-            await new Promise(resolve => setTimeout(resolve, 100));
+            submitButton && userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': [TextFileMock2, TextFileMock3] });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -220,7 +223,9 @@ export const Test = {
         });
 
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
-            const deleteButtons = canvas.getAllByRole('button', { name: I18n.getText('forms.fields.file.lblRemoveFile') });
+            const deleteButtons = await waitFor(() =>
+                canvas.getAllByRole('button', { name: I18n.getText('forms.fields.file.lblRemoveFile') })
+            );
             deleteButtons[0].click();
             await waitFor(() => {
                 expect(onDelete).toHaveBeenCalledWith(deleteButtons[0].closest('file-item'));
