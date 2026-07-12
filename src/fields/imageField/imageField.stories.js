@@ -1,20 +1,19 @@
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
  * @typedef {import('@arpadroid/lists').List} List
+ * @typedef {import('./imageField.types.js').ImageFieldConfigType} ImageFieldConfigType
  * @typedef {import('./imageField.js').default} ImageField
+ * @typedef {import('@storybook/web-components-vite').Meta<ImageFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<ImageFieldConfigType>} Story
  */
 
 import { expect, fireEvent, waitFor } from 'storybook/test';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { I18n } from '@arpadroid/i18n';
 import { TextFileSmall } from '../../test/mocks/fileMock.js';
 import { createImageFileFromURL } from '../../test/mocks/imageMock.js';
 import { formatBytes } from '@arpadroid/tools';
 import { playSetup, renderField } from '../field/field.stories.util.js';
-import { getArgs, getArgTypes, renderScript } from '../fileField/fileField.stories.util.js';
+import { renderScript } from '../fileField/fileField.stories.util.js';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
 
 const html = String.raw;
 const assetsURL = '/test-assets';
@@ -26,31 +25,30 @@ function renderFieldContent() {
 /** @type {Meta} */
 const ImageFieldStory = {
     title: 'Forms/Fields/Image',
+    component: 'image-field',
     tags: [],
     render: (args, story) => renderField(args, story, 'image-field', renderFieldContent, renderScript)
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        ...getArgTypes('File Props')
-    },
+    parameters: defaultParams,
     args: {
-        ...getArgs(),
         id: 'image-field',
         label: 'Image field',
-        required: true
+        required: true,
+        hasDropArea: true
     }
 };
 
 delete Default.args?.extensions;
 
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: { ...Default.args, id: 'image-field-test' },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
+    play: async ({ canvasElement, step }) => {
         const setup = await playSetup(canvasElement, {
             fieldTag: 'image-field'
         });
@@ -78,7 +76,7 @@ export const Test = {
 
         await step('Renders the default image', async () => {
             expect(canvas.getByText('girl')).toBeInTheDocument();
-            expect(canvas.getByText('.jpg')).toBeInTheDocument();
+            expect(canvas.getByText('jpg')).toBeInTheDocument();
         });
 
         await step('Adds an invalid file type and displays an error', async () => {

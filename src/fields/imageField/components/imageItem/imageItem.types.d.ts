@@ -12,5 +12,6 @@ export type ImageItemConfigType = FileItemConfigType & {
     width?: number;
     height?: number;
     highResImage?: string;
+    lblPreview?: string;
     imagePreviewTitle?: string;
 }

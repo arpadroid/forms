@@ -7,7 +7,6 @@
  * @typedef {import('./components/fieldInput/fieldInput.types.js').FieldInputType} FieldInputType
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  * @typedef {import('./components/fieldLabel/fieldLabel.js').default} FieldLabel
- * @typedef {import('@arpadroid/ui').ZoneToolPlaceZoneType} ZoneToolPlaceZoneType
  */
 import { attrString, defineCustomElement, dummyListener, dummySignal, mergeObjects } from '@arpadroid/tools';
 import { observerMixin } from '@arpadroid/tools';
@@ -65,7 +64,7 @@ class Field extends ArpaElement {
                 type: 'text'
             }
         };
-        return super.getDefaultConfig(config);
+        return mergeObjects(super.getDefaultConfig(), config);
     }
 
     /**
@@ -252,20 +251,6 @@ class Field extends ArpaElement {
                   ${this.getTooltip() || ''}
               </arpa-tooltip>`
             : '';
-    }
-
-    /**
-     * Handles a lost zone.
-     * @param {ZoneToolPlaceZoneType} payload
-     * @returns {boolean | ((payload: ZoneToolPlaceZoneType) => any) | undefined}
-     */
-    _onLostZone(payload) {
-        const { zoneName, zone } = payload;
-        if (zoneName === 'tooltip') {
-            zone?.childNodes?.length && this.tooltip?.contentNode?.append(...(zone?.childNodes || []));
-            return true;
-        }
-        return false;
     }
 
     renderErrors() {

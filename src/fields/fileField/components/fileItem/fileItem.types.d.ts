@@ -21,6 +21,7 @@ export type FileItemConfigType = ListItemConfigType & {
     isUploading?: boolean;
     link?: string;
     lblRemoveFile?: string;
+    lblEditFile?: string;
     name?: string;
     onDelete?: (fileItem: FileItem) => Promise<unknown>;
     onEdit?: (fileItem: FileItem) => void;

@@ -12,7 +12,7 @@ import { formatBytes } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
 import { EmptyImage } from '../../test/mocks/imageMock.js';
 import { TextFileLarge, TextFileMock, TextFileMock2, TextFileMock3, TextFileSmall } from '../../test/mocks/fileMock.js';
-import { getArgs, getArgTypes, renderFileField } from './fileField.stories.util.js';
+import { getArgs, renderFileField } from './fileField.stories.util.js';
 import { playSetup } from '../field/field.stories.util.js';
 
 const onDelete = fn(async () => {
@@ -35,7 +35,6 @@ const FileFieldStory = {
 export const Default = {
     name: 'Render',
     parameters: { ...FieldDefault.parameters },
-    argTypes: getArgTypes(),
     args: getArgs()
 };
 
@@ -44,6 +43,7 @@ export const Test = {
     parameters: { ...FieldTest.parameters },
     args: {
         ...Default.args,
+        label: 'File field',
         id: 'file-field',
         minSize: 0.0001,
         maxSize: 0.0002,

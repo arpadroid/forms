@@ -64,7 +64,7 @@ class FormComponent extends ArpaElement {
             submitIcon: 'check_circle',
             errorMessage: this.i18n('msgError')
         };
-        return super.getDefaultConfig(config);
+        return mergeObjects(super.getDefaultConfig(), config);
     }
 
     /**

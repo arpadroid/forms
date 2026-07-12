@@ -1,11 +1,12 @@
 file-field,
 image-field {
     max-width: 100%;
+
     .arpaField__inputWrapper {
         display: flex;
         flex-direction: column;
-        width: 100%;
         gap: 0.5rem;
+        width: 100%;
     }
 
     .fieldErrors .tooltip__content:has(.fieldErrors__list:not(:empty)) {
@@ -18,6 +19,7 @@ image-field {
     flex-wrap: wrap;
     gap: 1rem;
     width: 100%;
+
     > * {
         flex: 1 1 50%;
     }

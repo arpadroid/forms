@@ -246,14 +246,6 @@ class OptionsField extends Field {
         }
     }
 
-    /**
-     * Called when a zone is placed.
-     * @param {Record<string, any>} payload - The payload of the event.
-     */
-    _onPlaceZone(payload) {
-        payload?.zoneContainer && payload.zoneContainer === this.optionsNode && this.updateValue();
-    }
-
     updateValue() {
         // Abstract method
     }
@@ -341,9 +333,7 @@ class OptionsField extends Field {
 
     renderOptionsPreloader() {
         if (!this.optionsPreloader) {
-            this.optionsPreloader = /** @type {CircularSpinner} */ (
-                renderNode(html`<circular-spinner></circular-spinner>`)
-            );
+            this.optionsPreloader = /** @type {CircularSpinner} */ (renderNode(html`<circular-spinner></circular-spinner>`));
         }
         this.optionsPreloader && this.optionsNode?.append(this.optionsPreloader);
     }

@@ -2,7 +2,6 @@
 
 import FileItem from '../../../fileField/components/fileItem/fileItem.js';
 import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
-// import GalleryDialog from '../../../../../../gallery/components/galleryDialog/galleryDialog.js';
 const html = String.raw;
 class ImageItem extends FileItem {
     /** @type {ImageItemConfigType} */
@@ -12,16 +11,17 @@ class ImageItem extends FileItem {
      * @returns {ImageItemConfigType}
      */
     getDefaultConfig() {
+        const parentConfig = super.getDefaultConfig();
         this.i18nKey = 'forms.fields.image.item';
         /** @type {ImageItemConfigType} */
         const config = {
             icon: '',
             hasIcon: false,
-            defaultImageSize: 'small',
-            imagePreview: true,
-            imagePreviewTitle: undefined
+            classNames: ['imageItem'],
+            defaultImageSize: 'thumbnail',
+            imagePreview: true
         };
-        return mergeObjects(super.getDefaultConfig(), config);
+        return mergeObjects(parentConfig, config);
     }
 
     _preRender() {
@@ -29,11 +29,6 @@ class ImageItem extends FileItem {
         const payload = this.getPayload();
         const name = String(payload.name || '');
         this._config.imagePreviewTitle = this._config.imagePreviewTitle ?? name;
-    }
-
-    async $onConnected() {
-        super.$onConnected();
-        this.classList.add('imageItem');
     }
 
     _initializeFile() {
@@ -49,40 +44,29 @@ class ImageItem extends FileItem {
         }
     }
 
-    getTemplateVars() {
-        return {
-            ...super.getTemplateVars(),
-            previewButton: this.renderPreviewButton()
-        };
-    }
-
     $renderTemplate() {
-        const content = super.$renderTemplate();
-        return html`${content}<arpa-zone name="rhs">{previewButton}</arpa-zone>`;
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="rhs">
+                <icon-button
+                    on-click="{$onPreviewClick}"
+                    class="imageItem__previewButtonRhs"
+                    icon="visibility"
+                    tooltip="{i18n:lblPreview}"
+                ></icon-button>
+            </arpa-zone>
+        `;
     }
 
-    renderPreviewButton() {
-        return html`<icon-button class="imageItem__previewButtonRhs" icon="visibility">
-            <arpa-zone name="tooltip">${this.i18n('lblPreview')}</arpa-zone>
-        </icon-button>`;
-    }
-    
-
-    async $initializeNodes() {
-        await super.$initializeNodes();
-        const previewButton = this.querySelector('.imageItem__previewButtonRhs button');
-        previewButton?.addEventListener('click', () => {
-            /** @type {HTMLButtonElement | null} */
-            const btn = this.querySelector('.image__previewButton');
-            btn?.click();
-        });
-        return true;
+    $onPreviewClick() {
+        /** @type {HTMLButtonElement | null} */
+        const button = this.querySelector('.image__previewButton');
+        button?.click();
     }
 
-    // onEdit() {
-    //     const items = [{ title: this._config?.title, image: this._config.url }];
-    //     GalleryDialog.openEditor(items);
-    // }
+    $onEdit() {
+        // GalleryDialog.openEditor(items);
+    }
 }
 
 defineCustomElement('image-item', ImageItem);

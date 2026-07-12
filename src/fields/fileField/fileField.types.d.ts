@@ -16,6 +16,7 @@ export type FileFieldConfigType = FieldConfigType & {
     lblUploads?: string;
     fileListLabel?: string;
     lblAddFile?: string;
+    lblRemoveFile?: string;
     uploadListIcon?: string;
     fileListIcon?: string;
 };

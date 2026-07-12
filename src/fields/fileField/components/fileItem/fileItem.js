@@ -18,20 +18,24 @@ class FileItem extends ListItem {
      * @returns {FileItemConfigType}
      */
     getDefaultConfig() {
+        this.bind('$onDelete');
         this.i18nKey = 'forms.fields.file';
+        const superConfig = super.getDefaultConfig();
         /** @type {FileItemConfigType} */
         const config = {
             icon: 'attach_file',
             hasIcon: true,
+            blueprint: ListItem.prototype.$renderTemplate.bind(this),
             classNames: ['fileItem', () => (this.fileType && `fileItem--type--${this.fileType}`) || ''],
             lblRemoveFile: '{i18n:lblRemoveFile}',
+            lblEditFile: '{i18n:lblEditFile}',
             hasDelete: true,
             hasEdit: false,
             nodesConfig: {
                 content: { canRender: false }
             }
         };
-        return mergeObjects(super.getDefaultConfig(), config);
+        return mergeObjects(superConfig, config);
     }
 
     getFileType() {
@@ -47,12 +51,7 @@ class FileItem extends ListItem {
     }
 
     getReadableSize(size = this.getProp('size')) {
-        if (Number(size).toString() === size) {
-            return formatBytes(size);
-        }
-        if (typeof size === 'string') {
-            return size;
-        }
+        return Number(size).toString() === size ? formatBytes(size) : size;
     }
 
     _initializeFile() {
@@ -105,20 +104,16 @@ class FileItem extends ListItem {
                     variant="delete"
                     class="iconButton--small"
                     on-click="{$onDelete}"
-                    aria-label="${this.i18nText('lblRemoveFile')}"
-                >
-                    <arpa-zone name="tooltip">{lblRemoveFile}</arpa-zone>
-                </arpa-node>
+                    tooltip="{i18n:lblRemoveFile}"
+                ></arpa-node>
                 <arpa-node
                     tag="icon-button"
                     icon="edit"
                     name="editButton"
                     can-render="hasEdit()"
                     on-click="{$onEdit}"
-                    aria-label="${this.i18nText('lblEditFile')}"
-                >
-                    <arpa-zone name="tooltip">{lblEditFile}</arpa-zone>
-                </arpa-node>
+                    tooltip="{i18n:lblEditFile}"
+                ></arpa-node>
             </arpa-zone>
         `;
     }
@@ -144,7 +139,6 @@ class FileItem extends ListItem {
     }
 
     $onEdit() {
-        console.log('FileItem $onEdit', this);
         this._config?.onEdit?.(this);
         this.fieldConfig?.onEdit?.(this);
     }
