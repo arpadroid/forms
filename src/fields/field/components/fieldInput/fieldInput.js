@@ -64,6 +64,7 @@ class FieldInput extends ArpaElement {
     }
 
     async $initializeNodes() {
+        await super.$initializeNodes();
         /** @type {HTMLInputElement | null} */
         this.input = this.querySelector('input');
         this.initializeListeners();

@@ -143,6 +143,7 @@ class SelectCombo extends SelectField {
     _initializeInputCombo() {
         const handler = this.getInput();
         this.optionsNode = this.getOptionsNode();
+        this.optionsNode && (this.zoneTarget = this.optionsNode);
         if (!handler || !this.optionsNode) return;
         if (!this.inputCombo) {
             this.inputCombo = new InputCombo(handler, this.optionsNode, {

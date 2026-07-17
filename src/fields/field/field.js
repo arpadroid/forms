@@ -270,7 +270,7 @@ class Field extends ArpaElement {
     }
 
     renderLabel() {
-        return html`<arpa-node name="label" tag="field-label" can-render="label"></arpa-node>`;
+        return html`<arpa-node name="label" tag="field-label" can-render="label" has-zone="false"></arpa-node>`;
     }
 
     renderInput() {
@@ -321,7 +321,8 @@ class Field extends ArpaElement {
 
     _initializeClassNames() {
         if (typeof this._config?.className === 'string') {
-            this.classList.add(...this._config.className.trim());
+            const className = this._config.className?.trim() || '';
+            className && this.classList.add(className);
         }
         if (Array.isArray(this._config.classNames)) {
             this.classList.add(...this._config.classNames);
