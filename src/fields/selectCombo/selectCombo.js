@@ -82,7 +82,7 @@ class SelectCombo extends SelectField {
         const newInput = renderNode(this.renderComboInput());
         if (oldInput && newInput) {
             oldInput.replaceWith(newInput);
-            
+
             this.searchInput = /** @type {HTMLInputElement |  null} */ (newInput);
             this._initializeSearch();
             this._initializeInputCombo();
@@ -170,10 +170,6 @@ class SelectCombo extends SelectField {
 
     getFieldType() {
         return 'selectCombo';
-    }
-
-    getTagName() {
-        return 'select-combo';
     }
 
     /**

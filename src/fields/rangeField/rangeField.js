@@ -99,16 +99,12 @@ class RangeField extends Field {
         return 'range';
     }
 
-    getTagName() {
-        return 'range-field';
-    }
-
     getValue() {
         const val = /** @type {string} */ (super.getValue());
         return parseFloat(val);
     }
 }
 
-defineCustomElement(RangeField.prototype.getTagName(), RangeField);
+defineCustomElement('range-field', RangeField);
 
 export default RangeField;

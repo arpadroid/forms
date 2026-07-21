@@ -52,10 +52,6 @@ class PasswordField extends TextField {
         return 'password';
     }
 
-    getTagName() {
-        return 'password-field';
-    }
-
     getOutputValue() {
         return this._config?.isConfirm ? undefined : super.getOutputValue();
     }
@@ -196,6 +192,6 @@ class PasswordField extends TextField {
     // #endregion Validation
 }
 
-defineCustomElement(PasswordField.prototype.getTagName(), PasswordField);
+defineCustomElement('password-field', PasswordField);
 
 export default PasswordField;

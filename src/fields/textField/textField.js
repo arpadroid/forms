@@ -21,9 +21,6 @@ class TextField extends Field {
         return 'text';
     }
 
-    getTagName() {
-        return 'text-field';
-    }
 
     /**
      * Sets the regex validation for the text field.
@@ -49,6 +46,6 @@ class TextField extends Field {
     }
 }
 
-defineCustomElement(TextField.prototype.getTagName(), TextField);
+defineCustomElement('text-field', TextField);
 
 export default TextField;

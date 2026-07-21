@@ -18,10 +18,6 @@ class RadioField extends OptionsField {
         return 'radio';
     }
 
-    getTagName() {
-        return 'radio-field';
-    }
-
     async _initializeValue() {
         this.selectedOption = this.getSelectedOption(false);
         if (this.selectedOption) {
@@ -45,6 +41,6 @@ class RadioField extends OptionsField {
     }
 }
 
-defineCustomElement(RadioField.prototype.getTagName(), RadioField);
+defineCustomElement('radio-field', RadioField);
 
 export default RadioField;

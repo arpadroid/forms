@@ -517,10 +517,6 @@ class Field extends ArpaElement {
         return 'field';
     }
 
-    getTagName() {
-        return 'arpa-field';
-    }
-
     /**
      * Returns the HTML ID for the field.
      * @returns {string}
@@ -780,6 +776,6 @@ class Field extends ArpaElement {
     // #endregion
 }
 
-defineCustomElement(Field.prototype.getTagName(), Field);
+defineCustomElement('arpa-field', Field);
 
 export default Field;

@@ -24,12 +24,8 @@ class EmailField extends TextField {
     getFieldType() {
         return 'email';
     }
-
-    getTagName() {
-        return 'email-field';
-    }
 }
 
-defineCustomElement(EmailField.prototype.getTagName(), EmailField);
+defineCustomElement('email-field', EmailField);
 
 export default EmailField;

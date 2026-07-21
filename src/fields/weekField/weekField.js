@@ -24,10 +24,6 @@ class WeekField extends TextField {
         return 'week';
     }
 
-    getTagName() {
-        return 'week-field';
-    }
-
     async $onInitialized() {
         await this.onReady();
         super.$onInitialized();
@@ -65,6 +61,6 @@ class WeekField extends TextField {
     }
 }
 
-defineCustomElement(WeekField.prototype.getTagName(), WeekField);
+defineCustomElement('week-field', WeekField);
 
 export default WeekField;

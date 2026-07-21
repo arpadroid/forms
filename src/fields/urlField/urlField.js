@@ -13,10 +13,6 @@ class UrlField extends TextField {
         return 'url';
     }
 
-    getTagName() {
-        return 'url-field';
-    }
-
     getI18nKey() {
         return 'forms.fields.url';
     }
@@ -33,6 +29,7 @@ class UrlField extends TextField {
                 const url = new URL(value);
                 isValid = removeLastSlash(url.href) === removeLastSlash(value);
             } catch (error) {
+                console.error('Invalid URL:', error);
                 isValid = false;
             }
         }
@@ -43,6 +40,6 @@ class UrlField extends TextField {
     }
 }
 
-defineCustomElement(UrlField.prototype.getTagName(), UrlField);
+defineCustomElement('url-field', UrlField);
 
 export default UrlField;

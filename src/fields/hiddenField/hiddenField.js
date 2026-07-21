@@ -17,10 +17,6 @@ class HiddenField extends Field {
         return 'hidden';
     }
 
-    getTagName() {
-        return 'hidden-field';
-    }
-
     async $onConnected() {
         super.$onConnected();
         await this.onReady();
@@ -31,6 +27,6 @@ class HiddenField extends Field {
     }
 }
 
-defineCustomElement(HiddenField.prototype.getTagName(), HiddenField);
+defineCustomElement('hidden-field', HiddenField);
 
 export default HiddenField;

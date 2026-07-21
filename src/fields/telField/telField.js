@@ -17,12 +17,8 @@ class TelField extends TextField {
     getFieldType() {
         return 'tel';
     }
-
-    getTagName() {
-        return 'tel-field';
-    }
 }
 
-defineCustomElement(TelField.prototype.getTagName(), TelField);
+defineCustomElement('tel-field', TelField);
 
 export default TelField;

@@ -43,10 +43,6 @@ class CheckboxesField extends ArrayField {
         return 'checkboxes';
     }
 
-    getTagName() {
-        return 'checkboxes-field';
-    }
-
     /**
      * Get all the input elements within the checkboxes field.
      * @returns {HTMLInputElement[]} An array of input elements.
@@ -172,6 +168,6 @@ class CheckboxesField extends ArrayField {
     }
 }
 
-defineCustomElement(CheckboxesField.prototype.getTagName(), CheckboxesField);
+defineCustomElement('checkboxes-field', CheckboxesField);
 
 export default CheckboxesField;

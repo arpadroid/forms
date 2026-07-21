@@ -78,10 +78,6 @@ class GroupField extends Field {
         return localStorage.getItem(this.getHtmlId() + '-toggleState');
     }
 
-    getTagName() {
-        return 'group-field';
-    }
-
     isCollapsible() {
         return this.hasProp('is-collapsible') ?? true;
     }
@@ -171,6 +167,6 @@ class GroupField extends Field {
     // #endregion
 }
 
-defineCustomElement(GroupField.prototype.getTagName(), GroupField);
+defineCustomElement('group-field', GroupField);
 
 export default GroupField;

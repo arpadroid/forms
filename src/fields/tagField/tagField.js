@@ -74,7 +74,8 @@ class TagField extends SelectCombo {
 
     _initializeSearchInput() {
         super._initializeSearchInput();
-        if (this.searchInput) { // @ts-ignore
+        if (this.searchInput) {
+            // @ts-ignore
             listen(this.searchInput, 'keydown', this._onSearchInputKeyDown);
         }
     }
@@ -105,10 +106,6 @@ class TagField extends SelectCombo {
 
     getFieldType() {
         return 'tag';
-    }
-
-    getTagName() {
-        return 'tag-field';
     }
 
     /**
@@ -258,6 +255,6 @@ class TagField extends SelectCombo {
     // #endregion
 }
 
-defineCustomElement(TagField.prototype.getTagName(), TagField);
+defineCustomElement('tag-field', TagField);
 
 export default TagField;

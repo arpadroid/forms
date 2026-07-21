@@ -30,10 +30,6 @@ class CheckboxField extends Field {
         return 'checkbox';
     }
 
-    getTagName() {
-        return 'checkbox-field';
-    }
-
     $renderTemplate() {
         return html`
             <label for="${this.getHtmlId()}" class="fieldInput checkboxField__label fieldLabel buttonInput">
@@ -87,6 +83,6 @@ class CheckboxField extends Field {
     }
 }
 
-defineCustomElement(CheckboxField.prototype.getTagName(), CheckboxField);
+defineCustomElement('checkbox-field', CheckboxField);
 
 export default CheckboxField;

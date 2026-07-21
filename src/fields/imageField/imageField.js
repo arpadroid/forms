@@ -22,10 +22,6 @@ class ImageField extends FileField {
         return 'image';
     }
 
-    getTagName() {
-        return 'image-field';
-    }
-
     getI18nKey() {
         return 'forms.fields.image';
     }
@@ -37,6 +33,6 @@ class ImageField extends FileField {
     }
 }
 
-defineCustomElement(ImageField.prototype.getTagName(), ImageField);
+defineCustomElement('image-field', ImageField);
 
 export default ImageField;

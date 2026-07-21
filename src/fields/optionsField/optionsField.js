@@ -40,10 +40,6 @@ class OptionsField extends Field {
         return 'options';
     }
 
-    getTagName() {
-        return 'options-field';
-    }
-
     // #endregion
 
     /////////////////////////////
@@ -341,6 +337,6 @@ class OptionsField extends Field {
     // #endregion Render
 }
 
-defineCustomElement(OptionsField.prototype.getTagName(), OptionsField);
+defineCustomElement('options-field', OptionsField);
 
 export default OptionsField;

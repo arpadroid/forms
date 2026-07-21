@@ -35,10 +35,6 @@ class TimeField extends TextField {
         return 'time';
     }
 
-    getTagName() {
-        return 'time-field';
-    }
-
     async $initializeNodes() {
         await super.$initializeNodes();
         if (!this.timeButton) {
@@ -108,6 +104,6 @@ class TimeField extends TextField {
     }
 }
 
-defineCustomElement(TimeField.prototype.getTagName(), TimeField);
+defineCustomElement('time-field', TimeField);
 
 export default TimeField;

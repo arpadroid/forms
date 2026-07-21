@@ -69,10 +69,6 @@ class NumberField extends Field {
         return 'number';
     }
 
-    getTagName() {
-        return 'number-field';
-    }
-
     getI18nKey() {
         return 'forms.fields.number';
     }
@@ -138,6 +134,6 @@ class NumberField extends Field {
     }
 }
 
-defineCustomElement(NumberField.prototype.getTagName(), NumberField);
+defineCustomElement('number-field', NumberField);
 
 export default NumberField;

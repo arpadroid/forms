@@ -21,10 +21,6 @@ class DateTimeField extends DateField {
         return 'dateTime';
     }
 
-    getTagName() {
-        return 'date-time-field';
-    }
-
     /**
      * Renders the calendar button for the DateTimeField.
      * @returns {HTMLButtonElement | null} The rendered calendar button element.
@@ -36,6 +32,6 @@ class DateTimeField extends DateField {
     }
 }
 
-defineCustomElement(DateTimeField.prototype.getTagName(), DateTimeField);
+defineCustomElement('date-time-field', DateTimeField);
 
 export default DateTimeField;

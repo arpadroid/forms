@@ -34,10 +34,6 @@ class SearchField extends Field {
         return 'search';
     }
 
-    getTagName() {
-        return 'search-field';
-    }
-
     async $initialize() {
         const { variant } = this._config;
         super.$initialize();

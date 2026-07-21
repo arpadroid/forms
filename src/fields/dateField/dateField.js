@@ -66,10 +66,6 @@ class DateField extends Field {
         return 'date';
     }
 
-    getTagName() {
-        return 'date-field';
-    }
-
     getI18nKey() {
         return 'forms.fields.date';
     }
@@ -192,6 +188,6 @@ class DateField extends Field {
     // #endregion Validation
 }
 
-defineCustomElement(DateField.prototype.getTagName(), DateField);
+defineCustomElement('date-field', DateField);
 
 export default DateField;

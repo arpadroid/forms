@@ -23,10 +23,6 @@ class TextAreaField extends TextField {
         return 'textarea';
     }
 
-    getTagName() {
-        return 'textarea-field';
-    }
-
     async $initialize() {
         this.value = this.innerHTML || this.getProp('value');
         super.$initialize();
@@ -35,9 +31,8 @@ class TextAreaField extends TextField {
     async _initializeInputNode() {
         await super._initializeInputNode();
         this.input = /** @type {HTMLTextAreaElement} */ (this.getInput());
-        
+
         if (this.input) {
-            
             attr(this.input, { rows: this.getProp('rows') });
             this.input?.removeEventListener('input', this._onInput);
             this.input?.addEventListener('input', this._onInput);
@@ -54,6 +49,6 @@ class TextAreaField extends TextField {
     }
 }
 
-defineCustomElement(TextAreaField.prototype.getTagName(), TextAreaField);
+defineCustomElement('textarea-field', TextAreaField);
 
 export default TextAreaField;

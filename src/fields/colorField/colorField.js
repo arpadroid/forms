@@ -26,10 +26,6 @@ class ColorField extends Field {
         return 'color';
     }
 
-    getTagName() {
-        return 'color-field';
-    }
-
     async _initializeInputNode() {
         this.input = this.querySelector('input[type="color"]');
         this.input?.removeEventListener('input', this.onInput);
@@ -75,6 +71,6 @@ class ColorField extends Field {
     }
 }
 
-defineCustomElement(ColorField.prototype.getTagName(), ColorField);
+defineCustomElement('color-field', ColorField);
 
 export default ColorField;
