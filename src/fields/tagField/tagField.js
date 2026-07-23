@@ -200,7 +200,7 @@ class TagField extends SelectCombo {
 
     getValue() {
         /** @type {TagItem[]} */
-        const items = /** @type {TagItem[]} */ (Array.from(this.tagList?.getChildren() || []));
+        const items = /** @type {TagItem[]} */ (Array.from(this.tagList?.childNodes || []));
         return items?.map(item => item.getValue()) ?? this.value;
     }
 
