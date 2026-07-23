@@ -4,6 +4,9 @@ import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import FileField from '../fileField/fileField.js';
 
 class ImageField extends FileField {
+    /** @type {ImageFieldConfigType} */
+    _config = this._config;
+
     /**
      * Returns default config for image field.
      * @returns {ImageFieldConfigType}
