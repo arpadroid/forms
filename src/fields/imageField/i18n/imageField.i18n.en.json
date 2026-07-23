@@ -6,7 +6,8 @@
             "msgFileOverwriteWarning": "The original image will be overwritten. Please save your changes to upload the new image",
             "errExtensions": "The image file {file} is invalid, allowed file types are: {extensions}",
             "lblDeleteImage": "Delete Image",
-            "lblRemoveFile": "Remove Image"
+            "lblRemoveFile": "Remove Image",
+            "lblUploads": "Uploads"
         }
     }
 }

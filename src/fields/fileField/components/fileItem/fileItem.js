@@ -76,6 +76,10 @@ class FileItem extends ListItem {
         }
     }
 
+    canRenderRhs() {
+        return super.canRenderRhs() || this.hasDelete() || this.hasEdit();
+    }
+
     /**
      * Returns the template for the list item.
      * @returns {string}

@@ -80,7 +80,7 @@ export const Test = {
         });
 
         await step('Adds an invalid file type and displays an error', async () => {
-            fireEvent.change(input, { target: { files: [TextFileSmall] } });
+            await fireEvent.change(input, { target: { files: [TextFileSmall] } });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
                 expect(onChangeMock).toHaveBeenCalledWith([], field, expect.anything());

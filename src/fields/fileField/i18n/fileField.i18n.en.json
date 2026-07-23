@@ -10,7 +10,8 @@
             "msgFileOverwriteWarning": "The original file will be overwritten if you save your changes, are you sure?",
             "lblRemoveFile": "Remove file",
             "lblDeleteFile": "Delete file",
-            "lblUploadFile": "Upload file"
+            "lblUploadFile": "Upload file",
+            "lblUploads": "Uploads"
         }
     }
 }

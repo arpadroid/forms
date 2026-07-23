@@ -49,7 +49,7 @@ class FileField extends Field {
             uploadListComponent: 'file-list',
             fileComponent: 'file-item',
             inputComponent: 'file-field-input',
-            lblUploads: this.i18n('lblUploads', {}, {}, 'common.labels'),
+            lblUploads: '{i18n:lblUploads}',
             fileListLabel: this.i18n('lblUploadedFiles'),
             lblAddFile: this.i18n('lblAddFile'),
             lblRemoveFile: this.i18nText('lblRemoveFile'),
@@ -243,17 +243,20 @@ class FileField extends Field {
               </arpa-button>`;
     }
 
-    renderUploadList(id = this.getHtmlId()) {
-        const { uploadListComponent: list, uploadListIcon = 'publish' } = this._config;
+    renderUploadList() {
+        return html`<arpa-node
+            tag="{uploadListComponent}"
+            name="uploadList"
+            id="getHtmlId()"
+            title-icon="{uploadListIcon}"
+            class="fileField__uploadList"
+            can-render="hasUploads()"
+            title="{i18n:lblUploads}"
+        ></arpa-node>`;
+    }
 
-        return html`<${list} ${attrString({
-            id: `${id}-uploadList`,
-            class: 'fileField__uploadList',
-            'title-icon': uploadListIcon
-        })}> 
-                <arpa-zone name="title">${this.getProp('lbl-uploads')}</arpa-zone>
-                <template template-type="list-item" lbl-remove-file="{lblRemoveFile}"></template>
-            </${list}>`;
+    hasUploads() {
+        return true;
     }
 
     renderFileList(id = this.getHtmlId()) {

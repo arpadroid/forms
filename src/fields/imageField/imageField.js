@@ -9,13 +9,16 @@ class ImageField extends FileField {
      * @returns {ImageFieldConfigType}
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        const superConfig = super.getDefaultConfig();
+        /** @type {ImageFieldConfigType} */
+        const conf = {
             className: 'imageField',
             listComponent: 'image-list',
             uploadListComponent: 'image-list',
             fileComponent: 'image-item',
             extensions: ['jpg', 'png', 'gif', 'jpeg', 'svg']
-        });
+        };
+        return mergeObjects(superConfig, conf);
     }
 
     getFieldType() {
