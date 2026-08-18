@@ -131,7 +131,7 @@ export const Test = {
 
         await step('Sets allow-multiple, adds multiple images and checks the uploaded images list.', async () => {
             field.setAttribute('allow-multiple', '');
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 200));
             await fireEvent.change(input, { target: { files: [planeImage, flowerImage] } });
 
             await waitFor(() => {
