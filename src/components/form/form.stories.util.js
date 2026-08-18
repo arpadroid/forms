@@ -83,7 +83,11 @@ export function renderContent(_args, _story) {
         <div class="arpaForm__column">
             <group-field icon="list_alt" label="Select Fields" id="select-group" ${commonGroupConfig}>
                 <select-field id="select-field" label="Select Field"></select-field>
-                <select-combo has-search id="select-combo" label="Select Combo"></select-combo>
+                <select-combo has-search id="select-combo" label="Select Combo">
+                    <select-option value="1" label="Option 1"></select-option>
+                    <select-option value="2" label="Option 2"></select-option>
+                    <select-option value="3" label="Option 3"></select-option>
+                </select-combo>
                 <tag-field
                     value="AB-E::Albert Einstein,NE-CQ::Martin Luther King Jr.,NE-BG::William Shakespeare,NE-ZE::Zora Neale Hurston,NE-ZH::Zlatan Ibrahimovic"
                     id="tag-field"
