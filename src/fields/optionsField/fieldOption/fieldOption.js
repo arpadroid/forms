@@ -3,7 +3,7 @@
  * @typedef {import('./fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
  * @typedef {import('../../field/field.js').FieldInput} FieldInput
  */
-import { mechanize, appendNodes, defineCustomElement } from '@arpadroid/tools';
+import { mechanize, defineCustomElement } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 
 const html = String.raw;
@@ -34,6 +34,10 @@ class FieldOption extends ArpaElement {
         return customElements.whenDefined('arpa-field');
     }
 
+    getLabel() {
+        return this.getProp('label') || this.getProp('content') || this.getProp('value');
+    }
+
     /**
      * The HTML template for the field option element.
      * @type {string}
@@ -42,7 +46,7 @@ class FieldOption extends ArpaElement {
         <arpa-icon class="fieldOption__iconRight">{iconLeft}</arpa-icon>
         {input}
         <div class="fieldOption__content">
-            <span class="fieldOption__label">{label}</span>
+            <span class="fieldOption__label">{getLabel()}</span>
             {subtitle}
         </div>
         <arpa-icon class="fieldOption__icon">{icon}</arpa-icon>
@@ -83,7 +87,6 @@ class FieldOption extends ArpaElement {
     async $initializeNodes() {
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = /** @type {HTMLElement} */ (this.querySelector('.fieldOption__content'));
-        this.contentNode && appendNodes(this.contentNode, this._childNodes);
         return true;
     }
 
