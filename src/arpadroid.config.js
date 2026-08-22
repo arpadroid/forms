@@ -3,6 +3,7 @@ const config = {
     deps: ['messages'],
     style_patterns: 'fields/**/*',
     buildTypes: true,
+    buildManifest: true,
     storybook_port: 6005,
     turbo: false,
     buildType: 'uiComponent'

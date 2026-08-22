@@ -213,7 +213,7 @@ export const Test = {
                 expect(canvas.getByText('yet another text file')).toBeInTheDocument();
                 expect(canvas.getByText('128 bytes')).toBeInTheDocument();
             });
-            submitButton && userEvent.click(submitButton);
+            submitButton && await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': [TextFileMock2, TextFileMock3] });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -226,7 +226,7 @@ export const Test = {
             const deleteButtons = await waitFor(() =>
                 canvas.getAllByRole('button', { name: I18n.getText('forms.fields.file.lblRemoveFile') })
             );
-            deleteButtons[0].click();
+            await userEvent.click(deleteButtons[0]);
             await waitFor(() => {
                 expect(onDelete).toHaveBeenCalledWith(deleteButtons[0].closest('file-item'));
                 expect(canvas.queryByText('test file')).toBeNull();

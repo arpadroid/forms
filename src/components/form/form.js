@@ -56,6 +56,7 @@ class FormComponent extends ArpaElement {
         /** @type {FormConfigType} */
         const config = {
             variant: 'default',
+            attributeList: ['id'],
             hasSubmit: true,
             initialValues: {},
             onSubmit: undefined,
