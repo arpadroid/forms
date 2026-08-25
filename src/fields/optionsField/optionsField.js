@@ -237,7 +237,6 @@ class OptionsField extends Field {
         const { options, autoFetchOptions, fetchOptions } = this._config;
         Array.isArray(options) && this.setOptions(options);
         if (autoFetchOptions && typeof fetchOptions === 'function') {
-            await this.onReady();
             this.fetchOptions();
         }
     }

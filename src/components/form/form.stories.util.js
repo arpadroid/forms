@@ -158,6 +158,7 @@ export async function playSetup(canvasElement) {
     /** @type {Form | null} */
     const form = canvasElement.querySelector('arpa-form');
     await form?.promise;
+    await new Promise(resolve => setTimeout(resolve, 50));
     /** @type {HTMLButtonElement | null} */
     const submitButton = document.querySelector('button[type="submit"]');
     const onSubmitMock = fn(() => true);

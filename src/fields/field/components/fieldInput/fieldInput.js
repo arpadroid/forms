@@ -35,14 +35,6 @@ class FieldInput extends ArpaElement {
         this.input?.setAttribute('value', value);
     }
 
-    /**
-     * Called when the element is ready.
-     * @returns {Promise<any>}
-     */
-    async onReady() {
-        return customElements.whenDefined('arpa-field');
-    }
-
     _preRender() {
         if (!this.field) {
             /** @type {Field | null} */
@@ -51,14 +43,17 @@ class FieldInput extends ArpaElement {
     }
 
     $renderTemplate() {
-        const attr = mergeObjects({
-            class: this.getProp('input-class'),
-            id: this.field?.getHtmlId(),
-            name: this.field?.getId(),
-            disabled: this.field?.isDisabled(),
-            placeholder: this.field?.getPlaceholder(),
-            value: this.field?.getValue()?.toString(),
-        }, this.inputAttributes);
+        const attr = mergeObjects(
+            {
+                class: this.getProp('input-class'),
+                id: this.field?.getHtmlId(),
+                name: this.field?.getId(),
+                disabled: this.field?.isDisabled(),
+                placeholder: this.field?.getPlaceholder(),
+                value: this.field?.getValue()?.toString()
+            },
+            this.inputAttributes
+        );
 
         return `<input ${attrString(attr)} />`;
     }

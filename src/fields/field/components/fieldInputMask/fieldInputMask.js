@@ -49,7 +49,6 @@ class FieldInputMask extends HTMLElement {
     }
 
     async connectedCallback() {
-        // await this.onReady();
         /** @type {Field} */
         this.field = /** @type {Field} */ (this.closest('.arpaField'));
         this.render();
