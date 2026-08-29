@@ -15,11 +15,13 @@ class FieldErrors extends ArpaElement {
 
     /**
      * Renders the content.
+     * @returns {Promise<boolean>}
      */
-    render() {
+    async render() {
         this.innerHTML = html`<arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="top-right" arrow="false">
             <ul class="fieldErrors__list"></ul>
         </arpa-tooltip>`;
+        return true;
     }
 
     async $initializeNodes() {

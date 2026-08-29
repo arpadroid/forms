@@ -269,9 +269,10 @@ class OptionsField extends Field {
         });
     }
 
-    reRender() {
-        super.reRender();
+    async reRender() {
+        const rv = super.reRender();
         this._options?.length && this.setOptions(this._options);
+        return rv;
     }
 
     /**

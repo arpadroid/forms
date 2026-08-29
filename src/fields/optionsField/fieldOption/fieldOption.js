@@ -69,10 +69,11 @@ class FieldOption extends ArpaElement {
 
     /**
      * Renders the field option element.
+     * @returns {Promise<boolean>}
      */
     async render() {
         await this.onReady();
-        if (!this.field) return;
+        if (!this.field) return false;
         if (this.tagName.toLowerCase() === 'option') {
             this.removeAttribute('role');
         } else {
@@ -82,6 +83,7 @@ class FieldOption extends ArpaElement {
         super.render();
         this._config.className && this.classList.add(this._config.className);
         this.$onConnected();
+        return true;
     }
 
     async $initializeNodes() {
