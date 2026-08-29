@@ -6,7 +6,7 @@
  * @typedef {import('@storybook/web-components-vite').StoryObj<ImageFieldConfigType>} Story
  */
 
-import { expect, fireEvent, waitFor } from 'storybook/test';
+import { expect, fireEvent, waitFor, userEvent } from 'storybook/test';
 import { I18n } from '@arpadroid/i18n';
 import { TextFileSmall } from '../../test/mocks/fileMock.js';
 import { createImageFileFromURL } from '../../test/mocks/imageMock.js';
@@ -96,7 +96,7 @@ export const Test = {
         });
 
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
-            await new Promise(resolve => setTimeout(resolve, 100));
+            onChangeMock.mockReset();
             await fireEvent.change(input, { target: { files: [galaxyImage] } });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenCalledWith([galaxyImage], field, expect.anything());
@@ -109,7 +109,7 @@ export const Test = {
         });
 
         await step('Submits the form and checks the file is uploaded.', async () => {
-            submitButton?.click();
+            submitButton && await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList?.listResource?.getItems();
@@ -131,7 +131,7 @@ export const Test = {
 
         await step('Sets allow-multiple, adds multiple images and checks the uploaded images list.', async () => {
             field.setAttribute('allow-multiple', '');
-            await new Promise(resolve => setTimeout(resolve, 200));
+            await new Promise(resolve => setTimeout(resolve, 10));
             await fireEvent.change(input, { target: { files: [planeImage, flowerImage] } });
 
             await waitFor(() => {
