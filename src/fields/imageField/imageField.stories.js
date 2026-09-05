@@ -26,6 +26,12 @@ function renderFieldContent() {
 const ImageFieldStory = {
     title: 'Forms/Fields/Image',
     component: 'image-field',
+    args: {
+        id: 'image-field',
+        label: 'Image field',
+        required: true,
+        hasDropArea: true
+    },
     tags: [],
     render: (args, story) => renderField(args, story, 'image-field', renderFieldContent, renderScript)
 };
@@ -33,13 +39,7 @@ const ImageFieldStory = {
 /** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: defaultParams,
-    args: {
-        id: 'image-field',
-        label: 'Image field',
-        required: true,
-        hasDropArea: true
-    }
+    parameters: defaultParams
 };
 
 delete Default.args?.extensions;
@@ -47,7 +47,7 @@ delete Default.args?.extensions;
 /** @type {Story} */
 export const Test = {
     parameters: testParams,
-    args: { ...Default.args, id: 'image-field-test' },
+    args: { id: 'image-field-test' },
     play: async ({ canvasElement, step }) => {
         const setup = await playSetup(canvasElement, {
             fieldTag: 'image-field'
@@ -59,8 +59,8 @@ export const Test = {
         if (!form) throw new Error('Form element not found');
 
         await customElements.whenDefined('file-list');
-        /** @type {List | null} */
-        const uploadList = canvasElement.querySelector('.fileField__uploadList');
+
+        const uploadList = field.uploadList;
         const i18nKey = field.i18nKey;
 
         const galaxyImage = await createImageFileFromURL('/test-assets/galaxy.jpg', 'galaxy.jpg');
@@ -109,7 +109,7 @@ export const Test = {
         });
 
         await step('Submits the form and checks the file is uploaded.', async () => {
-            submitButton && await userEvent.click(submitButton);
+            submitButton && (await userEvent.click(submitButton));
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList?.listResource?.getItems();

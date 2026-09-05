@@ -3,7 +3,7 @@
  * @typedef {import('../../checkboxesField/checkboxesField.js').default} RadioField
  */
 
-import { defineCustomElement } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import RadioOption from '../../radioField/radioOption/radioOption.js';
 import CheckboxesField from '../checkboxesField.js';
 
@@ -13,6 +13,18 @@ import CheckboxesField from '../checkboxesField.js';
 class CheckboxOption extends RadioOption {
     /** @type {CheckboxesField} */
     field = this.field;
+
+    /**
+     * @returns {FieldOptionConfigType}
+     */
+    getDefaultConfig() {
+        /** @type {FieldOptionConfigType} */
+        const config = {
+            attributeList: ['value']
+        };
+        return mergeObjects(super.getDefaultConfig(), config);
+    }
+
     /**
      * Renders the input element for the checkbox option.
      * @returns {string} The rendered input element.
@@ -22,10 +34,13 @@ class CheckboxOption extends RadioOption {
         return super.renderInput('checkbox', name);
     }
 
-    async $onConnected() {
-        await super.$onConnected();
+    async $onComplete() {
+        const val = this.getAttribute('value');
+        /** @todo Remove this setTimeout. */
+        await new Promise(resolve => setTimeout(resolve, 10));
+        this.input = this.querySelector('input');
         if (this.input && this.field) {
-            this.input.checked = this.field?.hasValue(this.getAttribute('value'));
+            this.input.checked = this.field?.hasValue(val);
         }
     }
 

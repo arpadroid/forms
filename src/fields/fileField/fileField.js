@@ -246,10 +246,10 @@ class FileField extends Field {
     renderUploadList() {
         return html`<arpa-node
             tag="{uploadListComponent}"
+            class-name="fileField__uploadList"
             name="uploadList"
             id="getHtmlId()"
             title-icon="{uploadListIcon}"
-            class="fileField__uploadList"
             can-render="hasUploads()"
             title="{i18n:lblUploads}"
         ></arpa-node>`;
@@ -281,11 +281,10 @@ class FileField extends Field {
     async $initializeNodes() {
         await super.$initializeNodes();
         this.classList.add(!this.allowMultiple() ? 'fileField--single' : 'fileField--multiple');
+
         this._initializeFileList();
-        /** @type {FileList | null} */
-        this.uploadList = this.querySelector('.fileField__uploadList');
-        /** @type {FileList | null} */
-        this.fileList = this.querySelector('.fileField__fileList');
+
+        this.uploadList = /** @type {FileList | undefined} */ (this.nodes.uploadList);
         this.dropArea = this.querySelector('drop-area');
         /** @type {FileFieldInput} */
         this.input = this.getInput();

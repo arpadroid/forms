@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
  * @typedef {import('./dateField.js').default} DateField
  * @typedef {import('@storybook/web-components-vite').Meta} Meta
@@ -8,10 +7,9 @@
  */
 import { I18n } from '@arpadroid/i18n';
 import { waitFor, expect } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { playSetup, renderField } from '../field/field.stories.util.js';
 import { getArgs, getArgTypes } from './dateField.stories.util.js';
-const category = 'Date Field Props';
 /** @type {Meta} */
 const DateFieldStory = {
     title: 'Forms/Fields/Date',

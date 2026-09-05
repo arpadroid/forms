@@ -69,9 +69,10 @@ export const Test = {
         const field = /** @type {SelectCombo} */ (setup.field);
         if (!input) throw new Error('Input element not found in the setup.');
 
-        await customElements.whenDefined('select-combo');
-        await field.promise;
+        onChangeMock.mockClear();
         field.setOptions(CountryOptions);
+
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         await step('Renders the field with four select options', async () => {
             expect(canvas.getByText('Select combo')).toBeInTheDocument();
@@ -81,7 +82,7 @@ export const Test = {
         });
 
         await step('Submits the form without selecting an option and receives required error', async () => {
-            submitButton?.click();
+            submitButton && (await userEvent.click(submitButton));
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -92,13 +93,13 @@ export const Test = {
         await step('Selects the first option and submits the form', async () => {
             await input?.focus();
             const spainButton = canvas.getByText('Spain').closest('button');
-            spainButton.click();
+            spainButton && (await userEvent.click(spainButton));
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenCalledWith('es', field, expect.anything());
                 expect(field.getValue()).toBe('es');
                 expect(input).toHaveTextContent('Spain');
             });
-            submitButton?.click();
+            submitButton && (await userEvent.click(submitButton));
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 /** @todo Fix flaky test. */

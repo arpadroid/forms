@@ -71,14 +71,16 @@ class RadioOption extends FieldOption {
         callOnChange && this.field?._callOnChange(event);
     }
 
-    async $onConnected() {
-        await this.field?.promise;
-        super.$onConnected();
-        this.input = this.querySelector('input');
-        if (this.input) {
-            this.input.removeEventListener('change', this._onChange);
-            this.input.addEventListener('change', this._onChange);
-        }
+    async $initializeNodes() {
+        await super.$initializeNodes();
+        this.promise.then(async () => {
+            const input = this.querySelector('input');
+            if (input) {
+                input.removeEventListener('change', this._onChange);
+                input.addEventListener('change', this._onChange);
+            }
+        });
+        return true;
     }
 }
 

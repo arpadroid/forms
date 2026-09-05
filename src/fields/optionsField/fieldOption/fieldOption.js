@@ -3,7 +3,7 @@
  * @typedef {import('./fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
  * @typedef {import('../../field/field.js').FieldInput} FieldInput
  */
-import { mechanize, defineCustomElement } from '@arpadroid/tools';
+import { mechanize, defineCustomElement, mergeObjects, ucFirst } from '@arpadroid/tools';
 import { ArpaElement } from '@arpadroid/ui';
 
 const html = String.raw;
@@ -20,10 +20,13 @@ class FieldOption extends ArpaElement {
      * @returns {FieldOptionConfigType}
      */
     getDefaultConfig() {
-        return {
+        /** @type {FieldOptionConfigType} */
+        const config = {
             template: FieldOption.template,
-            className: 'fieldOption'
+            className: 'fieldOption',
+            attributeList: ['value']
         };
+        return mergeObjects(super.getDefaultConfig(), config);
     }
 
     /**
@@ -35,7 +38,7 @@ class FieldOption extends ArpaElement {
     }
 
     getLabel() {
-        return this.getProp('label') || this.getProp('content') || this.getProp('value');
+        return this.getProp('label') || ucFirst(this.getProp('value')) || this.getProp('content');
     }
 
     /**
@@ -62,7 +65,6 @@ class FieldOption extends ArpaElement {
     }
 
     async _preRender() {
-        super._preRender();
         const field = this.getField();
         field && (this.field = field);
     }
@@ -72,7 +74,6 @@ class FieldOption extends ArpaElement {
      * @returns {Promise<boolean>}
      */
     async render() {
-        await this.onReady();
         if (!this.field) return false;
         if (this.tagName.toLowerCase() === 'option') {
             this.removeAttribute('role');
@@ -82,11 +83,11 @@ class FieldOption extends ArpaElement {
         this.setIsSelected();
         super.render();
         this._config.className && this.classList.add(this._config.className);
-        this.$onConnected();
         return true;
     }
 
     async $initializeNodes() {
+        await super.$initializeNodes();
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = /** @type {HTMLElement} */ (this.querySelector('.fieldOption__content'));
         return true;

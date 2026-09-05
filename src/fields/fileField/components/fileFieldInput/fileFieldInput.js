@@ -28,18 +28,20 @@ class FileFieldInput extends FieldInput {
      */
     async $initializeNodes() {
         await super.$initializeNodes();
-        const input = this.input;
-        if (!input) {
-            return false;
-        }
-        input.style.display = 'none';
-        this.allowMultiple = this.field?.allowMultiple();
-        if (this.allowMultiple) {
-            input.setAttribute('multiple', '');
-        }
-        input.removeEventListener('change', this._onInputChange);
-        input.addEventListener('change', this._onInputChange);
-        this._initializeDropArea();
+        this.promise.then(() => {
+            const input = this.input;
+            if (!input) {
+                return false;
+            }
+            input.style.display = 'none';
+            this.allowMultiple = this.field?.allowMultiple();
+            if (this.allowMultiple) {
+                input.setAttribute('multiple', '');
+            }
+            input.removeEventListener('change', this._onInputChange);
+            input.addEventListener('change', this._onInputChange);
+            this._initializeDropArea();
+        });
         return true;
     }
 

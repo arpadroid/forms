@@ -137,7 +137,9 @@ class FileItem extends ListItem {
         if (typeof fieldOnDelete === 'function') {
             const rv = await fieldOnDelete(this);
             rv !== false && this.delete();
-            return rv;
+            if (rv !== true) {
+                return rv;
+            }
         }
         this.remove();
     }

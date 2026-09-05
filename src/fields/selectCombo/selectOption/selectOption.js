@@ -29,9 +29,7 @@ class SelectOption extends FieldOption {
         return mergeObjects(super.getDefaultConfig(), {
             className: 'comboBox__item',
             template: html`
-                <button class="fieldOption__handler" data-value="{value}" tabindex="-1">
-                    ${FieldOption.template}
-                </button>
+                <button class="fieldOption__handler" data-value="{value}" tabindex="-1">${FieldOption.template}</button>
             `
         });
     }
@@ -49,9 +47,12 @@ class SelectOption extends FieldOption {
      */
     async $initializeNodes() {
         await super.$initializeNodes();
-        this.handler = /** @type {HTMLElement | null} */ (this.querySelector('.fieldOption__handler'));
-        this.handler?.removeEventListener('click', this._onSelected);
-        this.handler?.addEventListener('click', this._onSelected);
+        this.promise.then(async () => {
+            await new Promise((resolve) => setTimeout(resolve, 50));
+            this.handler = /** @type {HTMLElement | null} */ (this.querySelector('.fieldOption__handler'));
+            this.handler?.removeEventListener('click', this._onSelected);
+            this.handler?.addEventListener('click', this._onSelected);
+        });
         return true;
     }
 

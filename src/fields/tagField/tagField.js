@@ -124,6 +124,7 @@ class TagField extends SelectCombo {
      * @returns {TagItemConfigType[] | undefined}
      */
     setTags(tags) {
+        this.tagList = this.querySelector('tag-list');
         /** @type {TagItemConfigType[]} */
         const _tags = /** @type {TagItemConfigType[]} */ (this.parseTags(tags));
         this.tagList?.setItems(_tags);
@@ -201,7 +202,13 @@ class TagField extends SelectCombo {
     getValue() {
         /** @type {TagItem[]} */
         const items = /** @type {TagItem[]} */ (Array.from(this.tagList?.childNodes || []));
-        return items?.map(item => item.getValue()) ?? this.value;
+        return (
+            items
+                ?.filter(item => item instanceof HTMLElement)
+                .map(item => {
+                    return item.getValue();
+                }) ?? this.value
+        );
     }
 
     allowTextInput() {
@@ -238,6 +245,15 @@ class TagField extends SelectCombo {
             return !this.tagList?.listResource?.items?.find(item => item.value === option.value);
         });
         super.onOptionsFetched(opt);
+    }
+
+    /**
+     * Handles the search event for the select combo field.
+     * @type {import('@arpadroid/tools').SearchToolCallbackType}
+     */
+    async onSearch(payload) {
+        this.inputCombo?.open();
+        return super.onSearch(payload);
     }
 
     /**

@@ -9,7 +9,7 @@
  */
 
 import { attrString } from '@arpadroid/tools';
-import { fn, within, getByText } from 'storybook/test';
+import { fn, within, getByText, waitFor } from 'storybook/test';
 
 const html = String.raw;
 
@@ -83,7 +83,7 @@ export async function playSetup(canvasElement, opt) {
     const form = canvasElement.querySelector('arpa-form');
     await form?.promise;
     form?.setAttribute('debounce', '0');
-    const submitButton = getByText(canvasElement, 'Submit').closest('button');
+    const submitButton = await waitFor(() => getByText(canvasElement, 'Submit').closest('button'));
     const onSubmitMock = fn(_values => {
         // console.log('values', values);
         return true;
@@ -95,10 +95,11 @@ export async function playSetup(canvasElement, opt) {
         field.on('error', onErrorMock);
         field.on('change', onChangeMock);
     }
+    
+    await new Promise(resolve => setTimeout(resolve, 20));
+    
     /** @type {import('../../types').FieldInputType | null} */
     const input = (typeof field?.getInput === 'function' && field?.getInput()) || null;
-
-    await new Promise(resolve => setTimeout(resolve, 100));
     return { canvas, field, form, submitButton, onSubmitMock, onErrorMock, onChangeMock, input };
 }
 

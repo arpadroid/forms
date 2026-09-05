@@ -98,14 +98,16 @@ class SelectCombo extends SelectField {
 
     async $initializeNodes() {
         await super.$initializeNodes();
-        this._initializeButtonInput();
-        this._initializeSearchInput();
-        this._initializeOptionsNode();
-        this._initializeInputCombo();
-        if (this.label) {
-            this.label.removeEventListener('click', this.onLabelClick);
-            this.label.addEventListener('click', this.onLabelClick);
-        }
+        this.promise.then(() => {
+            this._initializeButtonInput();
+            this._initializeSearchInput();
+            this._initializeOptionsNode();
+            this._initializeInputCombo();
+            if (this.label) {
+                this.label.removeEventListener('click', this.onLabelClick);
+                this.label.addEventListener('click', this.onLabelClick);
+            }
+        });
         return true;
     }
 
@@ -148,7 +150,9 @@ class SelectCombo extends SelectField {
         if (!this.inputCombo) {
             this.inputCombo = new InputCombo(handler, this.optionsNode, {
                 containerSelector: this.getProp('option-component'),
-                position: { position: this.getProp('options-position') },
+                position: {
+                    position: this.getProp('optionsPosition')
+                },
                 closeOnClick: true,
                 onOpen: () => this.onOpenCombo(),
                 onClose: () => this.onCloseCombo()

@@ -117,10 +117,9 @@ export const Test = {
 
         await step('Calls onChange listener when change event is fired', async () => {
             args.onChange && field?.on('change', args.onChange);
+
             expect(args.onChange).not.toHaveBeenCalled();
-            if (!input) {
-                throw new Error('Input element not found');
-            }
+            const input = /** @type {HTMLInputElement} */ (field?.getInput());
             input.value = 'test value';
             const event = new Event('input', { bubbles: true, cancelable: true });
             input?.dispatchEvent(event);

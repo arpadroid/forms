@@ -6,7 +6,7 @@
  */
 import { I18n } from '@arpadroid/i18n';
 import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, fireEvent } from 'storybook/test';
+import { waitFor, expect, fireEvent, userEvent } from 'storybook/test';
 import { playSetup, renderField } from '../field/field.stories.util.js';
 import { getArgs, getArgTypes } from '../../components/form/form.stories.util.js';
 
@@ -69,9 +69,10 @@ export const Test = {
         });
 
         await step('Checks the checkbox', async () => {
-            fireEvent.click(label);
-            expect(input.checked).toBe(true);
+            await userEvent.click(label);
+            const input = /** @type {HTMLInputElement | null} */ (field?.getInput());
             await waitFor(() => {
+                expect(input?.checked).toBe(true);
                 expect(onChangeMock).toHaveBeenLastCalledWith(true, field, expect.anything());
                 expect(onChangeMock).toHaveBeenCalledTimes(1);
             });

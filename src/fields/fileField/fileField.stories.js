@@ -6,7 +6,7 @@
  * @typedef {import('@arpadroid/lists').List} List
  */
 
-import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
 import { formatBytes } from '@arpadroid/tools';
 import { I18n } from '@arpadroid/i18n';
@@ -46,9 +46,7 @@ export const Test = {
         label: 'File field',
         id: 'file-field',
         minSize: 0.0001,
-        maxSize: 0.0002,
-        onDelete,
-        onDeleteUpload
+        maxSize: 0.0002
     },
     play: async ({ canvasElement, step }) => {
         const setup = await playSetup(canvasElement, {
@@ -61,7 +59,8 @@ export const Test = {
         const field = /** @type {FileField} */ (setup.field);
         if (!input) throw new Error('File input element not found');
         if (!field) throw new Error('File field element not found');
-
+        // @ts-ignore
+        field.setConfig({ onDelete, onDeleteUpload });
         field._config.onDelete = onDelete;
         field._config.onDeleteUpload = onDeleteUpload;
 
@@ -161,28 +160,24 @@ export const Test = {
         await step('Deletes the upload and checks the onDelete signal and callback is called.', async () => {
             onDeleteUpload.mockClear();
             /** @type {HTMLButtonElement | null} */
-            const deleteButton = await waitFor(() =>
-                canvasElement.querySelector('.fileField__uploadList button[variant="delete"]')
+            const deleteButton = await waitFor(
+                () => uploadList && within(uploadList)?.getByRole('button', { name: /Remove file/i })
             );
             if (!deleteButton) {
                 throw new Error('Delete button not found');
             }
             await userEvent.click(deleteButton);
-            await waitFor(() => {
-                expect(onDeleteUpload).toHaveBeenCalledOnce();
-                expect(canvas.queryByText('test file')).toBeNull();
-                expect(uploadList?.listResource?.getItems()).toHaveLength(0);
-            });
+            expect(onDeleteUpload).toHaveBeenCalledOnce();
+            expect(canvas.queryByText('test file')).toBeNull();
+            expect(uploadList?.listResource?.getItems()).toHaveLength(0);
         });
 
         await step('Adds a valid file and submits the form receiving expected value', async () => {
             await fireEvent.change(input, { target: { files: [TextFileMock] } });
             expect(uploadList?.listResource?.getItems()).toHaveLength(1);
-            submitButton?.click();
-            await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': TextFileMock });
-                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
-            });
+            submitButton && (await userEvent.click(submitButton));
+            expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': TextFileMock });
+            canvas.getByText(I18n.getText('forms.form.msgSuccess'));
         });
 
         await step(
@@ -213,7 +208,7 @@ export const Test = {
                 expect(canvas.getByText('yet another text file')).toBeInTheDocument();
                 expect(canvas.getByText('128 bytes')).toBeInTheDocument();
             });
-            submitButton && await userEvent.click(submitButton);
+            submitButton && (await userEvent.click(submitButton));
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': [TextFileMock2, TextFileMock3] });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -226,6 +221,7 @@ export const Test = {
             const deleteButtons = await waitFor(() =>
                 canvas.getAllByRole('button', { name: I18n.getText('forms.fields.file.lblRemoveFile') })
             );
+            await new Promise(resolve => setTimeout(resolve, 0));
             await userEvent.click(deleteButtons[0]);
             await waitFor(() => {
                 expect(onDelete).toHaveBeenCalledWith(deleteButtons[0].closest('file-item'));
