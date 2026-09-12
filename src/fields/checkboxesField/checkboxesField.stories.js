@@ -6,10 +6,10 @@
  * @typedef {import('./checkboxesField.js').default} CheckboxesField
  */
 
-import { expect, fireEvent, waitFor } from 'storybook/test';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { expect, waitFor, userEvent, fireEvent, within } from 'storybook/test';
 import { I18n } from '@arpadroid/i18n';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { playSetup, renderField } from '../field/field.stories.util.js';
+import { testParams, defaultParams } from '@arpadroid/module/storybook/helper';
 
 const html = String.raw;
 
@@ -29,46 +29,35 @@ function renderFieldContent(_args, _story) {
 const CheckboxesFieldStory = {
     title: 'Forms/Fields/Checkboxes',
     tags: [],
+
+    args: {
+        binary: false,
+        id: 'checkboxes-field',
+        label: 'Checkboxes Field',
+        value: 'option1, option2'
+    },
     render: (args, story) => renderField(args, story, 'checkboxes-field', renderFieldContent)
 };
 
 /** @type {StoryObj} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        ...getArgTypes(),
-        binary: {
-            table: { category: 'Props' }
-        }
-    },
-    args: {
-        binary: false,
-        ...getArgs(),
-        id: 'checkboxes-field',
-        label: 'Checkboxes Field',
-        value: 'option1, option2'
-    }
+    parameters: defaultParams
 };
-/**
- * @todo: handle the properties below properly, this can lead to flaky outcomes.
- */
-delete Default.args?.placeholder;
-delete Default.argTypes?.placeholder;
 
 /** @type {StoryObj} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
-        ...Default.args,
         required: true,
-        value: 'option1, option2'
+        value: 'option1,option2',
+        id: 'checkboxes-field-test'
     },
-    play: async ({ canvasElement, step }) => {
+    play: async ({ canvas, canvasElement, step }) => {
         const setup = await playSetup(canvasElement, {
             fieldTag: 'checkboxes-field'
         });
-        const { submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = setup;
+        const { onChangeMock, onErrorMock, submitButton, onSubmitMock } = setup;
         const field = /** @type {CheckboxesField} */ (setup.field);
         const label = canvas.getByText('Checkboxes Field');
 
@@ -87,30 +76,33 @@ export const Test = {
         });
 
         await step('Clicks on the second option and unchecks it.', async () => {
-            const option2 = canvas.getByText('Option 2');
-            await fireEvent.click(option2);
-            expect(field.hasValue('option2')).toBeFalsy();
+            const optionsNode = field.optionsNode && within(field.optionsNode);
+            const option2 = optionsNode?.getByText('Option 2');
+            option2 && userEvent.click(option2, { delay: 50 });
             await waitFor(() => {
+                expect(field.hasValue('option2')).toBeFalsy();
                 expect(onChangeMock).toHaveBeenLastCalledWith(['option1'], field, expect.anything());
             });
         });
 
         await step('clicks on the label to toggle all options', async () => {
-            await fireEvent.click(label);
-            expect(field.hasValue('option1')).toBeTruthy();
-            expect(field.hasValue('option2')).toBeTruthy();
-            expect(field.hasValue('option3')).toBeTruthy();
+            await userEvent.click(label, { delay: 50 });
+            await waitFor(() => {
+                expect(field.hasValue('option1')).toBeTruthy();
+                expect(field.hasValue('option2')).toBeTruthy();
+                expect(field.hasValue('option3')).toBeTruthy();
+            });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith(['option1', 'option2', 'option3'], field, undefined);
             });
-            await fireEvent.click(label);
+            await userEvent.click(label, { delay: 50 });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith([], expect.anything(), undefined);
             });
         });
 
         await step('Submits form with invalid empty value and checks for error messages.', async () => {
-            submitButton?.click();
+            submitButton && (await userEvent.click(submitButton, { delay: 50 }));
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.field.errRequired'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -119,11 +111,11 @@ export const Test = {
         });
 
         await step('Submits form with valid field value.', async () => {
-            await fireEvent.click(label);
-            submitButton?.click();
+            await userEvent.click(label, { delay: 50 });
+            submitButton && (await userEvent.click(submitButton, { delay: 50 }));
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
-                    'checkboxes-field': ['option1', 'option2', 'option3']
+                    'checkboxes-field-test': ['option1', 'option2', 'option3']
                 });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
@@ -131,12 +123,13 @@ export const Test = {
 
         await step('Switches to binary data mode, submits form and receives expected data.', async () => {
             field.setAttribute('binary', 'true');
+            await field?.onNodesReady();
             const option2 = canvas.getByText('Option 2');
             await fireEvent.click(option2);
             submitButton?.click();
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
-                    'checkboxes-field': {
+                    'checkboxes-field-test': {
                         option1: true,
                         option2: false,
                         option3: true
@@ -144,6 +137,10 @@ export const Test = {
                 });
             });
         });
+
+        onChangeMock.mockClear();
+        onErrorMock.mockClear();
+        onSubmitMock.mockClear();
     }
 };
 

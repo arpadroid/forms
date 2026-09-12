@@ -144,7 +144,7 @@ class Field extends ArpaElement {
         return true;
     }
 
-    $onDomReady() {
+    $onComplete() {
         this._initializeValue();
     }
 

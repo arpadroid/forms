@@ -245,8 +245,8 @@ class FileField extends Field {
 
     renderUploadList() {
         return html`<arpa-node
-            tag="{uploadListComponent}"
-            class-name="fileField__uploadList"
+            tag="${this.getProp('uploadListComponent')}"
+            class="fileField__uploadList"
             name="uploadList"
             id="getHtmlId()"
             title-icon="{uploadListIcon}"
