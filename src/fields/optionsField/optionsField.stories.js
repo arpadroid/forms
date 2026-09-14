@@ -29,7 +29,7 @@ export const Default = {
 
 /** @type {StoryObj} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: {},
     args: {
         ...Default.args
     },
@@ -61,7 +61,7 @@ export const Test = {
                 expect(canvas.getByText('Option 6')).toBeInTheDocument();
             });
         });
-        await new Promise(resolve => setTimeout(resolve, 50));
+
         await step('Sets a new list of options to the field', async () => {
             field.setOptions([
                 { value: 'option7', label: 'Option 7', icon: 'grocery' },

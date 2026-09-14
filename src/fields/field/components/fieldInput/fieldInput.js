@@ -4,9 +4,11 @@
 import { ArpaElement } from '@arpadroid/ui';
 import Field from '../../field.js';
 import { attrString, defineCustomElement, mergeObjects } from '@arpadroid/tools';
+
+const html = String.raw;
 class FieldInput extends ArpaElement {
-    $initialize() {
-        this.bind('_onFocus', '_onInput');
+    _printAttributes() {
+        super._printAttributes();
         /** @type {Record<string, unknown>} */
         this.inputAttributes = {};
         for (const attr of this.attributes) {
@@ -20,10 +22,22 @@ class FieldInput extends ArpaElement {
      * @returns {FieldInputConfigType}
      */
     getDefaultConfig() {
-        return {
+        /** @type {FieldInputConfigType} */
+        const config = {
             inputAttributes: {},
             inputClass: 'fieldInput'
         };
+        return mergeObjects(super.getDefaultConfig(), config);
+    }
+
+    _initializeField() {
+        /** @type {Field | undefined} */
+        this.field = this.field || this.closest('.arpaField') || undefined;
+    }
+
+    _preRender() {
+        super._preRender();
+        this._initializeField();
     }
 
     /**
@@ -35,42 +49,31 @@ class FieldInput extends ArpaElement {
         this.input?.setAttribute('value', value);
     }
 
-    _preRender() {
-        if (!this.field) {
-            /** @type {Field | null} */
-            this.field = this.closest('.arpaField');
-        }
+    canRenderInput() {
+        return true;
     }
 
     $renderTemplate() {
-        const attr = mergeObjects(
-            {
-                class: this.getProp('input-class'),
-                id: this.field?.getHtmlId(),
-                name: this.field?.getId(),
-                disabled: this.field?.isDisabled(),
-                placeholder: this.field?.getPlaceholder(),
-                value: this.field?.getValue()?.toString()
-            },
-            this.inputAttributes
-        );
-
-        return `<input ${attrString(attr)} />`;
+        const field = this.field;
+        return html`<arpa-node
+            tag="input"
+            name="input"
+            class="{inputClass}"
+            id="${field?.getHtmlId()}"
+            name="${field?.getId()}"
+            can-render="canRenderInput()"
+            placeholder="${field?.getPlaceholder()}"
+            value="${field?.getValue()?.toString()}"
+            on-focus="{_onFocus}"
+            on-input="{_onInput}"
+            ${attrString(this.inputAttributes)}
+        ></arpa-node>`;
     }
 
     async $initializeNodes() {
         await super.$initializeNodes();
-        /** @type {HTMLInputElement | null} */
-        this.input = this.querySelector('input');
-        this.initializeListeners();
+        this.input = /** @type {HTMLInputElement | undefined} */ (this.nodes.input);
         return true;
-    }
-
-    initializeListeners() {
-        this.input?.removeEventListener('focus', this._onFocus);
-        this.input?.addEventListener('focus', this._onFocus);
-        this.input?.removeEventListener('input', this._onInput);
-        this.input?.addEventListener('input', this._onInput);
     }
 
     /**

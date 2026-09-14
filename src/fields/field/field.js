@@ -33,17 +33,8 @@ class Field extends ArpaElement {
         this.on = dummyListener;
         this.signal = dummySignal;
         observerMixin(this);
-    }
-
-    /**
-     * Initializes the field after constructor.
-     * @throws {Error} If the field does not have an id.
-     */
-    async $initialize() {
         const id = this.getId();
         if (!id) throw new Error('Field must have an id');
-        await this.onReady();
-        this._onReady();
     }
 
     /**
@@ -81,18 +72,23 @@ class Field extends ArpaElement {
      * @returns {boolean}
      */
     $initializeProperties() {
+        this.classList.add('arpaField');
         /** @type {FormComponent} */
         if (this.id) {
             this._id = this.id;
             this.removeAttribute('id');
             this.id = '';
         }
+
+        return true;
+    }
+
+    async _initializeForm() {
         this.form = this.getForm();
         if (this.form) {
             this.form.registerField(this);
             return true;
         }
-        return false;
     }
 
     $onInitialized() {
@@ -128,9 +124,7 @@ class Field extends ArpaElement {
     }
 
     async $initializeNodes() {
-        /** @type {FormComponent} */
-        await new Promise(resolve => setTimeout(resolve, 0));
-        this.form = this.getForm();
+        await super.$initializeNodes();
         await this._initializeInputNode();
         /** @type {fieldInputMask | null} */
         this.inputMask = this.querySelector('field-input-mask');
@@ -312,23 +306,6 @@ class Field extends ArpaElement {
         return customElements.whenDefined('arpa-form');
     }
 
-    _onReady() {
-        this.form = this.getForm();
-        this.classList.add('arpaField');
-        this._initializeClassNames();
-        this.$initializeProperties();
-    }
-
-    _initializeClassNames() {
-        if (typeof this._config?.className === 'string') {
-            const className = this._config.className?.trim() || '';
-            className && this.classList.add(className);
-        }
-        if (Array.isArray(this._config.classNames)) {
-            this.classList.add(...this._config.classNames);
-        }
-    }
-
     // #endregion Lifecycle
 
     /////////////////////////////
@@ -413,6 +390,10 @@ class Field extends ArpaElement {
      */
     getForm() {
         return /** @type {FormComponent | undefined} */ (this.form || this._config.form || this.closest('arpa-form'));
+    }
+
+    $onConnected() {
+        this._initializeForm();
     }
 
     getOnChangeValue() {

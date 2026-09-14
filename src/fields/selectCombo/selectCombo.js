@@ -127,7 +127,6 @@ class SelectCombo extends SelectField {
     }
 
     async _initializeSearch() {
-        await this.onReady();
         if (this.searchInput && !this.search) {
             this.search = new SearchTool(this.searchInput, {
                 container: this.optionsNode,

@@ -69,25 +69,23 @@ class FieldOption extends ArpaElement {
         field && (this.field = field);
     }
 
-    /**
-     * Renders the field option element.
-     * @returns {Promise<boolean>}
-     */
-    async render() {
-        if (!this.field) return false;
+    async _printAttributes() {
+        super._printAttributes();
         if (this.tagName.toLowerCase() === 'option') {
             this.removeAttribute('role');
         } else {
             this.setAttribute('role', 'option');
         }
-        this.setIsSelected();
-        super.render();
-        this._config.className && this.classList.add(this._config.className);
-        return true;
     }
+
+    
 
     async $initializeNodes() {
         await super.$initializeNodes();
+        this.field = this.getField();
+        this.field?.on('change', () => this.setIsSelected());
+        this.setIsSelected();
+
         this.handlerNode = this.querySelector('.fieldOption__handler');
         this.contentNode = /** @type {HTMLElement} */ (this.querySelector('.fieldOption__content'));
         return true;
@@ -120,7 +118,6 @@ class FieldOption extends ArpaElement {
 
     async $onInitialized() {
         await this.onReady();
-        this.field?.on('change', () => this.setIsSelected());
         super.$onInitialized();
     }
 

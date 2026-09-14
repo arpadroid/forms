@@ -28,26 +28,27 @@ class FileFieldInput extends FieldInput {
      */
     async $initializeNodes() {
         await super.$initializeNodes();
-        this.promise.then(() => {
-            const input = this.input;
-            if (!input) {
-                return false;
-            }
-            input.style.display = 'none';
-            this.allowMultiple = this.field?.allowMultiple();
-            if (this.allowMultiple) {
-                input.setAttribute('multiple', '');
-            }
-            input.removeEventListener('change', this._onInputChange);
-            input.addEventListener('change', this._onInputChange);
-            this._initializeDropArea();
-        });
+        await this.waitForArpaNodes();
+        
+        const input = this.input;
+        if (!input) {
+            return false;
+        }
+        input.style.display = 'none';
+        this.allowMultiple = this.field?.allowMultiple();
+        if (this.allowMultiple) {
+            input.setAttribute('multiple', '');
+        }
+        input.removeEventListener('change', this._onInputChange);
+        input.addEventListener('change', this._onInputChange);
+        this._initializeDropArea();
         return true;
     }
 
     async _initializeDropArea() {
+        this.field = this.closest('.arpaField') || undefined;
+        await this.field?.promise;
         this.dropArea = /** @type {DropArea} */ (this.field?.querySelector('drop-area'));
-        await customElements.whenDefined('drop-area');
         this.dropArea?.on('drop', this._onInputChange);
     }
 

@@ -80,7 +80,7 @@ export const Test = {
         });
 
         await step('Adds an invalid file type and displays an error', async () => {
-            await fireEvent.change(input, { target: { files: [TextFileSmall] } });
+            await fireEvent.change(input, { target: { files: [TextFileSmall] }, delay: 100 });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
                 expect(onChangeMock).toHaveBeenCalledWith([], field, expect.anything());
@@ -97,7 +97,7 @@ export const Test = {
 
         await step('Adds a valid file type with a warning the old one will be overwritten.', async () => {
             onChangeMock.mockReset();
-            await fireEvent.change(input, { target: { files: [galaxyImage] } });
+            await fireEvent.change(input, { target: { files: [galaxyImage], delay: 100 } });
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenCalledWith([galaxyImage], field, expect.anything());
                 const warning = I18n.getText(`${field.i18nKey}.msgFileOverwriteWarning`);
@@ -109,7 +109,7 @@ export const Test = {
         });
 
         await step('Submits the form and checks the file is uploaded.', async () => {
-            submitButton && (await userEvent.click(submitButton));
+            submitButton && (await userEvent.click(submitButton, { delay: 150 }));
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
                 const items = field.fileList?.listResource?.getItems();

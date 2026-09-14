@@ -34,14 +34,6 @@ class SearchField extends Field {
         return 'search';
     }
 
-    async $initialize() {
-        const { variant } = this._config;
-        super.$initialize();
-        if (variant === 'mini') {
-            this._config.iconRight = undefined;
-        }
-    }
-
     getVariant() {
         return this.getProp('variant');
     }
@@ -50,10 +42,23 @@ class SearchField extends Field {
         return this.getVariant() === 'mini' ? undefined : this.getProp('icon-right');
     }
 
-    async $onInitialized() {
-        await super.$onInitialized();
+    _addClassNames() {
+        super._addClassNames();
         this.classList.add('searchField', `searchField--${this.getVariant()}`);
+    }
+
+    async $initialize() {
+        const { variant } = this._config;
+        super.$initialize();
+        if (variant === 'mini') {
+            this._config.iconRight = undefined;
+        }
+    }
+
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this.handleMiniButton();
+        return true;
     }
 
     handleMiniButton() {

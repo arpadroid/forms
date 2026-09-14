@@ -6,7 +6,6 @@
  * @typedef {import('@storybook/web-components-vite').Args} Args
  */
 
-/* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
 
 import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';

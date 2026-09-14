@@ -27,10 +27,7 @@ const FieldStory = {
 export const Default = {
     name: 'Render',
     parameters: {
-        // actions: { disable: true },
         interactions: { disable: true },
-        a11y: { disable: true },
-        'storybook/interactions/panel': { disable: true },
         layout: 'padded',
         options: {
             selectedPanel: 'storybook/controls/panel'
@@ -51,12 +48,12 @@ export const Default = {
 export const Test = {
     parameters: {
         controls: { disable: true },
-        usage: { disable: true },
         options: { selectedPanel: 'storybook/interactions/panel' },
         layout: 'padded'
     },
     args: {
         ...Default.args,
+        id: 'test-field',
         required: true,
         minLength: 2,
         maxLength: 10

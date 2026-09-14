@@ -264,6 +264,7 @@ class FormComponent extends ArpaElement {
     }
 
     async $initializeNodes() {
+        await super.$initializeNodes();
         const { variant } = this._config || {};
         this.bodyNode = this.querySelector('.arpaForm__body');
         /** @type {HTMLFormElement | null} */

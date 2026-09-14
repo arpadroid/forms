@@ -127,6 +127,7 @@ class OptionsField extends Field {
      * @param {OptionsFieldConfigType['fetchOptions']} fetchOptions - The fetch options function.
      */
     async setFetchOptions(fetchOptions) {
+        await this.promise;
         this._config.fetchOptions = fetchOptions;
         this.initializeOptions();
     }
@@ -270,6 +271,7 @@ class OptionsField extends Field {
     }
 
     async reRender() {
+        await this.waitForArpaNodes();
         const rv = super.reRender();
         this._options?.length && this.setOptions(this._options);
         return rv;
@@ -293,14 +295,15 @@ class OptionsField extends Field {
      * @param {FieldOptionConfigType[]} options
      */
     async _renderOptions(options) {
-        await this.onReady();
+        await this.promise;
+        this.optionsNode = this.getOptionsNode();
         if (!this.optionsNode) {
             return;
         }
         /** @type {HTMLElement & {field: Field}} */ (this.optionsNode).field = this;
         this.optionsNode.innerHTML = '';
+        this.appendChild(this.optionsNode);
         if (!this.optionsNode.isConnected || this.optionsNode.parentNode === document.body) {
-            this.appendChild(this.optionsNode);
         }
         options?.forEach(option => this._renderOption(option));
     }

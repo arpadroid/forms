@@ -132,8 +132,8 @@ class GroupField extends Field {
     // #region LIFECYCLE
     /////////////////////////
 
-    $onConnected() {
-        super.$onConnected();
+    async $onConnected() {
+        await super.$onConnected();
         this.fieldsNode = this.querySelector('.groupField__fields');
         this.fieldsNode && appendNodes(this.fieldsNode, this._fields);
         this.details = this.querySelector('details');
@@ -147,6 +147,7 @@ class GroupField extends Field {
                 this.update();
             });
         }
+        return true;
     }
 
     update() {
