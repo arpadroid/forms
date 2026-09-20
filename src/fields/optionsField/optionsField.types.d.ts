@@ -10,6 +10,7 @@ export type OptionsFieldConfigType = FieldConfigType & {
     options?: FieldOptionConfigType[];
     optionTemplate?: string;
     defaultOption?: string;
+    optionsZone?: string;
 };
 
 export type OptionsNodeType = HTMLElement & { field?: OptionsField };

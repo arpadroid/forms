@@ -36,7 +36,7 @@ class SelectCombo extends SelectField {
             inputAttributes: { type: undefined },
             inputTemplate: html`
                 {comboInput}
-                <div class="selectCombo__options optionsField__options comboBox">{options}</div>
+                <div class="selectCombo__options optionsField__options comboBox" zone="{optionsZone}">{options}</div>
             `,
             optionComponent: 'select-option'
         };
@@ -98,11 +98,12 @@ class SelectCombo extends SelectField {
 
     async $initializeNodes() {
         await super.$initializeNodes();
+        this._initializeInputCombo();
+
         this.promise.then(() => {
             this._initializeButtonInput();
             this._initializeSearchInput();
             this._initializeOptionsNode();
-            this._initializeInputCombo();
             if (this.label) {
                 this.label.removeEventListener('click', this.onLabelClick);
                 this.label.addEventListener('click', this.onLabelClick);

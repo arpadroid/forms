@@ -67,11 +67,7 @@ class Field extends ArpaElement {
         super.setConfig(config);
     }
 
-    /**
-     * Initializes the properties for the field.
-     * @returns {boolean}
-     */
-    $initializeProperties() {
+    async $initializeProperties() {
         this.classList.add('arpaField');
         /** @type {FormComponent} */
         if (this.id) {
