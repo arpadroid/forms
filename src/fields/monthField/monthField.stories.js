@@ -1,57 +1,60 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
- * @typedef {import('./monthField.js').default} MonthField
+ * @typedef {import('../dateField/dateField.types.js').DateFieldConfigType} DateFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<DateFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<DateFieldConfigType>} Story
  */
 
-import { expect, waitFor } from 'storybook/test';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { expect, waitFor, userEvent } from 'storybook/test';
 import { I18n } from '@arpadroid/i18n';
-import { getArgs, getArgTypes } from '../dateField/dateField.stories.util.js';
-import { playSetup, renderField } from '../field/field.stories.util.js';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
 
 const html = String.raw;
 
 /** @type {Meta} */
 const MonthFieldStory = {
     title: 'Forms/Fields/Month',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'month-field')
-};
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        ...getArgTypes()
-    },
+    component: 'month-field',
     args: {
-        ...getArgs(),
         id: 'month-field',
         label: 'Month Field',
-        required: true
-    }
+        required: true,
+        value: '12 June 2021',
+        format: 'MMM YYYY',
+        disablePast: false,
+        disableFuture: false,
+        min: '',
+        max: ''
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <month-field ${$attr(args)}></month-field>
+        </arpa-form>
+    `
 };
 
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
         ...Default.args,
         required: true,
         value: '12 June 2021',
         format: 'MMM YYYY'
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'month-field'
+    play: async ({ canvasElement, canvas, step }) => {
+        const { submitButton, onErrorMock, onSubmitMock, input, field } = await playSetup({
+            tag: 'month-field',
+            canvas,
+            canvasElement
         });
-        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-        const input = /** @type {HTMLInputElement} */ (setup.input);
-        const field = /** @type {MonthField} */ (setup.field);
 
         await step('Default value is OK.', async () => {
             expect(input?.value).toBe('2021-06');
@@ -69,7 +72,7 @@ export const Test = {
             async () => {
                 field.setAttribute('disable-past', 'true');
                 field.setValue('31 Feb 1900');
-                submitButton?.click();
+                await userEvent.click(submitButton);
                 await waitFor(() => {
                     canvas.getByText(I18n.getText('forms.fields.date.errPastDisabled'));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -78,7 +81,7 @@ export const Test = {
 
                 field.setAttribute('disable-future', 'true');
                 field.setValue('1 Jan 3000');
-                submitButton?.click();
+                await userEvent.click(submitButton);
                 await waitFor(() => {
                     canvas.getByText(I18n.getText('forms.fields.date.errFutureDisabled'));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -90,13 +93,13 @@ export const Test = {
         await step('Submits form with different output formats and checks for expected submission values', async () => {
             field.setValue('1 October 1983');
             field.removeAttribute('disable-past');
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'month-field': 'Oct 1983' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
             field.setValue(new Date('17 July 1984'));
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'month-field': 'Jul 1984' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

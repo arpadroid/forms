@@ -1,57 +1,47 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
- * @typedef {import('./numberField.js').default} NumberField
+ * @typedef {import('./numberField.types.js').NumberFieldConfigType} NumberFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<NumberFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<NumberFieldConfigType>} Story
  */
 
-import { expect, fireEvent, waitFor } from 'storybook/test';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { expect, waitFor, userEvent } from 'storybook/test';
 import { I18n } from '@arpadroid/i18n';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
 const NumberFieldStory = {
     title: 'Forms/Fields/Number',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'number-field')
-};
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        step: {
-            control: { type: 'number' },
-            table: { category: 'Props' }
-        },
-        min: {
-            control: { type: 'number' },
-            table: { category: 'Props' }
-        },
-        max: {
-            control: { type: 'number' },
-            table: { category: 'Props' }
-        },
-        ...getArgTypes()
-    },
+    component: 'number-field',
     args: {
-        step: 1,
-        min: 0,
-        max: 0,
-        ...getArgs(),
         id: 'number-field',
         label: 'Number Field',
-        required: true
-    }
+        required: true,
+        icon: 'numbers',
+        min: 0,
+        max: 0,
+        step: 1,
+        enforceValue: false
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <number-field ${$attr(args)}></number-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
         ...Default.args,
         required: true,
@@ -59,18 +49,15 @@ export const Test = {
         max: 20,
         step: 2
     },
-    play: async ({ canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'number-field'
+    play: async ({ canvasElement, canvas, step }) => {
+        const { submitButton, onErrorMock, onSubmitMock, input, field } = await playSetup({
+            tag: 'number-field',
+            canvas,
+            canvasElement
         });
-        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-        const input = /** @type {HTMLInputElement} */ (setup.input);
-        const field = /** @type {NumberField} */ (setup.field);
-        if (!input) throw new Error('Input element not found');
-        if (!submitButton) throw new Error('Submit button not found');
-        await step('Submits form with invalid regex value: "some value".', () => {
+        await step('Submits form with invalid required value: "some value".', async () => {
             input.value = 'some value';
-            submitButton?.click();
+            await userEvent.click(submitButton);
         });
 
         await step('Checks for error message.', async () => {
@@ -83,7 +70,7 @@ export const Test = {
 
         await step('Submits form with non-numeric error anf gets required error message', async () => {
             input.value = 'valid';
-            await fireEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.number.errNumber'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -93,7 +80,7 @@ export const Test = {
 
         await step('Submits form with number below min and gets min error message.', async () => {
             input.value = '5';
-            await fireEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.number.errMin', { min: '10' }));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -103,7 +90,7 @@ export const Test = {
 
         await step('Submits form with number above max and gets max error message.', async () => {
             input.value = '25';
-            await fireEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.number.errMax', { max: '20' }));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -113,7 +100,7 @@ export const Test = {
 
         await step('Submits form with number not multiple of step and gets step error message.', async () => {
             input.value = '13';
-            await fireEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.number.errStep', { step: '2' }));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -123,8 +110,7 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             input.value = '18';
-            await fireEvent.input(input);
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'number-field': 18 });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -134,8 +120,7 @@ export const Test = {
         await step('Sets enforce value to true and submits form with value above max.', async () => {
             field.setAttribute('enforce-value', '');
             input.value = '25';
-            await fireEvent.input(input);
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(input?.value).toBe('20');
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'number-field': 20 });
@@ -145,8 +130,7 @@ export const Test = {
 
         await step('Sets enforce value to true and submits form with value below min.', async () => {
             input.value = '5';
-            await fireEvent.input(input);
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(input?.value).toBe('10');
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'number-field': 10 });

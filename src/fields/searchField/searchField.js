@@ -21,11 +21,12 @@ class SearchField extends Field {
         this._callOnSubmit = this._callOnSubmit.bind(this);
         /** @type {SearchFieldConfigType} */
         const conf = {
-            classNames: ['searchField', 'fieldComponent'],
+            className: 'arpaField',
+            classNames: ['searchField', 'arpaField'],
             icon: 'search',
             variant: 'default',
-            placeholder: I18n.getText('common.labels.lblSearch'),
-            inputAttributes: { type: 'search' }
+            placeholder: this.getAttribute('placeholder') || I18n.getText('common.labels.lblSearch'),
+            inputType: 'search',
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }

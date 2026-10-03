@@ -21,9 +21,11 @@ export type FieldConfigType = ArpaElementConfigType & {
     inputComponent?: string;
     inputAttributes?: Record<string, unknown>;
     inputTemplate?: string;
+    inputType?: string;
     inputTag?: string;
     hasInputMask?: boolean;
     label?: string;
+    labelIcon?: string;
     name?: string;
     onChange?: FieldOnChangeType;
     onFocus?: (field: Field) => boolean;
@@ -38,9 +40,10 @@ export type FieldConfigType = ArpaElementConfigType & {
     readOnly?: boolean;
     regex?: string;
     regexMessage?: string;
-    required?: boolean;
+    required?: boolean | 'false';
     template?: string;
     tooltip?: string;
+    tooltipPosition?: string;
     value?: unknown;
     form?: FormComponent;
     variant?: string;

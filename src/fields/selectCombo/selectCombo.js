@@ -1,13 +1,11 @@
 /**
  * @typedef {import('./selectOption/selectOption.js').default} SelectOption
- * @typedef {import('../optionsField/optionsField.types').OptionsFieldConfigType} OptionsFieldConfigType
- * @typedef {import('../optionsField/optionsField.types').OptionsNodeType} OptionsNodeType
  * @typedef {import('../optionsField//fieldOption/fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
  * @typedef {import('./selectCombo.types').SelectComboConfigType} SelectComboConfigType
  * @typedef {import('@arpadroid/tools').SearchToolCallbackType} SearchToolCallbackType
- * @typedef {import('@arpadroid/ui').InputComboNodeType} InputComboNodeType
  */
-import { mergeObjects, addSearchMatchMarkers, SearchTool, attrString, defineCustomElement, renderNode } from '@arpadroid/tools';
+import { mergeObjects, addSearchMatchMarkers, SearchTool, defineCustomElement } from '@arpadroid/tools';
+import Field from '../field/field.js';
 import SelectField from '../selectField/selectField.js';
 import { I18n } from '@arpadroid/i18n';
 import { InputCombo } from '@arpadroid/ui';
@@ -16,172 +14,34 @@ const html = String.raw;
 class SelectCombo extends SelectField {
     /** @type {SelectComboConfigType} */
     _config = this._config;
-    //////////////////////////
-    // #region INITIALIZATION
-    //////////////////////////
 
-    /**
-     * Returns the default configuration for the select combo field.
-     * @returns {SelectComboConfigType} The default configuration object.
-     */
+    /** @returns {SelectComboConfigType} The default configuration object. */
     getDefaultConfig() {
-        this.bind('onLabelClick', 'onSearch', 'onOpenCombo', 'onCloseCombo', 'onSearchInputFocus', 'onSearchInputBlur');
         /** @type {SelectComboConfigType} */
         const config = {
             hasSearch: false,
             debounceSearch: 500,
-            searchItemContentSelector: '.fieldOption__label, .fieldOption__subtitle',
+            searchItemContentSelector: '.fieldOption__label, .comboBox__item__label, .fieldOption__subtitle',
             placeholder: I18n.getText('forms.fields.selectCombo.lblNoSelection'),
             optionsPosition: 'bottom-left',
-            inputAttributes: { type: undefined },
-            inputTemplate: html`
-                {comboInput}
-                <div class="selectCombo__options optionsField__options comboBox" zone="{optionsZone}">{options}</div>
-            `,
+            inputTag: undefined,
+            inputType: undefined,
             optionComponent: 'select-option'
         };
         return /** @type {SelectComboConfigType} */ (mergeObjects(super.getDefaultConfig(), config));
     }
 
-    /**
-     * Sets the value of the select combo field.
-     * @param {string} value - The value to set on the select combo field.
-     * @returns {this} The instance of the select combo field.
-     */
-    setValue(value) {
-        super.setValue(value);
-        this.updateValue();
-        return this;
-    }
-
     // #endregion
 
-    ////////////////////
-    // #region LIFECYCLE
-    ////////////////////
-
-    static get observedAttributes() {
-        return ['value', 'has-search'];
-    }
-
-    /**
-     * Handles attribute changes and updates the value if the 'value' attribute has changed.
-     * @param {string} name - The name of the attribute that changed.
-     * @param {string} oldValue
-     * @param {string} newValue
-     */
-    async attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue === newValue) return;
-        if (name === 'has-search') {
-            this._convertInputToSearch();
-        }
-    }
-
-    _convertInputToSearch() {
-        const oldInput = this.searchInput || this.buttonInput;
-        const newInput = renderNode(this.renderComboInput());
-        if (oldInput && newInput) {
-            oldInput.replaceWith(newInput);
-
-            this.searchInput = /** @type {HTMLInputElement |  null} */ (newInput);
-            this._initializeSearch();
-            this._initializeInputCombo();
-        }
-    }
-
-    async _initializeValue() {
-        /** @type {OptionsNodeType} */
-        this.optionsNode = this.getOptionsNode();
-        this.selectedOption = this.getSelectedOption();
-        this.updateValue();
-    }
-
-    async $initializeNodes() {
-        await super.$initializeNodes();
-        this._initializeInputCombo();
-
-        this.promise.then(() => {
-            this._initializeButtonInput();
-            this._initializeSearchInput();
-            this._initializeOptionsNode();
-            if (this.label) {
-                this.label.removeEventListener('click', this.onLabelClick);
-                this.label.addEventListener('click', this.onLabelClick);
-            }
-        });
-        return true;
-    }
-
-    _initializeButtonInput() {
-        this.buttonInput = this.querySelector('button.optionsField__input');
-    }
-
-    _initializeSearchInput() {
-        this.searchInput = /** @type {HTMLInputElement |  null} */ (this.querySelector('input.optionsField__searchInput'));
-        if (this.searchInput) {
-            this.searchInput.removeEventListener('focus', this.onSearchInputFocus);
-            this.searchInput.addEventListener('focus', this.onSearchInputFocus);
-            this.searchInput.removeEventListener('blur', this.onSearchInputBlur);
-            this.searchInput.addEventListener('blur', this.onSearchInputBlur);
-        }
-        this._initializeSearch();
-    }
-
-    async _initializeSearch() {
-        if (this.searchInput && !this.search) {
-            this.search = new SearchTool(this.searchInput, {
-                container: this.optionsNode,
-                searchSelector: this.getProp('search-item-content-selector'),
-                onSearch: this.onSearch,
-                debounceDelay: this.getProp('debounce-search')
-            });
-        }
-    }
-
-    /**
-     * Initializes the input combo for the select combo field.
-     * @protected
-     */
-    _initializeInputCombo() {
-        const handler = this.getInput();
-        this.optionsNode = this.getOptionsNode();
-        this.optionsNode && (this.zoneTarget = this.optionsNode);
-        if (!handler || !this.optionsNode) return;
-        if (!this.inputCombo) {
-            this.inputCombo = new InputCombo(handler, this.optionsNode, {
-                containerSelector: this.getProp('option-component'),
-                position: {
-                    position: this.getProp('optionsPosition')
-                },
-                closeOnClick: true,
-                onOpen: () => this.onOpenCombo(),
-                onClose: () => this.onCloseCombo()
-            });
-        } else {
-            this.inputCombo.initialize(handler, this.optionsNode);
-        }
-    }
-
-    getValue() {
-        const input = this.getInput();
-        return this.preProcessValue(input?.getAttribute('value') || this.getProp('value') || '');
-    }
-    // #endregion
-
-    ////////////////////
-    // #region ACCESSORS
-    ////////////////////
+    // #region Get
 
     getFieldType() {
         return 'selectCombo';
     }
 
-    /**
-     * Returns the input element for the select combo field.
-     * @returns {HTMLInputElement | null} The input element for the select combo field.
-     */
-    getInput() {
-        return this.hasSearch() ? this.querySelector('.optionsField__searchInput') : this.querySelector('.optionsField__input');
+    getValue() {
+        const input = this.getInput();
+        return this.preProcessValue(input?.getAttribute('value') || this.getProp('value') || '');
     }
 
     getContentSelector() {
@@ -195,28 +55,127 @@ class SelectCombo extends SelectField {
     }
 
     /**
-     * Sets the options for the select combo field.
-     * @param {FieldOptionConfigType[]} options - The options to set on the select combo field.
-     * @returns {this} The instance of the select combo field.
+     * @param {FieldOptionConfigType[]} options
+     * @returns {this}
      */
     setOptions(options) {
         super.setOptions(options);
-        this.promise.then(() => {
-            if (options.length && !this._initializedOptions) {
-                this.updateValue();
-                this._initializedOptions = true;
-            }
-        });
-
+        this.updateValue();
         return this;
     }
 
     /**
-     * Returns the options node for the select combo field.
-     * @returns {OptionsNodeType | null} The options node for the select combo field.
+     * @param {string} value
+     * @returns {this}
      */
-    getOptionsNode() {
-        return this.optionsNode || this.querySelector('.selectCombo__options');
+    setValue(value) {
+        super.setValue(value);
+        this.updateValue();
+        return this;
+    }
+
+    /////////////////////
+    // #region Render
+    /////////////////////
+
+    $renderTemplate() {
+        return html`
+            ${Field.prototype.$renderTemplate.call(this)}
+            <arpa-node
+                id="{getHtmlId()}-options"
+                tag="select-options"
+                name="options"
+                class-name="optionsField__options"
+                zone="{optionsZone}"
+                is-content
+            ></arpa-node>
+            <arpa-zone name="inputWrapper">
+                <arpa-node
+                    name="searchInput"
+                    tag="input"
+                    aria-labelledby="{labelId}"
+                    type="text"
+                    class="optionsField__searchInput arpaField__input"
+                    placeholder="{placeholder}"
+                    autocomplete="off"
+                    data-value="{value}"
+                    on-focus="{onSearchInputFocus}"
+                    on-blur="{onSearchInputBlur}"
+                    can-render="hasSearch()"
+                ></arpa-node>
+                <arpa-node
+                    name="input"
+                    tag="button"
+                    data-value="{value}"
+                    id="{getHtmlId()}"
+                    type="button"
+                    class="arpaField__input"
+                    can-render="!hasSearch()"
+                    aria-labelledby="{labelId}"
+                >
+                    {placeholder}
+                </arpa-node>
+            </arpa-zone>
+        `;
+    }
+
+    async $initializeNodes() {
+        await super.$initializeNodes();
+        await this.waitForArpaNodes();
+        this.initializeInputCombo();
+        this.searchInput = this.getSearchInput();
+        this.initializeSearch(this.searchInput);
+        return true;
+    }
+
+    getSearchInput() {
+        return /** @type {HTMLInputElement | null} */ (this.nodes.searchInput);
+    }
+
+    /**
+     * Initializes the search functionality for the select combo field.
+     * @param {HTMLInputElement | null} [input]
+     */
+    initializeSearch(input) {
+        if (!this.hasSearch() || this.search || !input) {
+            return;
+        }
+        this.onSearch = this.onSearch.bind(this);
+        this.search = new SearchTool(input, {
+            container: this.optionsNode,
+            searchSelector: this.getProp('search-item-content-selector'),
+            onSearch: this.onSearch,
+            debounceDelay: this.getProp('debounce-search')
+        });
+    }
+
+    // #endregion Render
+
+    /////////////////////////
+    // #region Lifecycle
+    /////////////////////////
+
+    async _initializeValue() {
+        this.selectedOption = this.getSelectedOption();
+        this.updateValue();
+    }
+
+    // #endregion
+
+    ////////////////////////
+    // #region Updates
+    ///////////////////////
+
+    /**
+     * @param {SelectOption} option
+     * @param {MouseEvent} event
+     */
+    onOptionSelected(option, event) {
+        const val = option.getAttribute('value') || '';
+        this.setValue(val);
+        this._callOnChange(event);
+        this.inputCombo?.close();
+        this.updateValue();
     }
 
     /**
@@ -224,105 +183,44 @@ class SelectCombo extends SelectField {
      */
     async updateValue() {
         await this.promise;
+        await this.waitForArpaNodes();
         /** @type {SelectOption} */
         this.selectedOption = this.getSelectedOption();
-        const options = this.getOptions();
-        options.forEach(option => option.removeAttribute('aria-selected'));
+        this.getOptions().forEach(option => option.removeAttribute('aria-selected'));
         this.selectedOption?.setAttribute('aria-selected', 'true');
-        const label = this.getValueLabel();
-        this.updateButtonLabel(label);
-        this.updateSearchInputLabel(label);
+        this.updateInputLabel();
+        this.resetSearchState();
     }
 
-    getValueLabel() {
+    getValueLabel(option = this.getSelectedOption()) {
         const { renderValue } = this._config;
-        const configValue = typeof renderValue === 'function' && renderValue(this.selectedOption);
-        return (
-            configValue ||
-            this.selectedOption?.getProp('label') ||
-            this.selectedOption?.textContent?.trim() ||
-            this.getPlaceholder()
-        );
+        const configValue = typeof renderValue === 'function' && renderValue(option);
+        return configValue || option?.getProp('label') || option?.nodes.main.innerHTML?.trim() || this.getProp('placeholder');
     }
 
     /**
      * Updates the label of the button input of the select combo field.
-     * @param {string | HTMLElement} label - The label to set on the button input.
+     * @param {string | HTMLElement} label
      */
-    updateButtonLabel(label) {
-        if (this.buttonInput) {
-            this.buttonInput.innerHTML = '';
+    updateInputLabel(label = this.getValueLabel()) {
+        if (this.searchInput instanceof HTMLInputElement) {
+            this.searchInput.value = typeof label === 'string' ? label : label?.textContent || '';
+        }
+        if (this.input instanceof HTMLButtonElement) {
+            this.input.innerHTML = '';
             if (typeof label === 'string') {
-                this.buttonInput.innerHTML = label;
+                this.input.innerHTML = label;
             } else if (label instanceof HTMLElement) {
-                this.buttonInput.appendChild(label);
+                this.input.appendChild(label);
             }
         }
     }
 
-    /**
-     * Updates the value of the search input label.
-     * @param {string | HTMLElement} label - The label to set on the search input.
-     */
-    updateSearchInputLabel(label) {
-        if (this.searchInput instanceof HTMLInputElement) {
-            this.searchInput.value = typeof label === 'string' ? label : label?.textContent || '';
-        }
-    }
+    // #endregion Updates
 
-    // #endregion
-
-    /////////////////////
-    // #region RENDERING
-    /////////////////////
-
-    /**
-     * Returns the template variables for the select combo field.
-     * @returns {Record<string, unknown>} The template variables for the select combo field.
-     */
-    getTemplateVars() {
-        return {
-            ...super.getTemplateVars(),
-            comboInput: this.renderComboInput()
-        };
-    }
-
-    renderComboInput() {
-        const inputAttributes = attrString({ placeholder: this.getPlaceholder(), autocomplete: 'off' });
-        return this.hasSearch()
-            ? html`<input id="${this.getHtmlId()}" type="text" class="optionsField__searchInput fieldInput" ${inputAttributes} />`
-            : html`<button id="${this.getHtmlId()}" type="button" class="optionsField__input fieldInput">
-                  ${this.getPlaceholder()}
-              </button>`;
-    }
-
-    /**
-     * Renders the options for the select combo field.
-     * @param {FieldOptionConfigType[]} options - The options to render.
-     */
-    renderOptions(options) {
-        super.renderOptions(options);
-        requestAnimationFrame(() => this.inputCombo?.place());
-    }
-
-    // #endregion
-
-    //////////////////
-    // #region EVENTS
-    /////////////////
-
-    onLabelClick() {
-        const input = this.getInput();
-        return input instanceof HTMLElement && input.focus();
-    }
-
-    onSearchInputFocus() {
-        this.searchInput?.select();
-    }
-
-    onSearchInputBlur() {
-        this.searchInput && (this.searchInput.value = this.getSelectedOption()?.getProp('label') || '');
-    }
+    ///////////////////////////
+    // #region Combo
+    ///////////////////////////
 
     onOpenCombo() {
         const { fetchOptions } = this._config;
@@ -335,6 +233,45 @@ class SelectCombo extends SelectField {
         this.resetSearchState();
     }
 
+    /**
+     * Initializes the input combo for the select combo field.
+     * @param {HTMLInputElement} [input]
+     * @param {HTMLElement | null} [optionsNode]
+     */
+    initializeInputCombo(input = this.input, optionsNode = this.optionsNode) {
+        optionsNode && (this.zoneTarget = optionsNode);
+        if (!input || !optionsNode) return;
+        if (this.inputCombo) {
+            this.inputCombo.initialize(input, optionsNode);
+            return;
+        }
+        this.inputCombo = new InputCombo(input, optionsNode, {
+            containerSelector: this.getProp('option-component'),
+            position: {
+                position: this.getProp('optionsPosition')
+            },
+            closeOnClick: true,
+            onOpen: () => this.onOpenCombo(),
+            onClose: () => this.onCloseCombo()
+        });
+    }
+
+    // #endregion
+
+    ////////////////////////
+    // #region Search
+    ///////////////////////
+
+    onSearchInputFocus() {
+        this.input?.select();
+    }
+
+    onSearchInputBlur() {
+        if (this.input) {
+            this.input.value = this.getSelectedOption()?.getProp('label') || '';
+        }
+    }
+
     resetSearchState() {
         if (this.hasSearch()) {
             this.getOptions().forEach(node => {
@@ -344,10 +281,7 @@ class SelectCombo extends SelectField {
         }
     }
 
-    /**
-     * Handles the search event for the select combo field.
-     * @type {SearchToolCallbackType}
-     */
+    /** @type {SearchToolCallbackType} */
     async onSearch(payload) {
         const { query, event } = payload;
         if (event) {

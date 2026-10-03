@@ -1,65 +1,64 @@
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('../field/field.types.js').FieldConfigType} FieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story
  */
 import { I18n } from '@arpadroid/i18n';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, fireEvent, userEvent } from 'storybook/test';
-import { playSetup, renderField } from '../field/field.stories.util.js';
-import { getArgs, getArgTypes } from '../../components/form/form.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
 const CheckboxFieldStory = {
     title: 'Forms/Fields/Checkbox',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'checkbox-field')
+    component: 'checkbox-field',
+    args: {
+        id: 'checkbox-field',
+        label: 'Checkbox Field',
+        required: false,
+        value: 'option1, option2'
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <checkbox-field ${$attr(args)}></checkbox-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: { ...getArgTypes() },
-    args: {
-        ...getArgs(),
-        icon: 'check_box',
-        id: 'checkbox-field',
-        label: 'Checkbox Field'
-    }
+    parameters: defaultParams
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
         ...Default.args,
         required: true,
         value: 'option1, option2'
     },
-    play: async context => {
-        const { canvasElement, step } = context;
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'checkbox-field'
+    play: async ({ canvasElement, canvas, step }) => {
+        const { field, submitButton, onErrorMock, onSubmitMock, onChangeMock, input } = await playSetup({
+            tag: 'checkbox-field',
+            inputSelector: 'input[type="checkbox"]',
+            canvas,
+            canvasElement
         });
-        const { field, submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = setup;
-        const input = /** @type {HTMLInputElement | null} */ (setup.input);
-        if (!input) {
-            throw new Error('Checkbox input element not found');
-        }
 
         const label = canvas.getByText('Checkbox Field');
-        const icon = canvas.getByText('check_box');
 
         await step('Renders the checkbox field.', async () => {
             expect(label).toBeTruthy();
-            expect(icon).toBeTruthy();
             expect(input?.checked).toBe(false);
         });
 
         await step('Gets an error because the field is required.', async () => {
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).not.toHaveBeenCalled();
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
@@ -70,7 +69,6 @@ export const Test = {
 
         await step('Checks the checkbox', async () => {
             await userEvent.click(label);
-            const input = /** @type {HTMLInputElement | null} */ (field?.getInput());
             await waitFor(() => {
                 expect(input?.checked).toBe(true);
                 expect(onChangeMock).toHaveBeenLastCalledWith(true, field, expect.anything());
@@ -79,7 +77,7 @@ export const Test = {
         });
 
         await step('Submits the form and receives expected value.', async () => {
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'checkbox-field': true });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

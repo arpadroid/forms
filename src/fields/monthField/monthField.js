@@ -6,7 +6,7 @@ class MonthField extends DateField {
         return mergeObjects(super.getDefaultConfig(), {
             format: 'YYYY-MM',
             inputFormat: 'YYYY-MM',
-            inputAttributes: { type: 'month' }
+            inputType: 'month',
         });
     }
 

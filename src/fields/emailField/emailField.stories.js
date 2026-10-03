@@ -1,51 +1,55 @@
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
- * @typedef {import('../groupField/groupField.js').default} GroupField
+ * @typedef {import('../field/field.types.js').FieldConfigType} FieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story
  */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect } from 'storybook/test';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
-const TextFieldStory = {
+const EmailFieldStory = {
     title: 'Forms/Fields/Email',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'email-field')
+    component: 'email-field',
+    args: {
+        id: 'email-field',
+        label: 'Email Field',
+        icon: 'email',
+        regex: 'email',
+        regexMessage: I18n.getText('forms.fields.email.errRegex')
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <email-field ${$attr(args)}></email-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: { ...getArgTypes() },
-    args: {
-        ...getArgs(),
-        id: 'email-field',
-        label: 'Email Field'
-    }
+    parameters: defaultParams
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
-        ...Default.args,
         required: true
     },
-    play: async ({ canvasElement, step } ) => {
-        const setup = await playSetup(canvasElement);
-        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-        const input = /** @type {HTMLInputElement | null} */ (setup.input);
-        if (!input) {
-            throw new Error('Input element not found');
-        }
-        await step('Submits form with invalid regex value "some value" and checks for error messages.', () => {
+    play: async ({ canvasElement, canvas, step }) => {
+        const { submitButton, onErrorMock, onSubmitMock, input } = await playSetup({
+            tag: 'email-field',
+            canvas,
+            canvasElement
+        });
+        await step('Submits form with invalid regex value "some value" and checks for error messages.', async () => {
             input.value = 'some value';
-            submitButton?.click();
+            await userEvent.click(submitButton);
         });
 
         await step('Checks for error message.', async () => {
@@ -58,7 +62,7 @@ export const Test = {
 
         await step('Submits form with invalid value "some@value" and checks for error messages.', async () => {
             input.value = 'some@value';
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.email.errRegex'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -68,7 +72,7 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             input.value = 'email@somewhere.com';
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'email-field': 'email@somewhere.com' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -78,4 +82,4 @@ export const Test = {
 };
 
 /** @type {Meta} */
-export default TextFieldStory;
+export default EmailFieldStory;

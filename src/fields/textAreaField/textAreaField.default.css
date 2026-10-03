@@ -1,5 +1,5 @@
-textarea.fieldInput {
+textarea.arpaField__input {
     min-height: 100px;
-    border-radius: var(--input-border-radius);
     padding: 1rem;
+    border-radius: var(--input-border-radius);
 }

@@ -1,70 +1,60 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('../field/field.types').FieldConfigType} FieldConfigType
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./rangeField.types.js').RangeFieldConfigType} RangeFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<RangeFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<RangeFieldConfigType>} Story
  */
 
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
 const RangeFieldStory = {
     title: 'Forms/Fields/Range',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'range-field')
-};
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        min: {
-            control: 'number',
-            table: { category: 'Range Props' }
-        },
-        max: {
-            control: 'number',
-            table: { category: 'Range Props' }
-        },
-        step: {
-            control: 'number',
-            table: { category: 'Range Props' }
-        },
-        ...getArgTypes('Field Props')
-    },
+    component: 'range-field',
     args: {
-        min: '0',
-        max: 100,
-        step: 1,
-        ...getArgs(),
         id: 'range-field',
         label: 'Range Field',
         required: true,
-        value: undefined
-    }
+        min: 0,
+        max: 100,
+        step: 1,
+        value: 10
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <range-field ${$attr(args)}></range-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
         ...Default.args,
         required: true,
         value: 25
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { submitButton, canvas, onSubmitMock } = await playSetup(canvasElement, {
-            fieldTag: 'range-field'
+    play: async ({ canvasElement, canvas, step }) => {
+        const { submitButton, onSubmitMock } = await playSetup({
+            tag: 'range-field',
+            canvas,
+            canvasElement
         });
 
         await step('Submits form with valid field value.', async () => {
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'range-field': 25 });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

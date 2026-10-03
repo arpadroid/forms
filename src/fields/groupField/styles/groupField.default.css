@@ -1,61 +1,61 @@
 .groupField {
-    margin-bottom: 0;
     position: relative;
-    container-type: inline-size;
-    container-name: groupfield-input;
-    width: 100%;
     display: block;
+    width: 100%;
+    margin-bottom: 0;
+    container-name: groupfield-input;
+    container-type: inline-size;
 }
 
 .groupField__summary {
     display: flex;
-    align-items: center;
     gap: 12px;
+    align-items: center;
+    padding: 1rem 0;
+    text-transform: uppercase;
     cursor: pointer;
     border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    padding: 1rem 0px;
-    text-transform: uppercase;
     transition: var(--theme-transition);
 
     .groupField__iconRight {
         margin-left: auto;
     }
+
     arpa-icon {
         color: var(--grey-400);
     }
 }
 
 .groupField__summary__label {
-    color: var(--grey-600);
-    font-weight: 500;
     font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--grey-600);
 }
 
 .groupField > .groupField__details[open] {
     > .groupField__summary {
         border-bottom: 2px solid var(--grey-100);
+
         .groupField__summary__label {
             font-weight: 800;
         }
+
         arpa-icon {
             color: var(--color-primary);
         }
     }
 
     > .groupField__fields {
-        padding: 1rem .5rem;
-        border-radius: 16px;
+        padding: 1rem 0.5rem;
         margin-bottom: 20px;
+        border-radius: 16px;
     }
 }
 
 @container groupfield-input (min-width: 550px) {
     .groupField__fields {
         display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
+        flex-flow: row wrap;
         gap: 1.5rem 2rem;
     }
 
@@ -79,7 +79,7 @@
     .groupField__fields {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem 1.5rem;
+        gap: 1.5rem;
     }
 }
 

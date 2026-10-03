@@ -14,10 +14,8 @@ class EmailField extends TextField {
             regex: 'email',
             regexMessage: I18n.getText('forms.fields.email.errRegex'),
             icon: 'email',
-            inputAttributes: {
-                type: 'email',
-                autocomplete: 'email'
-            }
+            inputType: 'email',
+            inputAttributes: { autocomplete: 'email' }
         };
     }
 

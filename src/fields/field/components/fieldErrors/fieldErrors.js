@@ -9,8 +9,9 @@ class FieldErrors extends ArpaElement {
         this.field = this.closest('.arpaField');
     }
 
-    $onConnected() {
+    async $onConnected() {
         this.classList.add('fieldErrors');
+        return true;
     }
 
     /**
@@ -18,7 +19,7 @@ class FieldErrors extends ArpaElement {
      * @returns {Promise<boolean>}
      */
     async render() {
-        this.innerHTML = html`<arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="top-right" arrow="false">
+        this.innerHTML = html`<arpa-tooltip class="fieldErrors__tooltip" icon="warning" position="bottom-right" arrow="false">
             <ul class="fieldErrors__list"></ul>
         </arpa-tooltip>`;
         return true;

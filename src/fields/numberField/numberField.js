@@ -19,8 +19,8 @@ class NumberField extends Field {
         return {
             ...super.getDefaultConfig(),
             icon: 'numbers',
+            inputType: 'number',
             inputAttributes: {
-                type: 'number',
                 min: this.getProp('min'),
                 max: this.getProp('max'),
                 step: this.getProp('step')

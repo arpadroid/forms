@@ -12,6 +12,13 @@ image-field {
     .fieldErrors .tooltip__content:has(.fieldErrors__list:not(:empty)) {
         display: block;
     }
+
+    input[type='file'].arpaField__input {
+        /* display: flex; */
+        display: none;
+        align-items: center;
+        padding: 0.9rem 1.5rem;
+    }
 }
 
 .fileField__fileLists {

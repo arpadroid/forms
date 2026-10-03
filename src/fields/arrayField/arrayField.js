@@ -15,9 +15,10 @@ class ArrayField extends OptionsField {
     // #region Initialization
     ////////////////////////////
     async _initializeValue() {
-        const attrValue = this.getAttribute('value');
+        const attrValue = this.getArrayProp('value');
         if (attrValue) {
-            this.setValue(attrValue.split(',').map(value => value.trim()));
+            this.setValue(attrValue);
+            // this.setValue(attrValue.split(',').map(value => value.trim()));
         } else {
             super._initializeValue();
         }
@@ -47,6 +48,9 @@ class ArrayField extends OptionsField {
      * @returns {unknown[]} The current value.
      */
     getValue() {
+        if (!this._hasRendered) {
+            return this.getArrayProp('value');
+        }
         return this.getCheckedInputs()?.map(input => input.value) ?? this.value;
     }
 
@@ -64,7 +68,7 @@ class ArrayField extends OptionsField {
      * @returns {boolean} True if the value is present, false otherwise.
      */
     hasValue(value) {
-        return this.value.includes(value);
+        return this.getValue().includes(value);
     }
 
     // #endregion
@@ -88,9 +92,7 @@ class ArrayField extends OptionsField {
      */
     setValue(value) {
         this.value = value;
-        if (this._hasRendered) {
-            this.setChecked(value);
-        }
+        this.setChecked(value);
         return this;
     }
 

@@ -20,36 +20,25 @@ class CheckboxOption extends RadioOption {
     getDefaultConfig() {
         /** @type {FieldOptionConfigType} */
         const config = {
-            attributeList: ['value']
+            inputType: 'checkbox',
+            inputTag: 'input'
         };
         return mergeObjects(super.getDefaultConfig(), config);
     }
 
-    /**
-     * Renders the input element for the checkbox option.
-     * @returns {string} The rendered input element.
-     */
-    renderInput() {
-        const name = this.field.getId() + '[]';
-        return super.renderInput('checkbox', name);
+    getName() {
+        return this.field.getId() + '[]';
     }
 
-    async $onComplete() {
-        const val = this.getAttribute('value');
-        /** @todo Remove this setTimeout. */
-        await new Promise(resolve => setTimeout(resolve, 10));
-        this.input = this.querySelector('input');
-        if (this.input && this.field) {
-            this.input.checked = this.field?.hasValue(val);
-        }
+    isSelected() {
+        return this.field.hasValue(this.getAttribute('value'));
     }
 
     /**
-     * Handles the change event of the checkbox option.
-     * @param {Event} event - The onChange event.
-     * @param {boolean} [callOnChange] - Indicates whether to call the onChange callback.
+     * @param {Event} event
+     * @param {boolean} [callOnChange]
      */
-    _onChange(event, callOnChange = true) {
+    onChange(event, callOnChange = true) {
         const input = /** @type {HTMLInputElement} */ (event?.target);
         const checked = input?.checked;
         /** @type {string | number | boolean} */
@@ -63,7 +52,9 @@ class CheckboxOption extends RadioOption {
         } else {
             this.field?.removeValue(value);
         }
-        super._onChange(event, callOnChange);
+        if (callOnChange) {
+            this.field?._callOnChange(event);
+        }
     }
 }
 

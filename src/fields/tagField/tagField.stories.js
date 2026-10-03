@@ -1,72 +1,69 @@
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./tagField.types.js').TagFieldConfigType} TagFieldConfigType
  * @typedef {import('./tagField.js').default} TagField
+ * @typedef {import('@storybook/web-components-vite').Meta<TagFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<TagFieldConfigType>} Story
  */
 import { I18n } from '@arpadroid/i18n';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect, userEvent, fn, fireEvent } from 'storybook/test';
+import { waitFor, expect, userEvent, fn } from 'storybook/test';
 import { queryPeople } from '../../demo/demoFormOptions.js';
-import { getArgs, getArgTypes, playSetup } from '../field/field.stories.util.js';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
 import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
 
 const html = String.raw;
 
 /** @type {Meta} */
 const TagFieldStory = {
     title: 'Forms/Fields/Tag',
-    tags: [],
-    play: async ({ canvasElement }) => {
-        const setup = await playSetup(canvasElement);
+    component: 'tag-field',
+    args: {
+        id: 'tag-field',
+        label: 'Tag field',
+        required: true,
+        allowText: true,
+        hasSearch: false,
+        value: 'IS-N::Isaac Newton, AB-E::Albert Einstein'
+    },
+    play: async ({ canvasElement, canvas }) => {
+        const setup = await playSetup({
+            tag: 'tag-field',
+            canvas,
+            canvasElement
+        });
         const field = /** @type {TagField} */ (setup.field);
         await field?.promise;
         field?.setFetchOptions(queryPeople);
     },
-    render: args => {
-        return html`
-            <arpa-form id="field-form">
-                <tag-field ${$attr(args)}> </tag-field>
-            </arpa-form>
-        `;
-    }
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <tag-field ${$attr(args)}></tag-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        allowText: { control: 'boolean', table: { category: 'Tag Field Props' } },
-        hasSearch: { control: 'boolean', table: { category: 'Tag Field Props' } },
-        ...getArgTypes('Field Props')
-    },
-    args: {
-        allowText: true,
-        hasSearch: false,
-        ...getArgs(),
-        id: 'tag-field',
-        label: 'Tag field',
-        required: true,
-        value: 'IS-N::Isaac Newton, AB-E::Albert Einstein'
-    }
+    parameters: defaultParams
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
         ...Default.args,
         value: 'IS-N::Isaac Newton, AB-E::Albert Einstein',
         debounceSearch: 1
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'tag-field'
+    play: async ({ canvasElement, canvas, step }) => {
+        const setup = await playSetup({
+            tag: 'tag-field',
+            canvas,
+            canvasElement
         });
 
-        const { canvas, onErrorMock, onChangeMock } = setup;
+        const { onErrorMock, onChangeMock } = setup;
         const input = /** @type {HTMLInputElement | null} */ (setup.input);
         const field = /** @type {TagField} */ (setup.field);
         const submitButton = /** @type {HTMLButtonElement | null} */ (setup.submitButton);
@@ -96,12 +93,12 @@ export const Test = {
             const tag = canvasElement.querySelector('tag-item[value="IS-N"]');
             const tag2 = canvasElement.querySelector('tag-item[value="AB-E"]');
             const deleteButtons = canvas.getAllByRole('button', { name: 'Delete tag' });
-            await fireEvent.click(deleteButtons[0]);
+            await userEvent.click(deleteButtons[0]);
             await waitFor(() => {
                 expect(onDeleteTag).toHaveBeenLastCalledWith(tag, undefined, undefined);
                 expect(field.getValue()).toEqual(['AB-E']);
             });
-            await fireEvent.click(deleteButtons[1]);
+            await userEvent.click(deleteButtons[1]);
             await waitFor(() => {
                 expect(onDeleteTag).toHaveBeenLastCalledWith(tag2, undefined, undefined);
                 expect(field.getValue()).toEqual([]);
@@ -133,7 +130,7 @@ export const Test = {
 
         await step('Selects tag and submits the form receiving expected values.', async () => {
             const button = document.querySelector('[value="NE-AU"] button');
-            button && await userEvent.click(button);
+            button && (await userEvent.click(button));
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenCalledWith(['NE-AU'], field, expect.anything());
             });

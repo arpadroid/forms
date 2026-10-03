@@ -1,5 +1,5 @@
 /** @typedef {import('./dateField.types').DateFieldConfigType} DateFieldConfigType */
-import { attr, formatDate, isAfter, isBefore, renderNode, mergeObjects, defineCustomElement } from '@arpadroid/tools';
+import { attr, formatDate, isAfter, isBefore, mergeObjects, defineCustomElement } from '@arpadroid/tools';
 import Field from '../field/field.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
@@ -27,7 +27,8 @@ class DateField extends Field {
             inputFormat: 'YYYY-MM-DD',
             disableFuture: false,
             disablePast: false,
-            inputAttributes: { type: 'date' }
+            inputType: 'date',
+            pickerLabel: I18n.getText('forms.fields.date.txtShowPicker')
         };
         return mergeObjects(super.getDefaultConfig(), config);
     }
@@ -49,10 +50,6 @@ class DateField extends Field {
         if (this.isPastDisabled()) {
             this.input.setAttribute('min', formatDate(new Date(), this.getFormat()));
         }
-        if (!this.calendarButton) {
-            this.calendarButton = this.renderCalendarButton();
-            this.calendarButton && this.inputMask?.addRhs('calendarButton', this.calendarButton);
-        }
         return true;
     }
 
@@ -68,6 +65,21 @@ class DateField extends Field {
 
     getI18nKey() {
         return 'forms.fields.date';
+    }
+
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="inputMaskRhs">
+                <icon-button
+                    icon="calendar_month"
+                    tooltip="{pickerLabel}"
+                    tooltip-position="left"
+                    variant="minimal"
+                    on-click="{showPicker}"
+                ></icon-button>
+            </arpa-zone>
+        `;
     }
 
     /**
@@ -125,26 +137,6 @@ class DateField extends Field {
     }
 
     // #endregion Accessors
-
-    //////////////////////
-    // #region Render
-    /////////////////////
-
-    /**
-     * Renders the calendar button for the date field.
-     * @returns {HTMLButtonElement | null}
-     */
-    renderCalendarButton() {
-        const label = I18n.getText(`${this.getI18nKey()}.txtShowPicker`);
-        const buttonHTML = html`
-            <icon-button tooltip="${label}" variant="minimal" tooltip-position="left" icon="calendar_month"></icon-button>
-        `;
-        const button = /** @type {HTMLButtonElement | null} */ (renderNode(buttonHTML));
-        button?.addEventListener('click', () => this.showPicker());
-        return button;
-    }
-
-    // #endregion Render
 
     ////////////////////////////
     // #region Validation

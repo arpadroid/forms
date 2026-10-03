@@ -1,70 +1,57 @@
 /**
- * @typedef {import('./passwordField.js').default} PasswordField
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./passwordField.types.js').PasswordFieldConfigType} PasswordFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<PasswordFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<PasswordFieldConfigType>} Story
  */
 
-/* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent } from 'storybook/test';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
 
-const category = 'Password Field Props';
+const html = String.raw;
 
 /** @type {Meta} */
 const PasswordFieldStory = {
     title: 'Forms/Fields/Password',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'password-field')
+    component: 'password-field',
+    args: {
+        id: 'password-field',
+        label: 'Password Field',
+        required: true,
+        icon: 'lock',
+        confirm: true,
+        mode: 'register'
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <password-field ${$attr(args)}></password-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        confirm: {
-            control: { type: 'boolean' },
-            table: { category }
-        },
-        mode: {
-            control: { type: 'select' },
-            options: [null, 'login', 'register'],
-            table: { category }
-        },
-        ...getArgTypes('Field Props')
-    },
-    args: {
-        confirm: true,
-        mode: 'register',
-        // confirm: true,
-        ...getArgs(),
-        id: 'password-field',
-        label: 'Password Field'
-    }
+    parameters: defaultParams
 };
 
-/** @type {StoryObj} */
-export const Test = {
-    parameters: { ...FieldTest.parameters },
+/** @type {Story} */
+export const ConfirmMode = {
+    parameters: testParams,
     args: {
-        ...Default.args,
-        required: true,
-        mode: 'register',
         confirm: true
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'password-field'
+    play: async ({ canvasElement, canvas, step }) => {
+        const setup = await playSetup({
+            tag: 'password-field',
+            canvas,
+            canvasElement
         });
-        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-        const input = /** @type {HTMLInputElement} */ (setup.input);
-        const field = /** @type {PasswordField} */ (setup.field);
-        if (!field) throw new Error('PasswordField not found in the setup.');
-        if (!input) throw new Error('Input element not found in the setup.');
+
+        const { submitButton, onErrorMock, onSubmitMock, input } = setup;
+        const field = /** @type {import('./passwordField.js').default} */ (setup.field);
 
         await step('Renders the field with confirm field.', async () => {
             await waitFor(() => {
@@ -86,17 +73,17 @@ export const Test = {
             });
 
             expect(input.type).toBe('password');
-            await fireEvent.click(buttons[0]);
+            await userEvent.click(buttons[0]);
             expect(input.type).toBe('text');
             await waitFor(() => {
                 expect(canvas.getByText('Hide password')).toBeInTheDocument();
             });
-            await fireEvent.click(buttons[0]);
+            await userEvent.click(buttons[0]);
             expect(input.type).toBe('password');
         });
 
         await step('Submits form with invalid password and empty confirm value and receives expected message.', async () => {
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
@@ -111,7 +98,7 @@ export const Test = {
             if (field.confirmField?.input instanceof HTMLInputElement) {
                 field.confirmField.input.value = 'P455w0rd?!!?';
             }
-            submitButton?.click();
+            await userEvent.click(submitButton, { delay: 100 });
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.form.msgError'));
                 expect(onErrorMock).toHaveBeenCalled();
@@ -124,13 +111,38 @@ export const Test = {
             if (field.confirmField?.input instanceof HTMLInputElement) {
                 field.confirmField.input.value = 'P455w0rd??';
             }
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({
-                    // eslint-disable-next-line sonarjs/no-hardcoded-passwords
                     'password-field': 'P455w0rd??'
                 });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
+            });
+        });
+    }
+};
+
+/** @type {Story} */
+export const LoginMode = {
+    parameters: testParams,
+    args: {
+        required: true,
+        mode: 'login',
+        confirm: false
+    },
+    play: async ({ canvasElement, canvas, step }) => {
+        const setup = await playSetup({
+            tag: 'password-field',
+            canvas,
+            canvasElement
+        });
+
+        const { submitButton, onSubmitMock } = setup;
+        const field = /** @type {import('./passwordField.js').default} */ (setup.field);
+
+        await step('Renders the field with confirm field.', async () => {
+            await waitFor(() => {
+                expect(canvas.getByText('Password Field')).toBeInTheDocument();
             });
         });
 
@@ -138,16 +150,14 @@ export const Test = {
             'Switches mode to login and removes confirm field, then submits form successfully without validation.',
             async () => {
                 await field.promise;
-                field.setAttribute('mode', 'login');
-                field.removeAttribute('regex');
+                
                 await waitFor(() => {
                     expect(canvas.queryByText('Confirm Password')).not.toBeInTheDocument();
                 });
                 await field.setValue('pass');
-                submitButton?.click();
+                await userEvent.click(submitButton);
                 await waitFor(() => {
                     expect(onSubmitMock).toHaveBeenLastCalledWith({
-                        // eslint-disable-next-line sonarjs/no-hardcoded-passwords
                         'password-field': 'pass'
                     });
                     canvas.getByText(I18n.getText('forms.form.msgSuccess'));

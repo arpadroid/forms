@@ -15,21 +15,21 @@ class TagOption extends SelectOption {
      * Handles the selected event.
      * @param {Event} event - The event object.
      */
-    _onSelected(event) {
+    onSelected(event) {
         event.stopImmediatePropagation();
         const button = this.querySelector('button');
-
         if (!button?.getAttribute('data-value')) {
             return;
         }
         const { value, label } = this._config;
         this.classList.add('selectComboOption--selected');
-        this.field.addValue({ value, label });
-        this.field._callOnChange(event);
+        const field = /** @type {TagField} */ (this.getField());
+        field.addValue({ value, label });
+        field._callOnChange(event);
         this.style.display = 'none';
         requestAnimationFrame(() => {
             this.focusNext();
-            this.field?.inputCombo?.place();
+            field?.inputCombo?.place();
         });
     }
 

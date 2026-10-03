@@ -2,47 +2,51 @@
     position: relative;
     max-height: var(--input-height);
     padding-bottom: 1rem;
-    label {
-        cursor: pointer;
-        flex: 0;
+
+    .arpaField__label {
+        flex: 1 1 auto;
         padding-bottom: 0;
+        margin: 0;
+        font-size: var(--field-option-size);
+        font-weight: var(--field-option-weight);
+    }
+
+    label {
+        display: flex;
+        flex: 0;
+        align-items: center;
         padding-top: 0;
+        padding-bottom: 0;
+        cursor: pointer;
 
         &:hover,
         &:focus,
         &:has(input:checked) {
             background-color: var(--primary-hilight);
+
             .arpaField__icon {
                 color: var(--color-primary);
             }
 
-            .fieldLabel__text {
-                color: var(--field-option-active-color);
+            .arpaField__label {
                 font-weight: var(--field-option-active-weight);
+                color: var(--field-option-active-color);
                 letter-spacing: -0.2px;
-                text-decoration-color: var(--field-option-active-color);
                 text-decoration-thickness: 2px;
+                text-decoration-color: var(--field-option-active-color);
                 text-underline-offset: 2px;
             }
         }
 
         &:has(input:checked) {
-            .fieldLabel__text {
+            .arpaField__label {
                 text-decoration: underline;
             }
         }
     }
 
-    .arpaField__icon {
+    .icon {
         margin-right: 12px;
-    }
-
-    .fieldLabel__text.fieldLabel__text {
-        flex: 1 1 auto;
-        margin: 0;
-        padding-bottom: 0;
-        font-weight: var(--field-option-weight);
-        font-size: var(--field-option-size);
     }
 
     field-input {
@@ -50,48 +54,53 @@
     }
 }
 
-checkbox-field.arpaField:has(.arpaField__icon) .fieldInput {
+checkbox-field.arpaField:has(.arpaField__icon) .arpaField__input {
     padding-left: 12px;
 }
 
-checkbox-field.arpaField:has(.arpaField__iconRight) .fieldInput {
+checkbox-field.arpaField:has(.arpaField__iconRight) .arpaField__input {
     padding-right: 12px;
 }
 
 .arpaCheckbox,
 .arpaField input[type='radio'],
 .arpaField input[type='checkbox'] {
-    width: 24px;
-    height: 0 !important;
     position: relative;
-    text-align: center;
-    padding: 0;
-    margin: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    appearance: none;
     visibility: hidden;
     flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 0 !important;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    appearance: none;
 
     &::after {
-        font-family: 'Material Symbols Outlined';
-        content: 'check_box_outline_blank';
-        color: var(--grey-300);
-        font-size: 24px;
         position: absolute;
         visibility: visible;
-        cursor: pointer;
+        /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+        font-family: 'Material Symbols Outlined';
+        font-size: 24px;
         font-weight: 300;
+        color: var(--grey-300);
+        cursor: pointer;
+        content: 'check_box_outline_blank';
     }
 }
 
 .arpaCheckbox,
 .arpaField input[type='checkbox'] {
-    &:checked:after {
-        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        content: 'check_box';
+    &:checked::after {
+        font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
         color: var(--color-primary);
+        content: 'check_box';
     }
 }
 
@@ -99,7 +108,7 @@ checkbox-field.arpaField:has(.arpaField__iconRight) .fieldInput {
     content: 'radio_button_unchecked';
 }
 
-.arpaField input[type='radio']:checked:after {
-    content: 'radio_button_checked';
+.arpaField input[type='radio']:checked::after {
     color: var(--color-primary);
+    content: 'radio_button_checked';
 }

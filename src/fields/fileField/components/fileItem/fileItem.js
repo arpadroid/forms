@@ -126,7 +126,7 @@ class FileItem extends ListItem {
         /** @type {FileField | null} */
         this.field = this.closest('.arpaField');
         /** @type {FileFieldConfigType} */
-        this.fieldConfig = this.field?.getConfig();
+        this.fieldConfig = this.field?._config;
         await this._initializeFile();
         super.connectedCallback();
     }

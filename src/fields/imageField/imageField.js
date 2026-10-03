@@ -15,7 +15,7 @@ class ImageField extends FileField {
         const superConfig = super.getDefaultConfig();
         /** @type {ImageFieldConfigType} */
         const conf = {
-            className: 'imageField',
+            classNames: ['imageField'],
             listComponent: 'image-list',
             uploadListComponent: 'image-list',
             fileComponent: 'image-item',

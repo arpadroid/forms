@@ -2,7 +2,7 @@
  * @typedef {import('./weekField.types').WeekFieldConfigType} WeekFieldConfigType
  * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
-import { defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 const html = String.raw;
@@ -11,40 +11,38 @@ class WeekField extends TextField {
     input = this.input;
     /** @type {WeekFieldConfigType} */
     _config = this._config;
-
     _validations = [...super.getValidations(), 'week'];
+
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
+        /** @type {WeekFieldConfigType} */
+        const config = {
             pickerLabel: I18n.getText('forms.fields.week.lblShowPicker'),
-            inputAttributes: { type: 'week' }
-        });
+            inputType: 'week'
+        };
+        return mergeObjects(super.getDefaultConfig(), config);
     }
 
     getFieldType() {
         return 'week';
     }
 
-    async $onInitialized() {
-        await this.onReady();
-        super.$onInitialized();
-        this.weekButton = this.renderWeekButton();
-        this.weekButton && this.inputMask?.addRhs('timeButton', this.weekButton);
-    }
-
-    renderWeekButton() {
-        const { pickerLabel } = this._config;
-        const button = /** @type {IconButton} */ (
-            renderNode(
-                html`<icon-button
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="inputMaskRhs">
+                <icon-button
                     icon="date_range"
-                    label="${pickerLabel}"
+                    tooltip="{pickerLabel}"
                     tooltip-position="left "
                     variant="minimal"
-                ></icon-button>`
-            )
-        );
-        button?.addEventListener('click', () => this.input?.showPicker());
-        return button;
+                    on-click="{showPicker}"
+                ></icon-button>
+            </arpa-zone>
+        `;
+    }
+
+    showPicker() {
+        this.input.showPicker();
     }
 
     /**

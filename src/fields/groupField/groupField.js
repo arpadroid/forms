@@ -9,22 +9,6 @@ const html = String.raw;
 class GroupField extends Field {
     /** @type {GroupFieldConfigType} */
     _config = this._config;
-    /////////////////////////
-    // #region INITIALIZATION
-    /////////////////////////
-
-    /**
-     * Creates a new GroupField instance.
-     * @param {GroupFieldConfigType} config - The configuration object for the GroupField.
-     */
-    constructor(config) {
-        super(config);
-        this._fields = Array.from(this?.childNodes ?? []);
-        this._content = this.innerHTML;
-        this.innerHTML = '';
-        this.classList.add('groupField');
-        this.classList.remove('arpaField');
-    }
 
     /**
      * Returns the default configuration for the GroupField.
@@ -34,11 +18,11 @@ class GroupField extends Field {
         /** @type {GroupFieldConfigType} */
         const conf = {
             open: undefined,
+            classNames: ['groupField'],
             rememberToggle: undefined,
             isCollapsible: undefined,
             openIcon: 'keyboard_arrow_down',
-            closedIcon: 'keyboard_arrow_right',
-            template: GroupField.template
+            closedIcon: 'keyboard_arrow_right'
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -70,10 +54,6 @@ class GroupField extends Field {
         return undefined;
     }
 
-    getRememberToggle() {
-        return this.hasProp('remember-toggle');
-    }
-
     getSavedToggleState() {
         return localStorage.getItem(this.getHtmlId() + '-toggleState');
     }
@@ -84,7 +64,7 @@ class GroupField extends Field {
 
     _isOpen() {
         const savedToggle = this.getSavedToggleState();
-        if (this.getRememberToggle() && savedToggle) {
+        if (this.hasProp('rememberToggle') && savedToggle) {
             return savedToggle === 'true';
         }
         return this.hasProp('open');
@@ -100,30 +80,35 @@ class GroupField extends Field {
     // #region RENDERING
     /////////////////////
 
-    static template = html`
-        <{detailsTag} {isOpen} class="groupField__details">
-            <{summaryTag} class="groupField__summary">
-                <arpa-icon class="groupField__icon">{icon}</arpa-icon>
-                <span class="groupField__summary__label" zone="label">{label}</span>
-                {tooltip}
-                <arpa-icon class="groupField__iconRight">{iconRight}</arpa-icon>
-            </{summaryTag}>
-            <div class="groupField__fields"></div>
-        </{detailsTag}>
-    `;
-
     getTemplateVars() {
         return {
             ...super.getTemplateVars(),
             isOpen: this._isOpen() && 'open',
-            detailsTag: this.isCollapsible() ? 'details' : 'div',
-            summaryTag: this.isCollapsible() ? 'summary' : 'div',
-            iconRight: this.isCollapsible() && this.getIconRight()
+            detailsTag: this.hasProp('isCollapsible') ? 'details' : 'div',
+            summaryTag: this.hasProp('isCollapsible') ? 'summary' : 'div',
+            iconRight: this.hasProp('isCollapsible') && this.getIconRight()
         };
     }
 
-    renderLabel() {
-        return this.getLabel();
+    $renderTemplate() {
+        return html`
+            <arpa-node tag="{detailsTag}" name="details" {isOpen} class="groupField__details" on-toggle="{toggle}">
+                <arpa-node tag="{summaryTag}" name="summary" class="groupField__summary">
+                    <arpa-icon class="groupField__icon">{icon}</arpa-icon>
+                    <span class="groupField__summary__label" zone="label">{label}</span>
+                    {tooltip}
+                    <arpa-icon class="groupField__iconRight">{iconRight}</arpa-icon>
+                </arpa-node>
+                <arpa-node name="fields" class="groupField__fields" is-content></arpa-node>
+            </arpa-node>
+        `;
+    }
+
+    async $initializeNodes() {
+        await super.$initializeNodes();
+        this.fieldsNode = this.querySelector('.groupField__fields');
+        this.details = /** @type {HTMLDetailsElement | undefined} */ (this.nodes.details);
+        return true;
     }
 
     // #endregion
@@ -132,22 +117,15 @@ class GroupField extends Field {
     // #region LIFECYCLE
     /////////////////////////
 
-    async $onConnected() {
-        await super.$onConnected();
-        this.fieldsNode = this.querySelector('.groupField__fields');
-        this.fieldsNode && appendNodes(this.fieldsNode, this._fields);
-        this.details = this.querySelector('details');
-        if (this.isCollapsible()) {
-            this.details?.addEventListener('toggle', event => {
-                const target = /** @type {HTMLDetailsElement | undefined} */ (event?.target);
-                const isOpen = Boolean(target?.open);
-                if (this.getRememberToggle()) {
-                    localStorage.setItem(this.getHtmlId() + '-toggleState', isOpen.toString());
-                }
-                this.update();
-            });
+    /** @param {Event} event */
+    toggle(event) {
+        if (!this.hasProp('isCollapsible')) return;
+        const target = /** @type {HTMLDetailsElement | undefined} */ (event?.target);
+        const isOpen = Boolean(target?.open);
+        if (this.hasProp('rememberToggle')) {
+            localStorage.setItem(this.getHtmlId() + '-toggleState', isOpen.toString());
         }
-        return true;
+        this.update();
     }
 
     update() {
@@ -157,12 +135,6 @@ class GroupField extends Field {
         if (this.iconNode) {
             this.iconNode.innerHTML = icon;
         }
-    }
-
-    async $initializeNodes() {
-        await super.$initializeNodes();
-        this.fieldsNode = this.querySelector('.groupField__fields');
-        return true;
     }
 
     // #endregion

@@ -29,7 +29,6 @@ class UrlField extends TextField {
                 const url = new URL(value);
                 isValid = removeLastSlash(url.href) === removeLastSlash(value);
             } catch (error) {
-                console.error('Invalid URL:', error);
                 isValid = false;
             }
         }

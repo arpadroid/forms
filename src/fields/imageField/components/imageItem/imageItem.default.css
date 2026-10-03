@@ -20,4 +20,9 @@
         flex: auto;
         max-height: 100%;
     }
+
+    .listItem__rhs {
+        display: flex;
+        flex-direction: row;
+    }
 }

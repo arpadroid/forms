@@ -23,23 +23,24 @@ class SubmitButton extends Button {
 
     async $initializeNodes() {
         await super.$initializeNodes();
-        this._handleButtonState();
+        await this.waitForNodes();
         /** @type {import('../field/field').FormComponent | null} */
         this.form = this.closest('arpa-form');
         this.form?.on('change', this._handleButtonState);
+        this._handleButtonState();
         return true;
     }
 
-    _handleButtonState() {
+    async _handleButtonState() {
         const isValid = this.form?._validate();
         const iconInvalid = this.getProp('icon-invalid');
         const icon = this.form?.getProp('submit-icon') || this.getProp('icon');
         if (isValid) {
             this.button?.removeAttribute('data-invalid');
-            icon && this.setProp('icon', icon);
+            icon && this.setIcon(icon);
         } else {
             this.button?.setAttribute('data-invalid', '');
-            iconInvalid && this.setProp('icon', iconInvalid);
+            iconInvalid && this.setIcon(iconInvalid);
         }
     }
 }

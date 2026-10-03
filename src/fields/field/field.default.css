@@ -1,13 +1,27 @@
+:root {
+    --input-padding: 1.2rem;
+}
+
 .arpaField {
+    --input-height: 3.2rem;
+    --input-border-radius: 0.75rem;
+    --input-border-radius-round: var(--input-height);
+    --input-icon-padding: 52px;
+    --input-bg-color: var(--color-background);
+    --input-box-shadow: inset 6px 6px 6px var(--grey-150), inset -6px -6px 6px var(--grey-0);
+    --field-icon-padding: 1.1rem;
+
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     flex: 1 1 auto;
-    gap: 0.75rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+
     &:focus-within:not(.groupField) {
         .arpaField__icon {
             color: var(--color-primary);
         }
+
         &.arpaField--hasError {
             .arpaField__icon {
                 color: var(--red-medium);
@@ -16,102 +30,242 @@
     }
 }
 
-.arpaField__body {
-    gap: 0.5rem;
-    display: flex;
-    flex-direction: column;
-}
-
-.arpaField[variant='small'] {
-    max-width: 142px;
-
-    .fieldInput {
-        text-align: center;
-        justify-content: center;
-    }
-}
-
-.arpaField p {
-    margin: 4px 0px;
-}
+/* --- LAYOUT --- */
 
 .arpaField__header {
     display: flex;
+    gap: 1rem;
     align-items: center;
-    gap: 8px;
 }
 
-.arpaField__description {
-    padding: 4px 0px;
-    margin-bottom: 8px;
-    font-size: 15px;
-    margin: 0px 0px 8px;
-}
-
-.arpaField.arpaField--hasError {
-    .fieldInput {
-        border-color: var(--red-light);
-        background-color: var(--red-lightest);
-    }
-    &:focus-within field-errors .tooltip__content {
-        display: block;
-    }
+.arpaField__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .arpaField__inputWrapper {
+    position: relative;
     display: flex;
     flex: 1 1 auto;
-    position: relative;
+    gap: 1rem;
     align-items: center;
-    gap: 8px;
 
     > arpa-tooltip {
         position: absolute;
         inset: 0;
         z-index: -1;
     }
+
     &:focus-within > arpa-tooltip .tooltip__content {
         display: block;
     }
 }
 
-.arpaField:has(> .arpaField__body .fieldInputMask__lhs:not(:empty)) .fieldInput {
-    padding-left: var(--input-icon-padding);
+/* --- LABEL --- */
+
+.arpaField__labelWrapper {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    cursor: pointer;
 }
 
-.arpaField:has(> .arpaField__body .fieldInputMask__rhs:not(:empty)) .fieldInput {
-    padding-right: var(--input-icon-padding);
+.arpaField__labelIcon {
+    margin-right: 0.25rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--grey-650);
 }
 
-.arpaField__footer:empty {
-    display: none;
+.arpaField__label {
+    flex: 0 1 auto;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--grey-700);
 }
+
+.arpaField__requiredSign {
+    position: relative;
+    top: -6px;
+    display: flex;
+    height: 14px;
+    padding: 0 6px;
+    font-size: 20px;
+    color: var(--red);
+}
+
+/* --- INPUT --- */
+
+.arpaField__input {
+    display: flex;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 100%;
+    height: var(--input-height);
+    min-height: var(--input-height);
+    padding-right: var(--input-padding);
+    padding-left: var(--input-padding);
+    font-family: var(--primary-font);
+    font-size: 16px;
+    color: var(--text-color);
+    background-color: var(--input-bg-color);
+    border: 2px solid var(--border-color);
+    border: none;
+    border-radius: var(--input-border-radius-round);
+    box-shadow: var(--input-box-shadow);
+    transition: var(--theme-transition);
+
+    &:focus,
+    &:hover {
+        /* border: 2px solid var(--primary-highlight-outline); */
+        outline: none;
+        background-color: var(--primary-hilight);
+    }
+}
+
+button.arpaField__input {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    arpa-icon {
+        position: relative;
+        top: -1px;
+    }
+}
+
+.arpaField__input--compact.arpaField__input--compact {
+    --input-height: 3rem;
+
+    max-width: 6rem;
+    padding: 1rem;
+    border-radius: 1rem;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        margin: 0;
+        appearance: none;
+    }
+}
+
+.arpaField__inputMask {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    visibility: hidden;
+    align-items: center;
+    justify-content: flex-start;
+    max-height: var(--input-height);
+
+    .icon {
+        max-width: 20px;
+        font-size: 23px;
+    }
+
+    label {
+        display: flex;
+    }
+}
+
+.arpaField__inputMask > * {
+    visibility: visible;
+}
+
+.arpaField__inputMaskLhs,
+.arpaField__inputMaskRhs {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--field-icon-padding);
+
+    .iconButton {
+        --icon-button-size: 1.5rem;
+    }
+}
+
+.arpaField__inputMaskRhs {
+    margin-left: auto;
+}
+
+/* --- DESCRIPTION --- */
+
+.arpaField__description {
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+}
+
+/* --- TOOLTIP --- */
+
+.arpaField__tooltip {
+    --icon-button-size: 2.2rem;
+}
+
+/* --- FOOTNOTE --- */
 
 .arpaField__footnote.arpaField__footnote {
-    font-size: 14px;
-    font-weight: 500;
     position: relative;
-    padding: 0px 0px 0px 1.2rem;
-    line-height: 18px;
+    padding: 0 0 0 1.2rem;
     margin: 0;
     font-family: var(--font-raleway-italic);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 18px;
     color: var(--grey-500);
 }
 
-/* Disabled */
+/* --- ERROR --- */
 
-.arpaField:has(.fieldInput:disabled) {
+.arpaField.arpaField--hasError {
+    .arpaField__input {
+        background-color: var(--red-lightest);
+        border-color: var(--red-light);
+    }
+
+    &:focus-within field-errors .tooltip__content {
+        display: block;
+    }
+}
+
+/* --- VARIANTS --- */
+
+.arpaField[variant='small'] {
+    max-width: 142px;
+
+    .arpaField__input {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+.arpaField[variant='compact'] {
+    gap: 0;
+
+    --input-height: 2.375rem;
+    --input-border-radius: 0.25rem;
+}
+
+/* --- DISABLED --- */
+
+.arpaField:has(.arpaField__input:disabled) {
     opacity: 0.5;
-    .fieldInput {
+
+    .arpaField__input {
         cursor: not-allowed;
+
         &:hover {
             border-color: var(--grey-100);
         }
     }
 }
 
-.arpaField[variant='compact'] {
-    gap: 0px;
-    --input-height: 2.375rem;
-    --input-border-radius: 0.25rem;
+/* --- INPUT MASK PADDING --- */
+
+.arpaField:has(> .arpaField__body .arpaField__inputMaskLhs:not(:empty)) .arpaField__input {
+    padding-left: var(--input-icon-padding);
+}
+
+.arpaField:has(> .arpaField__body .arpaField__inputMaskRhs:not(:empty)) .arpaField__input {
+    padding-right: var(--input-icon-padding);
 }

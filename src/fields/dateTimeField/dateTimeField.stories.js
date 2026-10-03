@@ -1,52 +1,53 @@
 /**
- * @typedef {import('./dateTimeField.js').default} DateTimeField
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./dateTimeField.types.js').DateTimeFieldConfigType} DateTimeFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<DateTimeFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<DateTimeFieldConfigType>} Story
  */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { Default as DateDefault } from '../dateField/dateField.stories.js';
-import { playSetup, renderField } from '../field/field.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
-const DateFieldStory = {
+const DateTimeFieldStory = {
     title: 'Forms/Fields/DateTime',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'date-time-field')
+    component: 'date-time-field',
+    args: {
+        id: 'date-time-field',
+        label: 'Date Time Field',
+        required: true,
+        format: 'D MMM YYYY HH:MM',
+        value: '12 June 2021 15:30'
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <date-time-field ${$attr(args)}></date-time-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        ...DateDefault.argTypes
-    },
-    args: {
-        ...DateDefault.args,
-        id: 'date-time-field',
-        value: '12 June 2021 15:30',
-        format: 'D MMM YYYY HH:MM'
-    }
+    parameters: defaultParams
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
         ...Default.args,
         required: true
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'date-time-field'
+    play: async ({ canvasElement, canvas, step }) => {
+        const { submitButton, onSubmitMock, input, field } = await playSetup({
+            tag: 'date-time-field',
+            canvas,
+            canvasElement
         });
-        const { submitButton, canvas, onSubmitMock } = setup;
-        const field = /** @type {DateTimeField} */ (setup.field);
-        const input = /** @type {HTMLInputElement} */ (setup.input);
 
         await step('Default value is OK.', async () => {
             expect(input?.value).toBe('2021-06-12T15:30');
@@ -61,7 +62,7 @@ export const Test = {
 
         await step('Submits form with different output formats and checks for expected submission values', async () => {
             field.setValue('1 October 1983 12:30');
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-time-field': '1 Oct 1983 12:10' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -71,4 +72,4 @@ export const Test = {
 };
 
 /** @type {Meta} */
-export default DateFieldStory;
+export default DateTimeFieldStory;

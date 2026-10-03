@@ -6,8 +6,6 @@ export {
     FormPayloadType
 } from './components/form/form.types';
 
-export { FieldLabelConfigType } from './fields/field/components/fieldLabel/fieldLabel.types';
-
 export { CheckboxesFieldConfigType } from './fields/checkboxesField/checkboxesField.types';
 
 export { CheckboxFieldConfigType } from './fields/checkboxField/checkboxField.types';
@@ -17,8 +15,6 @@ export { DateFieldConfigType } from './fields/dateField/dateField.types';
 export { FieldConfigType, FieldValidationType, FieldOnChangeType } from './fields/field/field.types';
 
 export { FileItemConfigType } from './fields/fileField/components/fileItem/fileItem.types';
-
-export { FieldInputType } from './fields/field/components/fieldInput/fieldInput.types';
 
 export { FileFieldConfigType } from './fields/fileField/fileField.types';
 

@@ -5,24 +5,20 @@ import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 
-/**
- * @module CheckboxField
- */
 class CheckboxField extends Field {
-    /** @type {HTMLInputElement} */
-    input = this.input;
     /** @type {CheckboxFieldConfigType} */
     _config = this._config;
 
-    /**
-     * Returns the default configuration for the checkbox field.
-     * @returns {CheckboxFieldConfigType}
-     */
+    /** @returns {CheckboxFieldConfigType} */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            template: CheckboxField.template,
-            className: 'checkboxField',
-            inputAttributes: { type: 'checkbox' }
+            className: 'arpaField',
+            classNames: ['checkboxField'],
+            inputType: 'checkbox',
+            inputTag: 'input',
+            nodesConfig: {
+                label: { isContent: true }
+            }
         });
     }
 
@@ -32,48 +28,24 @@ class CheckboxField extends Field {
 
     $renderTemplate() {
         return html`
-            <label for="${this.getHtmlId()}" class="fieldInput checkboxField__label fieldLabel buttonInput">
-                <arpa-icon class="arpaField__icon">{icon}</arpa-icon>
-                <span class="fieldLabel__text" zone="checkbox-label">{label}</span>
-                <arpa-icon class="arpaField__iconRight">{iconRight}</arpa-icon>
-                <field-errors></field-errors>
-                {tooltip} {input}
+            <label for="${this.getHtmlId()}" class="arpaField__input checkboxField__label fieldLabel buttonInput">
+                {icon} {label} {iconRight} {errors} {tooltip} {input}
             </label>
             {description}
         `;
     }
 
-    /**
-     * Returns the template variables for the checkbox field.
-     * @returns {Record<string, string>} The template variables.
-     */
-    getTemplateVars() {
-        return mergeObjects(super.getTemplateVars(), {
-            tooltip: this.renderTooltip(),
-            icon: this.getProp('icon'),
-            iconRight: this.getProp('icon-right'),
-            label: this.getLabel()
-        });
+    getInput() {
+        this.input = /** @type {HTMLInputElement | undefined} */ (this.querySelector('input[type="checkbox"]'));
+        return this.input;
     }
 
-    renderTooltip() {
-        return this.hasContent('tooltip')
-            ? html`<arpa-tooltip position="${this.getTooltipPosition}">${this.getTooltip()}}</arpa-tooltip>`
-            : '';
-    }
-
-    /**
-     * Returns the value for the checkbox.
-     * @returns {boolean}
-     */
+    /** @returns {boolean} */
     getValue() {
-        return Boolean(this?.input?.checked ?? super.getValue());
+        return Boolean(this?.getInput()?.checked ?? super.getValue());
     }
 
-    /**
-     * Validates the checkbox field is checked.
-     * @returns {boolean}
-     */
+    /** @returns {boolean} */
     validateRequired() {
         if (!this.isRequired()) {
             return true;

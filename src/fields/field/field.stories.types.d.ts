@@ -1,19 +1,25 @@
-import { within, fn } from 'storybook/test';
+import { fn } from 'storybook/test';
 import Field from './field';
-import { Form } from './field.stories';
-import type { FieldInputType } from '../field/components/fieldInput/fieldInput.types';
+import { Canvas, Form } from './field.stories';
 
 export type FieldPlaySetupOptionsType = {
     fieldTag?: string;
 };
 
 export type FieldPlaySetupReturnType = {
-    canvas: ReturnType<typeof within>;
-    field: Field | null;
-    form: Form | null;
-    submitButton: HTMLButtonElement | null;
+    field: Field;
+    form: Form;
+    input: HTMLInputElement;
+    submitButton: HTMLButtonElement;
+    onFocusMock: ReturnType<typeof fn>;
     onSubmitMock: ReturnType<typeof fn>;
     onErrorMock: ReturnType<typeof fn>;
     onChangeMock: ReturnType<typeof fn>;
-    input: FieldInputType;
+};
+
+export type FieldPlayConfigType = {
+    tag?: string;
+    canvasElement: HTMLElement;
+    canvas: Canvas;
+    inputSelector?: string;
 };

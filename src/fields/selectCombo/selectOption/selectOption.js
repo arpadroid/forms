@@ -1,10 +1,10 @@
-import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
-import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
-const html = String.raw;
 /**
  * @typedef {import('../../optionsField/fieldOption/fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
  * @typedef {import('../selectCombo.js').default} SelectCombo
+ * @typedef {import('@arpadroid/ui').InputCombo} InputCombo
  */
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
+import FieldOption from '../../optionsField/fieldOption/fieldOption.js';
 
 /**
  * Represents a select option element.
@@ -12,59 +12,41 @@ const html = String.raw;
 class SelectOption extends FieldOption {
     /** @type {SelectCombo} */
     field = this.field;
-    /**
-     * Creates a new SelectOption instance.
-     * @param {FieldOptionConfigType} config - The configuration object for the SelectOption.
-     */
-    constructor(config) {
-        super(config);
-        this._onSelected = this._onSelected.bind(this);
+
+    getWrapperComponent() {
+        return 'button';
     }
 
-    /**
-     * Returns default config.
-     * @returns {FieldOptionConfigType}
-     */
-    getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
-            className: 'comboBox__item',
-            template: html`
-                <button class="fieldOption__handler" data-value="{value}" tabindex="-1">${FieldOption.template}</button>
-            `
-        });
-    }
-
-    getTemplateVars() {
+    getWrapperAttr() {
         return {
-            ...super.getTemplateVars(),
-            value: this.getProp('value')
+            ...super.getWrapperAttr(),
+            type: 'button'
         };
     }
 
-    /**
-     * Called when the element is connected to the DOM.
-     * @returns {Promise<boolean>}
-     */
-    async $initializeNodes() {
-        await super.$initializeNodes();
-        this.promise.then(async () => {
-            await new Promise((resolve) => setTimeout(resolve, 50));
-            this.handler = /** @type {HTMLElement | null} */ (this.querySelector('.fieldOption__handler'));
-            this.handler?.removeEventListener('click', this._onSelected);
-            this.handler?.addEventListener('click', this._onSelected);
+    /** @returns {FieldOptionConfigType} */
+    getDefaultConfig() {
+        this.field = /** @type {SelectCombo} */ (this.getField());
+        this.onSelected = this.onSelected.bind(this);
+        return mergeObjects(super.getDefaultConfig(), {
+            className: 'comboBox__item',
+            action: this.onSelected
         });
-        return true;
+    }
+
+    getField() {
+        const parentNode = /** @type {HTMLElement & { InputCombo: InputCombo }} */ (this.parentNode);
+        const field = super.getField() || parentNode?.InputCombo?.input?.closest('.arpaField');
+        return field;
     }
 
     /**
      * Called when the element is selected.
      * @param {MouseEvent} event - The event object.
      */
-    _onSelected(event) {
-        const val = this.getAttribute('value') || '';
-        this.field?.setValue(val);
-        this.field?._callOnChange(event);
-        this.field?.inputCombo?.close();
+    onSelected(event) {
+        this.field = /** @type {SelectCombo} */ (this.getField());
+        this.field?.onOptionSelected(this, event);
     }
 }
 

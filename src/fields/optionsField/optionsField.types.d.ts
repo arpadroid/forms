@@ -11,6 +11,9 @@ export type OptionsFieldConfigType = FieldConfigType & {
     optionTemplate?: string;
     defaultOption?: string;
     optionsZone?: string;
+    optionsTag?: string;
+    optionsClass?: string;
+    optionsAttributes?: Record<string, string>;
 };
 
 export type OptionsNodeType = HTMLElement & { field?: OptionsField };

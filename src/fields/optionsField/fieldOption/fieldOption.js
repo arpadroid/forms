@@ -1,155 +1,117 @@
 /**
  * @typedef {import('../../field/field.js').default} Field
  * @typedef {import('./fieldOption.types').FieldOptionConfigType} FieldOptionConfigType
- * @typedef {import('../../field/field.js').FieldInput} FieldInput
  */
-import { mechanize, defineCustomElement, mergeObjects, ucFirst } from '@arpadroid/tools';
-import { ArpaElement } from '@arpadroid/ui';
+import { mechanize, defineCustomElement, mergeObjects } from '@arpadroid/tools';
+import { ListItem } from '@arpadroid/lists';
 
 const html = String.raw;
 
-/**
- * Represents a field option element.
- */
-class FieldOption extends ArpaElement {
+class FieldOption extends ListItem {
     /** @type {FieldOptionConfigType} */
     _config = this._config;
 
-    /**
-     * Returns the default configuration for the field option element.
-     * @returns {FieldOptionConfigType}
-     */
+    /** @returns {FieldOptionConfigType} */
     getDefaultConfig() {
+        this.field = this.getField();
         /** @type {FieldOptionConfigType} */
         const config = {
-            template: FieldOption.template,
             className: 'fieldOption',
-            attributeList: ['value']
+            attributeList: ['value'],
+            inputType: undefined,
+            inputTag: undefined,
+            attributes: {
+                role: 'option'
+            },
+            blueprint: () => ListItem.prototype.$renderTemplate.call(this)
         };
         return mergeObjects(super.getDefaultConfig(), config);
     }
 
-    /**
-     * Returns the field option element's ready promise.
-     * @returns {Promise<any>} The ready promise.
-     */
-    onReady() {
-        return customElements.whenDefined('arpa-field');
-    }
-
-    getLabel() {
-        return this.getProp('label') || ucFirst(this.getProp('value')) || this.getProp('content');
-    }
-
-    /**
-     * The HTML template for the field option element.
-     * @type {string}
-     */
-    static template = html`
-        <arpa-icon class="fieldOption__iconRight">{iconLeft}</arpa-icon>
-        {input}
-        <div class="fieldOption__content">
-            <span class="fieldOption__label">{getLabel()}</span>
-            {subtitle}
-        </div>
-        <arpa-icon class="fieldOption__icon">{icon}</arpa-icon>
-    `;
-
-    /**
-     * Returns the option ID for the field option element.
-     * @returns {string}
-     */
+    /** @returns {string} */
     getOptionId() {
         const valueString = mechanize(this.getProp('value'));
-        return `field-option-${this.field?.getHtmlId()}-${valueString}`;
+        return `${this.getField()?.getId()}-${valueString}`;
     }
 
-    async _preRender() {
-        const field = this.getField();
-        field && (this.field = field);
-    }
-
-    async _printAttributes() {
-        super._printAttributes();
-        if (this.tagName.toLowerCase() === 'option') {
-            this.removeAttribute('role');
-        } else {
-            this.setAttribute('role', 'option');
-        }
-    }
-
-    
-
-    async $initializeNodes() {
-        await super.$initializeNodes();
-        this.field = this.getField();
-        this.field?.on('change', () => this.setIsSelected());
-        this.setIsSelected();
-
-        this.handlerNode = this.querySelector('.fieldOption__handler');
-        this.contentNode = /** @type {HTMLElement} */ (this.querySelector('.fieldOption__content'));
-        return true;
-    }
-
-    /**
-     * Returns the field for the field option element.
-     * @returns {Field | null}
-     */
+    /** @returns {Field | null} */
     getField() {
-        const optionsNode = /** @type {FieldInput} */ (this.closest('.optionsField__options'));
-        return this.field || /** @type {Field} */ (this.closest('.arpaField')) || optionsNode?.field;
-    }
-
-    /**
-     * Returns the action for the field option element.
-     * @returns {FieldOptionConfigType['action']}
-     */
-    getAction() {
-        return this._config.action;
+        return this.field || /** @type {Field} */ (this.closest('.arpaField'));
     }
 
     isSelected() {
-        return this.getAttribute('value') === this.field?.getValue();
+        return this.getAttribute('value') === this.getField()?.getValue();
     }
 
     setIsSelected() {
         this.isSelected() ? this.setAttribute('aria-selected', 'true') : this.removeAttribute('aria-selected');
     }
 
-    async $onInitialized() {
-        await this.onReady();
-        super.$onInitialized();
+    getAction() {
+        return this.getProp('action');
     }
 
-    /**
-     * Handles the connected event for the field option element.
-     */
-    $onConnected() {}
+    getName() {
+        return this.getField()?.getId() || '';
+    }
 
-    /**
-     * Returns the template variables for rendering the field option element.
-     * @returns {Record<string, unknown>} The template variables.
-     */
-    getTemplateVars() {
-        const subtitle = this.getProp('subtitle');
+    getWrapperAttr() {
         return {
-            content: this._content,
-            icon: this.getProp('icon'),
-            iconLeft: this.getProp('icon-left'),
-            label: this.getProp('label'),
-            subtitle: subtitle && html`<span class="fieldOption__subtitle">${subtitle}</span>`,
-            input: this.renderInput(),
-            optionId: this.getOptionId(),
-            value: this.getProp('value')
+            ...super.getWrapperAttr(),
+            className: 'fieldOption__handler'
         };
     }
 
-    /**
-     * Renders the input element for the field option element.
-     * @returns {string} The rendered input element.
-     */
-    renderInput() {
-        return html``;
+    getTemplateVars() {
+        return {
+            ...super.getTemplateVars(),
+            optionId: this.getOptionId()
+        };
+    }
+
+    getLabelId() {
+        return this.getOptionId() + '-label';
+    }
+
+    $renderTemplate() {
+        return html`
+            <arpa-node ${this.wrapperAttr()}>
+                <arpa-node
+                    name="input"
+                    tag="{inputTag}"
+                    type="{inputType}"
+                    on-change="{onChange}"
+                    value="{value}"
+                    checked="{isSelected()}"
+                    id="{optionId}"
+                    aria-labelledby="{getLabelId()}"
+                    can-render="inputTag"
+                ></arpa-node>
+                <div class="fieldOption__content">
+                    <arpa-node name="label" tag="span" id="{getLabelId()}" is-content></arpa-node>
+                    {subtitle}
+                </div>
+                {icon}
+            </arpa-node>
+            {rhs}
+        `;
+    }
+
+    async $initializeNodes() {
+        await super.$initializeNodes();
+        this.input = /** @type {HTMLInputElement} */ (this.nodes.input);
+        this.handlerNode = this.querySelector('.fieldOption__handler');
+        this.labelNode = /** @type {HTMLLabelElement} */ (this.nodes.label);
+        if (this.input instanceof HTMLInputElement) {
+            this.input.name = this.getName();
+        }
+        return true;
+    }
+
+    /** @param {Event} _event */
+    onChange(_event) {
+        this.field?._callOnChange(_event);
+        this.setIsSelected();
     }
 }
 

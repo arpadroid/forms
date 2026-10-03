@@ -1,78 +1,52 @@
 /** @typedef {import('./rangeField.types').RangeFieldConfigType} RangeFieldConfigType */
-import { defineCustomElement, listen, mergeObjects } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import Field from '../field/field.js';
 const html = String.raw;
 
 class RangeField extends Field {
-    /** @type {HTMLInputElement | null} */
-    input = this.input;
-    /**
-     * Creates an instance of RangeField.
-     * @param {RangeFieldConfigType} config - The configuration object.
-     */
-    constructor(config) {
-        super(config);
-        this.bind('_onChange', '_onTextInputChange');
-        this.on('change', this._onChange);
-    }
-
-    /**
-     * Returns default config.
-     * @returns {RangeFieldConfigType}
-     */
+    /** @returns {RangeFieldConfigType} */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            inputAttributes: { type: 'range' },
-            inputTemplate: html`<field-input {inputAttr} input-class="rangeField__input" value="{value}" min="{min}" max="{max}">
-            </field-input>`
+            inputType: 'range',
+            nodesConfig: {
+                input: { className: 'rangeField__input' }
+            }
         });
     }
 
-    _onChange() {
-        this.textInput && (this.textInput.value = String(this.getValue()));
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="inputRhs">
+                <arpa-node
+                    name="textInput"
+                    tag="input"
+                    class="arpaField__input arpaField__input--compact rangeField__textInput"
+                    id="{id}-text-input"
+                    type="number"
+                    min="{min}"
+                    value="${this.getValue()}"
+                    max="{max}"
+                    step="{step}"
+                    on-input="{_onTextInputChange}"
+                />
+            </arpa-zone>
+        `;
     }
 
-    renderInputRhs() {
-        return this.renderChild('input-rhs', {
-            content: html`<input
-                class="fieldInput fieldInput--compact rangeField__textInput"
-                id="{id}-text-input"
-                type="number"
-                min="{min}"
-                max="{max}"
-                step="{step}"
-            />`,
-            canRender: () => true
-        });
-    }
-
-    /**
-     * Returns the input template variables.
-     * @returns {Record<string, unknown>}
-     */
-    getTemplateVars() {
-        return {
-            ...super.getTemplateVars(),
-            min: this.getProp('min'),
-            max: this.getProp('max'),
-            step: this.getProp('step'),
-            value: this.getValue()
-        };
+    /** @param {Event} event */
+    _callOnChange(event) {
+        super._callOnChange(event);
+        if (this.textInput) {
+            this.textInput.value = String(this.getValue());
+        }
     }
 
     async $initializeNodes() {
         await super.$initializeNodes();
-        this.input?.setAttribute('step', this.getProp('step') || '1');
-        this._initializeTextInput();
+        await this.waitForArpaNodes();
+        this.textInput = /** @type {HTMLInputElement} */ (this.nodes.textInput);
         return true;
-    }
-
-    _initializeTextInput() {
-        /** @type {HTMLInputElement | null} */
-        this.textInput = this.querySelector('.rangeField__textInput');
-        if (!this.textInput) return true;
-        this.textInput.value = String(this.input?.value);
-        listen(this.textInput, 'input', this._onTextInputChange);
     }
 
     /**
