@@ -540,7 +540,7 @@ class Field extends ArpaElement {
     //////////////////////////
 
     hasInputMask() {
-        return (
+        return Boolean(
             this.getProp('icon') ||
             this.getProp('iconRight') ||
             this.hasContent('inputMaskLhs') ||
