@@ -142,7 +142,8 @@ class FieldValidator {
      * @returns {boolean} - True if the value length is less than or equal to the maximum length, false otherwise.
      */
     maxLength(value = /** @type {string | number | unknown[]} */ (this.field.getValue()), report = true) {
-        const maxLength = this.field.getMaxLength();
+        const maxLength = this.field.getProp('maxLength');
+
         const valid = !maxLength || validateMaxLength(value, maxLength);
         if (!valid && report) {
             this.setError(this.field.i18n('errMaxLength', { maxLength: String(maxLength) }));
@@ -157,7 +158,7 @@ class FieldValidator {
      * @returns {boolean} - True if the value length is greater than or equal to the minimum length, false otherwise.
      */
     minLength(value = /** @type {string | number | unknown[]} */ (this.field.getValue()), report = true) {
-        const minLength = this.field.getMinLength();
+        const minLength = this.field.getProp('minLength');
         const valid = !minLength || validateMinLength(value, minLength);
         if (!valid && report) {
             this.setError(this.field.i18n('errMinLength', { minLength: String(minLength) }));
@@ -171,7 +172,7 @@ class FieldValidator {
      * @param {number} [length] - The length to compare against.
      * @returns {boolean} - True if the value length is equal to the specified length, false otherwise.
      */
-    length(value = /** @type {string | []} */ (this.field.getValue()), length = this.field.getLength()) {
+    length(value = /** @type {string | []} */ (this.field.getValue()), length = this.field.getProp('length')) {
         const valid = validateLength(value, length);
         if (!valid) {
             this.setError(this.field.i18n('errLength', { length: String(length) }));
@@ -234,6 +235,7 @@ class FieldValidator {
         if (typeof value === 'undefined') {
             value = field.getValue();
         }
+
         if (!value) {
             return true;
         }
@@ -245,6 +247,7 @@ class FieldValidator {
         if (!valid) {
             this.setError(this.field.i18n('errColor'));
         }
+
         return valid;
     }
 

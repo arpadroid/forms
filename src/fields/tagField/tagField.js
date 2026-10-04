@@ -6,10 +6,11 @@
  * @typedef {import('@arpadroid/lists').TagItemConfigType} TagItemConfigType
  */
 
-import { mergeObjects, isObject, defineCustomElement, listen } from '@arpadroid/tools';
+import { mergeObjects, isObject, defineCustomElement, mapHTML } from '@arpadroid/tools';
 import SelectCombo from '../selectCombo/selectCombo.js';
 import ArrayField from '../arrayField/arrayField.js';
 import { I18n } from '@arpadroid/i18n';
+import Field from '../field/field.js';
 
 const html = String.raw;
 class TagField extends SelectCombo {
@@ -27,10 +28,11 @@ class TagField extends SelectCombo {
      * @returns {TagFieldConfigType}
      */
     getDefaultConfig() {
-        this.bind('_onDeleteTag', '_onSearchInputKeyDown');
+        this.bind('_onDeleteTag');
         /** @type {TagFieldConfigType} */
         const conf = {
             hasSearch: true,
+            className: 'arpaField',
             classNames: ['selectComboField', 'tagField'],
             placeholder: I18n.getText('forms.fields.tag.lblSearchTags'),
             allowTextInput: false,
@@ -38,16 +40,9 @@ class TagField extends SelectCombo {
             icon: 'label',
             tagDefaults: {
                 onDelete: this._onDeleteTag
-                // icon: 'label'
             }
         };
         return /** @type {TagFieldConfigType} */ (mergeObjects(super.getDefaultConfig(), conf));
-    }
-
-    getTemplateVars() {
-        return mergeObjects(super.getTemplateVars(), {
-            afterInput: this.renderTagList()
-        });
     }
 
     // #endregion
@@ -65,36 +60,47 @@ class TagField extends SelectCombo {
         this._hasInitializedValue = true;
     }
 
-    async $initializeNodes() {
-        await super.$initializeNodes();
-        /** @type {TagList | null} */
-        this.tagList = this.querySelector('tag-list');
-        return true;
-    }
-
-    _initializeSearchInput() {
-        super._initializeSearchInput();
-        if (this.searchInput) { // @ts-ignore
-            listen(this.searchInput, 'keydown', this._onSearchInputKeyDown);
-        }
-    }
-
     // #endregion
 
     //////////////////////
     // #region RENDERING
     /////////////////////
 
-    renderTagList() {
-        return html`
-            <tag-list id="${this.getHtmlId()}--tagList" no-items-content="" variant="mini" has-resource>
-                ${this.renderTags()}
-            </tag-list>
-        `;
+    getSearchInput() {
+        return /** @type {HTMLInputElement | null} */ (this.nodes.input);
     }
 
-    renderTags() {
-        return this.value?.map(tag => html`<tag-item>${tag}</tag-item>`).join('');
+    $renderTemplate() {
+        return html`
+            ${Field.prototype.$renderTemplate.call(this)}
+
+            <arpa-node
+                name="input"
+                tag="input"
+                id="{getHtmlId()}"
+                type="text"
+                class="arpaField__input"
+                placeholder="{placeholder}"
+                autocomplete="off"
+                can-render="hasSearch()"
+                on-keydown="{onSearchInputKeyDown}"
+            ></arpa-node>
+
+            <arpa-node
+                id="{getHtmlId()}-options"
+                tag="select-options"
+                name="options"
+                class-name="optionsField__options"
+                zone="{optionsZone}"
+                is-content
+            ></arpa-node>
+
+            <arpa-zone name="body">
+                <tag-list id="${this.getHtmlId()}--tagList" no-items-content="" variant="mini" has-resource>
+                    ${mapHTML(this.value, tag => html`<tag-item>${tag}</tag-item>`)}
+                </tag-list>
+            </arpa-zone>
+        `;
     }
 
     // #endregion
@@ -105,10 +111,6 @@ class TagField extends SelectCombo {
 
     getFieldType() {
         return 'tag';
-    }
-
-    getTagName() {
-        return 'tag-field';
     }
 
     /**
@@ -127,6 +129,7 @@ class TagField extends SelectCombo {
      * @returns {TagItemConfigType[] | undefined}
      */
     setTags(tags) {
+        this.tagList = /** @type {TagList | null} */ (this.querySelector('tag-list'));
         /** @type {TagItemConfigType[]} */
         const _tags = /** @type {TagItemConfigType[]} */ (this.parseTags(tags));
         this.tagList?.setItems(_tags);
@@ -176,12 +179,16 @@ class TagField extends SelectCombo {
         const { tagDefaults } = this._config;
         const value = this.getValue();
         if (!value.includes(item.value)) {
-            this?.tagList?.addItem({
+            const payload = {
                 ...tagDefaults,
                 text: item.label,
-                value: item.value,
-                template: undefined
-            });
+                value: item.value
+            };
+            this.tagList?.addItem(payload);
+            const hiddenOption = this.optionsNode?.querySelector(`[value="${item.value}"]`);
+            if (hiddenOption instanceof HTMLElement) {
+                hiddenOption.style.display = 'none';
+            }
         }
         return this;
     }
@@ -193,6 +200,7 @@ class TagField extends SelectCombo {
      */
     removeValue(value) {
         const item = this.tagList?.listResource?.items?.find(item => item.value === value);
+        // @ts-ignore
         item && this.tagList?.removeItem(item);
         const hiddenOption = this.optionsNode?.querySelector(`[value="${value}"]`);
         if (hiddenOption instanceof HTMLElement) {
@@ -203,15 +211,21 @@ class TagField extends SelectCombo {
 
     getValue() {
         /** @type {TagItem[]} */
-        const items = /** @type {TagItem[]} */ (Array.from(this.tagList?.getChildren() || []));
-        return items?.map(item => item.getValue()) ?? this.value;
+        const items = /** @type {TagItem[]} */ (Array.from(this.tagList?.childNodes || []));
+        return (
+            items
+                ?.filter(item => item instanceof HTMLElement)
+                .map(item => {
+                    return item.getValue();
+                }) ?? this.value
+        );
     }
 
     allowTextInput() {
         return this.getProp('allow-text-input');
     }
 
-    async updateSearchInputLabel() {
+    updateInputLabel() {
         // override
     }
 
@@ -220,6 +234,16 @@ class TagField extends SelectCombo {
     //////////////////
     // #region EVENTS
     /////////////////
+
+    /**
+     * @param {import('../selectCombo/selectCombo.js').SelectOption} option
+     * @param {MouseEvent} event
+     */
+    onOptionSelected(option, event) {
+        const val = option.getAttribute('value') || '';
+        this.addValue({ label: option.nodes.label.textContent, value: val });
+        this._callOnChange(event);
+    }
 
     /**
      * Handles the delete tag event.
@@ -244,20 +268,29 @@ class TagField extends SelectCombo {
     }
 
     /**
+     * Handles the search event for the select combo field.
+     * @type {import('@arpadroid/tools').SearchToolCallbackType}
+     */
+    async onSearch(payload) {
+        this.inputCombo?.open();
+        return super.onSearch(payload);
+    }
+
+    /**
      * Handles the search input keydown event.
      * @param {KeyboardEvent} event - The event object.
      */
-    _onSearchInputKeyDown(event) {
-        if (this.allowTextInput() && event.key === 'Enter') {
+    onSearchInputKeyDown(event) {
+        if (this.searchInput && this.allowTextInput() && event.key === 'Enter') {
             event.preventDefault();
             this.addValue({ label: this.searchInput?.value, value: this.searchInput?.value });
-            // this.searchInput.value = '';
+            this.searchInput.value = '';
         }
     }
 
     // #endregion
 }
 
-defineCustomElement(TagField.prototype.getTagName(), TagField);
+defineCustomElement('tag-field', TagField);
 
 export default TagField;

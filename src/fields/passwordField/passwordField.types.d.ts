@@ -6,4 +6,6 @@ export type PasswordFieldConfigType = FieldConfigType & {
     mode?: 'login' | 'register';
     isConfirm?: boolean;
     lblShowPassword?: string;
+    hasVisibilityButton?: boolean;
+    lblConfirmPassword?: string;
 };

@@ -1,9 +1,9 @@
 .optionsField__options:not(.comboBox) {
-    width: 100%;
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem 1.5rem;
     align-items: center;
-    gap: 24px;
+    width: auto;
 }
 
 .optionsField__input {

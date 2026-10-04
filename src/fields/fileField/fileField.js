@@ -3,34 +3,23 @@
  * @typedef {import('./components/fileItem/fileItem.types').FileItemConfigType} FileItemConfigType
  * @typedef {import('./components/fileItem/fileItem.js').default} FileItem
  * @typedef {import('./components/fileList/fileList.js').default} FileList
- * @typedef {import('./components/fileFieldInput/fileFieldInput.js').default} FileFieldInput
+ * @typedef {import("@arpadroid/ui").DropArea} DropArea
  */
 
 import { I18n } from '@arpadroid/i18n';
 import Field from '../field/field.js';
-import { attrString, defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects, renderNode } from '@arpadroid/tools';
 
 const html = String.raw;
 class FileField extends Field {
-    /** @type {FileFieldInput} */
-    inputComponent = this.inputComponent;
-    /** @type {FileFieldInput | null} */
-    input = this.input;
-    /** @type {FileFieldConfigType} */
-    _config = this._config;
     /////////////////////////
-    // #region INITIALIZATION
+    // #region Setup
     /////////////////////////
 
-    /**
-     * Creates an instance of FileField.
-     * @param {FileFieldConfigType} config
-     */
-    constructor(config) {
-        super(config);
-        this._onFileSelectClick = this._onFileSelectClick.bind(this);
-        this._onChange = this._onChange.bind(this);
-    }
+    /** @type {FileFieldConfigType} */
+    _config = this._config;
+    /** @type {File[]} */
+    uploads = [];
 
     /**
      * Returns default config.
@@ -39,26 +28,21 @@ class FileField extends Field {
     getDefaultConfig() {
         /** @type {FileFieldConfigType} */
         const conf = {
-            className: 'fileField',
-            inputTemplate: html`
-                <file-field-input {inputAttr}></file-field-input>
-                <div class="fileField__fileLists">{fileList} {uploadList}</div>
-                {fileSelect}
-            `,
+            classNames: ['fileField'],
             listComponent: 'file-list',
             uploadListComponent: 'file-list',
             fileComponent: 'file-item',
+            fileListIcon: 'gallery_thumbnail',
             inputComponent: 'file-field-input',
-            lblUploads: this.i18n('lblUploads', {}, {}, 'common.labels'),
-            fileListLabel: this.i18n('lblUploadedFiles'),
+            lblUploads: '{i18n:lblUploads}',
+            fileListLabel: this.i18nText('lblUploadedFiles'),
             lblAddFile: this.i18n('lblAddFile'),
+            lblRemoveFile: '{i18n:lblRemoveFile}',
             hasDropArea: false,
             hasInputMask: false,
             allowMultiple: false,
             extensions: [],
-            inputAttributes: {
-                type: 'file'
-            }
+            inputType: 'file'
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -69,17 +53,22 @@ class FileField extends Field {
     /////////////////////
 
     /**
-     * Adds an upload to the upload list.
-     * @param {File} file - The file to upload.
-     * @returns {FileItem | undefined}
+     * Adds a file to the uploads array.
+     * @param {File} file - The file to add.
+     * @returns {boolean} True if the file was added, false otherwise.
      */
     addUpload(file) {
-        return this.uploadList?.addItem({
-            file,
-            lblRemoveFile: this.i18nText('lblRemoveUpload'),
-            onDelete: this._config.onDeleteUpload,
-            key: file.name + file.size
-        });
+        const isValid = this?.validator?.validateFile(file);
+        if (isValid) {
+            this.uploads.push(file);
+            this.uploadList?.addItem({
+                file,
+                lblRemoveFile: this.i18nText('lblRemoveFile'),
+                onDelete: this._config.onDeleteUpload,
+                key: file.name + file.size
+            });
+        }
+        return Boolean(isValid);
     }
 
     /**
@@ -94,7 +83,6 @@ class FileField extends Field {
 
     clearUploads() {
         this.uploadList?.removeItems();
-        this.inputComponent && (this.inputComponent.uploads = []);
     }
 
     getFieldType() {
@@ -118,11 +106,7 @@ class FileField extends Field {
     }
 
     hasUploadWarning() {
-        return Boolean(
-            !this.allowMultiple() &&
-                Number(this.inputComponent?.uploads?.length) > 0 &&
-                Number(this.fileList?.itemsNode?.children.length) > 0
-        );
+        return Boolean(Number(this.uploads?.length) > 0 && Number(this.fileList?.itemsNode?.children.length) > 0);
     }
 
     getI18nKey() {
@@ -145,12 +129,6 @@ class FileField extends Field {
 
     resetValue() {
         this.clearUploads();
-    }
-
-    allowMultiple() {
-        const hasAttr = this.hasAttribute('allow-multiple');
-        const attr = this.getAttribute('allow-multiple');
-        return (hasAttr && attr !== 'false') || (!hasAttr && this._config.allowMultiple);
     }
 
     /**
@@ -200,23 +178,19 @@ class FileField extends Field {
     }
 
     getValue() {
-        return this.inputComponent?.getUploads();
+        return this?.getUploads();
+    }
+
+    getUploads() {
+        return this.uploads;
     }
 
     getOutputValue() {
         const value = super.getOutputValue();
-        if (!this.allowMultiple() && Array.isArray(value)) {
+        if (!this.hasProp('allowMultiple') && Array.isArray(value)) {
             return value[0];
         }
         return value;
-    }
-
-    /**
-     * Returns input component.
-     * @returns {FileFieldInput | null}
-     */
-    getInput() {
-        return this.querySelector('input[type="file"]');
     }
 
     // #endregion
@@ -225,44 +199,58 @@ class FileField extends Field {
     // #region RENDER
     /////////////////
 
-    getTemplateVars() {
-        return {
-            ...super.getTemplateVars(),
-            fileList: this.renderFileList(),
-            uploadList: this.renderUploadList(),
-            fileSelect: this.renderFileSelect()
-        };
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="inputWrapper">
+                <div class="fileField__fileLists">
+                    <arpa-node
+                        name="fileList"
+                        tag="{listComponent}"
+                        id="{id}-fileList"
+                        class="fileField__fileList"
+                        title-icon="{fileListIcon}"
+                        title="{fileListLabel}"
+                    >
+                        <template template-type="list-item" lbl-remove-file="${this.getProp('lblRemoveFile')}"></template>
+                    </arpa-node>
+                    <arpa-node
+                        tag="${this.getProp('uploadListComponent')}"
+                        class="fileField__uploadList"
+                        name="uploadList"
+                        id="{id}-uploadList"
+                        title-icon="{uploadListIcon}"
+                        can-render="hasUploads()"
+                        title="{i18n:lblUploads}"
+                    ></arpa-node>
+                </div>
+                <arpa-node
+                    $on-drop="{onInputChange}"
+                    name="dropArea"
+                    tag="drop-area"
+                    input-id="{id}"
+                    can-render="hasDropArea()"
+                ></arpa-node>
+                <arpa-node
+                    name="selectButton"
+                    tag="arpa-button"
+                    icon="upload_file"
+                    class="fileField__selectButton"
+                    can-render="!hasDropArea()"
+                    on-click="{onFileSelectClick}"
+                >
+                    {lblAddFile}
+                </arpa-node>
+            </arpa-zone>
+        `;
     }
 
     renderFileSelect(inputId = this.getHtmlId()) {
-        return this.hasDropArea()
-            ? html`<drop-area input-id="${inputId}"></drop-area>`
-            : html`<arpa-button icon="upload_file" class="fileField__selectButton">
-                  ${this.getProp('lbl-add-file')}
-              </arpa-button>`;
+        return this.hasDropArea() ? html`<drop-area input-id="${inputId}"></drop-area>` : html``;
     }
 
-    renderUploadList(id = this.getHtmlId()) {
-        const { uploadListComponent: list, uploadListIcon = 'publish' } = this._config;
-
-        return html`<${list} ${attrString({
-            id: `${id}-uploadList`,
-            class: 'fileField__uploadList',
-            'title-icon': uploadListIcon
-        })}> 
-                <zone name="title">${this.getProp('lbl-uploads')}</zone>
-            </${list}>`;
-    }
-
-    renderFileList(id = this.getHtmlId()) {
-        const { listComponent: list, fileListIcon = 'gallery_thumbnail' } = this._config;
-        return html`<${list} ${attrString({
-            id: `${id}-fileList`,
-            class: 'fileField__fileList',
-            'title-icon': fileListIcon
-        })}>
-            <zone name="title">${this.getProp('file-list-label')}</zone>
-        </${list}>`;
+    hasUploads() {
+        return true;
     }
 
     // #endregion
@@ -273,31 +261,32 @@ class FileField extends Field {
 
     async $initializeNodes() {
         await super.$initializeNodes();
-        this.classList.add(!this.allowMultiple() ? 'fileField--single' : 'fileField--multiple');
-        this._initializeFileList();
-        /** @type {FileList | null} */
-        this.uploadList = this.querySelector('.fileField__uploadList');
-        /** @type {FileList | null} */
-        this.fileList = this.querySelector('.fileField__fileList');
-        this.dropArea = this.querySelector('drop-area');
-        /** @type {FileFieldInput} */
-        this.input = this.getInput();
+        await this.waitForArpaNodes();
+        this.classList.add(!this.getProp('allowMultiple') ? 'fileField--single' : 'fileField--multiple');
+        this.uploadList = /** @type {FileList | undefined} */ (this.nodes.uploadList);
+        this.dropArea = /** @type {DropArea | undefined} */ (this.nodes.dropArea);
 
-        this.input?.removeEventListener('change', this._onChange);
-        this.input?.addEventListener('change', this._onChange);
-        this.fileSelectBtn = this.querySelector('.fileField__selectButton');
-        this.fileSelectBtn?.addEventListener('click', this._onFileSelectClick);
+        this.initializeInput();
+        this.initializeFileList();
+
         this.handleUploadWarning();
         return true;
     }
 
-    _initializeFileList() {
-        /** @type {FileList | null} */
-        this.fileList = this.querySelector('.fileField__fileList');
-        this.fileList?.onRenderReady(() => {
-            const files = this.getFileNodes();
-            files?.length && this.fileList?.addItemNodes(files);
-        });
+    async initializeInput() {
+        this.input = /** @type {HTMLInputElement | undefined} */ (this.getInput());
+        if (!this.input) return;
+        this.input.style.display = 'none';
+        if (this.hasProp('allowMultiple')) {
+            this.input.setAttribute('multiple', '');
+        }
+    }
+
+    async initializeFileList() {
+        this.fileList = /** @type {FileList | null} */ (this.nodes.fileList);
+        await this.fileList?.promise;
+        const files = this.getFileNodes();
+        files?.length && this.fileList?.addItemNodes(files);
     }
 
     async handleUploadWarning() {
@@ -317,13 +306,9 @@ class FileField extends Field {
     }
 
     renderUploadWarning() {
-        return html`
-            <warning-message
-                i18n="${this.i18nKey}.msgFileOverwriteWarning"
-                class="fileField__overwriteWarning"
-                can-close
-            ></warning-message>
-        `;
+        return html`<warning-message class="fileField__overwriteWarning" can-close>
+            ${this.i18n('msgFileOverwriteWarning')}
+        </warning-message>`;
     }
 
     // #endregion
@@ -333,18 +318,55 @@ class FileField extends Field {
     /////////////////
 
     /**
+     * Handles the change event for the input element.
+     * @param {Event} event - The event object.
+     * @param {File[] | FileList | null} _files - The files to process.
+     */
+    onInputChange(event, _files = this.input?.files ? Array.from(this.input.files) : null) {
+        const files = _files || [];
+        if (!Array.isArray(files) || !files.length) {
+            return;
+        }
+        const multiple = this.hasProp('allowMultiple');
+        /** @type {File[]} */
+        const invalidUploads = [];
+        if (!multiple && !invalidUploads.length) {
+            this.uploads = [];
+            this?.clearUploads();
+        }
+        const uploads = files.filter(file => {
+            const isValid = this.addUpload(file);
+            if (!isValid) {
+                invalidUploads.push(file);
+            }
+            return isValid;
+        });
+        if (uploads.length) {
+            this.signal('filesAdded', uploads, this);
+        }
+        if (invalidUploads.length) {
+            this.signal('error', invalidUploads, this);
+        } else {
+            this._callOnChange(event);
+        }
+
+        this.updateErrors();
+    }
+
+    /**
      * Event handler for when the value of the input changes.
      * @param {Event} event
      */
-    _onChange(event) {
+    onChange(event) {
         this.validator && (this.validator._errors = []);
-        this._callOnChange(event);
+        this.onInputChange(event);
         this.handleUploadWarning();
     }
 
     onSubmitSuccess() {
         this.reconcileListItems();
         requestAnimationFrame(() => {
+            this.uploads = [];
             this.handleUploadWarning();
         });
     }
@@ -358,14 +380,14 @@ class FileField extends Field {
         requestAnimationFrame(() => {
             this.clearUploads();
         });
-        if (this.allowMultiple()) {
+        if (this.hasProp('allowMultiple')) {
             uploadItems?.length && this.fileList?.listResource?.addItems(uploadItems);
         } else {
             uploadItems?.length && this.fileList?.listResource?.setItems(uploadItems);
         }
     }
 
-    _onFileSelectClick() {
+    onFileSelectClick() {
         this.input?.click();
     }
 

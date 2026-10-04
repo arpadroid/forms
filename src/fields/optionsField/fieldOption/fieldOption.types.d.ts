@@ -1,6 +1,6 @@
-import { ArpaElementConfigType } from '@arpadroid/ui';
 import FieldOption from './fieldOption.js';
 import OptionsField from '../optionsField.js';
+import { ListItemConfigType } from '@arpadroid/lists';
 
 export type FieldOptionOnChangePayloadType = {
     value: string;
@@ -11,19 +11,12 @@ export type FieldOptionOnChangePayloadType = {
 
 export type FieldOptionOnChangeType = (checked: boolean, payload: FieldOptionOnChangePayloadType) => void;
 
-export type FieldOptionConfigType = ArpaElementConfigType & {
+export type FieldOptionConfigType = Omit<ListItemConfigType, 'title'> & {
     label?: string;
-    subTitle?: string;
     value?: string;
+    inputType?: string;
     disabled?: boolean;
     selected?: boolean;
+    inputTag?: string;
     hidden?: boolean;
-    tooltip?: string;
-    icon?: string;
-    iconLeft?: string;
-    template?: string;
-    className?: string;
-    content?: string;
-    onChange?: FieldOptionOnChangeType;
-    action?: (...args: unknown[]) => void;
 };

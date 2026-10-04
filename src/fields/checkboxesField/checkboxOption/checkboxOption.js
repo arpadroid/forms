@@ -3,7 +3,7 @@
  * @typedef {import('../../checkboxesField/checkboxesField.js').default} RadioField
  */
 
-import { defineCustomElement } from '@arpadroid/tools';
+import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import RadioOption from '../../radioField/radioOption/radioOption.js';
 import CheckboxesField from '../checkboxesField.js';
 
@@ -13,28 +13,32 @@ import CheckboxesField from '../checkboxesField.js';
 class CheckboxOption extends RadioOption {
     /** @type {CheckboxesField} */
     field = this.field;
-    /**
-     * Renders the input element for the checkbox option.
-     * @returns {string} The rendered input element.
-     */
-    renderInput() {
-        const name = this.field.getId() + '[]';
-        return super.renderInput('checkbox', name);
-    }
-
-    async $onConnected() {
-        await super.$onConnected();
-        if (this.input && this.field) {
-            this.input.checked = this.field?.hasValue(this.getAttribute('value'));
-        }
-    }
 
     /**
-     * Handles the change event of the checkbox option.
-     * @param {Event} event - The onChange event.
-     * @param {boolean} [callOnChange] - Indicates whether to call the onChange callback.
+     * @returns {FieldOptionConfigType}
      */
-    _onChange(event, callOnChange = true) {
+    getDefaultConfig() {
+        /** @type {FieldOptionConfigType} */
+        const config = {
+            inputType: 'checkbox',
+            inputTag: 'input'
+        };
+        return mergeObjects(super.getDefaultConfig(), config);
+    }
+
+    getName() {
+        return this.field.getId() + '[]';
+    }
+
+    isSelected() {
+        return this.field.hasValue(this.getAttribute('value'));
+    }
+
+    /**
+     * @param {Event} event
+     * @param {boolean} [callOnChange]
+     */
+    onChange(event, callOnChange = true) {
         const input = /** @type {HTMLInputElement} */ (event?.target);
         const checked = input?.checked;
         /** @type {string | number | boolean} */
@@ -48,7 +52,9 @@ class CheckboxOption extends RadioOption {
         } else {
             this.field?.removeValue(value);
         }
-        super._onChange(event, callOnChange);
+        if (callOnChange) {
+            this.field?._callOnChange(event);
+        }
     }
 }
 

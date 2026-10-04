@@ -23,6 +23,7 @@ export type FormConfigType = ArpaElementConfigType & {
     submitIcon?: string;
     errorMessage?: string;
     title?: string;
+    hasMessages?: boolean;
     successMessage?: string;
 };
 

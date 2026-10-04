@@ -6,19 +6,15 @@ class MonthField extends DateField {
         return mergeObjects(super.getDefaultConfig(), {
             format: 'YYYY-MM',
             inputFormat: 'YYYY-MM',
-            inputAttributes: { type: 'month' }
+            inputType: 'month',
         });
     }
 
     getFieldType() {
         return 'month';
     }
-
-    getTagName() {
-        return 'month-field';
-    }
 }
 
-defineCustomElement(MonthField.prototype.getTagName(), MonthField);
+defineCustomElement('month-field', MonthField);
 
 export default MonthField;

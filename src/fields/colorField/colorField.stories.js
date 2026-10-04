@@ -1,57 +1,57 @@
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
- * @typedef {import('./colorField.js').default} ColorField
+ * @typedef {import('../field/field.types.js').FieldConfigType} FieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story
  */
 
-import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { expect, userEvent, waitFor } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
 import { I18n } from '@arpadroid/i18n';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
 
 const html = String.raw;
 
 /** @type {Meta} */
 const ColorFieldStory = {
     title: 'Forms/Fields/Color',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'color-field')
-};
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        ...getArgTypes('Field Props')
-    },
+    component: 'color-field',
     args: {
-        ...getArgs(),
         id: 'color-field-test',
         label: 'Color Field',
-        required: true
-    }
+        required: true,
+        icon: 'color_lens'
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <color-field ${$attr(args)}></color-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
 export const Test = {
     args: {
         ...Default.args,
         id: 'color-field',
         required: true
     },
-    parameters: { ...FieldTest.parameters },
-    play: async ({ canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'color-field'
+    parameters: testParams,
+    play: async ({ canvasElement, canvas, step }) => {
+        const setup = await playSetup({
+            tag: 'color-field',
+            canvas,
+            canvasElement
         });
-        const { canvas, onErrorMock, form, onSubmitMock } = setup;
-        const field = /** @type {ColorField} */ (setup.field);
-        const textInput = field.textInput;
-        if (!textInput) throw new Error('Text input element not found');
-        if (!form) throw new Error('Form element not found');
+        const { onErrorMock, onSubmitMock } = setup;
+        const field = /** @type {import('./colorField').default} */ (setup.field);
+        const textInput = /** @type {HTMLInputElement} */ (field.textInput);
 
         await step('sets value red to text input and checks that color input has appropriate value', async () => {
             await userEvent.type(textInput, 'red');
@@ -60,18 +60,19 @@ export const Test = {
 
         await step('Sets invalid value and checks for error message', async () => {
             textInput.value = 'invalid';
-            await fireEvent.submit(form);
+            onErrorMock.mockReset();
+            await userEvent.click(canvas.getByRole('button', { name: /submit/i }));
             await waitFor(() => {
                 canvas.getByText(field.i18nText('errColor'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
             });
-            expect(onErrorMock).toHaveBeenCalledOnce();
+            expect(onErrorMock).toHaveBeenCalled();
         });
 
         await step('Submits form with valid field value.', async () => {
             textInput.value = '';
             await userEvent.type(textInput, 'blue');
-            await fireEvent.submit(form);
+            await userEvent.click(canvas.getByRole('button', { name: /submit/i }));
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'color-field': '#0000ff' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

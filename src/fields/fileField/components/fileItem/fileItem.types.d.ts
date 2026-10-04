@@ -7,6 +7,8 @@ export type FileItemConfigType = ListItemConfigType & {
     // list item props
     // nav?: IconMenuInterface;
     action?: () => void;
+    hasDelete?: boolean;
+    hasEdit?: boolean;
     error?: string;
     extension?: string;
     file?: File;
@@ -19,6 +21,7 @@ export type FileItemConfigType = ListItemConfigType & {
     isUploading?: boolean;
     link?: string;
     lblRemoveFile?: string;
+    lblEditFile?: string;
     name?: string;
     onDelete?: (fileItem: FileItem) => Promise<unknown>;
     onEdit?: (fileItem: FileItem) => void;
@@ -29,7 +32,6 @@ export type FileItemConfigType = ListItemConfigType & {
     rhsContent?: string;
     size?: string;
     status?: string;
-    subTitle?: string;
     title?: string;
     titleIcon?: string;
     titleLink?: string;
@@ -37,7 +39,6 @@ export type FileItemConfigType = ListItemConfigType & {
     url?: string;
     key?: string;
 };
-
 
 export type FileItemPayloadType = Record<string, unknown> & {
     extension?: string;

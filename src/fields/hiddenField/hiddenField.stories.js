@@ -1,45 +1,49 @@
 /**
- * @typedef {import('../field/field.types').FieldConfigType} FieldConfigType
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('../field/field.types.js').FieldConfigType} FieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story
  */
 
-import { expect, fireEvent, waitFor } from 'storybook/test';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
+import { expect, waitFor, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
 import { I18n } from '@arpadroid/i18n';
-import { playSetup, renderField } from '../field/field.stories.util.js';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
-const TextFieldStory = {
+const HiddenFieldStory = {
     title: 'Forms/Fields/Hidden',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'hidden-field')
+    component: 'hidden-field',
+    args: {
+        id: 'hidden-field',
+        value: 'hidden value'
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <hidden-field ${$attr(args)}></hidden-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {},
-    args: {
-        value: 'hidden value',
-        id: 'hidden-field'
-    }
+    parameters: defaultParams
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
-    args: { ...Default.args },
-    parameters: { ...FieldTest.parameters },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const { submitButton, canvas, onSubmitMock } = await playSetup(canvasElement, {
-            fieldTag: 'hidden-field'
+    parameters: testParams,
+    play: async ({ canvasElement, canvas, step }) => {
+        const { submitButton, onSubmitMock } = await playSetup({
+            tag: 'hidden-field',
+            canvas,
+            canvasElement
         });
-        if (!submitButton) throw new Error('Submit button not found');
         await step('Submits form with field value.', async () => {
-            await fireEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'hidden-field': 'hidden value' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -48,4 +52,4 @@ export const Test = {
     }
 };
 
-export default TextFieldStory;
+export default HiddenFieldStory;

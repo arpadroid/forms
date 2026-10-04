@@ -13,9 +13,10 @@
 .fieldOption {
     display: flex;
     flex-direction: row;
-    align-items: center;
     gap: 12px;
+    align-items: center;
     height: var(--input-height);
+
     label {
         cursor: pointer;
     }
@@ -24,16 +25,21 @@
 .fieldOption__handler {
     display: flex;
     flex-direction: row;
-    align-items: center;
     gap: 12px;
-    cursor: pointer;
+    align-items: center;
     height: var(--input-height);
+    cursor: pointer;
+}
+
+.fieldOption__main {
+    display: flex;
+    gap: 12px;
 }
 
 .fieldOption__content {
     display: flex;
-    flex-direction: column;
     flex: 1 1 auto;
+    flex-direction: column;
 }
 
 .fieldOption__label.fieldOption__label {
@@ -41,6 +47,6 @@
     font-size: var(--field-option-size);
     font-weight: var(--field-option-weight);
     color: var(--field-option-color);
-    text-underline-offset: 2px;
     text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
 }

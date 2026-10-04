@@ -3,22 +3,13 @@ import Field from '../field/field.js';
 const html = String.raw;
 
 class ColorField extends Field {
-    /** @type {HTMLInputElement | null} */
-    input = this.input;
     /** @type {string[]} _validations - The validation method signatures for the color field.*/
     _validations = [...super.getValidations(), 'color'];
 
     getDefaultConfig() {
         this.bind('updateColorInput', 'onInput');
         return mergeObjects(super.getDefaultConfig(), {
-            icon: 'color_lens',
-            inputTemplate: html`
-                <input id="{id}" type="text" class="fieldInput colorField__textInput" />
-                <div class="colorField__colorInputWrapper">
-                    <input class="colorField__colorInput" aria-labelledby="{id}-label" type="color" />
-                </div>
-            `,
-            inputAttributes: { type: 'color' }
+            icon: 'color_lens'
         });
     }
 
@@ -26,22 +17,29 @@ class ColorField extends Field {
         return 'color';
     }
 
-    getTagName() {
-        return 'color-field';
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="inputMaskRhs">
+                <div class="colorField__colorInputWrapper">
+                    <arpa-node
+                        tag="input"
+                        name="colorInput"
+                        class="colorField__colorInput"
+                        aria-labelledby="{id}-label"
+                        on-input="{onInput}"
+                        type="color"
+                    />
+                </div>
+            </arpa-zone>
+        `;
     }
 
-    async _initializeInputNode() {
-        this.input = this.querySelector('input[type="color"]');
-        this.input?.removeEventListener('input', this.onInput);
-        this.input?.addEventListener('input', this.onInput);
-        /** @type {HTMLInputElement | null} */
-        this.textInput = this.querySelector('input[type="text"]');
-        if (this.textInput) {
-            this.textInput.removeEventListener('keyup', this.updateColorInput);
-            this.textInput.addEventListener('keyup', this.updateColorInput);
-            this.textInput.value = this.getProp('value') ?? '';
-        }
-        requestAnimationFrame(() => this.updateColorInput(undefined, false));
+    async $initializeNodes() {
+        await super.$initializeNodes();
+        await this.waitForArpaNodes();
+        this.colorInput = /** @type {HTMLInputElement | null} */ (this.nodes.colorInput);
+        this.textInput = /** @type {HTMLInputElement | null} */ (this.nodes.input);
         return true;
     }
 
@@ -55,11 +53,21 @@ class ColorField extends Field {
         const hexValue = stringToHex(value);
         const isValid = validateColor(hexValue);
         if (isValid) {
-            this.input && (this.input.value = hexValue);
+            this.colorInput && (this.colorInput.value = hexValue);
         }
         if (callOnChange) {
             requestAnimationFrame(() => this._callOnChange(event));
         }
+    }
+
+    getValue() {
+        return this.colorInput?.value ?? '';
+    }
+
+    /** @param {Event | undefined} event */
+    _callOnChange(event) {
+        this.updateColorInput(event, false);
+        super._callOnChange?.(event);
     }
 
     /**
@@ -67,14 +75,13 @@ class ColorField extends Field {
      * @param {Event} event
      */
     onInput(event) {
-        if (this.textInput && this.input) {
-            this.textInput.value = this.input.value;
-            this.textInput.value = this.input.value;
+        if (this.textInput && this.colorInput) {
+            this.textInput.value = this.colorInput.value;
         }
         this._callOnChange(event);
     }
 }
 
-defineCustomElement(ColorField.prototype.getTagName(), ColorField);
+defineCustomElement('color-field', ColorField);
 
 export default ColorField;

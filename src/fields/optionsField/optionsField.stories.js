@@ -1,51 +1,63 @@
 /**
- * @typedef {import('./optionsField.js').default} OptionsField
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./optionsField.types.js').OptionsFieldConfigType} OptionsFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<OptionsFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<OptionsFieldConfigType>} Story
  */
 
-/* eslint-disable sonarjs/no-duplicate-string */
 import { expect, fn, waitFor } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { playSetup, renderField } from '../field/field.stories.util.js';
-import { getArgs, getArgTypes, renderFieldContent } from './optionsField.stories.util.js';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
 const OptionsFieldStory = {
     title: 'Forms/Fields/Options',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'options-field', renderFieldContent)
+    component: 'options-field',
+    args: {
+        id: 'options-field',
+        label: 'Options field',
+        required: true,
+        autoFetchOptions: true
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <options-field ${$attr(args)}>
+                <field-option value="option1" icon="grocery" subtitle="Subtitle 1">Option 1</field-option>
+                <field-option value="option2" icon="nutrition" subtitle="Subtitle 2">Option 2</field-option>
+                <field-option value="option3" icon="person">Option 3</field-option>
+            </options-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
     name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: { ...getArgTypes() },
-    args: { ...getArgs() }
+    parameters: defaultParams
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
-    args: {
-        ...Default.args
-    },
-    play: async ({ canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, { fieldTag: 'options-field' });
-        const { canvas } = setup;
-        const field = /** @type {OptionsField} */ (setup.field);
+    parameters: testParams,
+    play: async ({ canvasElement, canvas, step }) => {
+        const setup = await playSetup({
+            tag: 'options-field',
+            canvas,
+            canvasElement
+        });
 
-        step('Renders the field with three radio options', async () => {
+        const field = /** @type {import('./optionsField.js').default} */ (setup.field);
+
+        await step('Renders the field with three radio options', async () => {
             expect(canvas.getByText('Options field')).toBeInTheDocument();
             expect(canvas.getByText('Option 1')).toBeInTheDocument();
             expect(canvas.getByText('Option 2')).toBeInTheDocument();
             expect(canvas.getByText('Option 3')).toBeInTheDocument();
         });
 
-        step('sets fetchOptions, fetches options and renders them', async () => {
+        await step('Sets fetchOptions, fetches options and renders them', async () => {
             const fetchOptions = fn(async () => {
                 return Promise.resolve([
                     { value: 'option4', label: 'Option 4', icon: 'grocery' },
@@ -61,7 +73,7 @@ export const Test = {
                 expect(canvas.getByText('Option 6')).toBeInTheDocument();
             });
         });
-        await new Promise(resolve => setTimeout(resolve, 50));
+
         await step('Sets a new list of options to the field', async () => {
             field.setOptions([
                 { value: 'option7', label: 'Option 7', icon: 'grocery' },

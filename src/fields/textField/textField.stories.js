@@ -1,72 +1,66 @@
 /** @typedef {import('../field/field.types').FieldConfigType} FieldConfigType */
-/** @typedef {import('@storybook/web-components-vite').Meta} Meta */
-/** @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj */
-/** @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext */
-/** @typedef {import('@storybook/web-components-vite').Args} Args */
+/** @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta */
+/** @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story */
+
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { playSetup } from '../field/field.stories';
+import { testParams, defaultParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+
+const html = String.raw;
 
 /** @type {Meta} */
 const TextFieldStory = {
     title: 'Forms/Fields/Text',
     tags: [],
-    render: (args, story) => renderField(args, story, 'text-field')
-};
-
-const category = 'Text Field Props';
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        regex: { table: { category } },
-        regexMessage: { table: { category } },
-        ...getArgTypes()
-    },
+    component: 'text-field',
     args: {
         regex: '^([a-z0-9]+)$',
         regexMessage: 'Only lowercase letters and numbers are allowed.',
-        ...getArgs(),
         id: 'text-field',
         label: 'Text Field',
+        labelIcon: 'label',
+        tooltip: 'This is a text field.',
         icon: 'match_case',
         required: true
-    }
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <text-field ${$attr(args)}></text-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
-    args: {
-        ...Default.args,
-        required: true,
-        regex: Default.args?.regex,
-        regexMessage: Default.args?.regexMessage
-    },
-    play: async ({ canvasElement, step }) => {
-        const setup = await playSetup(canvasElement);
-        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-        const input = /** @type {HTMLInputElement | null} */ (setup.input);
-        if (!input) throw new Error('Input element not found');
-        await step('Submits form with invalid regex value: "some value".', () => {
-            input.value = 'some value';
-            submitButton?.click();
+    parameters: testParams,
+
+    play: async ({ canvasElement, step, canvas }) => {
+        const setup = await playSetup({ canvas, canvasElement, tag: 'text-field' });
+        const { submitButton, onErrorMock, onSubmitMock, input } = setup;
+
+        await step('Submits form with invalid regex value: "some value".', async () => {
+            await userEvent.type(input, 'some value');
+            await userEvent.click(submitButton);
         });
 
         await step('Checks for error message.', async () => {
-            await waitFor(() => {
-                canvas.getByText('Only lowercase letters and numbers are allowed.');
-                canvas.getByText(I18n.getText('forms.form.msgError'));
-                expect(onErrorMock).toHaveBeenCalled();
-            });
+            canvas.getByText('Only lowercase letters and numbers are allowed.');
+            canvas.getByText(I18n.getText('forms.form.msgError'));
+            expect(onErrorMock).toHaveBeenCalled();
         });
 
         await step('Submits form with valid field value.', async () => {
-            input.value = 'valid';
-            submitButton?.click();
+            await userEvent.clear(input);
+            await userEvent.type(input, 'valid');
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'text-field': 'valid' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

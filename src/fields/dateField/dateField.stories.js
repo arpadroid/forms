@@ -1,48 +1,49 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('./dateField.js').default} DateField
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('./dateField.types.js').DateFieldConfigType} DateFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<DateFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<DateFieldConfigType>} Story
  */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { playSetup, renderField } from '../field/field.stories.util.js';
-import { getArgs, getArgTypes } from './dateField.stories.util.js';
-const category = 'Date Field Props';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
+
 /** @type {Meta} */
 const DateFieldStory = {
     title: 'Forms/Fields/Date',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'date-field')
-};
-/** @type {StoryObj} */ export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: getArgTypes(),
+    component: 'date-field',
     args: {
+        id: 'date-field',
+        label: 'Date Field',
         format: 'D MMM YYYY',
-        ...getArgs()
-    }
-};
-
-/** @type {StoryObj} */
-export const Test = {
-    parameters: { ...FieldTest.parameters },
-    args: {
-        ...Default.args,
         required: true,
         value: '12 June 2021'
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'date-field'
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <date-field ${$attr(args)}></date-field>
+        </arpa-form>
+    `
+};
+
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
+export const Test = {
+    parameters: testParams,
+    play: async ({ canvasElement, canvas, step }) => {
+        const { submitButton, onErrorMock, onSubmitMock, input, field } = await playSetup({
+            tag: 'date-field',
+            canvas,
+            canvasElement
         });
-        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-        const input = /** @type {HTMLInputElement} */ (setup.input);
-        const field = /** @type {DateField} */ (setup.field);
 
         await step('Renders the date field with default value', async () => {
             expect(input?.value).toBe('2021-06-12');
@@ -65,13 +66,13 @@ export const Test = {
 
         await step('Submits form with different output formats and checks for expected submission values', async () => {
             field.setValue('1 October 1983');
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '1 Oct 1983' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
             });
             field.setValue(new Date('17 July 1984'));
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '17 Jul 1984' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
@@ -83,7 +84,7 @@ export const Test = {
             async () => {
                 field.setAttribute('disable-past', 'true');
                 field.setValue('31 Feb 1900');
-                submitButton?.click();
+                await userEvent.click(submitButton);
                 await waitFor(() => {
                     canvas.getByText(I18n.getText('forms.fields.date.errPastDisabled'));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -92,7 +93,7 @@ export const Test = {
 
                 field.setAttribute('disable-future', 'true');
                 field.setValue('1 Jan 3000');
-                submitButton?.click();
+                await userEvent.click(submitButton);
                 await waitFor(() => {
                     canvas.getByText(I18n.getText('forms.fields.date.errFutureDisabled'));
                     canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -107,7 +108,7 @@ export const Test = {
             field.setAttribute('min', '1 Jan 2000');
             field.setAttribute('max', '31 Dec 2020');
             field.setValue('1 Jan 1999');
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.date.errMinDate', { date: '1 Jan 2000' }));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -115,7 +116,7 @@ export const Test = {
             });
 
             field.setValue('31 Dec 2021');
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.date.errMaxDate', { date: '31 Dec 2020' }));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -125,7 +126,7 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             field.setValue(new Date('30 December 2020'));
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenLastCalledWith({ 'date-field': '30 Dec 2020' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

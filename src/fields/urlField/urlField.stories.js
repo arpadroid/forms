@@ -1,47 +1,56 @@
-/** @typedef {import('@storybook/web-components-vite').Meta} Meta */
-/** @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj */
-/** @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext */
-/** @typedef {import('@storybook/web-components-vite').Args} Args */
+/**
+ * @typedef {import('../field/field.types').FieldConfigType} FieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story
+ */
+
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
 const UrlFieldStory = {
     title: 'Forms/Fields/Url',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'url-field')
-};
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: { ...getArgTypes() },
     args: {
-        ...getArgs(),
         id: 'url-field',
-        label: 'URL Field'
-    }
-};
-
-/** @type {StoryObj} */
-export const Test = {
-    parameters: { ...FieldTest.parameters },
-    args: {
-        ...Default.args,
+        label: 'URL Field',
+        placeholder: 'Please enter a value',
+        description: 'Test description',
+        footnote: 'This is a footnote',
+        tooltip: 'test tooltip',
         required: true
     },
-    play: async (/** @type {StoryContext} */ { canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, { fieldTag: 'url-field' });
-        const { submitButton, canvas, onErrorMock, onSubmitMock } = setup;
-        const input = /** @type {HTMLInputElement | null} */ (setup.input);
-        if (!input) throw new Error('Input element not found');
+    component: 'url-field',
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <url-field ${$attr(args)}></url-field>
+        </arpa-form>
+    `
+};
+
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
+export const Test = {
+    parameters: testParams,
+    play: async ({ canvasElement, canvas, step }) => {
+        const { submitButton, onErrorMock, onSubmitMock, input } = await playSetup({
+            tag: 'url-field',
+            canvas,
+            canvasElement
+        });
 
         await step('Submits form with invalid regex value "some value" and checks for error messages.', async () => {
             input.value = 'some value';
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.fields.url.errUrl'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -51,7 +60,7 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             input.value = 'https://www.example.com';
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'url-field': 'https://www.example.com' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

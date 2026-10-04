@@ -1,57 +1,58 @@
 /**
- * @typedef {import('./radioField.js').default} RadioField
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('../optionsField/optionsField.types.js').OptionsFieldConfigType} OptionsFieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<OptionsFieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<OptionsFieldConfigType>} Story
  */
 
+import { waitFor, expect, userEvent } from 'storybook/test';
 import { I18n } from '@arpadroid/i18n';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { waitFor, expect } from 'storybook/test';
-import { getArgs, getArgTypes, playSetup, renderField, renderScript } from '../field/field.stories.util.js';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
 
 const html = String.raw;
-
-function renderFieldContent() {
-    return html`<radio-option value="option1" label="Option 1"></radio-option>
-        <radio-option value="option2" label="Option 2"></radio-option>
-        <radio-option value="option3" label="Option 3"></radio-option>`;
-}
 
 /** @type {Meta} */
 const RadioFieldStory = {
     title: 'Forms/Fields/Radio',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'radio-field', renderFieldContent, renderScript)
-};
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: { ...getArgTypes('Field Props') },
+    component: 'radio-field',
     args: {
-        ...getArgs(),
         id: 'radio-field',
         label: 'Radio field',
         required: true,
-        value: ''
-    }
+        value: 'option1'
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <radio-field ${$attr(args)}>
+                <radio-option value="option1" icon="rocket_launch">Option 1</radio-option>
+                <radio-option value="option2" icon="eco">Option 2</radio-option>
+                <radio-option value="option3" icon="star">Option 3</radio-option>
+            </radio-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
-        ...Default.args
+        id: 'radio-field-test',
+        value: ''
     },
-    play: async ({ canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'radio-field'
+    play: async ({ canvasElement, step, canvas }) => {
+        const setup = await playSetup({
+            tag: 'radio-field',
+            canvas,
+            canvasElement
         });
-        const { submitButton, canvas, onErrorMock, onSubmitMock, onChangeMock } = setup;
-        const field = /** @type {RadioField} */ (setup.field);
+        const { submitButton, onErrorMock, onSubmitMock, onChangeMock, field } = setup;
 
         await step('Renders the field with three radio options', async () => {
             await waitFor(() => {
@@ -63,7 +64,7 @@ export const Test = {
         });
 
         await step('Submits the form without selecting a radio option', async () => {
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalled();
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -72,18 +73,17 @@ export const Test = {
         });
 
         await step('Select the first radio option', async () => {
-            const options = field?.getOptions();
-            // @ts-ignore
-            options[1].input.click();
+            const option2 = canvas.getByLabelText('Option 2');
+            await userEvent.click(option2);
             await waitFor(() => expect(onChangeMock).toHaveBeenCalledWith('option2', field, expect.anything()));
-            // @ts-ignore
-            expect(options[1].input).toBeChecked();
+            expect(option2).toBeChecked();
         });
 
         await step('Submits the form with the selected radio option', async () => {
-            submitButton?.click();
-            await waitFor(() => expect(onSubmitMock).toHaveBeenCalled());
-            expect(onSubmitMock).toHaveBeenCalledWith({ 'radio-field': 'option2' });
+            await userEvent.click(submitButton);
+            await waitFor(() => {
+                expect(onSubmitMock).toHaveBeenCalledWith({ 'radio-field-test': 'option2' });
+            });
         });
     }
 };

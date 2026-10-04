@@ -1,14 +1,13 @@
 /**
  * @typedef {import('./form.types').FormConfigType} FormConfigType
- * @typedef {import('./form.types').FormTemplatePropsType} FormTemplatePropsType
  * @typedef {import('./form.types').FormSubmitType} FormSubmitType
  * @typedef {import('./form.types').FormSubmitResponseType} FormSubmitResponseType
  * @typedef {import('../../fields/field/field').default} FieldComponent
  * @typedef {import('@arpadroid/messages').Messages} Messages
- * @typedef {import('@arpadroid/resources').ListResource} ListResource
+ * @typedef {import('../../fields/submitButton/submitButton').default} SubmitButton
  */
-import { mergeObjects, copyObjectProps, appendNodes, defineCustomElement } from '@arpadroid/tools';
-import { observerMixin, renderNode, render, dummySignal, dummyListener, dummyOff } from '@arpadroid/tools';
+import { mergeObjects, copyObjectProps, defineCustomElement } from '@arpadroid/tools';
+import { observerMixin, renderNode, dummySignal, dummyListener, dummyOff } from '@arpadroid/tools';
 import { I18nTool } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
 
@@ -16,6 +15,7 @@ const html = String.raw;
 class FormComponent extends ArpaElement {
     /** @type {Record<string, FieldComponent>} */
     fields = {};
+    touched = false;
 
     constructor(config = {}) {
         super(config);
@@ -29,7 +29,7 @@ class FormComponent extends ArpaElement {
     // #region Initialization & Config
     //////////////////////////////////
     $initialize() {
-        this.bind('_onChange', '_onSubmit');
+        this.bind('_onChange');
         if (this.hasAttribute('title')) {
             this._config.title = this.getProp('title');
             this.removeAttribute('title');
@@ -55,21 +55,19 @@ class FormComponent extends ArpaElement {
         /** @type {FormConfigType} */
         const config = {
             variant: 'default',
+            attributeList: ['id'],
             hasSubmit: true,
+            hasMessages: true,
             initialValues: {},
             onSubmit: undefined,
             debounce: 1000,
             successMessage: this.i18n('msgSuccess'),
             submitIcon: 'check_circle',
             errorMessage: this.i18n('msgError'),
-            zoneSelector: 'zone:not(.arpaField)',
-            zoneFilter: zones =>
-                zones.filter(zone => {
-                    const parent = /** @type {HTMLElement} */ (zone._parentNode);
-                    return parent?.classList?.contains('arpaField');
-                })
+            className: 'arpaForm',
+            classNames: [() => `arpaForm--${this.getProp('variant')}`]
         };
-        return super.getDefaultConfig(config);
+        return mergeObjects(super.getDefaultConfig(), config);
     }
 
     /**
@@ -83,48 +81,11 @@ class FormComponent extends ArpaElement {
 
     // #endregion Initialization & Config
 
-    ////////////////////////////////
-    // #region Lifecycle
-    ////////////////////////////////
-
-    attributeChangedCallback() {
-        this.update();
-    }
-
-    async _initializeMessages() {
-        await customElements.whenDefined('arpa-messages');
-
-        this.messages = /** @type {Messages | null} */ (this.querySelector('arpa-messages'));
-    }
-
-    _initializeSubmit() {
-        this.submitButton = this.querySelector('button[type="submit"]');
-        this.addEventListener('submit', this._onSubmit);
-    }
-
-    _initializeFields() {
-        this.formFields = this.querySelector('.arpaForm__fields');
-        if (this.formFields) {
-            appendNodes(this.formFields, this._childNodes);
-        }
-    }
-
-    // #endregion Lifecycle
-
-    /////////////////////////////////
-    // #region Get
-    /////////////////////////////////
-
-    getSubmitText() {
-        return this.getProp('submit-text') || html`<i18n-text key="common.labels.lblSubmit" />`;
-    }
-
     getFields() {
         return Object.values(this.fields);
     }
 
     /**
-     * Returns a field by its id.
      * @param {string} fieldId
      * @returns {FieldComponent | undefined}
      */
@@ -133,7 +94,6 @@ class FormComponent extends ArpaElement {
     }
 
     /**
-     * Returns the form fiel values.
      * @returns {Record<string, unknown>}
      */
     getValues() {
@@ -149,46 +109,10 @@ class FormComponent extends ArpaElement {
         return this._values;
     }
 
-    getTitle() {
-        return this.getProp('title');
-    }
-
-    getVariant() {
-        return this.getProp('variant');
-    }
-
-    // #endregion Get
-
-    /////////////////////////////////
-    // #region Has
-    /////////////////////////////////
-
     hasInitialValues() {
         const { initialValues = {} } = this._config || {};
         return Object.keys(initialValues).length > 0;
     }
-
-    hasTitle() {
-        return this.getProp('title') || this.hasZone('form-title');
-    }
-
-    hasFooter() {
-        return this.hasSubmitButton() || this.hasZone('footer') || this.hasZone('controls');
-    }
-
-    hasDescription() {
-        return this.getProp('description') || this.hasZone('description');
-    }
-
-    hasHeader() {
-        return this.hasTitle() || this.hasDescription();
-    }
-
-    // #endregion Has
-
-    /////////////////////////////////
-    // #region Set
-    /////////////////////////////////
 
     /**
      * Sets the initial values for the form.
@@ -237,104 +161,62 @@ class FormComponent extends ArpaElement {
      * @param {number} value - The debounce time in milliseconds.
      */
     setDebounce(value) {
-        this._config && (this._config.debounce = value);
+        this._config.debounce = value;
     }
-
-    // #endregion Set
 
     /////////////////////////////////
     // #region Rendering
     /////////////////////////////////
 
-    /**
-     * Returns the template variables for the form.
-     * @returns {FormTemplatePropsType}
-     */
-    getTemplateVars() {
-        return {
-            submitLabel: this.getSubmitText(),
-            formId: this.id,
-            title: this.renderTitle(),
-            description: this.renderDescription(),
-            submitButton: this.renderSubmitButton(),
-            header: this.renderHeader(),
-            messages: this.renderMessages(),
-            footer: this.renderFooter(),
-            fullLayout: this.renderFull()
-        };
+    isMini() {
+        return this.getProp('variant') === 'mini';
     }
 
-    async $initializeNodes() {
-        const { variant } = this._config || {};
-        this.bodyNode = this.querySelector('.arpaForm__body');
-        /** @type {HTMLFormElement | null} */
-        this.formNode = this.querySelector('.arpaForm__form');
-        this.messagesNode = this.querySelector('arpa-messages');
-        this._initializeFields();
-        this._initializeSubmit();
-        this._initializeMessages();
-        this.classList.add('arpaForm');
-        variant && this.classList.add(`arpaForm--${variant}`);
-        this.titleNode = this.querySelector('form-title');
-        this.headerNode = this.querySelector('.arpaForm__header');
-        this.errorsNode = this.querySelector('.arpaForm__errors');
-        return true;
+    $renderBlueprint() {
+        !this.id && console.warn('Form must have an id.', this);
+        return html`
+            <arpa-node name="header">
+                <arpa-node name="titleWrapper">
+                    <arpa-node tag="arpa-icon" name="titleIcon"></arpa-node>
+                    <arpa-node tag="h2" name="title"></arpa-node>
+                    <arpa-node tag="arpa-icon" name="titleIconRight"></arpa-node>
+                </arpa-node>
+                <arpa-node tag="p" name="description"></arpa-node>
+            </arpa-node>
+            <arpa-node name="messages" tag="arpa-messages" id="{id}-messages" can-render="hasMessages"></arpa-node>
+            <arpa-node name="body">
+                <arpa-node name="fields" is-content must-render></arpa-node>
+            </arpa-node>
+            <arpa-node name="footer">
+                <arpa-node name="controls">
+                    <arpa-node
+                        tag="submit-button"
+                        name="submitBtn"
+                        icon="{submitIcon}"
+                        type="submit"
+                        class="arpaForm__submitBtn"
+                        can-render="!isMini() && hasSubmit"
+                    ></arpa-node>
+                </arpa-node>
+            </arpa-node>
+        `;
     }
 
     $renderTemplate() {
-        !this.id && console.warn('Form must have an id.', this);
-        const variant = this.getVariant();
-        return html`<form class="arpaForm__form" novalidate>${variant === 'mini' ? this.renderMini() : this.renderFull()}</form>`;
+        return html`<arpa-node name="form" tag="form" novalidate on-submit="{submitForm}">
+            <arpa-frag name="fullContent" can-render="!isMini()">{header}{messages}{body}{footer}</arpa-frag>
+            <arpa-frag name="miniContent" can-render="isMini()">{title}{fields}</arpa-frag>
+        </arpa-node>`;
     }
 
-    renderFull() {
-        return html`{header} {messages}
-            <div class="arpaForm__body">
-                <div class="arpaForm__fields"></div>
-            </div>
-            {footer}`;
-    }
-
-    renderMessages() {
-        return html`<arpa-messages zone="messages" class="arpaForm__messages" id="{formId}-messages"></arpa-messages>`;
-    }
-
-    renderHeader() {
-        return this.hasHeader() ? html`<div class="arpaForm__header" zone="header">{title}{description}</div>` : '';
-    }
-
-    renderDescription() {
-        return this.hasDescription() ? html`<div class="arpaForm__description" zone="description"></div>` : '';
-    }
-
-    renderMini() {
-        return html`${this.renderTitle()}
-            <div class="arpaForm__fields"></div>`;
-    }
-
-    renderTitle() {
-        const title = this.getTitle();
-        return this.hasTitle() ? html`<form-title zone="form-title">${title || ''}</form-title>` : '';
-    }
-
-    renderFooter() {
-        return this.hasFooter()
-            ? html`<div class="arpaFrom__footer" zone="footer">
-                  <div class="arpaForm__controls" zone="controls">{submitButton}</div>
-              </div>`
-            : '';
-    }
-
-    renderSubmitButton() {
-        return render(
-            this.hasSubmitButton() && this.getProp('variant') !== 'mini',
-            html`<submit-button icon="${this.getProp('submit-icon')}" type="submit" class="arpaForm__submitBtn">
-            </submit-button>`
-        );
-    }
-
-    hasSubmitButton() {
-        return this.hasProp('has-submit');
+    async $initializeNodes() {
+        await super.$initializeNodes();
+        this.bodyNode = this.nodes.body;
+        this.formNode = /** @type {HTMLFormElement | null} */ (this.nodes.form);
+        this.submit = /** @type {SubmitButton | null} */ (this.nodes.submitBtn);
+        this.messages = /** @type {Messages | null} */ (this.nodes.messages);
+        this.touched = false;
+        return true;
     }
 
     // #endregion Rendering
@@ -348,34 +230,23 @@ class FormComponent extends ArpaElement {
      * @returns {boolean}
      */
     validate() {
-        this.getValues();
-        this._isValid = true;
-        this.getFields().forEach(field => !field.validate() && (this._isValid = false));
+        this._validate();
         if (this._isValid) {
             this.classList.remove('formComponent--invalid');
         } else {
             this.messages?.deleteMessages();
-            const msg = this.getErrorMessage();
+            const msg = this.getProp('errorMessage');
             msg && this.messages?.error(msg, { canClose: true });
             this.classList.add('formComponent--invalid');
         }
-        return this._isValid;
+        return Boolean(this._isValid);
     }
 
     _validate() {
-        return (
-            this.getFields()
-                .map(field => field._validate())
-                .indexOf(false) === -1
-        );
-    }
-
-    getErrorMessage() {
-        return this.getProp('error-message');
-    }
-
-    getSuccessMessage() {
-        return this.getProp('success-message');
+        this.getValues();
+        this._isValid = true;
+        this.getFields().forEach(field => !field.validate() && (this._isValid = false));
+        return this._isValid;
     }
 
     // #endregion Validation
@@ -389,15 +260,8 @@ class FormComponent extends ArpaElement {
      * @param {FormSubmitType} callback
      */
     onSubmit(callback) {
+        this.touched = true;
         this._config && (this._config.onSubmit = callback);
-    }
-
-    /**
-     * Returns the onSubmit callback.
-     * @returns {FormSubmitType | undefined}
-     */
-    getOnSubmit() {
-        return this._config?.onSubmit;
     }
 
     /**
@@ -405,16 +269,18 @@ class FormComponent extends ArpaElement {
      * @param {Event} event
      * @returns {Promise<FormSubmitResponseType> | undefined | boolean}
      */
-    _onSubmit(event) {
+    submitForm(event) {
         event?.preventDefault();
         const time = new Date().getTime();
         const diff = time - (this.submitTime || 0);
-        const debounce = this.getDebounce();
+        const debounce = Number(this.getProp('debounce'));
         if (debounce && this.submitTime && diff < debounce) {
             return;
         }
+
         this.submitTime = time;
-        if (this.validate()) {
+        const isValid = this.validate();
+        if (isValid) {
             return this._callOnSubmit();
         } else {
             this.scrollIntoView();
@@ -423,48 +289,24 @@ class FormComponent extends ArpaElement {
     }
 
     /**
-     * Submits the form.
-     * @param {Event} event
-     */
-    submitForm(event) {
-        this._onSubmit(event);
-    }
-
-    getDebounce() {
-        if (this.hasAttribute('debounce')) {
-            return Number(this.getAttribute('debounce'));
-        }
-        return Number(this._config?.debounce);
-    }
-
-    /**
      * Calls the onSubmit callback.
      * @returns {Promise<FormSubmitResponseType> | undefined | boolean}
      */
     _callOnSubmit() {
         this?.messages?.deleteMessages();
-        const onSubmit = this.getOnSubmit();
+        const onSubmit = this._config?.onSubmit;
         if (typeof onSubmit === 'function') {
             const payload = this._values;
             this.startLoading();
             const rv = onSubmit(payload);
             if (rv instanceof Promise && typeof rv?.finally === 'function') {
-                this.handlePromise(rv);
+                rv.then(this._onPromiseResolved).finally(() => this.stopLoading());
                 return rv;
             }
             rv && this._onSubmitSuccess();
             this.stopLoading();
             return rv;
         }
-    }
-
-    /**
-     * Handles the promise returned by the onSubmit callback.
-     * @param {Promise<FormSubmitResponseType>} promise - The promise returned by the onSubmit callback.
-     * @returns {Promise<FormSubmitResponseType>}
-     */
-    handlePromise(promise) {
-        return promise.then(this._onPromiseResolved).finally(() => this.stopLoading());
     }
 
     /**
@@ -485,7 +327,7 @@ class FormComponent extends ArpaElement {
 
     _onSubmitSuccess() {
         this.getFields().forEach(field => field.onSubmitSuccess());
-        const successMessage = this.getSuccessMessage();
+        const successMessage = this.getProp('successMessage');
         successMessage && this.messages?.success(successMessage, { canClose: true });
     }
 
@@ -498,7 +340,7 @@ class FormComponent extends ArpaElement {
 
     stopLoading() {
         this.preloader instanceof HTMLElement && this.preloader?.remove();
-        this.getVariant() !== 'mini' && this.scrollIntoView();
+        this.getProp('variant') !== 'mini' && this.scrollIntoView();
     }
 
     focusFirstErroredInput() {

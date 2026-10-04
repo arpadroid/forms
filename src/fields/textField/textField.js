@@ -2,16 +2,8 @@ import Field from '../field/field.js';
 import { defineCustomElement, RegexTool } from '@arpadroid/tools';
 
 class TextField extends Field {
-    /**
-     * Array of validations for the text field.
-     * @type {string[]}
-     */
     _validations = [...super.getValidations(), 'regex'];
 
-    /**
-     * Called when the element is connected to the DOM.
-     * @override
-     */
     $onInitialized() {
         super.$onInitialized();
         this.setRegexValidation();
@@ -21,10 +13,6 @@ class TextField extends Field {
         return 'text';
     }
 
-    getTagName() {
-        return 'text-field';
-    }
-
     /**
      * Sets the regex validation for the text field.
      * @param {string | RegExp} [regex] - The regular expression or the name of a predefined regex pattern.
@@ -32,12 +20,7 @@ class TextField extends Field {
      */
     setRegexValidation(regex = this.getProp('regex'), message = this.getProp('regex-message')) {
         if (typeof regex === 'string') {
-            if (RegexTool[regex]) {
-                regex = RegexTool[regex];
-            } else {
-                // eslint-disable-next-line security/detect-non-literal-regexp
-                regex = new RegExp(regex);
-            }
+            regex = RegexTool[regex] || new RegExp(regex);
         }
 
         if (regex instanceof RegExp) {
@@ -49,6 +32,6 @@ class TextField extends Field {
     }
 }
 
-defineCustomElement(TextField.prototype.getTagName(), TextField);
+defineCustomElement('text-field', TextField);
 
 export default TextField;

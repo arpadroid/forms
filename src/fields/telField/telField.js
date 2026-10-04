@@ -8,21 +8,15 @@ class TelField extends TextField {
             icon: 'phone',
             regex: 'telephone',
             regexMessage: I18n.getText('forms.fields.tel.errRegex'),
-            inputAttributes: {
-                type: 'text'
-            }
+            inputType: 'tel'
         });
     }
 
     getFieldType() {
         return 'tel';
     }
-
-    getTagName() {
-        return 'tel-field';
-    }
 }
 
-defineCustomElement(TelField.prototype.getTagName(), TelField);
+defineCustomElement('tel-field', TelField);
 
 export default TelField;

@@ -2,7 +2,7 @@
  * @typedef {import('./timeField.types').TimeFieldConfigType} TimeFieldConfigType
  * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
-import { mergeObjects, attr, timeStringToSeconds, renderNode, defineCustomElement } from '@arpadroid/tools';
+import { mergeObjects, attr, timeStringToSeconds, defineCustomElement } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 import { I18n } from '@arpadroid/i18n';
 
@@ -21,7 +21,7 @@ class TimeField extends TextField {
     getDefaultConfig() {
         /** @type {TimeFieldConfigType} */
         const config = {
-            inputAttributes: { type: 'time' },
+            inputType: 'time',
             pickerLabel: I18n.getText('forms.fields.time.lblShowPicker')
         };
         return mergeObjects(super.getDefaultConfig(), config);
@@ -35,36 +35,31 @@ class TimeField extends TextField {
         return 'time';
     }
 
-    getTagName() {
-        return 'time-field';
-    }
-
-    async $initializeNodes() {
-        await super.$initializeNodes();
-        if (!this.timeButton) {
-            this.timeButton = this.renderTimeButton();
-            this.timeButton && this.inputMask?.addRhs('timeButton', this.timeButton);
-        }
-        return true;
-    }
-
     async $onConnected() {
-        await this.onReady();
         super.$onConnected();
         const min = this.getProp('min');
         const max = this.getProp('max');
         this.input && attr(this.input, { min, max });
+        return true;
     }
 
-    renderTimeButton() {
-        const { pickerLabel } = this._config;
-        const button = /** @type {IconButton} */ (
-            renderNode(
-                html`<icon-button icon="schedule" label="${pickerLabel}" tooltip-position="left" variant="minimal"></icon-button>`
-            )
-        );
-        button?.addEventListener('click', () => this.input?.showPicker());
-        return button;
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="inputMaskRhs">
+                <icon-button
+                    icon="schedule"
+                    tooltip="{pickerLabel}"
+                    tooltip-position="left"
+                    variant="minimal"
+                    on-click="{showPicker}"
+                ></icon-button>
+            </arpa-zone>
+        `;
+    }
+
+    showPicker() {
+        this.input?.showPicker();
     }
 
     /**
@@ -108,6 +103,6 @@ class TimeField extends TextField {
     }
 }
 
-defineCustomElement(TimeField.prototype.getTagName(), TimeField);
+defineCustomElement('time-field', TimeField);
 
 export default TimeField;

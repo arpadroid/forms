@@ -1,90 +1,68 @@
 /**
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('../../components/form/form.types.js').FormConfigType} FormConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FormConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FormConfigType>} Story
  * @typedef {import('../../components/form/form').default} FormComponent
  */
-import { waitFor, expect, within, fireEvent } from 'storybook/test';
-const category = 'Submit Button Props';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
 const html = String.raw;
-
-/**
- * Sets up test scenario for submit button story.
- * @param {HTMLElement} canvasElement - The canvas element of the story.
- * @returns {Promise<{canvas: ReturnType<typeof within>, buttonNode: HTMLButtonElement | null, form: FormComponent}>}
- */
-async function playSetup(canvasElement) {
-    const canvas = within(canvasElement);
-    await customElements.whenDefined('arpa-button');
-    await customElements.whenDefined('text-field');
-    const buttonNode = canvasElement.querySelector('button');
-    const form = /** @type { FormComponent } */ (/** @type {unknown} */ (canvasElement.querySelector('arpa-form')));
-    return { canvas, buttonNode, form };
-}
 
 /** @type {Meta} */
 const SubmitButtonStory = {
     title: 'Forms/Components/Submit Button',
     tags: [],
+    component: 'submit-button',
     args: {
-        content: 'Click me',
-        icon: 'check_circle',
-        submitText: 'Submit'
+        id: 'submit-button-form',
+        debounce: 0,
+        submitIcon: 'check_circle'
     },
-    argTypes: {
-        content: { control: { type: 'text' }, table: { category } },
-        icon: { control: { type: 'text' }, table: { category } },
-        iconRight: { control: { type: 'text' }, table: { category } }
-    },
-    render: (/** @type {Args} */ args) => {
-        delete args.content;
-        return html`<arpa-form id="submit-button-form">
+    render: args =>
+        html`<arpa-form ${$attr(args)}>
             <text-field id="text" label="Text" required></text-field>
-            <number-field id="number" label="Number" required min="0" max="20"></number-field>
-        </arpa-form>`;
-    }
+            <number-field id="number" label="Number" required minLength="0" max-length="20"></number-field>
+        </arpa-form>`
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Default = {
-    name: 'Render'
+    name: 'Render',
+    parameters: defaultParams
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
 export const Test = {
-    name: 'Render',
+    parameters: testParams,
     play: async ({ canvasElement, step, canvas }) => {
-        const { form } = await playSetup(canvasElement);
-        const textField = /** @type {import('../textField/textField').default} */ (form.getField('text'));
+        const form = /** @type { FormComponent } */ (canvasElement.querySelector('arpa-form'));
+        await form.onRendered();
         const numberField = /** @type {import('../numberField/numberField').default} */ (form.getField('number'));
         await numberField?.promise;
         const submitButton = await waitFor(() => canvas.getByRole('button', { name: 'Submit' }));
+        const textInput = canvas.getByRole('textbox');
+        const numberInput = canvas.getByRole('spinbutton');
+
         await step(
             'Renders the button and expects data-invalid attribute to be present in container since the fields are required',
             async () => {
-                await waitFor(() => {
-                    expect(submitButton).not.toBeNull();
-                    expect(submitButton).toHaveAttribute('data-invalid');
-                });
+                expect(textInput).toBeInTheDocument();
+                expect(numberInput).toBeInTheDocument();
+                expect(submitButton).toBeInTheDocument();
+                expect(submitButton).toHaveAttribute('data-invalid');
             }
         );
 
         await step('Fills the form and expects data-invalid attribute to be removed', async () => {
-            await customElements.whenDefined('text-field');
-            if (!textField.input) throw new Error('Text field input element not found in the setup.');
-            if (!numberField?.input) throw new Error('Number field input element not found in the setup.');
-            textField?.setValue('text');
-            await fireEvent.input(textField?.input);
-            numberField?.setValue('32');
-            await fireEvent.input(numberField?.input);
-            await new Promise(resolve => setTimeout(resolve, 200));
+            await userEvent.type(textInput, 'text');
+            await userEvent.type(numberInput, '32');
             await waitFor(() => {
                 expect(submitButton).toHaveAttribute('data-invalid');
             });
-            await new Promise(resolve => setTimeout(resolve, 200));
-            numberField?.setValue('20');
-            await fireEvent.input(textField?.input);
+            await userEvent.clear(numberInput);
+            await userEvent.type(numberInput, '20');
+
             await waitFor(() => expect(submitButton).not.toHaveAttribute('data-invalid'));
         });
     }

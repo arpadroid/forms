@@ -13,10 +13,6 @@ class UrlField extends TextField {
         return 'url';
     }
 
-    getTagName() {
-        return 'url-field';
-    }
-
     getI18nKey() {
         return 'forms.fields.url';
     }
@@ -43,6 +39,6 @@ class UrlField extends TextField {
     }
 }
 
-defineCustomElement(UrlField.prototype.getTagName(), UrlField);
+defineCustomElement('url-field', UrlField);
 
 export default UrlField;

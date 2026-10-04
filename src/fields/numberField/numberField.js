@@ -19,8 +19,8 @@ class NumberField extends Field {
         return {
             ...super.getDefaultConfig(),
             icon: 'numbers',
+            inputType: 'number',
             inputAttributes: {
-                type: 'number',
                 min: this.getProp('min'),
                 max: this.getProp('max'),
                 step: this.getProp('step')
@@ -67,10 +67,6 @@ class NumberField extends Field {
 
     getFieldType() {
         return 'number';
-    }
-
-    getTagName() {
-        return 'number-field';
     }
 
     getI18nKey() {
@@ -138,6 +134,6 @@ class NumberField extends Field {
     }
 }
 
-defineCustomElement(NumberField.prototype.getTagName(), NumberField);
+defineCustomElement('number-field', NumberField);
 
 export default NumberField;

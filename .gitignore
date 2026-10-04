@@ -1,6 +1,5 @@
 custom-elements.json
 storybook-static/
-bundle-stats.html
 node_modules/
 dist/
 *.min.css

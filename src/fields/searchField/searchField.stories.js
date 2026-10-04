@@ -1,49 +1,48 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 /**
- * @typedef {import('../field/field.types').FieldConfigType} FieldConfigType
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('../field/field.types.js').FieldConfigType} FieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story
  */
 
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent } from 'storybook/test';
-import { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
 const SearchFieldStory = {
     title: 'Forms/Fields/Search',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'search-field')
-};
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        ...getArgTypes()
-    },
+    component: 'search-field',
     args: {
-        ...getArgs(),
         id: 'search-field',
         label: 'Search Field'
-    }
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <search-field ${$attr(args)}></search-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
 export const Test = {
-    args: Default.args,
-    parameters: { ...FieldTest.parameters },
-    play: async ({ canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'search-field'
+    parameters: testParams,
+    args: { ...Default.args },
+    play: async ({ canvasElement, canvas, step }) => {
+        const { onSubmitMock, input, submitButton } = await playSetup({
+            tag: 'search-field',
+            canvas,
+            canvasElement
         });
-        const { canvas, onSubmitMock } = setup;
-        const input = /** @type {HTMLInputElement} */ (setup.input);
-        const submitButton = /** @type {HTMLButtonElement} */ (setup.submitButton);
 
         await step('Renders the field', async () => {
             await waitFor(() => {
@@ -54,7 +53,7 @@ export const Test = {
 
         await step('Submits form with valid field value.', async () => {
             input.value = 'some query';
-            await fireEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'search-field': 'some query' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

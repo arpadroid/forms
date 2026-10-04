@@ -1,26 +1,17 @@
 /** @typedef {import('./selectField.types').SelectFieldConfigType} SelectFieldConfigType */
 import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import OptionsField from '../optionsField/optionsField.js';
+import Field from '../field/field.js';
 const html = String.raw;
 
 class SelectField extends OptionsField {
-    /** @type {HTMLSelectElement} */
-    input = this.input;
     /** @type {SelectFieldConfigType} */
     _config = this._config;
-    /**
-     * Returns the default configuration for the select field.
-     * @returns {SelectFieldConfigType} The default configuration object.
-     */
+    /** @returns {SelectFieldConfigType} The default configuration object. */
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             iconRight: 'keyboard_arrow_down',
-            inputTemplate: html`<select id="{id}" class="optionsField__options fieldInput">
-                {options}
-            </select>`,
-            inputTag: 'select',
-            optionComponent: 'option',
-            optionTemplate: html`<{optionComponent} role="option" {selected}>{label}</{optionComponent}>`
+            optionComponent: 'option'
         });
     }
 
@@ -28,18 +19,18 @@ class SelectField extends OptionsField {
         return 'select';
     }
 
-    async _initializeInputNode() {
-        await super._initializeInputNode();
-        const input = this.getInput();
-        input?.addEventListener('change', this._callOnChange);
-        return true;
-    }
-
-    async _initializeValue() {
-        const value = this.getProp('value');
-        if (value && this.input) {
-            this.input.value = value;
-        }
+    $renderTemplate() {
+        return html`
+            ${Field.prototype.$renderTemplate.call(this)}
+            <arpa-node
+                tag="select"
+                name="input"
+                class-name="arpaField__input"
+                is-content
+                on-change="{_callOnChange}"
+                value="{value}"
+            ></arpa-node>
+        `;
     }
 
     updateValue() {

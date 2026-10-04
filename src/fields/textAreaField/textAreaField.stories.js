@@ -1,58 +1,55 @@
 /**
- * @typedef {import('./textAreaField.js').default} TextAreaField
- * @typedef {import('@storybook/web-components-vite').Meta} Meta
- * @typedef {import('@storybook/web-components-vite').StoryObj} StoryObj
- * @typedef {import('@storybook/web-components-vite').StoryContext} StoryContext
- * @typedef {import('@storybook/web-components-vite').Args} Args
+ * @typedef {import('../field/field.types.js').FieldConfigType} FieldConfigType
+ * @typedef {import('@storybook/web-components-vite').Meta<FieldConfigType>} Meta
+ * @typedef {import('@storybook/web-components-vite').StoryObj<FieldConfigType>} Story
  */
 
-/* eslint-disable sonarjs/no-duplicate-string */
 import { I18n } from '@arpadroid/i18n';
-import { waitFor, expect, fireEvent, userEvent } from 'storybook/test';
-import FieldStory, { Default as FieldDefault, Test as FieldTest } from '../field/field.stories.js';
-import { getArgs, getArgTypes, playSetup, renderField } from '../field/field.stories.util.js';
+import { waitFor, expect, userEvent } from 'storybook/test';
+import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { $attr } from '@arpadroid/tools';
+import { playSetup } from '../field/field.stories';
+
+const html = String.raw;
 
 /** @type {Meta} */
 const TextAreaFieldStory = {
     title: 'Forms/Fields/Textarea',
-    tags: [],
-    render: (args, story) => renderField(args, story, 'textarea-field')
-};
-
-/** @type {StoryObj} */
-export const Default = {
-    name: 'Render',
-    parameters: { ...FieldDefault.parameters },
-    argTypes: {
-        ...getArgTypes('Field Props')
-    },
+    component: 'textarea-field',
     args: {
-        ...getArgs(),
         id: 'textarea-field',
         label: 'Textarea Field',
         required: true
-    }
+    },
+    render: args => html`
+        <arpa-form id="test-form" debounce="0">
+            <textarea-field ${$attr(args)}></textarea-field>
+        </arpa-form>
+    `
 };
 
-/** @type {StoryObj} */
+/** @type {Story} */
+export const Default = {
+    name: 'Render',
+    parameters: defaultParams
+};
+
+/** @type {Story} */
 export const Test = {
-    parameters: { ...FieldTest.parameters },
+    parameters: testParams,
     args: {
         ...Default.args,
         required: true
     },
-    play: async ({ canvasElement, step }) => {
-        const setup = await playSetup(canvasElement, {
-            fieldTag: 'textarea-field'
+    play: async ({ canvasElement, canvas, step }) => {
+        const { field, onErrorMock, onChangeMock, onSubmitMock, input, submitButton } = await playSetup({
+            tag: 'textarea-field',
+            canvas,
+            canvasElement
         });
-        const { field, canvas, onErrorMock, onChangeMock, onSubmitMock } = setup;
-        const input = /** @type {HTMLTextAreaElement | null} */ (setup.input);
-        if (!input) throw new Error('Textarea input element not found');
-        const submitButton = setup.submitButton;
-        if (!submitButton) throw new Error('Submit button not found');
 
         await step('Submits empty required field and checks for error message', async () => {
-            submitButton?.click();
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 canvas.getByText(I18n.getText('forms.field.errRequired'));
                 canvas.getByText(I18n.getText('forms.form.msgError'));
@@ -68,7 +65,7 @@ export const Test = {
         });
 
         await step('Submits form with valid field value.', async () => {
-            await fireEvent.click(submitButton);
+            await userEvent.click(submitButton);
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'textarea-field': 'some text' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));

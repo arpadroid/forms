@@ -8,8 +8,8 @@ class HiddenField extends Field {
 
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
-            inputAttributes: { type: 'hidden' },
-            template: html`{input}`
+            inputType: 'hidden',
+            inputTag: 'input'
         });
     }
 
@@ -17,20 +17,11 @@ class HiddenField extends Field {
         return 'hidden';
     }
 
-    getTagName() {
-        return 'hidden-field';
-    }
-
-    async $onConnected() {
-        super.$onConnected();
-        await this.onReady();
-        if (this.isConnected) {
-            this.input?.classList.add('arpaField');
-            this.input && this.replaceWith(this.input);
-        }
+    $renderTemplate() {
+        return html`<input type="hidden" value="{value}" id="{id}" name="{getId()}" can-render="!readOnly" />`;
     }
 }
 
-defineCustomElement(HiddenField.prototype.getTagName(), HiddenField);
+defineCustomElement('hidden-field', HiddenField);
 
 export default HiddenField;

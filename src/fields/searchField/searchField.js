@@ -21,29 +21,18 @@ class SearchField extends Field {
         this._callOnSubmit = this._callOnSubmit.bind(this);
         /** @type {SearchFieldConfigType} */
         const conf = {
-            classNames: ['searchField', 'fieldComponent'],
+            className: 'arpaField',
+            classNames: ['searchField', 'arpaField'],
             icon: 'search',
             variant: 'default',
-            placeholder: I18n.getText('common.labels.lblSearch'),
-            inputAttributes: { type: 'search' }
+            placeholder: this.getAttribute('placeholder') || I18n.getText('common.labels.lblSearch'),
+            inputType: 'search',
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
 
     getFieldType() {
         return 'search';
-    }
-
-    getTagName() {
-        return 'search-field';
-    }
-
-    async $initialize() {
-        const { variant } = this._config;
-        super.$initialize();
-        if (variant === 'mini') {
-            this._config.iconRight = undefined;
-        }
     }
 
     getVariant() {
@@ -54,10 +43,23 @@ class SearchField extends Field {
         return this.getVariant() === 'mini' ? undefined : this.getProp('icon-right');
     }
 
-    async $onInitialized() {
-        await super.$onInitialized();
+    _addClassNames() {
+        super._addClassNames();
         this.classList.add('searchField', `searchField--${this.getVariant()}`);
+    }
+
+    async $initialize() {
+        const { variant } = this._config;
+        super.$initialize();
+        if (variant === 'mini') {
+            this._config.iconRight = undefined;
+        }
+    }
+
+    async $initializeNodes() {
+        await super.$initializeNodes();
         this.handleMiniButton();
+        return true;
     }
 
     handleMiniButton() {

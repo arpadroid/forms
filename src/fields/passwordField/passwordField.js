@@ -2,40 +2,43 @@
  * @typedef {import('./passwordField.types').PasswordFieldConfigType} PasswordFieldConfigType
  * @typedef {import('@arpadroid/ui').IconButton} IconButton
  */
-import { defineCustomElement, mergeObjects, RegexTool, renderNode } from '@arpadroid/tools';
+import { $attr, defineCustomElement, mergeObjects, RegexTool } from '@arpadroid/tools';
 import TextField from '../textField/textField.js';
 
 const html = String.raw;
 class PasswordField extends TextField {
+    _validations = [...super.getValidations(), 'confirm'];
+
     /** @type {PasswordFieldConfigType} */
     _config = this._config;
+
     /**
-     * Returns the default configuration for the PasswordField.
-     * @returns {PasswordFieldConfigType} The default configuration object.
+     * @returns {PasswordFieldConfigType}
      */
     getDefaultConfig() {
         /** @type {PasswordFieldConfigType} */
         const conf = {
-            // label: this._i18n?.lblPassword,
             icon: 'lock',
             confirm: false,
             required: true,
             mode: 'register',
-            inputAttributes: { type: 'password' },
+            inputType: 'password',
             confirmField: {},
             isConfirm: false,
-            lblShowPassword: this.i18nText('lblShowPassword')
+            hasVisibilityButton: true,
+            lblShowPassword: this.i18nText('lblShowPassword'),
+            lblConfirmPassword: this.i18nText('lblConfirmPassword')
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
 
     setConfig(_config = {}) {
         super.setConfig(_config);
-        this._initializeConfig();
+        this._initializeMode();
     }
 
-    _initializeConfig(config = this._config ?? {}) {
-        const mode = this.getAttribute('mode') ?? config.mode;
+    _initializeMode(config = this._config ?? {}) {
+        const mode = this.getProp('mode');
         if (!config.inputAttributes) config.inputAttributes = {};
         if (mode === 'register') {
             config.inputAttributes.autocomplete = 'new-password';
@@ -52,132 +55,58 @@ class PasswordField extends TextField {
         return 'password';
     }
 
-    getTagName() {
-        return 'password-field';
-    }
-
     getOutputValue() {
-        return this._config?.isConfirm ? undefined : super.getOutputValue();
+        return this.hasProp('isConfirm') ? undefined : super.getOutputValue();
     }
 
-    getMode() {
-        return this.getProp('mode');
-    }
-
-    /**
-     * Checks if the PasswordField has a confirm field.
-     * @returns {boolean} True if the PasswordField has a confirm field, false otherwise.
-     */
     hasConfirm() {
-        const { isConfirm } = this._config;
-        return Boolean(!isConfirm && this.getMode() !== 'login' && this.hasProp('confirm')) ?? true;
+        return Boolean(!this.hasProp('isConfirm') && this.getProp('mode') !== 'login' && this.hasProp('confirm')) ?? true;
     }
 
-    /**
-     * Renders the visibility button for toggling password visibility.
-     * @returns {IconButton | null}
-     */
-    renderVisibilityButton() {
-        const { lblShowPassword } = this._config;
-        const button = /** @type {IconButton | null} */ (
-            renderNode(
-                html`<icon-button
+    $renderTemplate() {
+        return html`
+            ${super.$renderTemplate()}
+            <arpa-zone name="inputMaskRhs">
+                <arpa-node
+                    name="visibilityButton"
+                    tag="icon-button"
                     icon="visibility"
-                    tooltip="${lblShowPassword}"
+                    tooltip="{lblShowPassword}"
+                    on-click="{togglePasswordVisibility}"
                     variant="minimal"
                     tooltip-position="left"
-                ></icon-button>`
-            )
-        );
-        button?.addEventListener('click', () => this.togglePasswordVisibility());
-        return button;
+                    can-render="hasVisibilityButton"
+                ></arpa-node>
+            </arpa-zone>
+            <arpa-node
+                name="confirm"
+                tag="password-field"
+                id="{id}-confirm"
+                is-confirm
+                class-name="arpaField"
+                required
+                can-render="confirm"
+                label="{lblConfirmPassword}"
+                ${$attr(this._config.confirmField || {})}
+            ></arpa-node>
+        `;
     }
-
-    //////////////////////
-    // #region Lifecycle
-    //////////////////////
 
     async $initializeNodes() {
         await super.$initializeNodes();
-        this.promise.then(() => {
-            this._initializeConfirmField();
-            if (!this.visButton) {
-                this.visButton = this.renderVisibilityButton();
-                this.visButton && this.inputMask?.addRhs('visibilityButton', this.visButton);
-            }
-        });
+        await this.waitForArpaNodes();
+        this.visButton = /** @type {IconButton | null} */ (this.nodes.visibilityButton);
+        this.confirmField = /** @type {PasswordField | null} */ (this.nodes.confirm);
         return true;
     }
 
-    static get observedAttributes() {
-        return ['confirm', 'mode'];
-    }
-
-    /**
-     * Event handler for when the PasswordField attributes are changed.
-     * @param {string} name - The name of the attribute that was changed.
-     */
-    attributeChangedCallback(name) {
-        if (this._config?.isConfirm) {
-            return;
-        }
-        if (name === 'confirm') {
-            this._initializeConfirmField();
-        } else if (name === 'mode') {
-            this.reRender();
-        }
-    }
-
-    /**
-     * Initializes the confirm field for password confirmation.
-     */
-    _initializeConfirmField() {
-        if (this._config.isConfirm) {
-            return;
-        }
-        if (!this.hasConfirm()) {
-            if (this.confirmField) {
-                this.confirmField.remove();
-                this.confirmField = null;
-            }
-            return;
-        }
-        if (!this.confirmField) {
-            this.confirmField = new PasswordField({
-                form: this.form,
-                id: this._id + '-confirm',
-                isConfirm: true,
-                label: this.i18nText('lblConfirmPassword'),
-                required: true,
-                inputAttributes: { autocomplete: 'new-password' },
-                ...this._config.confirmField,
-                validation: () => this.validateConfirm()
-            });
-            this.form?.registerField(this.confirmField);
-        }
-        this.after(this.confirmField);
-    }
-
-    /**
-     * Toggles the visibility of the password.
-     */
     togglePasswordVisibility() {
         const isPassword = this.input?.getAttribute('type') === 'password';
         this.input?.setAttribute('type', isPassword ? 'text' : 'password');
-        this.visButton?.setProp('tooltip', isPassword ? this.i18nText('lblHidePassword') : this.i18nText('lblShowPassword'));
-        this.visButton?.setProp('icon', isPassword ? 'visibility_off' : 'visibility');
+        this.visButton?.setTooltip(this.i18nText(isPassword ? 'lblHidePassword' : 'lblShowPassword'));
+        this.visButton?.setIcon(isPassword ? 'visibility_off' : 'visibility');
     }
 
-    // #endregion Lifecycle
-
-    /////////////////////
-    // #region Validation
-    /////////////////////
-
-    /**
-     * Validates the password confirmation.
-     * @returns {boolean} True if the password confirmation is valid, false otherwise.
-     */
     validateConfirm() {
         if (!this.confirmField) {
             return true;
@@ -187,15 +116,13 @@ class PasswordField extends TextField {
             return true;
         }
         if (this.confirmField.getValue() !== this.getValue()) {
-            this.confirmField.setError(this.i18n('errPasswordMatch'));
+            this.setError(this.i18n('errPasswordMatch'));
             return false;
         }
         return true;
     }
-
-    // #endregion Validation
 }
 
-defineCustomElement(PasswordField.prototype.getTagName(), PasswordField);
+defineCustomElement('password-field', PasswordField);
 
 export default PasswordField;

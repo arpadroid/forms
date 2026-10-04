@@ -1,19 +1,19 @@
 .colorField__colorInputWrapper {
-    border-radius: 50%;
-    height: 2.2rem;
-    overflow: hidden;
     position: absolute;
     right: 0.6rem;
     width: 2.2rem;
+    height: 2.2rem;
+    overflow: hidden;
+    border-radius: 50%;
 }
 
 .colorField__colorInput {
-    background-color: transparent;
-    cursor: pointer;
-    height: 3rem;
-    inset: -0.4rem;
-    margin: 0;
-    padding: 0;
     position: absolute;
+    inset: -0.4rem;
     width: 3rem;
+    height: 3rem;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background-color: transparent;
 }

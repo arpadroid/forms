@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * @typedef {import('../components/form/form.js').default} Form
  * @typedef {import('../fields/selectCombo/selectCombo.js').default} SelectCombo
@@ -44,7 +46,7 @@ customElements.whenDefined('arpa-form').then(() => {
             return [...People].filter(
                 option =>
                     option.label.toLowerCase().includes(query.toLowerCase()) ||
-                    option.subTitle.toLowerCase().includes(query.toLowerCase())
+                    option.subtitle.toLowerCase().includes(query.toLowerCase())
             );
         });
     });

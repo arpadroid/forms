@@ -10,28 +10,14 @@ class RadioField extends OptionsField {
     getDefaultConfig() {
         return mergeObjects(super.getDefaultConfig(), {
             optionComponent: 'radio-option',
-            inputAttributes: { type: 'radio' }
+            optionsAttributes: {
+                'aria-labelledby': '{labelId}'
+            }
         });
     }
 
     getFieldType() {
         return 'radio';
-    }
-
-    getTagName() {
-        return 'radio-field';
-    }
-
-    async _initializeValue() {
-        this.selectedOption = this.getSelectedOption(false);
-        if (this.selectedOption) {
-            this.selectedOption?.querySelector('input[type="radio"]')?.setAttribute('checked', '');
-        }
-    }
-
-    async _initializeInputNode() {
-        // Override to prevent input node initialization since radio fields have an input node for each option.
-        return true;
     }
 
     /**
@@ -40,11 +26,11 @@ class RadioField extends OptionsField {
      */
     getValue() {
         /** @type {HTMLInputElement | null | undefined} */
-        const input = /** @type {HTMLInputElement | null} */ (this.optionsNode?.querySelector('input[type="radio"]:checked'));
-        return input?.value;
+        const input = /** @type {HTMLInputElement | null} */ (this.input?.querySelector('input[type="radio"]:checked'));
+        return input?.value || super.getValue();
     }
 }
 
-defineCustomElement(RadioField.prototype.getTagName(), RadioField);
+defineCustomElement('radio-field', RadioField);
 
 export default RadioField;

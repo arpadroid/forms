@@ -4,26 +4,28 @@ import { defineCustomElement, mergeObjects } from '@arpadroid/tools';
 import FileField from '../fileField/fileField.js';
 
 class ImageField extends FileField {
+    /** @type {ImageFieldConfigType} */
+    _config = this._config;
+
     /**
      * Returns default config for image field.
      * @returns {ImageFieldConfigType}
      */
     getDefaultConfig() {
-        return mergeObjects(super.getDefaultConfig(), {
-            className: 'imageField',
+        const superConfig = super.getDefaultConfig();
+        /** @type {ImageFieldConfigType} */
+        const conf = {
+            classNames: ['imageField'],
             listComponent: 'image-list',
             uploadListComponent: 'image-list',
             fileComponent: 'image-item',
             extensions: ['jpg', 'png', 'gif', 'jpeg', 'svg']
-        });
+        };
+        return mergeObjects(superConfig, conf);
     }
 
     getFieldType() {
         return 'image';
-    }
-
-    getTagName() {
-        return 'image-field';
     }
 
     getI18nKey() {
@@ -37,6 +39,6 @@ class ImageField extends FileField {
     }
 }
 
-defineCustomElement(ImageField.prototype.getTagName(), ImageField);
+defineCustomElement('image-field', ImageField);
 
 export default ImageField;

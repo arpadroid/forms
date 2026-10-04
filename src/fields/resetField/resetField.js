@@ -13,12 +13,8 @@ class ResetField extends Field {
     getFieldType() {
         return 'reset';
     }
-
-    getTagName() {
-        return 'reset-field';
-    }
 }
 
-defineCustomElement(ResetField.prototype.getTagName(), ResetField);
+defineCustomElement('reset-field', ResetField);
 
 export default ResetField;
