@@ -1,11 +1,10 @@
 /**
  * @typedef {import('../../components/form/form').default} FormComponent
  * @typedef {import('./field.types').FieldConfigType} FieldConfigType
- * @typedef {import('./components/fieldErrors/fieldErrors.js').default} FieldErrors
  * @typedef {import('@arpadroid/ui').Tooltip} Tooltip
  */
 import { $attr, defineCustomElement, dummyListener, dummySignal, mergeObjects } from '@arpadroid/tools';
-import { observerMixin } from '@arpadroid/tools';
+import { observerMixin, mapHTML } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
 import { ArpaElement } from '@arpadroid/ui';
@@ -15,6 +14,8 @@ class Field extends ArpaElement {
     /** @type {FieldConfigType} */
     _config = this._config;
     touched = false;
+    /** @type {string[]} */
+    errorMessages = [];
 
     ////////////////////////////////
     // #region Initialization
@@ -139,6 +140,21 @@ class Field extends ArpaElement {
         };
     }
 
+    /**
+     * Sets the errors for the field.
+     * @param {string[]} errors - An array of error messages.
+     * @param {boolean} [update] - Indicates whether to update the errors immediately.
+     */
+    setErrors(errors = [], update = true) {
+        if (!Array.isArray(errors)) {
+            errors = [];
+        }
+        this.errorMessages = errors;
+        if (update) {
+            this.updateErrors();
+        }
+    }
+
     $renderBlueprint() {
         return html`
             <arpa-node name="header">
@@ -147,21 +163,36 @@ class Field extends ArpaElement {
                     <arpa-node tag="span" name="label" id="{labelId}"></arpa-node>
                     <arpa-node tag="span" name="requiredSign" can-render="{required}">*</arpa-node>
                 </arpa-node>
-                <arpa-node name="errors" tag="field-errors" must-render></arpa-node>
-                <arpa-node name="tooltip" tag="arpa-tooltip" icon="info" position="{tooltipPosition}"></arpa-node>
+
+                <arpa-node
+                    name="errors"
+                    class="arpaField__tooltip"
+                    variant="error"
+                    tag="arpa-tooltip"
+                    icon="block"
+                    position="bottom-right"
+                    arrow="false"
+                >
+                    <ul class="arpaField__errorList" zone-name="errors">
+                        {renderErrors()}
+                    </ul>
+                </arpa-node>
+
+                <arpa-node name="tooltip" variant="info" tag="arpa-tooltip" icon="info" position="{tooltipPosition}"></arpa-node>
             </arpa-node>
             <arpa-node name="subHeader"></arpa-node>
             <arpa-node name="body">
                 <arpa-node name="description" tag="p" can-render="description"></arpa-node>
                 {beforeInput}
                 <arpa-node name="inputWrapper">
-                    <arpa-node name="readOnly" class="arpaField__readOnly arpaField__input" can-render="readOnly"
-                        >{value}</arpa-node
-                    >
+                    <arpa-node name="readOnly" class="arpaField__readOnly arpaField__input" can-render="readOnly">
+                        {value}
+                    </arpa-node>
+
                     <arpa-node
+                        name="input"
                         tag="{inputTag}"
                         type="{inputType}"
-                        name="input"
                         id="{id}"
                         name="{getId()}"
                         placeholder="{placeholder}"
@@ -214,7 +245,7 @@ class Field extends ArpaElement {
         this.bodyNode = /** @type {HTMLElement} */ (this.nodes.body);
         this.tooltip = /** @type {Tooltip | null} */ (this.nodes.tooltip);
         this.input = /** @type {HTMLInputElement} */ (this.nodes.input);
-        this.errors = /** @type {FieldErrors} */ (this.nodes.errors);
+        this.errors = /** @type {Tooltip | null} */ (this.nodes.errors);
         this.touched = false;
         return true;
     }
@@ -304,6 +335,10 @@ class Field extends ArpaElement {
         return this?.validator?.validate(value) ?? true;
     }
 
+    renderErrors(errors = this.errorMessages) {
+        return mapHTML(errors, error => html`<li class="fieldErrors__item">${error}</li>`);
+    }
+
     /**
      * Returns the error messages for the field.
      * @returns {string[]}
@@ -315,8 +350,11 @@ class Field extends ArpaElement {
     /**
      * Updates the errors for the field.
      */
-    updateErrors() {
-        this.getErrorsComponent()?.setErrors(this.getErrorMessages());
+    async updateErrors() {
+        this.errorMessages = this.getErrorMessages();
+        const errorsNode = this.querySelector('.arpaField__errorList');
+        if (!errorsNode) return;
+        errorsNode.innerHTML = this.renderErrors(this.errorMessages);
     }
 
     /**
@@ -326,14 +364,6 @@ class Field extends ArpaElement {
     setError(text) {
         this.validator?.setError(text);
         this.updateErrors();
-    }
-
-    /**
-     * Returns the field errors component.
-     * @returns {FieldErrors | null}
-     */
-    getErrorsComponent() {
-        return this.querySelector('field-errors');
     }
 
     // #endregion

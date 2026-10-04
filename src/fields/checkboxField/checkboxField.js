@@ -28,7 +28,7 @@ class CheckboxField extends Field {
 
     $renderTemplate() {
         return html`
-            <label for="${this.getHtmlId()}" class="arpaField__input checkboxField__label fieldLabel buttonInput">
+            <label for="{id}" class="arpaField__input checkboxField__label fieldLabel buttonInput">
                 {icon} {label} {iconRight} {errors} {tooltip} {input}
             </label>
             {description}

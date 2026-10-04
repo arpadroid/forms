@@ -8,7 +8,6 @@ export { default as SubmitButton } from './fields/submitButton/submitButton.js';
  * Field.
  */
 export { default as Field } from './fields/field/field.js';
-export { default as FieldErrors } from './fields/field/components/fieldErrors/fieldErrors.js';
 
 /**
  * Text Fields.

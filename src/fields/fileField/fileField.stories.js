@@ -108,7 +108,7 @@ export const Test = {
         await step('Submits the form without a file and expects an error', async () => {
             await userEvent.click(submitButton);
             await waitFor(() => {
-                const errorContainer = field.querySelector('.fieldErrors__list li');
+                const errorContainer = field.querySelector('.arpaField__errorList li');
                 expect(errorContainer).toHaveTextContent(I18n.getText('forms.field.errRequired'));
                 expect(onErrorMock).toHaveBeenCalledTimes(1);
             });
@@ -118,7 +118,7 @@ export const Test = {
             await fireEvent.change(input, { target: { files: [EmptyImage] } });
             await waitFor(() => {
                 expect(onErrorMock).toHaveBeenCalledTimes(2);
-                const errorContainer = field.querySelector('.fieldErrors__list');
+                const errorContainer = field.querySelector('.arpaField__errorList');
                 expect(errorContainer).toBeInTheDocument();
                 const errorNode = errorContainer?.querySelector('i18n-text[key="forms.fields.file.errExtensions"]');
                 expect(errorNode).toHaveTextContent(

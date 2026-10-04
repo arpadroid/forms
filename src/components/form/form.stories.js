@@ -23,8 +23,6 @@ export async function playSetup(canvasElement) {
     const form = canvasElement.querySelector('arpa-form');
     await form?.waitForArpaNodes();
     await form?.promise;
-    await new Promise(resolve => setTimeout(resolve, 50));
-
     const submitButton = /** @type {HTMLButtonElement} */ (canvasElement.querySelector('button[type="submit"]'));
     const onSubmitMock = fn(() => true);
     form?.onSubmit(onSubmitMock);

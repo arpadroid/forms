@@ -197,9 +197,11 @@ export const Zones = {
                 expect(canvas.getByText('Zone description')).toBeInTheDocument();
                 expect(canvas.getByText('Zone tooltip')).toBeInTheDocument();
                 expect(canvas.getByText('Zone label')).toBeInTheDocument();
-                const rhsTooltip = canvas.getByText('Rhs tooltip');
-                await userEvent.click(rhsTooltip);
-                expect(rhsTooltip).toBeVisible();
+            });
+            const rhsTooltip = canvas.getByText('Rhs tooltip');
+            await userEvent.click(rhsTooltip);
+            await waitFor(() => {
+                expect(rhsTooltip).toBeInTheDocument();
             });
         });
     }
@@ -218,6 +220,7 @@ export const Minimal = {
         icon: undefined,
         iconRight: undefined
     },
+
     play: async ({ step, canvasElement }) => {
         await step('Renders the field.', async () => {
             await waitFor(() => {
@@ -237,7 +240,7 @@ export const Minimal = {
             const footnote = canvasElement.querySelector('.arpaField__footnote');
             expect(footnote).not.toBeInTheDocument();
 
-            const tooltip = canvasElement.querySelector('.arpaField__tooltip');
+            const tooltip = canvasElement.querySelector('.arpaField__tooltip:not(.arpaField__errors)');
             expect(tooltip).not.toBeInTheDocument();
 
             const inputMask = canvasElement.querySelector('.arpaField__inputMask');

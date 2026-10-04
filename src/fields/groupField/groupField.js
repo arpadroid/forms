@@ -1,4 +1,4 @@
-import { mergeObjects, appendNodes, defineCustomElement } from '@arpadroid/tools';
+import { mergeObjects, defineCustomElement } from '@arpadroid/tools';
 import Field from '../field/field.js';
 
 /**
