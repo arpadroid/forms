@@ -1,9 +1,10 @@
 .optionsField__options:not(.comboBox) {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem 1.5rem;
+    gap: 1rem 2.5rem;
     align-items: center;
     width: auto;
+    padding: .5rem 0;
 }
 
 .optionsField__input {

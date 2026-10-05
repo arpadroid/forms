@@ -28,21 +28,22 @@ class FileField extends Field {
     getDefaultConfig() {
         /** @type {FileFieldConfigType} */
         const conf = {
+            allowMultiple: false,
             classNames: ['fileField'],
-            listComponent: 'file-list',
-            uploadListComponent: 'file-list',
+            extensions: [],
             fileComponent: 'file-item',
             fileListIcon: 'gallery_thumbnail',
-            inputComponent: 'file-field-input',
-            lblUploads: '{i18n:lblUploads}',
             fileListLabel: this.i18nText('lblUploadedFiles'),
-            lblAddFile: this.i18n('lblAddFile'),
-            lblRemoveFile: '{i18n:lblRemoveFile}',
             hasDropArea: false,
             hasInputMask: false,
-            allowMultiple: false,
-            extensions: [],
-            inputType: 'file'
+            inputComponent: 'file-field-input',
+            inputType: 'file',
+            lblAddFile: this.i18n('lblAddFile'),
+            lblRemoveFile: '{i18n:lblRemoveFile}',
+            lblUploads: '{i18n:lblUploads}',
+            listComponent: 'file-list',
+            uploadListComponent: 'file-list',
+            uploadListIcon: 'upload'
         };
         return mergeObjects(super.getDefaultConfig(), conf);
     }
@@ -217,6 +218,7 @@ class FileField extends Field {
                     <arpa-node
                         tag="${this.getProp('uploadListComponent')}"
                         class="fileField__uploadList"
+                        titleIcon="{uploadListIcon}"
                         name="uploadList"
                         id="{id}-uploadList"
                         title-icon="{uploadListIcon}"

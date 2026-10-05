@@ -1,15 +1,30 @@
 .colorField__colorInputWrapper {
+    --input-size: 1.75rem;
+    --shadow-size: 0.2rem;
+    --shadow-size-bottom: calc(-1 * var(--shadow-size));
+    --shadow-blur: 0.4rem;
+
     position: absolute;
-    right: 0.6rem;
-    width: 2.2rem;
-    height: 2.2rem;
+    right: 1rem;
+    width: var(--input-size);
+    height: var(--input-size);
     overflow: hidden;
-    border-radius: 50%;
+    border-radius: 0.5rem;
+}
+
+.colorField__colorInputWrapper::after {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+    content: '';
 }
 
 .colorField__colorInput {
     position: absolute;
     inset: -0.4rem;
+    z-index: 0;
     width: 3rem;
     height: 3rem;
     padding: 0;

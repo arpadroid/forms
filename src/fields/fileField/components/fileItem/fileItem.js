@@ -23,7 +23,7 @@ class FileItem extends ListItem {
         const superConfig = super.getDefaultConfig();
         /** @type {FileItemConfigType} */
         const config = {
-            icon: 'attach_file',
+            icon: 'file_copy',
             hasIcon: true,
             blueprint: ListItem.prototype.$renderTemplate.bind(this),
             classNames: ['fileItem', () => (this.fileType && `fileItem--type--${this.fileType}`) || ''],
@@ -88,7 +88,7 @@ class FileItem extends ListItem {
         return html`
             {main} {rhs}
             <arpa-zone name="title" replace-content>
-                <div class="fileItem__titleContent">
+                <div class="fileItem__titleContent" is-content>
                     {titleIcon}
                     <span class="fileItem__name">${this.getProp('title')}</span>
                 </div>

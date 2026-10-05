@@ -88,7 +88,7 @@
  * Footer
  */
 
-.arpaFrom__footer {
+.arpaForm__footer {
     position: sticky;
     bottom: 0;
     z-index: 1;
@@ -151,7 +151,7 @@
     padding: 0.4rem 0.7rem 0.7rem;
 
     .message.message {
-        border-radius: 8px;
+        border-radius: 0.5rem;
     }
 
     .arpaForm__fields {

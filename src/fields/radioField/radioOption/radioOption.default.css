@@ -1,13 +1,14 @@
 checkbox-option,
 radio-option {
     flex: 1 1 auto;
+
     .fieldOption__handler {
-        transition: var(--theme-transition);
+        gap: 0.5rem;
+        padding-right: 0;
+        padding-left: 0;
         background-color: var(--input-bg-color);
-        padding-left: var(--input-padding);
-        padding-right: var(--input-padding);
-        gap: 11px;
         border-radius: var(--input-border-radius-round);
+        transition: var(--theme-transition);
 
         .fieldOption__label {
             flex: 1 1 auto;
@@ -17,21 +18,17 @@ radio-option {
         &:hover,
         &:focus {
             .fieldOption__label {
-                text-decoration: underline;
-                text-underline-offset: 2px;
-                text-decoration-thickness: 2px;
                 font-weight: var(--field-option-active-weight);
-                letter-spacing: -0.2px;
                 color: var(--field-option-active-color);
+                letter-spacing: -0.0125rem;
+                text-decoration: underline;
+                text-decoration-thickness: 0.125rem;
+                text-underline-offset: 0.125rem;
             }
 
             arpa-icon {
                 color: var(--field-option-active-color);
             }
         }
-    }
-
-    input {
-        z-index: 1;
     }
 }

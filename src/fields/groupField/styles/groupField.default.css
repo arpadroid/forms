@@ -7,9 +7,15 @@
     container-type: inline-size;
 }
 
+.groupField__summary__label {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--grey-600);
+}
+
 .groupField__summary {
     display: flex;
-    gap: 12px;
+    gap: 0.75rem;
     align-items: center;
     padding: 1rem 0;
     text-transform: uppercase;
@@ -26,15 +32,9 @@
     }
 }
 
-.groupField__summary__label {
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: var(--grey-600);
-}
-
 .groupField > .groupField__details[open] {
     > .groupField__summary {
-        border-bottom: 2px solid var(--grey-100);
+        border-bottom: 0.125rem solid var(--grey-100);
 
         .groupField__summary__label {
             font-weight: 800;
@@ -47,8 +47,8 @@
 
     > .groupField__fields {
         padding: 1rem 0.5rem;
-        margin-bottom: 20px;
-        border-radius: 16px;
+        margin-bottom: 1.25rem;
+        border-radius: 1rem;
     }
 }
 

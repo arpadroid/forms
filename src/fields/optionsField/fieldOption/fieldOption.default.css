@@ -13,7 +13,7 @@
 .fieldOption {
     display: flex;
     flex-direction: row;
-    gap: 12px;
+    gap: 0.75rem;
     align-items: center;
     height: var(--input-height);
 
@@ -25,7 +25,7 @@
 .fieldOption__handler {
     display: flex;
     flex-direction: row;
-    gap: 12px;
+    gap: 0.75rem;
     align-items: center;
     height: var(--input-height);
     cursor: pointer;
@@ -33,7 +33,7 @@
 
 .fieldOption__main {
     display: flex;
-    gap: 12px;
+    gap: 0.75rem;
 }
 
 .fieldOption__content {
@@ -47,6 +47,6 @@
     font-size: var(--field-option-size);
     font-weight: var(--field-option-weight);
     color: var(--field-option-color);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: 0.125rem;
+    text-underline-offset: 0.125rem;
 }

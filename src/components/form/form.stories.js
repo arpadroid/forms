@@ -47,7 +47,7 @@ const FormStory = {
         variant: undefined
     },
     render: args => {
-        const commonGroupConfig = attrString({ open: false, 'remember-toggle': true });
+        const commonGroupConfig = attrString({ open: false, 'remember-toggle': true, 'is-collapsible': true });
         return html`
             <arpa-form ${attrString(args)}>
                 <arpa-zone name="messages">
