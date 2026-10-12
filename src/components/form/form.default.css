@@ -175,6 +175,10 @@
         }
     }
 
+    .arpaForm__footer {
+        padding: 0;
+    }
+
     .groupField__summary {
         padding: 0.75rem 0;
     }

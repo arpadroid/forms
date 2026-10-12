@@ -81,9 +81,9 @@
 
 .arpaField__label {
     flex: 0 1 auto;
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 600;
-    color: var(--grey-800);
+    color: var(--grey-700);
 }
 
 .arpaField__requiredSign {
@@ -128,6 +128,7 @@ button.arpaField__input {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    cursor: pointer;
 
     arpa-icon {
         position: relative;
