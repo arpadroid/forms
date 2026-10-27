@@ -23,9 +23,9 @@ const html = String.raw;
  */
 export async function playSetup({ tag = 'arpa-field', canvasElement, canvas, inputSelector = '.arpaField__input' }) {
     const form = /** @type {Form} */ (canvasElement.querySelector('arpa-form'));
-    await form?.promise;
+    await form?.onRendered();
     const field = /** @type {Field} */ (canvasElement.querySelector(tag));
-    await field?.promise;
+    await field?.onRendered();
 
     const input = /** @type {HTMLInputElement} */ (canvasElement.querySelector(inputSelector));
     const submitButton = /** @type {HTMLButtonElement} */ (canvas.getByRole('button', { name: /submit/i }));
@@ -198,7 +198,7 @@ export const Zones = {
                 expect(canvas.getByText('Zone tooltip')).toBeInTheDocument();
                 expect(canvas.getByText('Zone label')).toBeInTheDocument();
             });
-            const rhsTooltip = canvas.getByText('Rhs tooltip');
+            const rhsTooltip = await waitFor(() => canvas.getByText('Rhs tooltip'));
             await userEvent.click(rhsTooltip);
             await waitFor(() => {
                 expect(rhsTooltip).toBeInTheDocument();

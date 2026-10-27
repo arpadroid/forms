@@ -183,7 +183,7 @@ export const Test = {
             if (!deleteButton) {
                 throw new Error('Delete button not found');
             }
-            await userEvent.click(deleteButton);
+            await userEvent.click(deleteButton, { delay: 20 });
             expect(onDeleteUpload).toHaveBeenCalledOnce();
             expect(canvas.queryByText('test file')).toBeNull();
             expect(uploadList?.listResource?.getItems()).toHaveLength(0);
@@ -192,9 +192,11 @@ export const Test = {
         await step('Adds a valid file and submits the form receiving expected value', async () => {
             await fireEvent.change(input, { target: { files: [TextFileMock] } });
             expect(uploadList?.listResource?.getItems()).toHaveLength(1);
-            await userEvent.click(submitButton);
+            await userEvent.click(submitButton, { delay: 20 });
             expect(onSubmitMock).toHaveBeenCalledWith({ 'file-field': TextFileMock });
-            canvas.getByText(I18n.getText('forms.form.msgSuccess'));
+            await waitFor(() => {
+                canvas.getByText(I18n.getText('forms.form.msgSuccess'));
+            });
         });
 
         await step(

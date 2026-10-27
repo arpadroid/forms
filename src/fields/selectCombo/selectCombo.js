@@ -86,7 +86,7 @@ class SelectCombo extends SelectField {
                 tag="select-options"
                 name="options"
                 class-name="optionsField__options"
-                zone="{optionsZone}"
+                zone-name="{optionsZone}"
                 is-content
             ></arpa-node>
             <arpa-zone name="inputWrapper">
@@ -122,8 +122,8 @@ class SelectCombo extends SelectField {
     async $initializeNodes() {
         await super.$initializeNodes();
         await this.waitForArpaNodes();
-        this.initializeInputCombo();
         this.searchInput = this.getSearchInput();
+        this.initializeInputCombo();
         this.initializeSearch(this.searchInput);
         return true;
     }
@@ -207,7 +207,7 @@ class SelectCombo extends SelectField {
             this.searchInput.value = typeof label === 'string' ? label : label?.textContent || '';
         }
         if (this.input instanceof HTMLButtonElement) {
-            this.input.innerHTML = '';
+            this.input.replaceChildren();
             if (typeof label === 'string') {
                 this.input.innerHTML = label;
             } else if (label instanceof HTMLElement) {
@@ -238,13 +238,14 @@ class SelectCombo extends SelectField {
      * @param {HTMLInputElement} [input]
      * @param {HTMLElement | null} [optionsNode]
      */
-    initializeInputCombo(input = this.input, optionsNode = this.optionsNode) {
+    initializeInputCombo(input = this.searchInput || this.input, optionsNode = this.optionsNode) {
         optionsNode && (this.zoneTarget = optionsNode);
         if (!input || !optionsNode) return;
         if (this.inputCombo) {
             this.inputCombo.initialize(input, optionsNode);
             return;
         }
+
         this.inputCombo = new InputCombo(input, optionsNode, {
             containerSelector: this.getProp('option-component'),
             position: {
@@ -263,7 +264,7 @@ class SelectCombo extends SelectField {
     ///////////////////////
 
     onSearchInputFocus() {
-        this.input?.select();
+        this.searchInput?.select();
     }
 
     onSearchInputBlur() {

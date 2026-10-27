@@ -21,8 +21,7 @@ export async function playSetup(canvasElement) {
     await customElements.whenDefined('arpa-form');
     /** @type {Form | null} */
     const form = canvasElement.querySelector('arpa-form');
-    await form?.waitForArpaNodes();
-    await form?.promise;
+    await form?.onRendered();
     const submitButton = /** @type {HTMLButtonElement} */ (canvasElement.querySelector('button[type="submit"]'));
     const onSubmitMock = fn(() => true);
     form?.onSubmit(onSubmitMock);

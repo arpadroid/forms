@@ -7,7 +7,7 @@ import { $attr, defineCustomElement, dummyListener, dummySignal, mergeObjects } 
 import { observerMixin, mapHTML } from '@arpadroid/tools';
 import FieldValidator from '../../utils/fieldValidator.js';
 import { I18n } from '@arpadroid/i18n';
-import { ArpaElement } from '@arpadroid/ui';
+import { ArpaElement, getArpaElementWithTag } from '@arpadroid/ui';
 const html = String.raw;
 class Field extends ArpaElement {
     _validations = ['required', 'minLength', 'maxLength', 'size'];
@@ -194,7 +194,6 @@ class Field extends ArpaElement {
                         tag="{inputTag}"
                         type="{inputType}"
                         id="{id}"
-                        name="{getId()}"
                         placeholder="{placeholder}"
                         value="{value}"
                         on-focus="{_onFocus}"
@@ -280,7 +279,8 @@ class Field extends ArpaElement {
      * Initializes the value for the field.
      * @param {unknown} value
      */
-    _initializeValue(value = this.getProp('value')) {
+    async _initializeValue(value = this.getProp('value')) {
+        await this.onRendered();
         if (typeof value === 'undefined') {
             value = this.getProp('default-value');
         }
@@ -377,7 +377,9 @@ class Field extends ArpaElement {
      * @returns {FormComponent | undefined}
      */
     getForm() {
-        return /** @type {FormComponent | undefined} */ (this.form || this._config.form || this.closest('arpa-form'));
+        return /** @type {FormComponent | undefined} */ (
+            this.form || this._config.form || getArpaElementWithTag(this, 'arpa-form')
+        );
     }
 
     getOnChangeValue() {

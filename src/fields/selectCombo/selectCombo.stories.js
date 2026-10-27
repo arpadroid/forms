@@ -120,7 +120,7 @@ export const SearchInput = {
         });
         const { onChangeMock, onSubmitMock } = setup;
         const field = /** @type {SelectCombo} */ (setup.field);
-        field.setOptions(CountryOptions);
+        await field.setOptions(CountryOptions);
         const searchInput = canvas.getByRole('textbox', { name: /Select combo/i });
 
         await step('Renders the field', async () => {
@@ -132,12 +132,14 @@ export const SearchInput = {
         });
 
         await step('enables search, performs search and verifies search results', async () => {
+            await new Promise(resolve => setTimeout(resolve, 10));
             await userEvent.clear(searchInput);
             await userEvent.type(searchInput, 'United', { delay: 10 });
             /** @type {any} */
             let match = null;
+            const combo = /** @type {HTMLElement} */ (field.optionsNode);
             await waitFor(() => {
-                const searchMatches = canvasElement.querySelectorAll('mark');
+                const searchMatches = combo.querySelectorAll('mark');
                 expect(searchMatches).toHaveLength(2);
                 expect(searchMatches[0]).toHaveTextContent('United');
                 match = searchMatches[1];

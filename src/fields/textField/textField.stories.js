@@ -48,7 +48,7 @@ export const Test = {
 
         await step('Submits form with invalid regex value: "some value".', async () => {
             await userEvent.type(input, 'some value');
-            await userEvent.click(submitButton);
+            await userEvent.click(submitButton, { delay: 30 });
         });
 
         await step('Checks for error message.', async () => {
@@ -60,7 +60,7 @@ export const Test = {
         await step('Submits form with valid field value.', async () => {
             await userEvent.clear(input);
             await userEvent.type(input, 'valid');
-            await userEvent.click(submitButton);
+            await userEvent.click(submitButton, { delay: 50 });
             await waitFor(() => {
                 expect(onSubmitMock).toHaveBeenCalledWith({ 'text-field': 'valid' });
                 canvas.getByText(I18n.getText('forms.form.msgSuccess'));
