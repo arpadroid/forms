@@ -27,8 +27,9 @@ class FileItem extends ListItem {
             hasIcon: true,
             blueprint: ListItem.prototype.$renderTemplate.bind(this),
             classNames: ['fileItem', () => (this.fileType && `fileItem--type--${this.fileType}`) || ''],
-            lblRemoveFile: '{i18n:lblRemoveFile}',
+            lblRemoveFile: this.i18nText('lblRemoveFile'),
             lblEditFile: '{i18n:lblEditFile}',
+            listSelector: 'file-list,upload-list',
             hasDelete: true,
             hasEdit: false,
             nodesConfig: {

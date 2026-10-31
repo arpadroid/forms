@@ -39,7 +39,7 @@ class FileField extends Field {
             inputComponent: 'file-field-input',
             inputType: 'file',
             lblAddFile: this.i18n('lblAddFile'),
-            lblRemoveFile: '{i18n:lblRemoveFile}',
+            lblRemoveFile: this.i18nText('lblRemoveFile'),
             lblUploads: '{i18n:lblUploads}',
             listComponent: 'file-list',
             uploadListComponent: 'file-list',
@@ -216,10 +216,10 @@ class FileField extends Field {
                         <template template-type="list-item" lbl-remove-file="${this.getProp('lblRemoveFile')}"></template>
                     </arpa-node>
                     <arpa-node
+                        name="uploadList"
                         tag="${this.getProp('uploadListComponent')}"
                         class="fileField__uploadList"
                         titleIcon="{uploadListIcon}"
-                        name="uploadList"
                         id="{id}-uploadList"
                         title-icon="{uploadListIcon}"
                         can-render="hasUploads()"
@@ -227,9 +227,9 @@ class FileField extends Field {
                     ></arpa-node>
                 </div>
                 <arpa-node
-                    $on-drop="{onInputChange}"
                     name="dropArea"
                     tag="drop-area"
+                    $on-drop="{onInputChange}"
                     input-id="{id}"
                     can-render="hasDropArea()"
                 ></arpa-node>

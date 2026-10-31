@@ -31,8 +31,12 @@ class FileList extends List {
             itemTag: 'file-item',
             controls: [],
             mapItemId: payload => {
-                const file = /** @type {File} */ (payload.file);
-                return mechanize(`${file.name}-${file.size}`);
+                const file = /** @type {File} */ (payload.file || {});
+                const name = payload?.name || file?.name || 'file';
+                const size = file.size || payload?.size || '';
+                let id = name;
+                if (size) id += `-${size}`;
+                return mechanize(id.replace(/\./g, '-'));
             }
         };
         return mergeObjects(super.getDefaultConfig(), conf);

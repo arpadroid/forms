@@ -30,7 +30,8 @@ class SelectOption extends FieldOption {
         this.onSelected = this.onSelected.bind(this);
         return mergeObjects(super.getDefaultConfig(), {
             className: 'comboBox__item',
-            action: this.onSelected
+            action: this.onSelected,
+            listSelector: 'select-options'
         });
     }
 
