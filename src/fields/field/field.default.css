@@ -1,9 +1,9 @@
 :root {
     --input-padding: 1.2rem;
+    --input-height: 3.2rem;
 }
 
 .arpaField {
-    --input-height: 3.2rem;
     --input-border-radius: 0.75rem;
     --input-border-radius-round: var(--input-height);
     --input-icon-padding: 3.25rem;

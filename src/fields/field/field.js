@@ -414,7 +414,11 @@ class Field extends ArpaElement {
      * @returns {HTMLInputElement | undefined}
      */
     getInput() {
-        return /** @type {HTMLInputElement | undefined} */ (this.nodes.input || this.input);
+        return /** @type {HTMLInputElement | undefined} */ (
+            (this.input?.isConnected && this.input) ||
+                this.querySelector(`input[type="${this.getProp('inputType')}`) ||
+                this.nodes.input
+        );
     }
 
     getTooltipPosition() {
