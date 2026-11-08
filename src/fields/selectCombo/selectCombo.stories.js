@@ -132,7 +132,6 @@ export const SearchInput = {
         });
 
         await step('enables search, performs search and verifies search results', async () => {
-            await new Promise(resolve => setTimeout(resolve, 10));
             await userEvent.clear(searchInput);
             await userEvent.type(searchInput, 'United', { delay: 10 });
             /** @type {any} */
