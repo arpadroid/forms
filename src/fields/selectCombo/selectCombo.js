@@ -183,7 +183,7 @@ class SelectCombo extends SelectField {
      */
     async updateValue() {
         await this.promise;
-        await this.waitForArpaNodes();
+        await this.onRendered();
         /** @type {SelectOption} */
         this.selectedOption = this.getSelectedOption();
         this.getOptions().forEach(option => option.removeAttribute('aria-selected'));
@@ -195,7 +195,13 @@ class SelectCombo extends SelectField {
     getValueLabel(option = this.getSelectedOption()) {
         const { renderValue } = this._config;
         const configValue = typeof renderValue === 'function' && renderValue(option);
-        return configValue || option?.getProp('label') || option?.nodes.main.innerHTML?.trim() || this.getProp('placeholder');
+        return (
+            configValue ||
+            option?.getProp('label') ||
+            option?.nodes.main.innerHTML?.trim() ||
+            option?.getAttribute('value') ||
+            this.getProp('placeholder')
+        );
     }
 
     /**
