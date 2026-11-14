@@ -170,7 +170,7 @@ class Field extends ArpaElement {
                     variant="error"
                     tag="arpa-tooltip"
                     icon="block"
-                    position="bottom-right"
+                    position="top-right"
                     arrow="false"
                 >
                     <ul class="arpaField__errorList" zone-name="errors">

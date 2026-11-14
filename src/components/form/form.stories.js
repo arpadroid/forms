@@ -4,28 +4,35 @@
  * @typedef {import('../../fields/passwordField/passwordField.js').default} PasswordField
  * @typedef {import('@storybook/web-components-vite').Meta<FormConfigType>} Meta
  * @typedef {import('@storybook/web-components-vite').StoryObj<FormConfigType>} Story
+ * @typedef {import('../../fields/selectField/selectField.js').default} SelectField
+ * @typedef {import('../../fields/selectCombo/selectCombo.js').default} SelectCombo
+ * @typedef {import('../../fields/tagField/tagField.js').default} TagField
+ *
  */
 
 import { expect, waitFor, userEvent, fn } from 'storybook/test';
 import { attrString } from '@arpadroid/tools';
 import { defaultParams, testParams } from '@arpadroid/module/storybook/helper';
+import { MusicGenres, queryPeople } from '../../demo/demoFormOptions.js';
 
 const html = String.raw;
 
 /**
  * Sets up the play function for the form stories.
  * @param {HTMLElement} canvasElement - The canvas element of the story.
- * @returns {Promise<{form: Form | null, submitButton: HTMLButtonElement, onSubmitMock: ReturnType<typeof fn>}>} The setup result containing the canvas, form, submit button, and onSubmit mock function.
+ * @returns {Promise<{form: Form , submitButton: HTMLButtonElement, onSubmitMock: ReturnType<typeof fn>}>} The setup result containing the canvas, form, submit button, and onSubmit mock function.
  */
 export async function playSetup(canvasElement) {
     await customElements.whenDefined('arpa-form');
-    /** @type {Form | null} */
-    const form = canvasElement.querySelector('arpa-form');
-    await form?.onRendered();
+
+    const form = /** @type {Form} */ (canvasElement.querySelector('arpa-form'));
+    await form.onRendered();
     const submitButton = /** @type {HTMLButtonElement} */ (canvasElement.querySelector('button[type="submit"]'));
     const onSubmitMock = fn(() => true);
-    form?.onSubmit(onSubmitMock);
+    form.onSubmit(onSubmitMock);
+
     await form?.promise;
+
     return { form, submitButton, onSubmitMock };
 }
 
@@ -44,6 +51,15 @@ const FormStory = {
         successMessage: 'Form submitted successfully!',
         errorMessage: 'Form submission failed!',
         variant: undefined
+    },
+    play: async ({ canvasElement }) => {
+        const { form } = await playSetup(canvasElement);
+        const selectField = /** @type {SelectField} */ (form.getField('select-field'));
+        selectField?.setOptions(MusicGenres);
+        const selectCombo = /** @type {SelectCombo} */ (form.getField('select-combo'));
+        selectCombo?.setOptions(MusicGenres);
+        const tagField = /** @type {TagField} */ (form.getField('tag-field'));
+        tagField?.setFetchOptions(queryPeople);
     },
     render: args => {
         const commonGroupConfig = attrString({ open: false, 'remember-toggle': true, 'is-collapsible': true });
@@ -120,7 +136,6 @@ const FormStory = {
             </arpa-form>
             <script type="module">
                 import { People, MusicGenres, queryPeople } from '../../demo/demoFormOptions.js';
-
                 customElements.whenDefined('arpa-form').then(() => {
                     const form = document.getElementById('demo-form');
                     form.onSubmit(values => {

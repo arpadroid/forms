@@ -24,5 +24,6 @@
     .listItem__rhs {
         display: flex;
         flex-direction: row;
+        align-self: center;
     }
 }
