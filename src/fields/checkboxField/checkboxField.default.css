@@ -80,7 +80,7 @@ checkbox-field.arpaField:has(.arpaField__iconRight) .arpaField__input {
         font-family: 'Material Symbols Outlined';
         font-size: 1.5rem;
         font-weight: 300;
-        color: var(--grey-300);
+        color: var(--button-color);
         cursor: pointer;
         content: 'check_box_outline_blank';
     }
