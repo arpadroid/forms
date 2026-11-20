@@ -1,7 +1,7 @@
 import { FieldConfigType } from '../field/field.types';
 
 export type GroupFieldConfigType = FieldConfigType & {
-    open?: boolean;
+    open?: boolean | 'false';
     isCollapsible?: boolean;
     rememberToggle?: boolean;
     closedIcon?: string;

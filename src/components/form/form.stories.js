@@ -24,15 +24,11 @@ const html = String.raw;
  */
 export async function playSetup(canvasElement) {
     await customElements.whenDefined('arpa-form');
-
     const form = /** @type {Form} */ (canvasElement.querySelector('arpa-form'));
-    await form.onRendered();
     const submitButton = /** @type {HTMLButtonElement} */ (canvasElement.querySelector('button[type="submit"]'));
     const onSubmitMock = fn(() => true);
     form.onSubmit(onSubmitMock);
-
     await form?.promise;
-
     return { form, submitButton, onSubmitMock };
 }
 
@@ -167,21 +163,24 @@ export const Test = {
     parameters: testParams,
     play: async ({ canvasElement, step, canvas }) => {
         const setup = await playSetup(canvasElement);
-        const { submitButton, form } = setup;
-        await step('Renders the form.', () => {
-            expect(canvas.getByText('Demo Form')).toBeTruthy();
-            expect(canvas.getByText('Text Fields')).toBeTruthy();
-            expect(canvas.getByText('Date & Time Fields')).toBeTruthy();
-            expect(canvas.getByText('Numeric Fields')).toBeTruthy();
-            expect(canvas.getByText('Select Fields')).toBeTruthy();
-            expect(canvas.getByText('Toggle Fields')).toBeTruthy();
-            expect(canvas.getByText('File Fields')).toBeTruthy();
+        const { form } = setup;
+        const submit = await waitFor(() => canvas.getByRole('button', { name: /submit/i }));
+        await step('Renders the form.', async () => {
+            await waitFor(() => {
+                expect(canvas.getByText('Demo Form')).toBeInTheDocument();
+                expect(canvas.getByText('Text Fields')).toBeInTheDocument();
+                expect(canvas.getByText('Date & Time Fields')).toBeInTheDocument();
+                expect(canvas.getByText('Numeric Fields')).toBeInTheDocument();
+                expect(canvas.getByText('Select Fields')).toBeInTheDocument();
+                expect(canvas.getByText('Toggle Fields')).toBeInTheDocument();
+                expect(canvas.getByText('File Fields')).toBeInTheDocument();
+            });
         });
 
         await step('Submits the form and receives configured error message from missing required fields', async () => {
-            await userEvent.click(submitButton);
+            await userEvent.click(submit);
             await waitFor(() => {
-                expect(canvas.getByText('Form submission failed!')).toBeTruthy();
+                expect(canvas.getByText('Form submission failed!')).toBeInTheDocument();
             });
         });
 
@@ -191,7 +190,7 @@ export const Test = {
             await passwordField?.confirmField?.promise;
             passwordField?.setValue('P455w0rd!!');
             passwordField?.confirmField?.setValue('P455w0rd!!');
-            await userEvent.click(submitButton);
+            await userEvent.click(submit);
             await waitFor(() => {
                 expect(canvas.getByText('Form submitted successfully!')).toBeTruthy();
             });

@@ -25,7 +25,6 @@ class FileItem extends ListItem {
         const config = {
             icon: 'file_copy',
             hasIcon: true,
-            blueprint: ListItem.prototype.$renderTemplate.bind(this),
             classNames: ['fileItem', () => (this.fileType && `fileItem--type--${this.fileType}`) || ''],
             lblRemoveFile: this.i18nText('lblRemoveFile'),
             lblEditFile: '{i18n:lblEditFile}',
@@ -87,7 +86,7 @@ class FileItem extends ListItem {
      */
     $renderTemplate() {
         return html`
-            {main} {rhs}
+            ${super.$renderTemplate()}
             <arpa-zone name="title" replace-content>
                 <div class="fileItem__titleContent" is-content>
                     {titleIcon}
