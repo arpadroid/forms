@@ -190,7 +190,7 @@ export const Test = {
             await passwordField?.confirmField?.promise;
             passwordField?.setValue('P455w0rd!!');
             passwordField?.confirmField?.setValue('P455w0rd!!');
-            await userEvent.click(submit);
+            await userEvent.click(canvas.getByRole('button', { name: /submit/i }));
             await waitFor(() => {
                 expect(canvas.getByText('Form submitted successfully!')).toBeTruthy();
             });
