@@ -135,6 +135,7 @@ class GroupField extends Field {
         if (this.iconNode) {
             this.iconNode.innerHTML = icon;
         }
+        isOpen ? this.setAttribute('open', '') : this.removeAttribute('open');
     }
 
     // #endregion

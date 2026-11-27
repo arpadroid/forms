@@ -9,8 +9,12 @@
 
 .groupField__summary__label {
     font-size: 1.05rem;
-    font-weight: 500;
+    font-weight: 800;
     color: var(--grey-600);
+    text-decoration: underline;
+    text-decoration-thickness: 0.125rem;
+    text-decoration-color: var(--grey-150);
+    text-underline-offset: 0.5rem;
 }
 
 .groupField__summary {
@@ -20,7 +24,6 @@
     padding: 1rem 0;
     text-transform: uppercase;
     cursor: pointer;
-    border-bottom: 1px solid var(--border-color);
     transition: var(--theme-transition);
 
     .groupField__iconRight {
@@ -32,27 +35,31 @@
     }
 }
 
-.groupField > .groupField__details[open] {
-    > .groupField__summary {
-        border-bottom: 0.125rem solid var(--grey-100);
-
-        .groupField__summary__label {
-            font-weight: 800;
-        }
-
-        arpa-icon {
-            color: var(--color-primary);
-        }
+.groupField[open] {
+    &:not(:last-child) {
+        padding-bottom: 0.5rem;
     }
 
-    > .groupField__fields {
-        padding: 1rem 0.5rem;
-        margin-bottom: 1.25rem;
-        border-radius: 1rem;
+    > .groupField__details {
+        > .groupField__summary {
+            .groupField__summary__label {
+                text-decoration-color: var(--grey-400);
+            }
+
+            arpa-icon {
+                color: var(--color-primary);
+            }
+        }
+
+        > .groupField__fields {
+            padding: 1rem 0.5rem;
+            margin-bottom: 1.25rem;
+            border-radius: 1rem;
+        }
     }
 }
 
-@container groupfield-input (min-width: 550px) {
+@container groupfield-input (min-width: 400px) {
     .groupField__fields {
         display: flex;
         flex-flow: row wrap;
@@ -75,7 +82,7 @@
     }
 }
 
-@container groupfield-input (max-width: 549px) {
+@container groupfield-input (max-width: 399px) {
     .groupField__fields {
         display: flex;
         flex-direction: column;

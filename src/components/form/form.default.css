@@ -133,7 +133,7 @@
 @container arpa-form (max-width: 980px) {
     .arpaForm__fields.arpaForm__fields {
         flex-direction: column;
-        gap: 0 1.5rem;
+        gap: 1.5rem;
     }
 
     .arpaForm__column {
@@ -155,23 +155,30 @@
     }
 
     .arpaForm__fields {
-        gap: 1rem;
+        gap: 0.25rem;
         margin-top: 0;
 
         .groupField__fields.groupField__fields {
-            gap: 1rem;
             margin-bottom: 0;
         }
     }
 
-    .groupField__details {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+    .groupField {
+        .groupField__details {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
 
-        .groupField__fields.groupField__fields {
-            padding: 0;
-            box-shadow: none;
+            .groupField__fields.groupField__fields {
+                padding: 0;
+                box-shadow: none;
+            }
+        }
+
+        &[open] {
+            .groupField__details {
+                gap: 1rem;
+            }
         }
     }
 
