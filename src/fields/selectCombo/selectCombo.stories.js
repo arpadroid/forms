@@ -133,7 +133,7 @@ export const SearchInput = {
 
         await step('enables search, performs search and verifies search results', async () => {
             await userEvent.clear(searchInput);
-            await userEvent.type(searchInput, 'United', { delay: 10 });
+            await userEvent.type(searchInput, 'United');
             /** @type {any} */
             let match = null;
             const combo = /** @type {HTMLElement} */ (field.optionsNode);

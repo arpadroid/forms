@@ -72,7 +72,6 @@ export const Test = {
         if (!input) throw new Error('Input element not found in the setup.');
         if (!field) throw new Error('Field not found in the setup.');
         if (!submitButton) throw new Error('Submit button not found in the setup.');
-        field.inputCombo?.close();
 
         await field.promise;
         field.setFetchOptions(queryPeople);
@@ -122,8 +121,7 @@ export const Test = {
 
         await step('Performs search and verifies search results', async () => {
             await userEvent.type(input, 'and', { delay: 100 });
-            const combo = field?.inputCombo?.combo;
-
+            const combo = canvas.getByRole('listbox');
             await waitFor(() => {
                 expect(combo?.querySelector('[value="NE-B"')).toBeInTheDocument();
                 expect(combo?.querySelector('[value="NE-AU"')).toBeInTheDocument();

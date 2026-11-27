@@ -82,16 +82,19 @@ class TagField extends SelectCombo {
                 class="arpaField__input"
                 placeholder="{placeholder}"
                 autocomplete="off"
+                on-click="{openSelect}"
+                on-focus="{openSelect}"
                 can-render="hasSearch()"
                 on-keydown="{onSearchInputKeyDown}"
             ></arpa-node>
 
             <arpa-node
-                id="{getHtmlId()}-options"
+                id="{id}-options"
                 tag="select-options"
                 name="options"
                 class-name="optionsField__options"
                 zone="{optionsZone}"
+                popover="auto"
                 is-content
             ></arpa-node>
 
@@ -272,7 +275,6 @@ class TagField extends SelectCombo {
      * @type {import('@arpadroid/tools').SearchToolCallbackType}
      */
     async onSearch(payload) {
-        this.inputCombo?.open();
         return super.onSearch(payload);
     }
 

@@ -8,12 +8,12 @@ import { mergeObjects, addSearchMatchMarkers, SearchTool, defineCustomElement } 
 import Field from '../field/field.js';
 import SelectField from '../selectField/selectField.js';
 import { I18n } from '@arpadroid/i18n';
-import { InputCombo } from '@arpadroid/ui';
 
 const html = String.raw;
 class SelectCombo extends SelectField {
     /** @type {SelectComboConfigType} */
     _config = this._config;
+    selectState = '';
 
     /** @returns {SelectComboConfigType} The default configuration object. */
     getDefaultConfig() {
@@ -81,14 +81,7 @@ class SelectCombo extends SelectField {
     $renderTemplate() {
         return html`
             ${Field.prototype.$renderTemplate.call(this)}
-            <arpa-node
-                id="{getHtmlId()}-options"
-                tag="select-options"
-                name="options"
-                class-name="optionsField__options"
-                zone-name="{optionsZone}"
-                is-content
-            ></arpa-node>
+
             <arpa-zone name="inputWrapper">
                 <arpa-node
                     name="searchInput"
@@ -101,11 +94,13 @@ class SelectCombo extends SelectField {
                     data-value="{value}"
                     on-focus="{onSearchInputFocus}"
                     on-blur="{onSearchInputBlur}"
+                    on-click="{openSelect}"
                     can-render="hasSearch()"
                 ></arpa-node>
                 <arpa-node
                     name="input"
                     tag="button"
+                    popovertarget="{id}-options"
                     data-value="{value}"
                     id="{getHtmlId()}"
                     type="button"
@@ -115,6 +110,16 @@ class SelectCombo extends SelectField {
                 >
                     {placeholder}
                 </arpa-node>
+                <arpa-node
+                    id="{id}-options"
+                    tag="select-options"
+                    name="options"
+                    class-name="optionsField__options"
+                    zone-name="{optionsZone}"
+                    popover="auto"
+                    is-content
+                    on-toggle="{onToggle}"
+                ></arpa-node>
             </arpa-zone>
         `;
     }
@@ -123,7 +128,6 @@ class SelectCombo extends SelectField {
         await super.$initializeNodes();
         await this.waitForArpaNodes();
         this.searchInput = this.getSearchInput();
-        this.initializeInputCombo();
         this.initializeSearch(this.searchInput);
         return true;
     }
@@ -174,7 +178,7 @@ class SelectCombo extends SelectField {
         const val = option.getAttribute('value') || '';
         this.setValue(val);
         this._callOnChange(event);
-        this.inputCombo?.close();
+        this.optionsNode?.hidePopover?.();
         this.updateValue();
     }
 
@@ -228,6 +232,23 @@ class SelectCombo extends SelectField {
     // #region Combo
     ///////////////////////////
 
+    openSelect() {
+        requestAnimationFrame(() => {
+            this.optionsNode?.showPopover();
+        });
+    }
+
+    /**
+     * @param {ToggleEvent} event
+     */
+    onToggle(event) {
+        if (this.selectState === event.newState) {
+            return;
+        }
+        event.newState === 'open' ? this.onOpenCombo() : this.onCloseCombo();
+        this.selectState = event.newState;
+    }
+
     onOpenCombo() {
         const { fetchOptions } = this._config;
         if (typeof fetchOptions === 'function' && this.query) {
@@ -239,30 +260,6 @@ class SelectCombo extends SelectField {
         this.resetSearchState();
     }
 
-    /**
-     * Initializes the input combo for the select combo field.
-     * @param {HTMLInputElement} [input]
-     * @param {HTMLElement | null} [optionsNode]
-     */
-    initializeInputCombo(input = this.searchInput || this.input, optionsNode = this.optionsNode) {
-        optionsNode && (this.zoneTarget = optionsNode);
-        if (!input || !optionsNode) return;
-        if (this.inputCombo) {
-            this.inputCombo.initialize(input, optionsNode);
-            return;
-        }
-
-        this.inputCombo = new InputCombo(input, optionsNode, {
-            containerSelector: this.getProp('option-component'),
-            position: {
-                position: this.getProp('optionsPosition')
-            },
-            closeOnClick: true,
-            onOpen: () => this.onOpenCombo(),
-            onClose: () => this.onCloseCombo()
-        });
-    }
-
     // #endregion
 
     ////////////////////////
@@ -270,6 +267,7 @@ class SelectCombo extends SelectField {
     ///////////////////////
 
     onSearchInputFocus() {
+        this.openSelect();
         this.searchInput?.select();
     }
 
