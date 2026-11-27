@@ -29,7 +29,6 @@ class TagOption extends SelectOption {
         this.style.display = 'none';
         requestAnimationFrame(() => {
             this.focusNext();
-            field?.inputCombo?.place();
         });
     }
 
