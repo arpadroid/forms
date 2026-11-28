@@ -56,7 +56,6 @@ class FormComponent extends ArpaElement {
         const config = {
             variant: 'default',
             attributeList: ['id'],
-            eventHandlerSelector: 'form',
             hasSubmit: true,
             hasMessages: true,
             initialValues: {},
@@ -282,20 +281,21 @@ class FormComponent extends ArpaElement {
         this.submitTime = time;
         const isValid = this.validate();
         if (isValid) {
+            this.signal('submit', this._values);
             return this._callOnSubmit();
         } else {
+            this.signal('error', this._values);
             this.scrollIntoView();
             this.focusFirstErroredInput();
         }
     }
 
     /**
-     * Calls the onSubmit callback.
+     * @param {FormSubmitType} onSubmit
      * @returns {Promise<FormSubmitResponseType> | undefined | boolean}
      */
-    _callOnSubmit() {
+    _callOnSubmit(onSubmit = this._config?.onSubmit) {
         this?.messages?.deleteMessages();
-        const onSubmit = this._config?.onSubmit;
         if (typeof onSubmit === 'function') {
             const payload = this._values;
             this.startLoading();

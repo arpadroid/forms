@@ -232,6 +232,7 @@ export const AllowMultiple = {
         const { submitButton, onSubmitMock } = setup;
 
         const field = /** @type {FileField} */ (setup.field);
+        await field.onRendered();
         field._config.onDelete = onDelete;
 
         const fileList = /** @type {List | null} */ (canvasElement.querySelector('.fileField__fileList'));
